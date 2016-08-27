@@ -53,6 +53,7 @@ add_library(core
     .gitignore .gitmodules
     .travis.yml
     core/signal.h++
+    core/property.h++
     core/string.h++ core/string.c++
     )
 

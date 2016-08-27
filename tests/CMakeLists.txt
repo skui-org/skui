@@ -48,4 +48,5 @@ function(compile_test component test_name)
 endfunction()
 
 runtime_test(core signal)
+runtime_test(core property)
 
