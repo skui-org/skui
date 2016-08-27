@@ -30,6 +30,11 @@ namespace
 {
   using skui::core::signal;
 
+  void test_basic_operations()
+  {
+    // TODO test copy/move assignment operators
+  }
+
   void test_simple_signal()
   {
     bool slot_called = false;
@@ -59,6 +64,7 @@ namespace
 
 int main()
 {
+  test_basic_operations();
   test_simple_signal();
   test_signal_with_argument();
 }
