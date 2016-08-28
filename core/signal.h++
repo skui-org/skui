@@ -42,14 +42,15 @@ namespace skui
       class signal_base
       {
       public:
+        using slot_type = std::function<void(ArgTypes...)>;
+
         signal_base() = default;
 
         signal_base(const signal_base& other) : slots(other.slots) {}
         signal_base(signal_base&& other) : slots(std::move(other.slots)) {}
         signal_base& operator=(signal_base other) { swap(other); return *this; }
 
-        template<typename Callable>
-        void connect(Callable&& slot)
+        void connect(slot_type&& slot)
         {
           std::lock_guard<decltype(slots_mutex)> lock(slots_mutex);
           slots.emplace_back(slot);
@@ -57,7 +58,7 @@ namespace skui
 
       protected:
         // mutable here allows to connect to a const object's signals
-        mutable std::vector<std::function<void(ArgTypes...)>> slots;
+        mutable std::vector<slot_type> slots;
         mutable std::mutex slots_mutex;
 
       private:
