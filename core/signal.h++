@@ -28,6 +28,7 @@
  * Notifies registered observers.
  */
 
+#include <algorithm>
 #include <functional>
 #include <mutex>
 #include <vector>
@@ -42,6 +43,7 @@ namespace skui
       class signal_base
       {
       public:
+        using function_type = void(*)(ArgTypes...);
         using slot_type = std::function<void(ArgTypes...)>;
 
         signal_base() = default;
@@ -54,6 +56,29 @@ namespace skui
         {
           const std::lock_guard<decltype(slots_mutex)> lock(slots_mutex);
           slots.emplace_back(slot);
+        }
+
+        bool disconnect(slot_type&& slot)
+        {
+          const std::lock_guard<decltype(slots_mutex)> lock(slots_mutex);
+          auto function_pointer = slot.template target<function_type>();
+          const auto result_it = std::find_if(begin(slots), end(slots),
+                                              [&function_pointer](slot_type& connected_slot)
+                                              {
+                                                return function_pointer == connected_slot.template target<function_type>();
+                                              });
+          if(result_it != end(slots))
+          {
+            slots.erase(result_it);
+            return true;
+          }
+          return false;
+        }
+
+        void disconnect_all()
+        {
+          const std::lock_guard<decltype(slots_mutex)> lock(slots_mutex);
+          slots.clear();
         }
 
       protected:

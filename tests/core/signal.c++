@@ -60,6 +60,31 @@ namespace
 
     skui::test::assert(slot_called, "Argument not passed through signal.");
   }
+
+  void test_signal_disconnect()
+  {
+    bool slot_called = false;
+    bool other_slot_called = false;
+    auto slot = [&slot_called]() { slot_called = true; };
+    auto other_slot = [&other_slot_called]() { other_slot_called = true; };
+
+    signal<> signal;
+    signal.connect(slot);
+    signal.connect(other_slot);
+    signal.disconnect(slot);
+
+    signal.emit();
+
+    skui::test::assert(!slot_called, "Slot not disconnected.");
+    skui::test::assert(other_slot_called, "Other slot still connected.");
+
+    signal.disconnect_all();
+
+    other_slot_called = false;
+    signal.emit();
+
+    skui::test::assert(!other_slot_called, "Disconnect all failed.");
+  }
 }
 
 int main()
@@ -67,4 +92,5 @@ int main()
   test_basic_operations();
   test_simple_signal();
   test_signal_with_argument();
+  test_signal_disconnect();
 }
