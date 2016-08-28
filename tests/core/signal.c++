@@ -28,24 +28,48 @@
 
 namespace
 {
-  using skui::core::signal;
+  using skui::test::assert;
 
-  void test_basic_operations()
-  {
-    // TODO test copy/move assignment operators
-  }
-
-  void test_simple_signal()
+  void test_signal_connect_emit()
   {
     bool slot_called = false;
     auto slot = [&slot_called]() { slot_called = true; };
 
-    signal<> simple_signal;
-    simple_signal.connect(slot);
+    skui::core::signal<> signal;
+    signal.connect(slot);
 
-    simple_signal.emit();
+    signal.emit();
 
-    skui::test::assert(slot_called, "Simple slot not called through emit.");
+    assert(slot_called, "Simple slot called through emit.");
+  }
+
+  void test_basic_operations()
+  {
+    bool slot_called = false;
+    auto slot = [&slot_called]() { slot_called = true; };
+    skui::core::signal<> signal_one;
+    skui::core::signal<> signal_two;
+
+    signal_one.connect(slot);
+
+    signal_two = signal_one; // copy
+
+    signal_one.emit();
+    assert(slot_called, "copied-from signal still connected");
+    slot_called = false;
+    signal_two.emit();
+    assert(slot_called, "copied to signal connected");
+
+    signal_two = std::move(signal_one);
+
+    slot_called = false;
+    signal_one.emit();
+
+    assert(!slot_called, "moved-from signal still connected");
+
+    signal_two.emit();
+
+    assert(slot_called, "moved-to signal connected correclty");
   }
 
   void test_signal_with_argument()
@@ -53,12 +77,12 @@ namespace
     bool slot_called = false;
     auto slot = [&slot_called](bool called) { slot_called = called; };
 
-    signal<bool> signal_with_argument;
-    signal_with_argument.connect(slot);
+    skui::core::signal<bool> signal;
+    signal.connect(slot);
 
-    signal_with_argument.emit(true);
+    signal.emit(true);
 
-    skui::test::assert(slot_called, "Argument not passed through signal.");
+    assert(slot_called, "Argument not passed through signal.");
   }
 
   void test_signal_disconnect()
@@ -68,14 +92,14 @@ namespace
     auto slot = [&slot_called]() { slot_called = true; };
     auto other_slot = [&other_slot_called]() { other_slot_called = true; };
 
-    signal<> signal;
+    skui::core::signal<> signal;
     signal.connect(slot);
     signal.connect(other_slot);
     signal.disconnect(slot);
 
     signal.emit();
 
-    skui::test::assert(!slot_called, "Slot not disconnected.");
+    skui::test::assert(!slot_called, "Slot disconnected.");
     skui::test::assert(other_slot_called, "Other slot still connected.");
 
     signal.disconnect_all();
@@ -83,14 +107,14 @@ namespace
     other_slot_called = false;
     signal.emit();
 
-    skui::test::assert(!other_slot_called, "Disconnect all failed.");
+    skui::test::assert(!other_slot_called, "Disconnect all slots.");
   }
 }
 
 int main()
 {
+  test_signal_connect_emit();
   test_basic_operations();
-  test_simple_signal();
   test_signal_with_argument();
   test_signal_disconnect();
 }
