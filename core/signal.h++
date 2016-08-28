@@ -52,7 +52,7 @@ namespace skui
 
         void connect(slot_type&& slot)
         {
-          std::lock_guard<decltype(slots_mutex)> lock(slots_mutex);
+          const std::lock_guard<decltype(slots_mutex)> lock(slots_mutex);
           slots.emplace_back(slot);
         }
 
