@@ -48,7 +48,7 @@ namespace skui
 
         signal_base(const signal_base& other) : slots(other.slots) {}
         signal_base(signal_base&& other) : slots(std::move(other.slots)) {}
-        signal_base& operator=(signal_base other) { swap(other); return *this; }
+        signal_base& operator=(signal_base other) { swap(slots, other.slots); return *this; }
 
         void connect(slot_type&& slot)
         {
@@ -60,9 +60,6 @@ namespace skui
         // mutable here allows to connect to a const object's signals
         mutable std::vector<slot_type> slots;
         mutable std::mutex slots_mutex;
-
-      private:
-        void swap(signal_base& other) { std::swap(slots, other.slots); }
       };
     }
     template<typename... ArgTypes>
