@@ -22,9 +22,8 @@ This list will grow (and change) as the library's design takes shape.
 
 ## Roadmap
 
-### Pre-releases
 
-#### 0.0.x
+### 0.0.x
 
  * establish a logical basis for UI functionality, including:
    * signals, properties, strings
@@ -33,7 +32,7 @@ This list will grow (and change) as the library's design takes shape.
    * basic UI controls
    * Application abstraction
 
-#### 0.1.x
+### 0.1.x
 
  * Application window abstraction
    * Windows
@@ -46,7 +45,7 @@ This list will grow (and change) as the library's design takes shape.
    * ...
  * Improve core logic and functionality.
 
-#### 0.x.x
+### 0.x.x
 
  * Windows, Linux, OS X support of the above
  * More application logic (model/views, ...)
@@ -61,13 +60,13 @@ This list will grow (and change) as the library's design takes shape.
  * Add missing documentation
  * ...
 
-#### 1.x.x
+### 1.x.x
 
  * Stability and features of a basic UI framework
  * Improve platform support
  * Solve all them bugs.
  * Correct all them documentation typos.
 
-#### x.x.x
+### x.x.x
 
  * Supreme world domination through superiour benevolent A.I.
