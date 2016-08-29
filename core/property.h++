@@ -27,7 +27,7 @@
  * Utility class to handle automatic notification of observers when a value changes
  */
 
-#include "core/signal.h++"
+#include "signal.h++"
 
 #include <type_traits>
 #include <utility>

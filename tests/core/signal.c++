@@ -30,17 +30,29 @@ namespace
 {
   using skui::test::assert;
 
-  void test_signal_connect_emit()
+  namespace
   {
-    bool slot_called = false;
-    auto slot = [&slot_called]() { slot_called = true; };
+    bool free_slot_called = false;
+    void slot() { free_slot_called = true; }
 
-    skui::core::signal<> signal;
-    signal.connect(slot);
+    bool overloaded_slot_called = false;
+    void slot(bool) { overloaded_slot_called = true; }
 
-    signal.emit();
+    void test_signal_connect_emit()
+    {
 
-    assert(slot_called, "Simple slot called through emit.");
+      bool lambda_slot_called = false;
+      auto lambda_slot = [&lambda_slot_called]() { lambda_slot_called = true; };
+
+      skui::core::signal<> signal;
+      signal.connect(static_cast<void(*)()>(slot));
+      signal.connect(lambda_slot);
+
+      signal.emit();
+      assert(free_slot_called, "free function slot called.\n");
+      assert(lambda_slot_called, "lambda function slot called.\n");
+      assert(!overloaded_slot_called, "overloaded slot not called.\n");
+    }
   }
 
   void test_basic_operations()
@@ -52,24 +64,28 @@ namespace
 
     signal_one.connect(slot);
 
-    signal_two = signal_one; // copy
+    signal_two = signal_one;
 
     signal_one.emit();
-    assert(slot_called, "copied-from signal still connected");
+
+    assert(slot_called, "Copied-from signal still connected.");
+
     slot_called = false;
+
     signal_two.emit();
-    assert(slot_called, "copied to signal connected");
+
+    assert(slot_called, "Copied-to signal connected.");
 
     signal_two = std::move(signal_one);
-
     slot_called = false;
+
     signal_one.emit();
 
-    assert(!slot_called, "moved-from signal still connected");
+    assert(!slot_called, "Moved-from signal disconnected.");
 
     signal_two.emit();
 
-    assert(slot_called, "moved-to signal connected correclty");
+    assert(slot_called, "moved-to signal connected correclty.");
   }
 
   void test_signal_with_argument()
@@ -98,7 +114,6 @@ namespace
     signal.disconnect(slot);
 
     signal.emit();
-
     skui::test::assert(!slot_called, "Slot disconnected.");
     skui::test::assert(other_slot_called, "Other slot still connected.");
 
