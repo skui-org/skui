@@ -23,18 +23,19 @@
 # THE SOFTWARE.
 #
 
-
 # Boilerplate CMake code
 function(runtime_test component test_name)
   add_executable(${test_name} EXCLUDE_FROM_ALL ${component}/${test_name}.c++ ${CMAKE_CURRENT_LIST_DIR}/test.h++)
   set_target_properties(${test_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${component})
   target_include_directories(${test_name} PUBLIC ${CMAKE_CURRENT_LIST_DIR} ${PROJECT_SOURCE_DIR})
+  target_link_libraries(${test_name} ${component})
   add_test(remove/${component}/${test_name} ${CMAKE_COMMAND} -E remove ${component}/${test_name}${CMAKE_EXECUTABLE_SUFFIX})
   add_test(build/${component}/${test_name} ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target ${test_name})
   add_test(NAME    run/${component}/${test_name}
-           COMMAND ${component}/${test_name}
-           DEPENDS build/${component}/${test_name})
-  # Each runtime_test is actually 3 tests, use below to make it one test
+           COMMAND ${component}/${test_name})
+  set_tests_properties(run/${component}/${test_name} PROPERTIES DEPENDS build/${component}/${test_name})
+  #TODO add intertest dependencies
+  #BROKEN Each runtime_test is actually 3 tests, use below to make it one test
 #  add_test(${test_dir}/${test_name} ${CMAKE_COMMAND} -E remove ${test_dir}/${test_name}${CMAKE_EXECUTABLE_SUFFIX}
 #                                 && ${CMAKE_COMMAND} --build --target ${test_name})
 #                                 && ${CMAKE_CURRENT_LIST_DIR}/${test_dir}/${test_name}${CMAKE_EXECUTABLE_SUFFIX})
@@ -42,11 +43,15 @@ function(runtime_test component test_name)
 endfunction()
 
 function(compile_test component test_name)
-  add_library(${test_name} OBJECT EXCLUDE_FROM_ALL ${component}/${test_name}.c++ ${CMAKE_CURRENT_LIST_DIR}/test.h++)
+  add_executable(${test_name} EXCLUDE_FROM_ALL ${component}/${test_name}.c++ ${CMAKE_CURRENT_LIST_DIR}/test.h++)
   set_target_properties(${test_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${component})
-  add_test(${component}/${test_name} ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target ${test_name})
+  target_include_directories(${test_name} PUBLIC ${CMAKE_CURRENT_LIST_DIR} ${PROJECT_SOURCE_DIR})
+  target_link_libraries(${test_name} ${component})
+  add_test(remove/${component}/${test_name} ${CMAKE_COMMAND} -E remove ${component}/${test_name}${CMAKE_EXECUTABLE_SUFFIX})
+  add_test(build/${component}/${test_name} ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target ${test_name})
 endfunction()
 
 runtime_test(core signal)
 runtime_test(core property)
-
+compile_test(core application)
+add_test(NAME run/core/application COMMAND core/application "skui is awesome")

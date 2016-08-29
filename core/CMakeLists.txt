@@ -27,7 +27,17 @@ set(core_src
     signal.h++
     property.h++
     string.h++ string.c++
+    application.h++ application.c++
     )
+
+# Platform-specific files
+if(WIN32)
+  set(core_src ${core_src}
+      application_windows.c++)
+elseif(UNIX)
+  set(core_src ${core_src}
+      application_unix.c++)
+endif()
 
 # The library itself
 add_library(core ${core_src})
