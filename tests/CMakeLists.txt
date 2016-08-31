@@ -25,7 +25,7 @@
 
 # Boilerplate CMake code
 function(runtime_test component test_name)
-  add_executable(${test_name} EXCLUDE_FROM_ALL ${component}/${test_name}.c++ ${CMAKE_CURRENT_LIST_DIR}/test.h++)
+  add_executable(${test_name} ${component}/${test_name}.c++ ${CMAKE_CURRENT_LIST_DIR}/test.h++)
   set_target_properties(${test_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${component})
   target_include_directories(${test_name} PUBLIC ${CMAKE_CURRENT_LIST_DIR} ${PROJECT_SOURCE_DIR})
   target_link_libraries(${test_name} ${component})
