@@ -30,48 +30,6 @@ namespace
 {
   using skui::test::assert;
 
-  void test_basic_operations()
-  {
-    skui::core::property<int> property;
-    assert(property == 0, "equality");
-    assert(0 == property, "equality (reversed)");
-
-    property = 1;
-    assert(property == 1, "assignment");
-
-    skui::core::property<int> other_property = property;
-    assert(property == other_property && other_property == 1, "copy assignment");
-
-    property = 2;
-    other_property = std::move(property);
-    assert(other_property == 2, "move assignment");
-  }
-
-  void test_numerical_operations()
-  {
-    skui::core::property<int> property = 0;
-
-    property++;
-    assert(property == 1, "post-increment");
-    assert(++property == 2, "pre-increment");
-
-    property--;
-    assert(property == 1, "post-decrement");
-    assert(--property == 0, "pre-decrement");
-
-    property += 1;
-    assert(property == 1, "addition");
-
-    property *= 2;
-    assert(property == 2, "multiplication");
-
-    property /= 2;
-    assert(property == 1, "division");
-
-    property -= 1;
-    assert(property == 0, "subtraction");
-  }
-
   void test_value_changed_signal()
   {
     int changed_value = 0;
@@ -84,11 +42,55 @@ namespace
 
     assert(changed_value == 1, "changed slot called on assignment");
   }
+
+  void test_basic_operations()
+  {
+    bool slot_called = false;
+    auto slot = [&slot_called](int) { slot_called = true; };
+
+    skui::core::property<int> property;
+    property.value_changed.connect(slot);
+
+    assert(property == 0, "==");
+    assert(0 == property, "== (reversed)");
+    assert(property <  1, "<" );
+    assert(property <= 0, "<=");
+    assert(property > -1, ">" );
+    assert(property >= 0, ">=");
+    assert(property != 1, "!=");
+    assert(!slot_called,  "operators don't emit value_changed");
+
+    slot_called = false;
+    property = 1;
+    assert(property == 1, "assignment");
+    assert(slot_called,   "assignment emits value_changed");
+
+    slot_called = false;
+    skui::core::property<int> other_property{property};
+    assert(property == other_property && other_property == 1, "copy construction");
+    assert(!slot_called, "copy construction does not emit value_changed");
+
+    slot_called = false;
+    other_property = 0;
+    assert(slot_called, "connection copied");
+
+    slot_called = false;
+    other_property = std::move(property);
+    assert(other_property == 1, "move assignment moves value");
+    assert(!slot_called, "move constructor does not emit value_changed");
+
+    slot_called = false;
+    property = 0;
+    assert(!slot_called, "moved-from property is disconnected");
+
+    slot_called = false;
+    other_property = 0;
+    assert(slot_called, "moved-to property is connected");
+  }
 }
 
 int main()
 {
-  test_basic_operations();
-  test_numerical_operations();
   test_value_changed_signal();
+  test_basic_operations();
 }
