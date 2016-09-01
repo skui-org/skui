@@ -70,6 +70,47 @@ namespace skui
                                        return function_pointer == object_slot.second.template target<function_type>();
                                      }));
         }
+
+        template<typename Class>
+        void connect(Class* object, void(Class::* slot)(ArgTypes...))
+        {
+          const std::lock_guard<decltype(slots_mutex)> lock(slots_mutex);
+
+          slots.emplace_back(object, [object, slot](ArgTypes... args) { (object->*slot)(std::forward(args)...); } );
+        }
+
+        template<typename Class>
+        void connect(const Class* object, void(Class::* slot)(ArgTypes...) const)
+        {
+          const std::lock_guard<decltype(slots_mutex)> lock(slots_mutex);
+
+          slots.emplace_back(object, [object, slot](ArgTypes... args) { (object->*slot)(std::forward(args)...); } );
+        }
+
+        template<typename Class>
+        void connect(volatile Class* object, void(Class::* slot)(ArgTypes...) volatile)
+        {
+          const std::lock_guard<decltype(slots_mutex)> lock(slots_mutex);
+
+          slots.emplace_back(object, [object, slot](ArgTypes... args) { (object->*slot)(std::forward(args)...); } );
+        }
+
+        template<typename Class>
+        void connect(const volatile Class* object, void(Class::* slot)(ArgTypes...) const volatile)
+        {
+          const std::lock_guard<decltype(slots_mutex)> lock(slots_mutex);
+
+          slots.emplace_back(object, [object, slot](ArgTypes... args) { (object->*slot)(std::forward(args)...); } );
+        }
+
+        // removes all connections to an object
+        void disconnect(const volatile void* object)
+        {
+          slots.erase(std::remove_if(slots.begin(), slots.end(),
+                                     [object](const object_slot_type& object_slot)
+                                     {
+                                       return object == object_slot.first;
+                                     }));
         }
 
         void disconnect_all()

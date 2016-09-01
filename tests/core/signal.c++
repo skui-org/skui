@@ -124,6 +124,45 @@ namespace
 
     skui::test::assert(!other_slot_called, "Disconnect all slots.");
   }
+
+  struct mock
+  {
+    mock(){};
+    void f() const volatile { slot_called = true; };
+    void g(int);
+    mutable bool slot_called = false;
+  };
+
+  void test_member_functions()
+  {
+    mock object;
+    {
+      skui::core::signal<> signal;
+      signal.connect(&object, &mock::f);
+      signal.emit();
+
+      assert(object.slot_called, "member function slot called.");
+    }
+    {
+      const mock other_object;
+      skui::core::signal<> signal;
+      signal.connect(&object, &mock::f);
+      signal.connect(&other_object, &mock::f);
+      signal.disconnect(&other_object);
+
+      signal.emit();
+      assert(object.slot_called, "connected slot called");
+      assert(!other_object.slot_called, "disconnected slot called");
+    }
+    {
+      const volatile mock cv_object;
+      skui::core::signal<> signal;
+      signal.connect(&cv_object, &mock::f);
+
+      signal.emit();
+      assert(cv_object.slot_called, "const volatile object connected");
+    }
+  }
 }
 
 int main()
@@ -132,4 +171,5 @@ int main()
   test_basic_operations();
   test_signal_with_argument();
   test_signal_disconnect();
+  test_member_functions();
 }
