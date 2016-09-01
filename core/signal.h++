@@ -46,6 +46,7 @@ namespace skui
       public:
         using function_type = void(*)(ArgTypes...);
         using slot_type = std::function<void(ArgTypes...)>;
+        using object_slot_type = std::pair<const volatile void*, slot_type>;
 
         signal_base() = default;
 
@@ -59,21 +60,16 @@ namespace skui
           slots.emplace_back(nullptr, slot);
         }
 
-        bool disconnect(slot_type&& slot)
+        void disconnect(slot_type&& slot)
         {
           const std::lock_guard<decltype(slots_mutex)> lock(slots_mutex);
           auto function_pointer = slot.template target<function_type>();
-          const auto result_it = std::find_if(begin(slots), end(slots),
-                                              [&function_pointer](std::pair<void*, slot_type>& object_slot)
-                                              {
-                                                return function_pointer == object_slot.second.template target<function_type>();
-                                              });
-          if(result_it != end(slots))
-          {
-            slots.erase(result_it);
-            return true;
-          }
-          return false;
+          slots.erase(std::remove_if(begin(slots), end(slots),
+                                     [&function_pointer](const object_slot_type& object_slot)
+                                     {
+                                       return function_pointer == object_slot.second.template target<function_type>();
+                                     }));
+        }
         }
 
         void disconnect_all()
@@ -84,7 +80,7 @@ namespace skui
 
       protected:
         // mutable here allows to connect to a const object's signals
-        mutable std::vector<std::pair<void*, slot_type>> slots;
+        mutable std::vector<object_slot_type> slots;
         mutable std::mutex slots_mutex;
       };
     }
@@ -114,9 +110,9 @@ namespace skui
       void emit() const
       {
         std::lock_guard<decltype(this->slots_mutex)> lock(this->slots_mutex);
-        for(auto&& object_slot_pair : this->slots)
+        for(auto&& object_slot : this->slots)
         {
-          object_slot_pair.second();
+          object_slot.second();
         }
       }
     };
