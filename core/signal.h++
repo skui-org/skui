@@ -31,6 +31,7 @@
 #include <algorithm>
 #include <functional>
 #include <mutex>
+#include <utility>
 #include <vector>
 
 namespace skui
@@ -55,7 +56,7 @@ namespace skui
         void connect(slot_type&& slot)
         {
           const std::lock_guard<decltype(slots_mutex)> lock(slots_mutex);
-          slots.emplace_back(slot);
+          slots.emplace_back(nullptr, slot);
         }
 
         bool disconnect(slot_type&& slot)
@@ -63,9 +64,9 @@ namespace skui
           const std::lock_guard<decltype(slots_mutex)> lock(slots_mutex);
           auto function_pointer = slot.template target<function_type>();
           const auto result_it = std::find_if(begin(slots), end(slots),
-                                              [&function_pointer](slot_type& connected_slot)
+                                              [&function_pointer](std::pair<void*, slot_type>& object_slot)
                                               {
-                                                return function_pointer == connected_slot.template target<function_type>();
+                                                return function_pointer == object_slot.second.template target<function_type>();
                                               });
           if(result_it != end(slots))
           {
@@ -83,10 +84,11 @@ namespace skui
 
       protected:
         // mutable here allows to connect to a const object's signals
-        mutable std::vector<slot_type> slots;
+        mutable std::vector<std::pair<void*, slot_type>> slots;
         mutable std::mutex slots_mutex;
       };
     }
+
     template<typename... ArgTypes>
     class signal : public implementation::signal_base<ArgTypes...>
     {
@@ -96,9 +98,9 @@ namespace skui
       void emit(ArgTypes... arguments) const
       {
         std::lock_guard<decltype(this->slots_mutex)> lock(this->slots_mutex);
-        for(auto&& slot : this->slots)
+        for(auto&& object_slot : this->slots)
         {
-          slot(arguments...);
+          object_slot.second(arguments...);
         }
       }
     };
@@ -112,9 +114,9 @@ namespace skui
       void emit() const
       {
         std::lock_guard<decltype(this->slots_mutex)> lock(this->slots_mutex);
-        for(auto&& slot : this->slots)
+        for(auto&& object_slot_pair : this->slots)
         {
-          slot();
+          object_slot_pair.second();
         }
       }
     };
