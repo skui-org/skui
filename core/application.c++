@@ -42,7 +42,7 @@ namespace skui
     }
 
     application::application(int argc, char* argv[])
-      : commandline_arguments(initialize_arguments(argc, argv))
+      : commandline_arguments{argv+1, argv+argc}
     {
       if(implementation::instance != nullptr)
       {

@@ -32,10 +32,5 @@ namespace skui
 {
   namespace core
   {
-    std::vector<std::string> application::initialize_arguments(int argc, char *argv[])
-    {
-      // assumes UTF-8 encoding of the terminal/shell
-      return { argv+1, argv+argc };
-    }
   }
 }

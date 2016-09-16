@@ -43,32 +43,16 @@ namespace skui
 {
   namespace core
   {
-
-    std::vector<string> application::initialize_arguments(int, char*[])
+    int application::execute() const
     {
-      std::vector<string> result;
-
-      int argc;
-      wchar_t** argz = CommandLineToArgvW(GetCommandLineW(), &argc);
-      result.reserve(static_cast<std::size_t>(argc));
-
-      // convert to UTF-8
-      try
+      MSG message;
+      while(GetMessageW(&message, NULL, 0, 0) > 0)
       {
-        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> converter;
-
-        for(int i = 1; i<argc; ++i)
-        {
-          result.emplace_back(converter.to_bytes(argz[i]));
-        }
-      }
-      catch(const std::out_of_range&)
-      {
-        std::cerr << "Failure converting commandline arguments to UTF-8.\n";
-        quit();
+        TranslateMessage(&message);
+        DispatchMessageW(&message);
       }
 
-      return result;
+      return EXIT_SUCCESS;
     }
   }
 }

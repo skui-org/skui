@@ -35,5 +35,5 @@ int main(int argc, char* argv[])
 
   const auto& arguments = skui::core::application::instance().arguments();
 
-  assert(arguments[0] == "skui is awesome", "arguments not passed correctly.\n");
+  assert(arguments[0] == "skui is awesome", "arguments passed correctly.\n");
 }

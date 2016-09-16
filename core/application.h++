@@ -35,6 +35,7 @@
 #include "string.h++"
 
 #include <cstdlib>
+#include <vector>
 
 namespace skui
 {
@@ -51,11 +52,12 @@ namespace skui
 
       static const application& instance();
 
+      int execute() const;
+
       void quit(int exit_code = EXIT_SUCCESS) const;
       const std::vector<string>& arguments() const;
 
     private:
-      std::vector<string> initialize_arguments(int argc, char* argv[]);
       std::vector<string> commandline_arguments;
     };
   }
