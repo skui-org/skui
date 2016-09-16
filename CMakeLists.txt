@@ -46,6 +46,7 @@ endif()
 # Miscellaneous files
 add_custom_target(miscellaneous SOURCES
     README.md
+    TODO.md
     LICENSE
     .gitignore
     .gitmodules
