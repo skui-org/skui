@@ -24,6 +24,7 @@
 
 # Common source files
 set(core_src
+    debug.h++
     signal.h++
     property.h++
     string.h++ string.c++
@@ -41,3 +42,4 @@ endif()
 
 # The library itself
 add_library(core ${core_src})
+target_compile_definitions(core PRIVATE $<$<CONFIG:Debug>:SKUI_DEBUG>)
