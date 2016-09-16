@@ -42,4 +42,5 @@ endif()
 
 # The library itself
 add_library(core ${core_src})
+set_target_properties(core PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_SOURCE_DIR})
 target_compile_definitions(core PRIVATE $<$<CONFIG:Debug>:SKUI_DEBUG>)
