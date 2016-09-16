@@ -22,43 +22,25 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-cmake_minimum_required(VERSION 3.0)
-project(skui)
+# Common source files
+set(gui_src
+    size.h++ position.h++
+    icon.h++
+    window.h++ window.c++
+    )
 
-# Compiler options
-if(CMAKE_COMPILER_IS_GNUCXX)
-  set(CMAKE_CXX_FLAGS "-std=c++14 -pedantic-errors -Wextra -Wconversion -Winit-self -Wmissing-include-dirs -Wstrict-aliasing -Werror ${CMAKE_CXX_FLAGS}")
-elseif(MSVC)
-  add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-  if(NOT ${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
-      add_compile_options(/wd4503)
-  endif()
-elseif(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
-  set(CMAKE_CXX_FLAGS "-std=c++14 -pedantic-errors -Wextra -Wconversion -Winit-self -Wmissing-include-dirs -Wstrict-aliasing -Werror ${CMAKE_CXX_FLAGS}")
-  if(MINGW)
-    link_libraries(-lpthread)
-  else()
-    set(CMAKE_CXX_FLAGS "-stdlib=libc++ ${CMAKE_CXX_FLAGS}")
-    link_libraries(-lc++ -lc++abi)
-  endif()
+# Platform-specific files
+if(WIN32)
+  set(gui_src ${gui_src}
+      main_windows.c++
+      window_windows.c++
+      )
+elseif(UNIX)
+  set(gui_src ${gui_src}
+      window_unix.c++
+      )
 endif()
 
-# Miscellaneous files
-add_custom_target(miscellaneous SOURCES
-    README.md
-    TODO.md
-    LICENSE
-    .gitignore
-    .gitmodules
-    .travis.yml)
-
-# 3rd party libraries built as integral part of skui
-#add_subdirectory(skia)
-
-# skui itself
-add_subdirectory(core)
-add_subdirectory(gui)
-
-# skui tests
-enable_testing()
-add_subdirectory(tests)
+# The library itself
+add_library(gui ${gui_src})
+target_link_libraries(gui PUBLIC core)
