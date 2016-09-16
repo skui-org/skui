@@ -28,6 +28,9 @@
  * Singleton
  */
 
+#ifndef SKUI_CORE_APPLICATION_H
+#define SKUI_CORE_APPLICATION_H
+
 #include "property.h++"
 #include "string.h++"
 
@@ -57,3 +60,5 @@ namespace skui
     };
   }
 }
+
+#endif

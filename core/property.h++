@@ -27,6 +27,9 @@
  * Utility class to handle automatic notification of observers when a value changes
  */
 
+#ifndef SKUI_CORE_PROPERTY_H
+#define SKUI_CORE_PROPERTY_H
+
 #include "signal.h++"
 
 #include <type_traits>
@@ -75,3 +78,5 @@ namespace skui
     };
   }
 }
+
+#endif

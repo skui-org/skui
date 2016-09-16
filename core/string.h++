@@ -28,6 +28,9 @@
  * Unimplemented, if that wasn't clear by the code in this file
  */
 
+#ifndef SKUI_CORE_STRING_H
+#define SKUI_CORE_STRING_H
+
 #include <string>
 
 namespace skui
@@ -37,3 +40,5 @@ namespace skui
     using string = std::string;
   }
 }
+
+#endif

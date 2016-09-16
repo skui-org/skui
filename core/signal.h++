@@ -28,6 +28,9 @@
  * Notifies registered observers.
  */
 
+#ifndef SKUI_CORE_SIGNAL_H
+#define SKUI_CORE_SIGNAL_H
+
 #include <algorithm>
 #include <functional>
 #include <mutex>
@@ -160,4 +163,4 @@ namespace skui
   }
 }
 
-
+#endif
