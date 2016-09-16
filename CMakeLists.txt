@@ -59,6 +59,9 @@ add_custom_target(miscellaneous SOURCES
 add_subdirectory(core)
 add_subdirectory(gui)
 
+# skui examples
+add_subdirectory(examples)
+
 # skui tests
 enable_testing()
 add_subdirectory(tests)
