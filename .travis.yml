@@ -33,4 +33,4 @@ matrix:
             - libc++abi-dev
       env:
        - C_COMPILER=clang-3.8
-       - CXX_COMPILER='clang++-3.8 -stdlib=libc++ -
+       - CXX_COMPILER=clang++-3.8

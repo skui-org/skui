@@ -58,7 +58,7 @@ namespace skui
 
       pixel_position position;
 
-      core::property<icon> icon;
+      core::property<gui::icon> icon;
       core::property<core::string> title;
 
       void show();

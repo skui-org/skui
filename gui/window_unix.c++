@@ -28,6 +28,17 @@ namespace skui
 {
   namespace gui
   {
+    window::window(pixel_position position, pixel_size initial_size)
+      : size{initial_size.width, initial_size.height}
+      , maximum_size{}
+      , minimum_size{}
+      , position{position}
+      , icon{}
+      , title{}
+    {
+
+    }
+
     void window::show()
     {
 
