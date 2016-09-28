@@ -43,4 +43,4 @@ endif()
 
 # The library itself
 add_library(gui ${gui_src})
-target_link_libraries(gui PUBLIC core)
+target_link_libraries(gui PUBLIC core skia)
