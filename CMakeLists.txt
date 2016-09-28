@@ -52,8 +52,8 @@ add_custom_target(miscellaneous SOURCES
     .gitmodules
     .travis.yml)
 
-# 3rd party libraries built as integral part of skui
-#add_subdirectory(skia)
+# Skia and its dependencies
+add_subdirectory(3rdparty/skia)
 
 # skui itself
 add_subdirectory(core)
