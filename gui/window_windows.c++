@@ -26,33 +26,25 @@
 
 #include <core/debug.h++>
 
+#ifndef UNICODE
+#define UNICODE
+#endif
+#ifndef WIN32_MEAN_AND_LEAN
+#define WIN32_MEAN_AND_LEAN
+#endif
+
+#include <windows.h>
+#include <GL/gl.h>
+
 namespace skui
 {
   namespace gui
   {
-    window::window(pixel_position position, pixel_size initial_size)
-      : size{initial_size.width, initial_size.height}
-      , maximum_size{}
-      , minimum_size{}
-      , position{position}
-      , icon{}
-      , title{}
-      , native_handle(initialize())
-    {
-    }
-
-    void window::show()
-    {
-      ShowWindow(native_handle, SW_SHOWNORMAL);
-    }
-
-    void window::hide()
-    {
-
-    }
-
+    // Helper functions
     namespace
     {
+      const HINSTANCE application_instance = static_cast<HINSTANCE>(GetModuleHandleW(nullptr));
+
       LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
       {
         switch(msg)
@@ -68,53 +60,110 @@ namespace skui
         }
         return 0;
       }
-    }
 
-    HWND window::initialize()
-    {
-      WNDCLASSEXW wc;
-      const HINSTANCE appInstance = static_cast<HINSTANCE>(GetModuleHandleW(nullptr));
+      constexpr wchar_t window_class[] = L"skui window";
 
-      //Step 1: Registering the Window Class
-      wc.cbSize        = sizeof(WNDCLASSEXW);
-      wc.style         = 0;
-      wc.lpfnWndProc   = WndProc;
-      wc.cbClsExtra    = 0;
-      wc.cbWndExtra    = 0;
-      wc.hInstance     = appInstance;
-      wc.hIcon         = LoadIcon(NULL, IDI_APPLICATION);
-      wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
-      wc.hbrBackground = reinterpret_cast<HBRUSH>(COLOR_WINDOW+1);
-      wc.lpszMenuName  = NULL;
-      wc.lpszClassName = L"skui window";
-      wc.hIconSm       = LoadIcon(NULL, IDI_APPLICATION);
-
-      if(!RegisterClassExW(&wc))
+      bool register_window_class()
       {
-        MessageBoxW(nullptr, L"Window Registration Failed!", L"Error!",
-                   MB_ICONEXCLAMATION | MB_OK);
-        return nullptr;
+        WNDCLASSEXW wc;
+
+        // Register the Window Class
+        wc.cbSize        = sizeof(WNDCLASSEXW);
+        wc.style         = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
+        wc.lpfnWndProc   = WndProc;
+        wc.cbClsExtra    = 0;
+        wc.cbWndExtra    = 0;
+        wc.hInstance     = application_instance;
+        wc.hIcon         = LoadIcon(application_instance, (LPCWSTR)IDI_WINLOGO);
+        wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
+        wc.hbrBackground = reinterpret_cast<HBRUSH>(COLOR_WINDOW+1);
+        wc.lpszMenuName  = L"Skui menu";
+        wc.lpszClassName = window_class;
+        wc.hIconSm       = LoadIcon(application_instance, (LPCWSTR)IDI_WINLOGO);
+
+        return RegisterClassExW(&wc);
       }
 
-      HWND native_handle = CreateWindowExW(
+      HWND initialize()
+      {
+        const static bool registered = register_window_class();
+
+        return CreateWindowExW(
               WS_EX_CLIENTEDGE,
-              wc.lpszClassName,
+              window_class,
               L"A Skui Window",
               WS_OVERLAPPEDWINDOW,
-              static_cast<int>(position.x), static_cast<int>(position.y),
-              static_cast<int>(size.width), static_cast<int>(size.height),
+              CW_USEDEFAULT, CW_USEDEFAULT,
+              CW_USEDEFAULT, CW_USEDEFAULT,
               nullptr, nullptr,
-              appInstance, nullptr
+              application_instance, nullptr
               );
 
-      if(native_handle == nullptr)
-      {
-        MessageBoxW(nullptr, L"Window Creation Failed!", L"Error!",
-                   MB_ICONEXCLAMATION | MB_OK);
-        return nullptr;
       }
-
-      return native_handle;
     }
+
+
+    window::window(pixel_position position, pixel_size initial_size)
+      : size{initial_size.width, initial_size.height}
+      , maximum_size{}
+      , minimum_size{}
+      , position{position}
+      , icon{}
+      , title{}
+      , native_handle(initialize())
+    {
+    }
+
+    void window::show()
+    {
+      ShowWindow(static_cast<HWND>(native_handle), SW_SHOWNORMAL);
+    }
+
+    void window::hide()
+    {
+      ShowWindow(static_cast<HWND>(native_handle), SW_HIDE);
+    }
+
+
+
+
+
+/*
+
+      HDC hdc = GetDC(native_handle);
+
+      skia_gl_context = SkCreateWGLContext(hdc,
+                                           0,
+                                           true,
+                                           kGLPreferCompatibilityProfile_SkWGLContextRequest);
+
+      glClearStencil(0);
+      glClearColor(0, 0, 0, 0);
+      glStencilMask(0xffffffff);
+      glClear(GL_STENCIL_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+      if(wglMakeCurrent(hdc, skia_gl_context))
+      {
+        // use DescribePixelFormat to get the stencil and color bit depth.
+        int pixelFormat = GetPixelFormat(hdc);
+        PIXELFORMATDESCRIPTOR pfd;
+        DescribePixelFormath(hdc, pixelFormat, sizeof(pfd), &pfd);
+        info->fStencilBits = pfd.cStencilBits;
+        // pfd.cColorBits includes alpha, so it will be 32 in 8/8/8/8 and 10/10/10/2
+        info->fColorBits = pfd.cRedBits + pfd.cGreenBits + pfd.cBlueBits;
+
+        // Get sample count if the MSAA WGL extension is present
+        SkWGLExtensions extensions;
+        if (extensions.hasExtension(dc, "WGL_ARB_multisample")) {
+          static const int kSampleCountAttr = SK_WGL_SAMPLES;
+          extensions.getPixelFormatAttribiv(dc,
+                                            pixelFormat,
+                                            0,
+                                            1,
+                                            &kSampleCountAttr,
+                                            &info->fSampleCount);
+
+                  return native_handle;
+        }
+        */
   }
 }

@@ -29,19 +29,11 @@
 #ifndef SKUI_GUI_WINDOW_H
 #define SKUI_GUI_WINDOW_H
 
-#include <core/string.h++>
-
 #include "icon.h++"
 #include "position.h++"
 #include "size.h++"
 
-#ifdef _WIN32
-#define WIN32_MEAN_AND_LEAN
-#include <windows.h>
-#undef WIN32_MEAN_AND_LEAN
-#else
-//TODO
-#endif
+#include <core/string.h++>
 
 namespace skui
 {
@@ -65,12 +57,7 @@ namespace skui
       void hide();
 
     private:
-#ifdef WIN32
-      HWND native_handle;
-      HWND initialize();
-#else
       void* native_handle;
-#endif
     };
   }
 }
