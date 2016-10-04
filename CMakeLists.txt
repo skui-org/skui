@@ -56,11 +56,16 @@ add_custom_target(miscellaneous SOURCES
     .travis.yml)
 
 # Skia and its dependencies
-add_subdirectory(3rdparty/skia)
+if(NOT SKIP_SKIA)
+  set(SKIA_STATIC TRUE)
+  add_subdirectory(3rdparty/skia)
+endif()
 
 # skui itself
 add_subdirectory(core)
-add_subdirectory(gui)
+if(NOT SKIP_SKIA)
+  add_subdirectory(gui)
+endif()
 
 # skui examples
 add_subdirectory(examples)

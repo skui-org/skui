@@ -10,4 +10,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-add_subdirectory(widget_gallery)
+if(NOT SKIP_SKIA)
+  add_subdirectory(widget_gallery)
+endif()

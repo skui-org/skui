@@ -43,7 +43,7 @@ namespace skui
       core::property<T> height;
     };
 
-    // pixel here means device independent pixel
+    // pixel here means "device independent pixel" aka scaled from 72dpi
     using pixel_t = std::size_t;
     using pixel_size = size<pixel_t>;
   }
