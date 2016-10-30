@@ -29,6 +29,7 @@ set(core_src
     property.h++
     signal.h++
     string.h++ string.c++
+    trackable.h++ trackable.c++
     value_ptr.h++
     )
 

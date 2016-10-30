@@ -52,6 +52,7 @@ function(compile_test component test_name)
 endfunction()
 
 runtime_test(core value_ptr)
+runtime_test(core trackable)
 runtime_test(core signal)
 runtime_test(core property)
 compile_test(core application)
