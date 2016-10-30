@@ -47,7 +47,7 @@ namespace skui
     {
       if(!passed)
       {
-        print_error(message...);
+        print_error(message..., '\n');
         std::exit(EXIT_FAILURE);
       }
     }
