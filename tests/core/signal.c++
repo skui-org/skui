@@ -30,32 +30,34 @@ namespace
 {
   using skui::test::assert;
 
-  namespace
+  bool free_slot_called = false;
+  void slot() { free_slot_called = true; }
+
+  bool overloaded_slot_called = false;
+  void slot(bool) { overloaded_slot_called = true; }
+
+  void test_signal_connect_emit()
   {
-    bool free_slot_called = false;
-    void slot() { free_slot_called = true; }
+    bool lambda_slot_called = false;
+    auto lambda_slot = [&lambda_slot_called]() { lambda_slot_called = true; };
 
-    bool overloaded_slot_called = false;
-    void slot(bool) { overloaded_slot_called = true; }
+    skui::core::signal<> signal;
+    signal.connect(static_cast<void(*)()>(slot));
+    signal.connect(lambda_slot);
 
-    void test_signal_connect_emit()
-    {
+    signal.emit();
+    assert(free_slot_called, "Free function slot called.");
+    assert(lambda_slot_called, "Lambda function slot called.");
+    assert(!overloaded_slot_called, "Overloaded slot not called.");
 
-      bool lambda_slot_called = false;
-      auto lambda_slot = [&lambda_slot_called]() { lambda_slot_called = true; };
+    skui::core::signal<bool> signal_bool;
+    signal_bool.connect(static_cast<void(*)(bool)>(slot));
+    signal_bool.emit(true);
 
-      skui::core::signal<> signal;
-      signal.connect(static_cast<void(*)()>(slot));
-      signal.connect(lambda_slot);
-
-      signal.emit();
-      assert(free_slot_called, "free function slot called.\n");
-      assert(lambda_slot_called, "lambda function slot called.\n");
-      assert(!overloaded_slot_called, "overloaded slot not called.\n");
-    }
+    assert(overloaded_slot_called, "Overloaded slot called.");
   }
 
-  void test_basic_operations()
+  void test_signal_copy_move()
   {
     bool slot_called = false;
     auto slot = [&slot_called]() { slot_called = true; };
@@ -85,7 +87,7 @@ namespace
 
     signal_two.emit();
 
-    assert(slot_called, "moved-to signal connected correclty.");
+    assert(slot_called, "Moved-to signal connected correclty.");
   }
 
   void test_signal_with_argument()
@@ -98,23 +100,22 @@ namespace
 
     signal.emit(true);
 
-    assert(slot_called, "Argument not passed through signal.");
+    assert(slot_called, "Argument passed through signal.");
   }
 
   void test_signal_disconnect()
   {
-    bool slot_called = false;
+    free_slot_called = false;
     bool other_slot_called = false;
-    auto slot = [&slot_called]() { slot_called = true; };
     auto other_slot = [&other_slot_called]() { other_slot_called = true; };
 
     skui::core::signal<> signal;
-    signal.connect(slot);
+    auto slot_connection = signal.connect(static_cast<void(*)()>(&slot));
     signal.connect(other_slot);
-    signal.disconnect(slot);
+    signal.disconnect(slot_connection);
 
     signal.emit();
-    skui::test::assert(!slot_called, "Slot disconnected.");
+    skui::test::assert(!free_slot_called, "Slot disconnected.");
     skui::test::assert(other_slot_called, "Other slot still connected.");
 
     signal.disconnect_all();
@@ -125,11 +126,11 @@ namespace
     skui::test::assert(!other_slot_called, "Disconnect all slots.");
   }
 
-  struct mock
+  struct mock : skui::core::trackable
   {
-    mock(){};
-    void f() const volatile { slot_called = true; };
-    void g(int);
+    mock() = default;
+    void f() const { slot_called = true; }
+    void g(int) const { slot_called = true; }
     mutable bool slot_called = false;
   };
 
@@ -139,12 +140,19 @@ namespace
     {
       skui::core::signal<> signal;
       signal.connect(&object, &mock::f);
-      signal.emit();
 
+      signal.emit();
       assert(object.slot_called, "member function slot called.");
+
+      skui::core::signal<int> signal_int;
+      signal_int.connect(&object, &mock::g);
+
+      object.slot_called = false;
+      signal_int.emit(0);
+      assert(object.slot_called, "member function with argument called");
     }
     {
-      const mock other_object;
+      mock other_object;
       skui::core::signal<> signal;
       signal.connect(&object, &mock::f);
       signal.connect(&other_object, &mock::f);
@@ -152,24 +160,30 @@ namespace
 
       signal.emit();
       assert(object.slot_called, "connected slot called");
-      assert(!other_object.slot_called, "disconnected slot called");
+      assert(!other_object.slot_called, "disconnected slot not called");
     }
-    {
-      const volatile mock cv_object;
-      skui::core::signal<> signal;
-      signal.connect(&cv_object, &mock::f);
+  }
 
-      signal.emit();
-      assert(cv_object.slot_called, "const volatile object connected");
-    }
+  void test_deleted_connected_object()
+  {
+    mock mock_object;
+    auto mock_ptr = std::make_unique<mock>();
+    skui::core::signal<> signal;
+    signal.connect(&mock_object, &mock::f);
+    signal.connect(mock_ptr.get(), &mock::f);
+
+    mock_ptr.reset();
+    signal.emit();
+    assert(mock_object.slot_called, "signal disconnects on object delete");
   }
 }
 
 int main()
 {
   test_signal_connect_emit();
-  test_basic_operations();
+  test_signal_copy_move();
   test_signal_with_argument();
   test_signal_disconnect();
   test_member_functions();
+  test_deleted_connected_object();
 }

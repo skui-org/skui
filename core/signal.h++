@@ -31,11 +31,16 @@
 #ifndef SKUI_CORE_SIGNAL_H
 #define SKUI_CORE_SIGNAL_H
 
+#include "slot.h++"
+#include "trackable.h++"
+#include "value_ptr.h++"
+
 #include <algorithm>
 #include <functional>
+#include <list>
+#include <memory>
 #include <mutex>
 #include <utility>
-#include <vector>
 
 namespace skui
 {
@@ -44,71 +49,117 @@ namespace skui
     namespace implementation
     {
       template<typename... ArgTypes>
-      class signal_base
+      class signal_base : public tracker
       {
       public:
         using function_type = void(*)(ArgTypes...);
-        using slot_type = std::function<void(ArgTypes...)>;
-        using object_slot_type = std::pair<const volatile void*, slot_type>;
+        using slot_type = slot<ArgTypes...>;
+        using object_slot_type = std::pair<const trackable*, value_ptr<slot_type>>;
+        using connection_type = typename std::list<object_slot_type>::const_iterator;
 
         signal_base() = default;
+        ~signal_base() { disconnect_all(); }
 
-        signal_base(const signal_base& other) : slots(other.slots) {}
+        signal_base(const signal_base& other)
+          : slots()
+        {
+          std::copy(other.slots.begin(), other.slots.end(), std::back_inserter(slots));
+        }
+
         signal_base(signal_base&& other) : slots(std::move(other.slots)) {}
         signal_base& operator=(signal_base other) { swap(slots, other.slots); return *this; }
 
-        void connect(slot_type&& slot)
+        virtual void trackable_deleted(const trackable* tracker) override
         {
-          const std::lock_guard<decltype(slots_mutex)> lock(slots_mutex);
-          slots.emplace_back(nullptr, slot);
+          disconnect(tracker);
         }
 
-        void disconnect(slot_type&& slot)
+        virtual void trackable_moved(const trackable* old_object, const trackable* new_object) override
         {
           const std::lock_guard<decltype(slots_mutex)> lock(slots_mutex);
-          auto function_pointer = slot.template target<function_type>();
-          slots.erase(std::remove_if(begin(slots), end(slots),
-                                     [&function_pointer](const object_slot_type& object_slot)
-                                     {
-                                       return function_pointer == object_slot.second.template target<function_type>();
-                                     }));
+          std::for_each(slots.begin(), slots.end(),
+                        [&old_object, &new_object](object_slot_type& object_slot)
+                        {
+                          if(object_slot.first == old_object)
+                            object_slot.first = new_object;
+                        });
         }
 
-        template<typename Class>
-        void connect(Class* object, void(Class::* slot)(ArgTypes...))
+        virtual void trackable_copied(const trackable* old_object, const trackable* new_object) override
         {
           const std::lock_guard<decltype(slots_mutex)> lock(slots_mutex);
+          std::for_each(slots.begin(), slots.end(),
+                        [&old_object, &new_object, this](const object_slot_type& object_slot)
+                        {
+                          if(object_slot.first == old_object)
+                            slots.push_back({new_object, object_slot.second}); //TODO
+                        });
 
-          slots.emplace_back(object, [object, slot](ArgTypes... args) { (object->*slot)(std::forward(args)...); } );
         }
 
-        template<typename Class>
-        void connect(const Class* object, void(Class::* slot)(ArgTypes...) const)
+        template<typename Callable>
+        connection_type connect(Callable&& callable)
         {
           const std::lock_guard<decltype(slots_mutex)> lock(slots_mutex);
-
-          slots.emplace_back(object, [object, slot](ArgTypes... args) { (object->*slot)(std::forward(args)...); } );
-        }
-
-        template<typename Class>
-        void connect(volatile Class* object, void(Class::* slot)(ArgTypes...) volatile)
-        {
-          const std::lock_guard<decltype(slots_mutex)> lock(slots_mutex);
-
-          slots.emplace_back(object, [object, slot](ArgTypes... args) { (object->*slot)(std::forward(args)...); } );
+          slots.emplace_back(nullptr, make_value<function_slot<Callable, ArgTypes...>>(callable));
+          return --slots.end();
         }
 
         template<typename Class>
-        void connect(const volatile Class* object, void(Class::* slot)(ArgTypes...) const volatile)
+        connection_type connect(Class* object, void(Class::* slot)(ArgTypes...))
         {
+          static_assert(std::is_base_of<trackable, Class>::value,
+                        "You can only connect to member functions of a trackable object.");
+
           const std::lock_guard<decltype(slots_mutex)> lock(slots_mutex);
 
-          slots.emplace_back(object, [object, slot](ArgTypes... args) { (object->*slot)(std::forward(args)...); } );
+          slots.emplace_back(object, make_value<member_function_slot<Class, ArgTypes...>>(object, slot));
+          object->track(this);
+
+          return --slots.end();
+        }
+
+        template<typename Class>
+        connection_type connect(const Class* object, void(Class::* slot)(ArgTypes...) const)
+        {
+          static_assert(std::is_base_of<trackable, Class>::value,
+                        "You can only connect to member functions of a trackable object");
+          const std::lock_guard<decltype(slots_mutex)> lock(slots_mutex);
+
+          object_slot_type object_slot(object, make_value<const_member_function_slot<Class, ArgTypes...>>(slot));
+          slots.emplace_back(std::move(object_slot));
+          object->track(this);
+
+          return --slots.end();
+        }
+
+        // connects first object like first object
+        void connect(trackable* /*first*/, trackable* /*second*/)
+        {
+          // trackable copy constructor makes second->track(this) unnecessary
+          const std::lock_guard<decltype(slots_mutex)> lock(slots_mutex);
+        }
+
+        // removes a previously made connection, handles lifetime tracking if it was the last connection to a specific object
+        void disconnect(connection_type connection)
+        {
+          const std::lock_guard<decltype(slots_mutex)> lock(slots_mutex);
+          const trackable* object = connection->first;
+
+          slots.erase(connection);
+          if(object && std::find_if(slots.begin(), slots.end(),
+                                   [&object](const object_slot_type& object_slot)
+                                   {
+                                     return object_slot.first == object;
+                                   }) == slots.end())
+            object->untrack(this);
         }
 
         // removes all connections to an object
-        void disconnect(const volatile void* object)
+        void disconnect(const trackable* object)
         {
+          const std::lock_guard<decltype(slots_mutex)> lock(slots_mutex);
+          object->untrack(this);
           slots.erase(std::remove_if(slots.begin(), slots.end(),
                                      [object](const object_slot_type& object_slot)
                                      {
@@ -119,12 +170,18 @@ namespace skui
         void disconnect_all()
         {
           const std::lock_guard<decltype(slots_mutex)> lock(slots_mutex);
+          for(object_slot_type& object_slot : slots)
+          {
+            auto trackable = object_slot.first;
+            if(trackable)
+              trackable->untrack(this);
+          }
           slots.clear();
         }
 
       protected:
         // mutable here allows to connect to a const object's signals
-        mutable std::vector<object_slot_type> slots;
+        mutable std::list<object_slot_type> slots;
         mutable std::mutex slots_mutex;
       };
     }
@@ -140,7 +197,7 @@ namespace skui
         std::lock_guard<decltype(this->slots_mutex)> lock(this->slots_mutex);
         for(auto&& object_slot : this->slots)
         {
-          object_slot.second(arguments...);
+          (*object_slot.second)(object_slot.first, arguments...);
         }
       }
     };
@@ -156,7 +213,7 @@ namespace skui
         std::lock_guard<decltype(this->slots_mutex)> lock(this->slots_mutex);
         for(auto&& object_slot : this->slots)
         {
-          object_slot.second();
+          (*object_slot.second)(object_slot.first);
         }
       }
     };
