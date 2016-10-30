@@ -51,6 +51,7 @@ function(compile_test component test_name)
   add_test(build/${component}/${test_name} ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target ${test_name})
 endfunction()
 
+runtime_test(core value_ptr)
 runtime_test(core signal)
 runtime_test(core property)
 compile_test(core application)
