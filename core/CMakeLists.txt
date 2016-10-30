@@ -24,20 +24,22 @@
 
 # Common source files
 set(core_src
+    application.h++ application.c++ application_windows.c++ application_unix.c++
     debug.h++
-    signal.h++
     property.h++
+    signal.h++
     string.h++ string.c++
-    application.h++ application.c++
     )
 
 # Platform-specific files
-if(WIN32)
-  set(core_src ${core_src}
-      application_windows.c++)
-elseif(UNIX)
-  set(core_src ${core_src}
-      application_unix.c++)
+if(NOT WIN32)
+  exclude_from_build(application_windows.c++)
+endif()
+if(NOT UNIX)
+  if(NOT APPLE)
+  else()
+    exclude_from_build(application_unix.c++)
+  endif()
 endif()
 
 # The library itself

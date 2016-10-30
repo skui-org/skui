@@ -46,6 +46,11 @@ elseif(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
   endif()
 endif()
 
+# Boilerplate
+function(exclude_from_build)
+  set_source_files_properties(${ARGV} PROPERTIES HEADER_FILE_ONLY TRUE)
+endfunction()
+
 # Miscellaneous files
 add_custom_target(miscellaneous SOURCES
     README.md

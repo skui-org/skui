@@ -24,23 +24,33 @@
 
 # Common source files
 set(gui_src
-    size.h++ position.h++
     icon.h++
-    window.h++ window.c++
-    )
-
-# Platform-specific files
-if(WIN32)
-  set(gui_src ${gui_src}
-      main_windows.c++
-      window_windows.c++
-      )
-elseif(UNIX)
-  set(gui_src ${gui_src}
-      window_unix.c++
-      )
-endif()
+    position.h++
+    size.h++
+    window.h++ window.c++ window_windows.c++ window_unix.c++
+   )
 
 # The library itself
 add_library(gui ${gui_src})
 target_link_libraries(gui PUBLIC core skia)
+
+# Platform specific libraries
+if(UNIX)
+  if(NOT APPLE)
+    target_link_libraries(gui PUBLIC xcb)
+  endif()
+endif()
+
+# Platform specific files
+if(NOT WIN32)
+  exclude_from_build(main_windows.c++
+                     window_windows.c++
+                    )
+endif()
+if(NOT UNIX)
+  if(NOT APPLE)
+  else()
+    exclude_from_build(window_x11.c++
+                      )
+  endif()
+endif()
