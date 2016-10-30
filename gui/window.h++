@@ -43,6 +43,7 @@ namespace skui
     {
     public:
       window(pixel_position position = {0, 0}, pixel_size initial_size = {800, 600});
+      virtual ~window();
 
       pixel_size size;
       pixel_size maximum_size;

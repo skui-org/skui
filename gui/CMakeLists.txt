@@ -27,7 +27,7 @@ set(gui_src
     icon.h++
     position.h++
     size.h++
-    window.h++ window.c++ window_windows.c++ window_unix.c++
+    window.h++ window.c++ window_windows.c++ window_x11.c++
    )
 
 # The library itself

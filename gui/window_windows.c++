@@ -102,7 +102,6 @@ namespace skui
       }
     }
 
-
     window::window(pixel_position position, pixel_size initial_size)
       : size{initial_size.width, initial_size.height}
       , maximum_size{}
@@ -111,6 +110,10 @@ namespace skui
       , icon{}
       , title{}
       , native_handle(initialize())
+    {
+    }
+
+    window::~window()
     {
     }
 
