@@ -30,13 +30,17 @@
 
 #include "trackable.h++"
 
+#include <vector>
+
 namespace skui
 {
   namespace core
   {
     trackable::~trackable()
     {
-      for(auto tracker : trackers)
+      // trackable_deleted will most likely erase elements in this->trackers, so iterate through a copy made up front.
+      const std::vector<implementation::tracker*> trackers_copy(trackers.begin(), trackers.end());
+      for(auto tracker : trackers_copy)
       {
         tracker->trackable_deleted(this);
       }

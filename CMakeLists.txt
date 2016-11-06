@@ -58,6 +58,7 @@ add_custom_target(miscellaneous SOURCES
     LICENSE
     .gitignore
     .gitmodules
+    appveyor.yml
     .travis.yml)
 
 # Skia and its dependencies

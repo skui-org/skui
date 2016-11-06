@@ -1,0 +1,35 @@
+environment:
+  matrix:
+  - config: Debug
+  - config: RelWithDebInfo
+
+shallow_clone: true
+
+# Operating system (build VM template)
+os: Visual Studio 2015
+
+# scripts that are called at very beginning, before repo cloning
+init:
+
+# clone directory
+clone_folder: c:\skui
+
+platform: x64
+
+install:
+  - set
+  - echo cmake on AppVeyor
+  - cmake -version
+  - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64
+
+build_script:
+  - cd c:\skui
+  - mkdir build
+  - cd build
+  - echo %config%
+  - cmake -LA -G "NMake Makefiles" -DSKIP_SKIA=TRUE -DCMAKE_BUILD_TYPE=%config%
+    ..
+  - nmake
+
+test_script:
+  - ctest --output-on-failure -C %config%

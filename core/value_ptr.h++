@@ -36,9 +36,9 @@
 #define SKUI_CORE_VALUE_PTR_H
 
 #include <memory>
+#include <tuple>
 #include <type_traits>
-#include <iostream>
-#include <memory>
+
 namespace skui
 {
   namespace core
