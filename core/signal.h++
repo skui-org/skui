@@ -93,7 +93,7 @@ namespace skui
                         [&old_object, &new_object, this](const object_slot_type& object_slot)
                         {
                           if(object_slot.first == old_object)
-                            slots.push_back({new_object, object_slot.second}); //TODO
+                            slots.push_back({new_object, object_slot.second});
                         });
 
         }
@@ -161,13 +161,13 @@ namespace skui
         {
           const std::lock_guard<decltype(slots_mutex)> lock(slots_mutex);
           object->untrack(this);
-          slots.erase(std::remove_if(slots.begin(), slots.end(),
-                                     [object](const object_slot_type& object_slot)
-                                     {
-                                       return object == object_slot.first;
-                                     }));
+          slots.remove_if([object](const object_slot_type& object_slot)
+                          {
+                            return object == object_slot.first;
+                          });
         }
 
+        // removes all connections
         void disconnect_all()
         {
           const std::lock_guard<decltype(slots_mutex)> lock(slots_mutex);
