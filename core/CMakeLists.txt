@@ -26,22 +26,23 @@
 set(core_src
     application.h++ application.c++ application_windows.c++ application_unix.c++
     debug.h++
+    library.h++ library.c++ library_windows.c++ library_unix.c++
     property.h++
     signal.h++
     slot.h++
     string.h++ string.c++
     trackable.h++ trackable.c++
+    utility.h++ utility.c++
     value_ptr.h++
     )
 
 # Platform-specific files
 if(NOT WIN32)
-  exclude_from_build(application_windows.c++)
+  exclude_from_build(application_windows.c++ library_windows.c++)
 endif()
 if(NOT UNIX)
+  exclude_from_build(library_unix.c++ application_unix.c++)
   if(NOT APPLE)
-  else()
-    exclude_from_build(application_unix.c++)
   endif()
 endif()
 
@@ -49,3 +50,4 @@ endif()
 add_library(core ${core_src})
 set_target_properties(core PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_SOURCE_DIR})
 target_compile_definitions(core PRIVATE $<$<CONFIG:Debug>:SKUI_DEBUG>)
+target_link_libraries(core PUBLIC $<$<NOT:$<PLATFORM_ID:Windows>>:-ldl>)
