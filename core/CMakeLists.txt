@@ -29,6 +29,7 @@ set(core_src
     library.h++ library.c++ library_windows.c++ library_unix.c++
     path.h++
     property.h++
+    proxy_property.h++
     signal.h++
     slot.h++
     string.h++ string.c++
