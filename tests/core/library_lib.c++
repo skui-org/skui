@@ -24,14 +24,20 @@
 
 #include "test.h++"
 
+#ifdef _WIN32
+#define EXPORT __declspec(dllexport)
+#else
+#define EXPORT
+#endif
+
 const char test_string[] = "test string";
 
-extern "C" const char* library_function()
+extern "C" EXPORT const char* library_function()
 {
   return test_string;
 }
 
-extern "C" int library_function_int(int i)
+extern "C" EXPORT int library_function_int(int i)
 {
   return i*i;
 }

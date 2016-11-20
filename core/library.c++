@@ -31,10 +31,10 @@ namespace skui
     namespace implementation
     {
       // these are defined in library_*.c++
-      void* load(const std::string& library);
+      void* load(const path& library);
       bool unload(void*);
     }
-    library::library(string filename)
+    library::library(path filename)
       : filename(filename)
     {}
 
@@ -43,7 +43,7 @@ namespace skui
       unload();
     }
 
-    bool library::load(string filename)
+    bool library::load(path filename)
     {
       if(this->filename == filename)
       {

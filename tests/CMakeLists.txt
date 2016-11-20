@@ -53,7 +53,8 @@ endfunction()
 
 function(compile_test_library component test_name)
   add_library(${test_name} SHARED EXCLUDE_FROM_ALL ${component}/${test_name}.c++ ${CMAKE_CURRENT_LIST_DIR}/test.h++)
-  set_target_properties(${test_name} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${component})
+  set_target_properties(${test_name} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${component}
+                                                RUNTIME_OUTPUT_DIRECTORY ${component})
   target_include_directories(${test_name} PUBLIC ${CMAKE_CURRENT_LIST_DIR} ${PROJECT_SOURCE_DIR})
   target_link_libraries(${test_name} ${component})
   add_test(remove/${component}/${test_name} ${CMAKE_COMMAND} -E remove ${component}/${test_name}${CMAKE_EXECUTABLE_SUFFIX})

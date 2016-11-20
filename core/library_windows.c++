@@ -24,12 +24,18 @@
 
 #include "library.h++"
 
+#include "path.h++"
 #include "utility.h++"
 
 #ifndef WINDOWS_LEAN_AND_MEAN
 #define WINDOWS_LEAN_AND_MEAN
 #endif
 #include <windows.h>
+
+#include <array>
+#include <experimental/filesystem>
+
+namespace fs = std::experimental::filesystem;
 
 namespace skui
 {
@@ -39,14 +45,18 @@ namespace skui
     {
       constexpr char dll_prefix[] = "lib";
       constexpr char dll_suffix[] = ".dll";
-      void* load(const string& filename)
+      void* load(const path& filename)
       {
-        std::array<string, 3> filenames{{filename,
-                                         filename + dll_suffix,
-                                         dll_prefix + filename + dll_suffix}};
+        path directory = fs::absolute(filename).remove_filename();
+        path filename_only = filename.filename();
+
+        std::array<path, 3> filenames{{directory / filename_only,
+                                       directory / filename_only + dll_suffix,
+                                       directory / dll_prefix + filename_only + dll_suffix}};
+
         for(const auto& filename : filenames)
         {
-          void* handle = LoadLibraryW(convert_to_utf16(filename).c_str());
+          void* handle = LoadLibraryW(filename.native().c_str());
           if(handle)
             return handle;
         }
@@ -55,7 +65,7 @@ namespace skui
 
       bool unload(void* handle)
       {
-        return FreeLibrary(static_cast<HMODULE>(handle));
+        return FreeLibrary(static_cast<HMODULE>(handle)) == 0;
       }
     }
 

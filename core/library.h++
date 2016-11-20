@@ -30,6 +30,7 @@
 #ifndef SKUI_CORE_LIBRARY_H
 #define SKUI_CORE_LIBRARY_H
 
+#include "path.h++"
 #include "string.h++"
 
 #include <functional>
@@ -42,10 +43,10 @@ namespace skui
     class library
     {
     public:
-      library(string filename);
+      library(path filename);
       ~library();
 
-      bool load(string filename = {});
+      bool load(path filename = {});
       bool unload();
 
       template<typename ReturnType, typename... ArgTypes>
@@ -60,8 +61,7 @@ namespace skui
 
       function_ptr resolve_symbol(const string& symbol_name);
 
-      string filename;
-      std::vector<string> search_directories;
+      path filename;
       void* native_handle;
     };
   }

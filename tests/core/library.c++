@@ -30,7 +30,7 @@ int main()
 {
   using skui::test::assert;
 
-  skui::core::library library("core/liblibrary_lib.so");
+  skui::core::library library("core/library_lib");
 
   assert(library.load(), "library loaded correctly");
 

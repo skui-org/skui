@@ -41,11 +41,14 @@ namespace skui
           ".so";
     #endif
       constexpr char so_prefix[] = "lib";
-      void* load(const string& filename)
+      void* load(const path& filename)
       {
-        std::array<std::string, 3> filenames{{filename,
-                                              filename + so_suffix,
-                                              so_prefix + filename + so_suffix}};
+        path directory = fs::absolute(filename).remove_filename();
+        path filename_only = filename.filename();
+
+        std::array<path, 3> filenames{{directory / filename_only,
+                                       directory / filename_only + so_suffix,
+                                       directory / so_prefix + filename + so_suffix}};
         for(const auto& filename : filenames)
         {
           void* handle = dlopen(filename.c_str(), RTLD_LAZY);
