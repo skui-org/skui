@@ -1,5 +1,5 @@
 sudo: required
-dist: trusty
+dist: precise
 
 language: c++
 
@@ -16,8 +16,10 @@ matrix:
       addons:
         apt:
           sources:
+            - kalakris-cmake
             - ubuntu-toolchain-r-test
           packages:
+            - cmake
             - g++-6
       env: C_COMPILER=gcc-6 CXX_COMPILER=g++-6
     - compiler: clang
@@ -25,12 +27,11 @@ matrix:
         apt:
           sources:
             - kalakris-cmake
-            - llvm-toolchain-trusty-3.8
           packages:
             - cmake
-            - clang-3.8
+            - clang-3.9
             - libc++-dev
             - libc++abi-dev
       env:
-       - C_COMPILER=clang-3.8
-       - CXX_COMPILER=clang++-3.8
+       - C_COMPILER=clang-3.9
+       - CXX_COMPILER=clang++-3.9

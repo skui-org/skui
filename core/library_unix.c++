@@ -27,6 +27,9 @@
 #include <dlfcn.h>
 
 #include <array>
+#include <experimental/filesystem>
+
+namespace fs = std::experimental::filesystem;
 
 namespace skui
 {
@@ -47,8 +50,8 @@ namespace skui
         path filename_only = filename.filename();
 
         std::array<path, 3> filenames{{directory / filename_only,
-                                       directory / filename_only + so_suffix,
-                                       directory / so_prefix + filename + so_suffix}};
+                                       directory / (filename_only + so_suffix),
+                                       directory / (so_prefix + filename_only + so_suffix)}};
         for(const auto& filename : filenames)
         {
           void* handle = dlopen(filename.c_str(), RTLD_LAZY);
