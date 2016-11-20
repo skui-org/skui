@@ -27,6 +27,7 @@ set(core_src
     application.h++ application.c++ application_windows.c++ application_unix.c++
     debug.h++
     library.h++ library.c++ library_windows.c++ library_unix.c++
+    path.h++
     property.h++
     signal.h++
     slot.h++
