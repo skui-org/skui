@@ -28,6 +28,9 @@
  * All this is needed so that a member_function_slot can keep a pointer to the address of the member function it wraps.
  */
 
+#ifndef SKUI_CORE_SLOT_H
+#define SKUI_CORE_SLOT_H
+
 #include <functional>
 #include <utility>
 
@@ -155,3 +158,5 @@ namespace skui
     }
   }
 }
+
+#endif
