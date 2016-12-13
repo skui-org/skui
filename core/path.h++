@@ -42,7 +42,8 @@ namespace skui
 {
   namespace core
   {
-    using path = std::experimental::filesystem::path;
+    namespace fs = std::experimental::filesystem;
+    using path = fs::path;
 
     inline path operator+(const path& left, const path& right)
     {
