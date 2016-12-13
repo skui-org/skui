@@ -54,7 +54,7 @@ namespace skui
       {
       public:
         using function_type = void(*)(ArgTypes...);
-        using slot_type = slot<ArgTypes...>;
+        using slot_type = slot<void, ArgTypes...>;
         using object_slot_type = std::pair<const trackable*, value_ptr<slot_type>>;
         using connection_type = typename std::list<object_slot_type>::const_iterator;
 
@@ -98,36 +98,36 @@ namespace skui
 
         }
 
-        template<typename Callable>
+        template<typename Callable, typename ReturnType = void>
         connection_type connect(Callable&& callable)
         {
           const std::lock_guard<decltype(slots_mutex)> lock(slots_mutex);
-          slots.emplace_back(nullptr, make_value<function_slot<Callable, ArgTypes...>>(callable));
+          slots.emplace_back(nullptr, make_value<function_slot<Callable, ReturnType, ArgTypes...>>(callable));
           return --slots.end();
         }
 
-        template<typename Class>
-        connection_type connect(Class* object, void(Class::* slot)(ArgTypes...))
+        template<typename Class, typename ReturnType>
+        connection_type connect(Class* object, ReturnType(Class::* slot)(ArgTypes...))
         {
           static_assert(std::is_base_of<trackable, Class>::value,
                         "You can only connect to member functions of a trackable object.");
 
           const std::lock_guard<decltype(slots_mutex)> lock(slots_mutex);
 
-          slots.emplace_back(object, make_value<member_function_slot<Class, ArgTypes...>>(object, slot));
+          slots.emplace_back(object, make_value<member_function_slot<Class, ReturnType, ArgTypes...>>(object, slot));
           object->track(this);
 
           return --slots.end();
         }
 
-        template<typename Class>
-        connection_type connect(const Class* object, void(Class::* slot)(ArgTypes...) const)
+        template<typename Class, typename ReturnType>
+        connection_type connect(const Class* object, ReturnType(Class::* slot)(ArgTypes...) const)
         {
           static_assert(std::is_base_of<trackable, Class>::value,
                         "You can only connect to member functions of a trackable object");
           const std::lock_guard<decltype(slots_mutex)> lock(slots_mutex);
 
-          object_slot_type object_slot(object, make_value<const_member_function_slot<Class, ArgTypes...>>(slot));
+          object_slot_type object_slot(object, make_value<const_member_function_slot<Class, ReturnType, ArgTypes...>>(slot));
           slots.emplace_back(std::move(object_slot));
           object->track(this);
 

@@ -40,56 +40,56 @@ namespace skui
   {
     namespace implementation
     {
-      template<typename... ArgTypes>
+      template<typename ReturnType, typename... ArgTypes>
       class slot
       {
       public:
         virtual ~slot() = default;
 
-        virtual void operator()(const void* object, ArgTypes...) const = 0;
+        virtual ReturnType operator()(const void* object, ArgTypes...) const = 0;
 
       protected:
         slot() = default;
       };
 
-      template<typename Callable, typename... ArgTypes>
-      class callable_slot : public slot<ArgTypes...>
+      template<typename Callable, typename ReturnType = void, typename... ArgTypes>
+      class callable_slot : public slot<ReturnType, ArgTypes...>
       {
       public:
         callable_slot(Callable function_pointer_or_lambda) : callable(function_pointer_or_lambda) {}
 
-        virtual void operator()(const void*, ArgTypes... args) const override { callable(args...); }
+        ReturnType operator()(const void*, ArgTypes... args) const override { return callable(args...); }
 
       private:
         Callable callable;
       };
 
-      template<typename Callable>
-      class callable_slot<Callable> : public slot<>
+      template<typename Callable, typename ReturnType>
+      class callable_slot<Callable, ReturnType> : public slot<ReturnType>
       {
       public:
         callable_slot(Callable function_pointer_or_lambda) : callable(function_pointer_or_lambda) {}
 
-        virtual void operator()(const void*) const override { callable(); }
+        ReturnType operator()(const void*) const override { return callable(); }
 
       private:
         Callable callable;
       };
 
-      template<typename Callable, typename... ArgTypes>
-      using function_slot = callable_slot<Callable, ArgTypes...>;
+      template<typename Callable, typename ReturnType, typename... ArgTypes>
+      using function_slot = callable_slot<Callable, ReturnType, ArgTypes...>;
 
-      template<typename Class, typename... ArgTypes>
-      class member_function_slot : public slot<ArgTypes...>
+      template<typename Class, typename ReturnType, typename... ArgTypes>
+      class member_function_slot : public slot<ReturnType, ArgTypes...>
       {
-        using member_function_pointer = void(Class::*)(ArgTypes...);
+        using member_function_pointer = ReturnType(Class::*)(ArgTypes...);
 
       public:
         member_function_slot(member_function_pointer member_function)
           : member_function_ptr(member_function)
         {}
 
-        void operator()(const void* object, ArgTypes... args) const override
+        ReturnType operator()(const void* object, ArgTypes... args) const override
         {
           return (const_cast<Class*>(static_cast<const Class*>(object))->*member_function_ptr)(args...);
         }
@@ -98,17 +98,17 @@ namespace skui
         member_function_pointer member_function_ptr;
       };
 
-      template<typename Class>
-      class member_function_slot<Class> : public slot<>
+      template<typename Class, typename ReturnType>
+      class member_function_slot<Class, ReturnType> : public slot<ReturnType>
       {
-        using member_function_pointer = void(Class::*)();
+        using member_function_pointer = ReturnType(Class::*)();
 
       public:
         member_function_slot(member_function_pointer member_function)
           : member_function_ptr(member_function)
         {}
 
-        virtual void operator()(const void* object) const override
+        virtual ReturnType operator()(const void* object) const override
         {
           // Slot objects are stored as pointers to const, but the original connection was to a non-const object and member function
           return (const_cast<Class*>(static_cast<const Class*>(object))->*member_function_ptr)();
@@ -118,17 +118,17 @@ namespace skui
         member_function_pointer member_function_ptr;
       };
 
-      template<typename Class, typename... ArgTypes>
-      class const_member_function_slot : public slot<ArgTypes...>
+      template<typename Class, typename ReturnType, typename... ArgTypes>
+      class const_member_function_slot : public slot<ReturnType, ArgTypes...>
       {
-        using const_member_function_pointer = void(Class::*)(ArgTypes...) const;
+        using const_member_function_pointer = ReturnType(Class::*)(ArgTypes...) const;
 
       public:
         const_member_function_slot(const_member_function_pointer const_member_function)
           : const_member_function_ptr(const_member_function)
         {}
 
-        virtual void operator()(const void* object, ArgTypes... args) const override
+        ReturnType operator()(const void* object, ArgTypes... args) const override
         {
           return (static_cast<const Class*>(object)->*const_member_function_ptr)(args...);
         }
@@ -137,17 +137,17 @@ namespace skui
         const_member_function_pointer const_member_function_ptr;
       };
 
-      template<typename Class>
-      class const_member_function_slot<Class> : public slot<>
+      template<typename Class, typename ReturnType>
+      class const_member_function_slot<Class, ReturnType> : public slot<ReturnType>
       {
-        using const_member_function_pointer = void(Class::*)() const;
+        using const_member_function_pointer = ReturnType(Class::*)() const;
 
       public:
         const_member_function_slot(const_member_function_pointer const_member_function)
           : const_member_function_ptr(const_member_function)
         {}
 
-        virtual void operator()(const void* object) const override
+        ReturnType operator()(const void* object) const override
         {
           return (static_cast<const Class*>(object)->*const_member_function_ptr)();
         }
