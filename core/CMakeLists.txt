@@ -28,6 +28,7 @@ set(core_src
     command.h++
     command_queue.h++ command_queue.c++
     debug.h++
+    event_loop.h++ event_loop.c++
     library.h++ library.c++ library_windows.c++ library_unix.c++
     path.h++
     property.h++
@@ -55,4 +56,5 @@ add_library(core ${core_src})
 set_target_properties(core PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_SOURCE_DIR})
 target_compile_definitions(core PRIVATE $<$<CONFIG:Debug>:SKUI_DEBUG>)
 target_link_libraries(core PUBLIC $<$<NOT:$<PLATFORM_ID:Windows>>:-ldl>)
+target_link_libraries(core PUBLIC $<$<PLATFORM_ID:UNIX>:-pthread>)
 target_link_libraries(core PUBLIC $<$<CXX_COMPILER_ID:GNU>:-lstdc++fs>)
