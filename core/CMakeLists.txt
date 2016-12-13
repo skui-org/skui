@@ -25,6 +25,7 @@
 # Common source files
 set(core_src
     application.h++ application.c++ application_windows.c++ application_unix.c++
+    command.h++
     debug.h++
     library.h++ library.c++ library_windows.c++ library_unix.c++
     path.h++
