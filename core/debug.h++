@@ -30,10 +30,6 @@
 #ifndef SKUI_CORE_DEBUG_H
 #define SKUI_CORE_DEBUG_H
 
-#ifndef SKUI_DEBUG
-#define print_debug()
-#else
-
 #include <iostream>
 
 #ifdef _WIN32
@@ -47,6 +43,11 @@ namespace skui
   namespace core
   {
     template<typename... ArgTypes>
+
+#ifndef SKUI_DEBUG
+    inline void debug_print(ArgTypes...)
+    {}
+#else
     inline void debug_print(ArgTypes... args)
     {
       // trick to expand variadic argument pack without recursion
@@ -62,13 +63,11 @@ namespace skui
    //   std::wstring stuff = convert_to_utf16(stream.str());
    //   WriteConsoleW(GetStdHandle(STD_OUTPUT_HANDLE), stuff.c_str(), static_cast<DWORD>(stuff.size()), nullptr, nullptr);
    // #else
-      (void)expand_variadic_pack{0, ((std::cout << args), void(), 0)... };
+      (void)expand_variadic_pack{0, ((std::cerr << args), void(), 0)... };
    // #endif
     }
-
+ #endif
   }
 }
-
-#endif
 
 #endif
