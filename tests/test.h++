@@ -42,13 +42,14 @@ namespace skui
       (void)expand_variadic_pack{0, ((std::cerr << args), void(), 0)... };
     }
 
+    static int exit_code = EXIT_SUCCESS;
     template<typename... ArgTypes>
     void assert(bool passed, ArgTypes... message)
     {
       if(!passed)
       {
         print_error(message..., '\n');
-        std::exit(EXIT_FAILURE);
+        exit_code = EXIT_FAILURE;
       }
     }
   }

@@ -88,4 +88,6 @@ int main()
 {
   test_callable_slot();
   test_member_slot();
+
+  return skui::test::exit_code;
 }

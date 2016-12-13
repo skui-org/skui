@@ -41,4 +41,6 @@ int main()
   auto func_arg = library.resolve<int, int>("library_function_int");
   assert(func_arg != nullptr, "function name with arg resolved");
   assert(func_arg(2) == 4, "function call returns correct value");
+
+  return skui::test::exit_code;
 }

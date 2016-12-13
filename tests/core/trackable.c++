@@ -90,4 +90,6 @@ int main()
   test_trackable_deleted();
   test_trackable_copy();
   test_trackable_move();
+
+  return skui::test::exit_code;
 }

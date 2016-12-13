@@ -106,5 +106,7 @@ int main()
   test_value_ptr_copy();
   test_value_ptr_move();
   test_value_ptr_make_value();
+
+  return skui::test::exit_code;
 }
 

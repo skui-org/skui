@@ -186,4 +186,6 @@ int main()
   test_signal_disconnect();
   test_member_functions();
   test_deleted_connected_object();
+
+  return skui::test::exit_code;
 }

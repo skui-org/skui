@@ -92,4 +92,6 @@ int main()
 {
   test_value_changed_signal();
   test_basic_operations();
+
+  return skui::test::exit_code;
 }

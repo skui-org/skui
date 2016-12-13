@@ -26,14 +26,23 @@
 
 #include "core/application.h++"
 
-int main(int argc, char* argv[])
+namespace
 {
-  using skui::core::application;
   using skui::test::assert;
 
-  const application app(argc, argv);
+  void test_arguments()
+  {
+    const auto& arguments = skui::core::application::instance().commandline_arguments;
 
-  const auto& arguments = skui::core::application::instance().arguments();
+    assert(arguments[0] == "skui is awesome", "arguments passed correctly.\n");
+  }
+}
 
-  assert(arguments[0] == "skui is awesome", "arguments passed correctly.\n");
+int main(int argc, char* argv[])
+{
+  const skui::core::application app(argc, argv);
+
+  test_arguments();
+
+  return skui::test::exit_code;
 }
