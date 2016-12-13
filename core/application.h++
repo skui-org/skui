@@ -44,7 +44,9 @@ namespace skui
     class application
     {
     public:
-      application(int argc, char* argv[]);
+      application(int argc, char* argv[], string name = "");
+
+      const std::vector<string> commandline_arguments;
 
       property<string> name;
 
@@ -58,7 +60,6 @@ namespace skui
       const std::vector<string>& arguments() const;
 
     private:
-      std::vector<string> commandline_arguments;
     };
   }
 }

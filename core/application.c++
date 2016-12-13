@@ -41,8 +41,9 @@ namespace skui
       application* instance = nullptr;
     }
 
-    application::application(int argc, char* argv[])
+    application::application(int argc, char* argv[], string name)
       : commandline_arguments{argv+1, argv+argc}
+      , name(std::move(name))
     {
       if(implementation::instance != nullptr)
       {
