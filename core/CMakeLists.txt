@@ -26,6 +26,7 @@
 set(core_src
     application.h++ application.c++ application_windows.c++ application_unix.c++
     command.h++
+    command_queue.h++ command_queue.c++
     debug.h++
     library.h++ library.c++ library_windows.c++ library_unix.c++
     path.h++
