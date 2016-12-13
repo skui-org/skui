@@ -6,7 +6,7 @@ language: c++
 script:
  - mkdir build
  - cd build
- - cmake .. -DSKIP_SKIA=TRUE -DCMAKE_C_COMPILER=$C_COMPILER -DCMAKE_CXX_COMPILER=$CXX_COMPILER
+ - cmake .. -DSKIP_SKIA=TRUE -DCLANG_USE_LIBSTDCXX=TRUE -DCMAKE_C_COMPILER=$C_COMPILER -DCMAKE_CXX_COMPILER=$CXX_COMPILER
  - make
  - ctest --output-on-failure
 
@@ -21,21 +21,42 @@ matrix:
           packages:
             - cmake
             - g++-6
-      env: C_COMPILER=gcc-6 CXX_COMPILER=g++-6
+      env:
+        - C_COMPILER=gcc-6
+        - CXX_COMPILER=g++-6
     - compiler: clang
       addons:
         apt:
           packages:
-            - cmake
             - clang-3.9
             - libc++-dev
             - libc++abi-dev
-          sources: &sources
-            - kalakris-cmake
+          sources:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise
             - sourceline: 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-3.9 main'
               key_url: 'http://apt.llvm.org/llvm-snapshot.gpg.key'
       env:
-       - C_COMPILER=clang-3.9
-       - CXX_COMPILER=clang++-3.9
+        - C_COMPILER=clang-3.9
+        - CXX_COMPILER=clang++-3.9
+      before_install:
+        - wget https://cmake.org/files/v3.7/cmake-3.7.1-Linux-x86_64.tar.gz
+        - tar -xf cmake-3.7.1-Linux-x86_64.tar.gz
+        - export PATH=$PWD/cmake-3.7.1-Linux-x86_64/bin:$PATH
+        - wget http://llvm.org/releases/3.9.0/libcxxabi-3.9.0.src.tar.xz
+        - tar -xf libcxxabi-3.9.0.src.tar.xz
+        - mkdir libcxxabi-build && cd libcxxabi-build
+        - cmake ../libcxxabi-3.9.0.src -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang-3.9 -DCMAKE_CXX_COMPILER=clang++-3.9 -DCMAKE_INSTALL_PREFIX=/usr
+        - make
+        - sudo make install
+        - sudo mkdir -p /usr/include/cxxabi
+        - cd ../libcxxabi-3.9.0.src && sudo cp -v -a include/ "/usr/include/cxxabi"
+        - sudo chmod -R o=g "/usr/include"
+        - cd ..
+        - wget http://llvm.org/releases/3.9.0/libcxx-3.9.0.src.tar.xz
+        - tar -xf libcxx-3.9.0.src.tar.xz
+        - mkdir libcxx-build && cd libcxx-build
+        - cmake ../libcxx-3.9.0.src -DCMAKE_BUILD_TYPE=Release -DLIBCXX_CXX_ABI=libcxxabi -DLIBCXX_CXX_ABI_INCLUDE_PATHS=/usr/include/cxxabi -DCMAKE_C_COMPILER=clang-3.9 -DCMAKE_CXX_COMPILER='clang++-3.9 -v' -DCMAKE_INSTALL_PREFIX=/usr
+        - make VERBOSE=1
+        - sudo make install
+        - sudo cp lib/libc++experimental.a /usr/lib/
