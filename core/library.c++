@@ -43,19 +43,19 @@ namespace skui
       unload();
     }
 
-    bool library::load(path filename)
+    bool library::load(path filename_to_load)
     {
-      if(this->filename == filename)
+      if(filename == filename_to_load)
       {
         if(native_handle)
           return true;
       }
       else
       {
-        if(!filename.empty())
-          this->filename = std::move(filename);
+        if(!filename_to_load.empty())
+          filename = std::move(filename_to_load);
       }
-      native_handle = implementation::load(this->filename.c_str());
+      native_handle = implementation::load(filename.c_str());
 
       return native_handle != nullptr;
     }

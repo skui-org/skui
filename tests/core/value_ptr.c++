@@ -73,7 +73,7 @@ namespace
     assert(base_ptr.get() != nullptr, "copied-from value_ptr is not nullptr");
     assert(base_ptr_copy.get() != nullptr, "copied-to value_ptr is not nullptr");
     assert(base_ptr_copy.get() != base_ptr.get(), "value_ptr copy constructor copies");
-    assert(dynamic_cast<Derived*>(base_ptr_copy.get()), "value_ptr copy constructor maintains dynamic type");
+    assert(dynamic_cast<Derived*>(base_ptr_copy.get()) != nullptr, "value_ptr copy constructor maintains dynamic type");
   }
 
   void test_value_ptr_move()
@@ -84,7 +84,7 @@ namespace
 
     assert(base_ptr.get() == nullptr, "moved-from value_ptr is nullptr");
     assert(base_ptr_move.get() != nullptr, "moved-to value_ptr is not nullptr");
-    assert(dynamic_cast<Derived*>(base_ptr_move.get()), "value_ptr move maintains dynamic type");
+    assert(dynamic_cast<Derived*>(base_ptr_move.get()) != nullptr, "value_ptr move maintains dynamic type");
   }
 
   void test_value_ptr_make_value()
@@ -93,9 +93,9 @@ namespace
     skui::core::value_ptr<Base> ptr_copy(ptr);
     skui::core::value_ptr<Base> ptr_copy2(ptr_copy);
 
-    assert(dynamic_cast<Derived*>(ptr.get()), "make_value maintains dynamic type");
-    assert(dynamic_cast<Derived*>(ptr_copy.get()), "copy of make_value maintains dynamic type");
-    assert(dynamic_cast<Derived*>(ptr_copy2.get()), "copy of of copy of make_value maintains dynamic type");
+    assert(dynamic_cast<Derived*>(ptr.get()) != nullptr, "make_value maintains dynamic type");
+    assert(dynamic_cast<Derived*>(ptr_copy.get()) != nullptr, "copy of make_value maintains dynamic type");
+    assert(dynamic_cast<Derived*>(ptr_copy2.get()) != nullptr, "copy of of copy of make_value maintains dynamic type");
   }
 }
 

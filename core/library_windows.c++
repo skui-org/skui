@@ -54,9 +54,9 @@ namespace skui
                                        directory / filename_only + dll_suffix,
                                        directory / dll_prefix + filename_only + dll_suffix}};
 
-        for(const auto& filename : filenames)
+        for(const auto& filepath : filenames)
         {
-          void* handle = LoadLibraryW(filename.native().c_str());
+          void* handle = LoadLibraryW(filepath.native().c_str());
           if(handle)
             return handle;
         }

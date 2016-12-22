@@ -69,9 +69,9 @@ namespace skui
         std::swap(other.set, set);
         std::swap(other.get, get);
 
-        value_type value = get();
-        if(value != other.get())
-          value_changed.emit(value);
+        value_type current_value = get();
+        if(current_value != other.get())
+          value_changed.emit(current_value);
 
         return *this;
       }
