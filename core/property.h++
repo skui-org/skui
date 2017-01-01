@@ -72,9 +72,7 @@ namespace skui
       signal<value_type> value_changed;
 
       private:
-        // to prevent a mutable reference being passed around, const operators need to modify the value
-        mutable value_type value;
-
+        value_type value;
     };
   }
 }
