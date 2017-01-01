@@ -43,11 +43,12 @@ namespace skui
 
       void push(command_queue::command_ptr&& command);
 
-      void stop();
+      void stop(int return_code = 0);
 
     private:
       command_queue queue;
       bool exit = false;
+      int exit_code = 0;
     };
   }
 }

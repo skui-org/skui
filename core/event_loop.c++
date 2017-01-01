@@ -46,7 +46,7 @@ namespace skui
           commands.pop();
         }
       }
-      return 0;
+      return exit_code;
     }
 
     void event_loop::push(command_queue::command_ptr&& command)
@@ -54,8 +54,9 @@ namespace skui
       queue.push(std::move(command));
     }
 
-    void event_loop::stop()
+    void event_loop::stop(int return_code)
     {
+      exit_code = return_code;
       queue.push(std::make_unique<command>([this]() { exit=true; }));
     }
   }
