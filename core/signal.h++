@@ -114,7 +114,7 @@ namespace skui
 
           const std::lock_guard<decltype(slots_mutex)> lock(slots_mutex);
 
-          slots.emplace_back(object, make_value<member_function_slot<Class, ReturnType, ArgTypes...>>(object, slot));
+          slots.emplace_back(object, make_value<member_function_slot<Class, ReturnType, ArgTypes...>>(slot));
           object->track(this);
 
           return --slots.end();
