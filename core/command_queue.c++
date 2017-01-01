@@ -35,6 +35,7 @@ namespace skui
       const std::lock_guard<decltype(queue_mutex)> lock(queue_mutex);
 
       queue.emplace(std::move(command));
+      condition_variable.notify_one();
     }
 
     void command_queue::wait()
