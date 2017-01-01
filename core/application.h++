@@ -25,14 +25,16 @@
 /*
  * Application
  * Basic application parameters and information.
- * Singleton
+ * Singleton. The one and only.
  */
 
 #ifndef SKUI_CORE_APPLICATION_H
 #define SKUI_CORE_APPLICATION_H
 
+#include "event_loop.h++"
 #include "property.h++"
 #include "string.h++"
+#include "trackable.h++"
 
 #include <cstdlib>
 #include <vector>
@@ -41,7 +43,7 @@ namespace skui
 {
   namespace core
   {
-    class application
+    class application : public trackable
     {
     public:
       application(int argc, char* argv[], string name = "");
@@ -52,14 +54,15 @@ namespace skui
 
       signal<> about_to_quit;
 
-      static const application& instance();
+      static application& instance();
 
-      int execute() const;
+      int execute();
+      void quit(int exit_code = EXIT_SUCCESS);
 
-      void quit(int exit_code = EXIT_SUCCESS) const;
       const std::vector<string>& arguments() const;
 
     private:
+      core::event_loop event_loop;
     };
   }
 }

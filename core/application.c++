@@ -53,7 +53,7 @@ namespace skui
       implementation::instance = this;
     }
 
-    const application& application::instance()
+    application& application::instance()
     {
       if(implementation::instance == nullptr)
       {
@@ -63,11 +63,17 @@ namespace skui
       return *implementation::instance;
     }
 
-    void application::quit(int exit_code) const
+    int application::execute()
+    {
+      return event_loop.execute();
+    }
+
+    void application::quit(int exit_code)
     {
       about_to_quit.emit();
-      std::exit(exit_code);
+      event_loop.stop(exit_code);
     }
+
     const std::vector<string>& application::arguments() const
     {
       return commandline_arguments;
