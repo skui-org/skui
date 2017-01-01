@@ -43,16 +43,5 @@ namespace skui
 {
   namespace core
   {
-    int application::execute() const
-    {
-      MSG message;
-      while(GetMessageW(&message, NULL, 0, 0) > 0)
-      {
-        TranslateMessage(&message);
-        DispatchMessageW(&message);
-      }
-
-      return EXIT_SUCCESS;
-    }
   }
 }

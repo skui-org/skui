@@ -32,9 +32,5 @@ namespace skui
 {
   namespace core
   {
-    int application::execute() const
-    {
-        return EXIT_SUCCESS;
-    }
   }
 }
