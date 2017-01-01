@@ -26,6 +26,8 @@
 
 #include "core/application.h++"
 
+#include <thread>
+
 namespace
 {
   using skui::test::assert;
@@ -36,6 +38,20 @@ namespace
 
     assert(arguments[0] == "skui is awesome", "arguments passed correctly.\n");
   }
+
+  void test_execute_and_quit()
+  {
+    auto app = &skui::core::application::instance();
+    constexpr int exit_code = 1;
+    int return_value = 0;
+    std::thread t([app, &return_value] { return_value = app->execute(); });
+
+    app->quit(exit_code);
+
+    t.join();
+
+    assert(return_value = exit_code, "application::execute returns exit code passed to quit().");
+  }
 }
 
 int main(int argc, char* argv[])
@@ -43,6 +59,7 @@ int main(int argc, char* argv[])
   const skui::core::application app(argc, argv);
 
   test_arguments();
+  test_execute_and_quit();
 
   return skui::test::exit_code;
 }
