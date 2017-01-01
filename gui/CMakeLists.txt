@@ -27,17 +27,19 @@ set(gui_src
     icon.h++
     position.h++
     size.h++
-    window.h++ window.c++ window_windows.c++ window_x11.c++
+    window.h++ window.c++ window_windows.c++ window_xcb.c++
    )
 
 # The library itself
 add_library(gui ${gui_src})
+target_compile_definitions(gui PRIVATE $<$<CONFIG:Debug>:SKUI_DEBUG>)
 target_link_libraries(gui PUBLIC core skia)
 
 # Platform specific libraries
 if(UNIX)
   if(NOT APPLE)
-    target_link_libraries(gui PUBLIC xcb)
+      find_package(X11 REQUIRED)
+      target_link_libraries(gui PUBLIC xcb X11-xcb X11 GL)
   endif()
 endif()
 

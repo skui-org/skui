@@ -33,18 +33,43 @@
 #include "position.h++"
 #include "size.h++"
 
+#include <core/bitflag.h++>
 #include <core/string.h++>
+#include <core/trackable.h++>
+
+#include <condition_variable>
+#include <thread>
+#include <vector>
 
 namespace skui
 {
   namespace gui
   {
-    class window
+    namespace implementation
+    {
+      class platform_handle;
+    }
+
+    enum class window_flags
+    {
+      exit_on_close, // Quit application when last window with this flag set closes
+    };
+
+    class window : public core::trackable
     {
     public:
-      window(pixel_position position = {0, 0}, pixel_size initial_size = {800, 600});
+      using window_list = std::vector<window*>;
+
+      window(pixel_position position = {0, 0}, pixel_size initial_size = {800, 600}, core::bitflag<window_flags> flags = window_flags::exit_on_close);
       virtual ~window();
 
+      void show();
+      void hide();
+      void close();
+
+      void draw();
+
+      // Properties
       pixel_size size;
       pixel_size maximum_size;
       pixel_size minimum_size;
@@ -54,11 +79,20 @@ namespace skui
       core::property<gui::icon> icon;
       core::property<core::string> title;
 
-      void show();
-      void hide();
+      // Signals
+      core::signal<> closed;
+      core::signal<> minimized;
 
     private:
-      void* native_handle;
+      const implementation::platform_handle* native_handle;
+      void initialize_and_execute_platform_loop();
+
+      static window_list& windows();
+
+      std::mutex handle_mutex;
+      std::condition_variable handle_condition_variable;
+      std::thread thread;
+      core::bitflag<window_flags> flags;
     };
   }
 }

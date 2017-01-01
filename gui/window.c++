@@ -24,9 +24,76 @@
 
 #include "window.h++"
 
+#include <core/application.h++>
+
+#include <memory>
+#include <vector>
+
+#include <GL/gl.h>
+#include <GL/glx.h>
+#include <GL/glu.h>
+
 namespace skui
 {
   namespace gui
   {
+    namespace implementation
+    {
+      // These are implemented in window_<platform>.c++
+      extern platform_handle* initialize_platform_window(const pixel_position& position, const pixel_size& size);
+
+      std::unique_ptr<window::window_list> list_of_windows;
+      window::window_list& windows()
+      {
+        list_of_windows = std::make_unique<window::window_list>();
+
+        return *list_of_windows;
+      }
+    }
+
+    window::window(pixel_position position, pixel_size initial_size, core::bitflag<window_flags> flags)
+      : trackable()
+      , size{initial_size.width, initial_size.height}
+      , maximum_size{}
+      , minimum_size{}
+      , position{position}
+      , icon{}
+      , title{}
+      , flags(flags)
+      , native_handle(nullptr)
+      , thread()
+    {
+      std::unique_lock<decltype(handle_mutex)> lock(handle_mutex);
+      std::thread t(&window::initialize_and_execute_platform_loop, this);
+      thread.swap(t);
+      handle_condition_variable.wait(lock, [this] { return native_handle != nullptr; });
+      implementation::windows().push_back(this);
+    }
+
+    void window::draw()
+    {
+      glClearColor(1.0, 1.0, 1.0, 1.0);
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+      glMatrixMode(GL_PROJECTION);
+      glLoadIdentity();
+      glOrtho(-1., 1., -1., 1., 1., 20.);
+
+      glMatrixMode(GL_MODELVIEW);
+      glLoadIdentity();
+      gluLookAt(0., 0., 10., 0., 0., 0., 0., 1., 0.);
+
+      glBegin(GL_QUADS);
+       glColor3f(1., 0., 0.); glVertex3f(-.75, -.75, 0.);
+       glColor3f(0., 1., 0.); glVertex3f( .75, -.75, 0.);
+       glColor3f(0., 0., 1.); glVertex3f( .75,  .75, 0.);
+       glColor3f(1., 1., 0.); glVertex3f(-.75,  .75, 0.);
+      glEnd();
+    }
+
+    window::window_list& window::windows()
+    {
+      return implementation::windows();
+    }
   }
 }
