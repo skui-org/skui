@@ -32,7 +32,8 @@ function(runtime_test component test_name)
   add_test(remove/${component}/${test_name} ${CMAKE_COMMAND} -E remove ${component}/${test_name}${CMAKE_EXECUTABLE_SUFFIX})
   add_test(build/${component}/${test_name} ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target ${test_name})
   add_test(NAME    run/${component}/${test_name}
-           COMMAND ${component}/${test_name}${CMAKE_EXECUTABLE_SUFFIX})
+           COMMAND ${component}/${test_name}${CMAKE_EXECUTABLE_SUFFIX}
+           TIMEOUT 10)
   set_tests_properties(run/${component}/${test_name} PROPERTIES DEPENDS build/${component}/${test_name})
   #TODO add intertest dependencies
   #BROKEN Each runtime_test is actually 3 tests, use below to make it one test
