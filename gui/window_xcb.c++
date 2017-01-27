@@ -186,9 +186,8 @@ namespace skui
 */
       XSetWindowAttributes window_attributes;
       window_attributes.colormap = XCreateColormap(handle->display.get(), root, handle->visual_info->visual, AllocNone);
-      window_attributes.event_mask =   ExposureMask      | StructureNotifyMask
+      window_attributes.event_mask =   ExposureMask      | PointerMotionMask
                                      | ButtonPressMask   | ButtonReleaseMask
-                                     | PointerMotionMask
                                      | EnterWindowMask   | LeaveWindowMask
                                      | KeyPressMask      | KeyReleaseMask;
 
@@ -207,12 +206,8 @@ namespace skui
       core::string name = core::application::instance().name;
       XStoreName(handle->display.get(), handle->id, name.c_str());
 
-      //xcb_map_window(handle->connection, handle->id);
-
       GLXContext glx_context = glXCreateContext(handle->display.get(), handle->visual_info.get(), nullptr, True);
       glXMakeCurrent(handle->display.get(), handle->id, glx_context);
-
-      glEnable(GL_DEPTH_TEST);
 
       // The magic incantation to receive and be able to check for the "window was closed" event
       //handle->wm_delete_window = XInternAtom(handle->display.get(), "WM_DELETE_WINDOW", False);
@@ -253,25 +248,40 @@ namespace skui
 
         switch(event_ptr->response_type & ~0x80)
         {
-          case XCB_CONFIGURE_NOTIFY:
-          {
-            auto configure = reinterpret_cast<xcb_configure_notify_event_t*>(event_ptr.get());
-
-            core::debug_print("Window ", configure->window, " configured. ");
-            size = { configure->width, configure->height };
-            position = { configure->x, configure->y };
-
-            core::debug_print("New window geometry: (", position.x, ", ", position.y, "): ", size.width, "x", size.height, ".\n");
-            break;
-          }
           case XCB_EXPOSE:
           {
             auto expose = reinterpret_cast<xcb_expose_event_t*>(event_ptr.get());
+            if(expose->count>0)
+              continue;
 
-            core::debug_print("Window ", expose->window, " exposed. "
-                              "Region to be redrawn at location (", expose->x, ", ", expose->y, "), with dimension (", expose->width, ", ", expose->height, ").\n");
+            core::debug_print("Window ", expose->window, " exposed.\n"
+                              " Region to be redrawn at location (", expose->x, ", ", expose->y, "), with dimension (", expose->width, ", ", expose->height, ").\n");
 
-            core::debug_print("render thread: ", std::this_thread::get_id());
+            // fetch true dimensions and position of visual window now because the ConfigureNotify event lies to us
+            xcb_get_geometry_reply_t *geom = xcb_get_geometry_reply (native_handle->connection,
+                                                                     xcb_get_geometry (native_handle->connection, native_handle->id),
+                                                                     nullptr );
+
+            xcb_query_tree_reply_t *tree = xcb_query_tree_reply (native_handle->connection,
+                                                                 xcb_query_tree (native_handle->connection, native_handle->id),
+                                                                 nullptr );
+
+            xcb_translate_coordinates_cookie_t translateCookie = xcb_translate_coordinates (native_handle->connection,
+                                                                                            native_handle->id,
+                                                                                            tree->parent,
+                                                                                            geom->x, geom->y );
+
+            xcb_translate_coordinates_reply_t *trans = xcb_translate_coordinates_reply (native_handle->connection,
+                                                                                        translateCookie,
+                                                                                        nullptr);
+
+            size = { geom->width, geom->height };
+            position = { trans->dst_x, trans->dst_y };
+
+            free(geom);
+            free(tree);
+            free(trans);
+
             glViewport(0, 0, static_cast<GLsizei>(size.width), static_cast<GLsizei>(size.height));
             draw();
             glXSwapBuffers(native_handle->display.get(), native_handle->id);
@@ -282,6 +292,7 @@ namespace skui
             auto unmap = reinterpret_cast<xcb_unmap_notify_event_t*>(event_ptr.get());
 
             core::debug_print("Window ", unmap->window, " unmapped.\n");
+            break;
           }
           case XCB_BUTTON_PRESS:
           {
