@@ -40,23 +40,23 @@ matrix:
         - C_COMPILER=clang-3.9
         - CXX_COMPILER=clang++-3.9
       before_install:
-        - wget https://cmake.org/files/v3.7/cmake-3.7.1-Linux-x86_64.tar.gz
-        - tar -xf cmake-3.7.1-Linux-x86_64.tar.gz
-        - export PATH=$PWD/cmake-3.7.1-Linux-x86_64/bin:$PATH
-        - wget http://llvm.org/releases/3.9.0/libcxxabi-3.9.0.src.tar.xz
-        - tar -xf libcxxabi-3.9.0.src.tar.xz
+        - wget https://cmake.org/files/v3.7/cmake-3.7.2-Linux-x86_64.tar.gz
+        - tar -xf cmake-3.7.2-Linux-x86_64.tar.gz
+        - export PATH=$PWD/cmake-3.7.2-Linux-x86_64/bin:$PATH
+        - wget http://llvm.org/releases/3.9.1/libcxxabi-3.9.1.src.tar.xz
+        - tar -xf libcxxabi-3.9.1.src.tar.xz
         - mkdir libcxxabi-build && cd libcxxabi-build
-        - cmake ../libcxxabi-3.9.0.src -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang-3.9 -DCMAKE_CXX_COMPILER=clang++-3.9 -DCMAKE_INSTALL_PREFIX=/usr
+        - cmake ../libcxxabi-3.9.1.src -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang-3.9 -DCMAKE_CXX_COMPILER=clang++-3.9 -DCMAKE_INSTALL_PREFIX=/usr
         - make
         - sudo make install
         - sudo mkdir -p /usr/include/cxxabi
-        - cd ../libcxxabi-3.9.0.src && sudo cp -v -a include/* "/usr/include/cxxabi"
+        - cd ../libcxxabi-3.9.1.src && sudo cp -v -a include/* "/usr/include/cxxabi"
         - sudo chmod -R o=g "/usr/include"
         - cd ..
-        - wget http://llvm.org/releases/3.9.0/libcxx-3.9.0.src.tar.xz
-        - tar -xf libcxx-3.9.0.src.tar.xz
+        - wget http://llvm.org/releases/3.9.1/libcxx-3.9.1.src.tar.xz
+        - tar -xf libcxx-3.9.1.src.tar.xz
         - mkdir libcxx-build && cd libcxx-build
-        - cmake ../libcxx-3.9.0.src -DCMAKE_BUILD_TYPE=Release -DLIBCXX_CXX_ABI=libcxxabi -DLIBCXX_CXX_ABI_INCLUDE_PATHS=/usr/include/cxxabi -DCMAKE_C_COMPILER=clang-3.9 -DCMAKE_CXX_COMPILER=clang++-3.9 -DCMAKE_INSTALL_PREFIX=/usr -DLIBCXX_INSTALL_EXPERIMENTAL_LIBRARY=TRUE -DLIBCXX_ENABLE_FILESYSTEM=TRUE
+        - cmake ../libcxx-3.9.1.src -DCMAKE_BUILD_TYPE=Release -DLIBCXX_CXX_ABI=libcxxabi -DLIBCXX_CXX_ABI_INCLUDE_PATHS=/usr/include/cxxabi -DCMAKE_C_COMPILER=clang-3.9 -DCMAKE_CXX_COMPILER=clang++-3.9 -DCMAKE_INSTALL_PREFIX=/usr -DLIBCXX_INSTALL_EXPERIMENTAL_LIBRARY=TRUE -DLIBCXX_ENABLE_FILESYSTEM=TRUE
         - make VERBOSE=1
         - sudo make install
         - cd ..
