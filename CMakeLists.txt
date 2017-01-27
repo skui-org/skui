@@ -31,6 +31,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # Compiler options
 if(CMAKE_COMPILER_IS_GNUCXX)
   set(CMAKE_CXX_FLAGS "-pedantic-errors -Wextra -Wconversion -Winit-self -Wmissing-include-dirs -Wstrict-aliasing -Werror ${CMAKE_CXX_FLAGS}")
+  set(CMAKE_LINK_FLAGS "-Wl,--gc-sections ${CMAKE_LINK_FLAGS}")
 elseif(MSVC)
   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
   string(REPLACE "/W3" "/W4" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
