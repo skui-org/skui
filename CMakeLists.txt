@@ -73,6 +73,7 @@ endif()
 # skui itself
 add_subdirectory(core)
 if(NOT SKIP_SKIA)
+  add_subdirectory(graphics)
   add_subdirectory(gui)
 endif()
 

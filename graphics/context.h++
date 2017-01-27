@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 Ruben Van Boxem
+ * Copyright (c) 2017 Ruben Van Boxem
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,29 +23,28 @@
  **/
 
 /*
- * Size
- * Width and height properties in one nice package
+ * Graphics context that takes care of initialization and cleanup.
  */
 
-#ifndef SKUI_GUI_SIZE_H
-#define SKUI_GUI_SIZE_H
+#ifndef SKUI_GRAPHICS_CONTEXT_H
+#define SKUI_GRAPHICS_CONTEXT_H
 
-#include <core/property.h++>
+#include "canvas.h++"
+#include "size.h++"
+
+#include <memory>
 
 namespace skui
 {
-  namespace gui
+  namespace graphics
   {
-    template<typename T>
-    struct size
+    class context
     {
-      core::property<T> width;
-      core::property<T> height;
-    };
+    public:
+      virtual ~context() = default;
 
-    // pixel here means "device independent pixel" aka scaled from 72dpi
-    using pixel_t = std::size_t;
-    using pixel_size = size<pixel_t>;
+      virtual std::unique_ptr<canvas> create_canvas(const pixel_size& size) const = 0;
+    };
   }
 }
 

@@ -23,33 +23,16 @@
 # THE SOFTWARE.
 
 # Common source files
-set(gui_src
-    icon.h++
-    window.h++ window.c++ window_windows.c++ window_xcb.c++
+set(graphics_src
+    canvas.h++ canvas.c++
+    context.h++ context.c++
+    pixel.h++
+    position.h++
+    size.h++
+    skia_canvas.h++ skia_canvas.c++
+    skia_context.h++ skia_context.c++
    )
 
 # The library itself
-add_library(gui ${gui_src})
-target_link_libraries(gui PUBLIC core graphics)
-
-# Platform specific libraries
-if(UNIX)
-  if(NOT APPLE)
-      find_package(X11 REQUIRED)
-      target_link_libraries(gui PUBLIC xcb X11-xcb X11 GL)
-  endif()
-endif()
-
-# Platform specific files
-if(NOT WIN32)
-  exclude_from_build(main_windows.c++
-                     window_windows.c++
-                    )
-endif()
-if(NOT UNIX)
-  if(NOT APPLE)
-  else()
-    exclude_from_build(window_x11.c++
-                      )
-  endif()
-endif()
+add_library(graphics ${graphics_src})
+target_link_libraries(graphics PUBLIC core skia)

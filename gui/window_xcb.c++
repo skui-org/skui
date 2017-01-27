@@ -33,8 +33,7 @@
 #include <core/application.h++>
 #include <core/debug.h++>
 
-#include <GrGLInterface.h>
-#include <GrContext.h>
+#include <graphics/skia_context.h++>
 
 #include <X11/X.h>
 #include <X11/Xlib.h>
@@ -229,17 +228,12 @@ namespace skui
 
       xcb_flush(handle->connection);
 
+      graphics_context = std::make_unique<graphics::skia_context>();
+
       // Ensure calling thread is waiting for draw_condition_variable
       std::unique_lock<decltype(handle_mutex)> handle_lock(handle_mutex);
       native_handle = handle.release();
       handle_condition_variable.notify_one();
-
-      // Skia setup
-      sk_sp<const GrGLInterface> interface(GrGLCreateNativeInterface());
-      sk_sp<const GrGLInterface> backend_context(GrGLInterfaceRemoveNVPR(interface.get()));
-      sk_sp<GrContext> context(GrContext::Create(kOpenGL_GrBackend, (GrBackendContext)backend_context.get()));
-      //GrPixelConfig pixel_config = context->caps()->srgbSupport() /*&& fDisplayParams.fColorSpace */&&
-      //               (fColorBits != 30) ? kSRGBA_8888_GrPixelConfig : kRGBA_8888_GrPixelConfig;
 
       // Continue calling thread before initiating event loop
       handle_lock.unlock();
@@ -369,6 +363,7 @@ namespace skui
           {
             core::debug_print("Destroy notify.\n");
             running = false;
+            graphics_context.reset();
             delete native_handle;
             native_handle = nullptr;
             break;
