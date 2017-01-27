@@ -32,8 +32,7 @@
 
 int main(int argc, char* argv[])
 {
-  skui::core::application app(argc, argv);
-  app.name = "Widget Gallery";
+  skui::core::application app(argc, argv, "Widget Gallery");
 
   skui::gui::window window;
   window.title = app.name;
