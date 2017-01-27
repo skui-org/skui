@@ -55,7 +55,7 @@ endif()
 # The library itself
 add_library(core ${core_src})
 set_target_properties(core PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_SOURCE_DIR})
-target_compile_definitions(core PRIVATE $<$<CONFIG:Debug>:SKUI_DEBUG>)
+target_compile_definitions(core PUBLIC $<$<CONFIG:Debug>:SKUI_DEBUG>)
 target_link_libraries(core PUBLIC $<$<NOT:$<PLATFORM_ID:Windows>>:-ldl>)
 target_link_libraries(core PUBLIC $<$<PLATFORM_ID:Linux>:-pthread>)
 target_link_libraries(core PUBLIC $<$<CXX_COMPILER_ID:GNU>:-lstdc++fs>)
