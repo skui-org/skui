@@ -42,17 +42,17 @@ namespace skui
     {
     public:
       constexpr bitflag() = default;
-      bitflag(Enum value) : bits(1UL << static_cast<std::size_t>(value)) {}
+      bitflag(Enum value) : bits(enum_to_bits(value)) {}
       bitflag(const bitflag& other) : bits(other.bits) {}
 
-      bitflag operator|(Enum value) const { bitflag result = *this; result.bits |= 1UL << static_cast<std::size_t>(value); return result; }
-      bitflag operator&(Enum value) const { bitflag result = *this; result.bits &= 1UL << static_cast<std::size_t>(value); return result; }
-      bitflag operator^(Enum value) const { bitflag result = *this; result.bits ^= 1UL << static_cast<std::size_t>(value); return result; }
+      bitflag operator|(Enum value) const { bitflag result = *this; result.bits |= enum_to_bits(value); return result; }
+      bitflag operator&(Enum value) const { bitflag result = *this; result.bits &= enum_to_bits(value); return result; }
+      bitflag operator^(Enum value) const { bitflag result = *this; result.bits ^= enum_to_bits(value); return result; }
       bitflag operator~() const { bitflag result = *this; result.bits.flip(); return result; }
 
-      bitflag& operator|=(Enum value) { bits |= 1UL << static_cast<std::size_t>(value); return *this; }
-      bitflag& operator&=(Enum value) { bits &= 1UL << static_cast<std::size_t>(value); return *this; }
-      bitflag& operator^=(Enum value) { bits ^= 1UL << static_cast<std::size_t>(value); return *this; }
+      bitflag& operator|=(Enum value) { bits |= enum_to_bits(value); return *this; }
+      bitflag& operator&=(Enum value) { bits &= enum_to_bits(value); return *this; }
+      bitflag& operator^=(Enum value) { bits ^= enum_to_bits(value); return *this; }
 
       bool any() const { return bits.any(); }
       bool all() const { return bits.all(); }
@@ -66,8 +66,8 @@ namespace skui
     private:
       std::bitset<number_of_bits> bits;
 
-      std::bitset<number_of_bits> enum_to_bits(Enum value) const
-      { return { 1UL << static_cast<std::size_t>(value) }; }
+      static std::bitset<number_of_bits> enum_to_bits(Enum value)
+      { return { 1ULL << static_cast<std::size_t>(value) }; }
     };
 
     namespace bitflag_operators
