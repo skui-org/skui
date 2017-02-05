@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  **/
 
-#include "utility.h++"
+#include "core/utility.h++"
 
 #ifdef _WIN32
 #include <stdexcept>

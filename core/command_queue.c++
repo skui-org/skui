@@ -22,9 +22,7 @@
  * THE SOFTWARE.
  **/
 
-#include "command_queue.h++"
-
-#include "debug.h++"
+#include "core/command_queue.h++"
 
 namespace skui
 {

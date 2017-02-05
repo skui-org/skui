@@ -31,9 +31,9 @@
 #ifndef SKUI_CORE_SIGNAL_H
 #define SKUI_CORE_SIGNAL_H
 
-#include "slot.h++"
-#include "trackable.h++"
-#include "value_ptr.h++"
+#include "core/slot.h++"
+#include "core/trackable.h++"
+#include "core/value_ptr.h++"
 
 #include <algorithm>
 #include <functional>

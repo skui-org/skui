@@ -26,7 +26,7 @@
  * Unix-specific implementation of application class.
  */
 
-#include "application.h++"
+#include "core/application.h++"
 
 namespace skui
 {

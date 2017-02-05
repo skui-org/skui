@@ -27,7 +27,7 @@
  * Common implementation.
  */
 
-#include "application.h++"
+#include "core/application.h++"
 
 #include <cstdlib>
 #include <iostream>

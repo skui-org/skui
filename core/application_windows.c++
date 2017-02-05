@@ -26,7 +26,7 @@
  * Win32-specific implementation of application class/
  */
 
-#include "application.h++"
+#include "core/application.h++"
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>

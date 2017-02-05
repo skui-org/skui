@@ -28,7 +28,7 @@
  * Only needed if e.g. a signal from outside the class connects to e.g. a member function.
  */
 
-#include "trackable.h++"
+#include "core/trackable.h++"
 
 #include <vector>
 

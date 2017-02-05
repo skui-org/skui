@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  **/
 
-#include "library.h++"
+#include "core/library.h++"
 
 #include <dlfcn.h>
 

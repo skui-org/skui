@@ -22,8 +22,7 @@
  * THE SOFTWARE.
  **/
 
-#include "event_loop.h++"
-#include "debug.h++"
+#include "core/event_loop.h++"
 
 #include <memory>
 

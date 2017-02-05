@@ -30,7 +30,7 @@
 #ifndef SKUI_CORE_EVENT_LOOP_H
 #define SKUI_CORE_EVENT_LOOP_H
 
-#include "command_queue.h++"
+#include "core/command_queue.h++"
 
 namespace skui
 {

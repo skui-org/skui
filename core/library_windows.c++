@@ -22,10 +22,10 @@
  * THE SOFTWARE.
  **/
 
-#include "library.h++"
+#include "core/library.h++"
 
-#include "path.h++"
-#include "utility.h++"
+#include "core/path.h++"
+#include "core/utility.h++"
 
 #ifndef WINDOWS_LEAN_AND_MEAN
 #define WINDOWS_LEAN_AND_MEAN
@@ -33,9 +33,6 @@
 #include <windows.h>
 
 #include <array>
-#include <experimental/filesystem>
-
-namespace fs = std::experimental::filesystem;
 
 namespace skui
 {

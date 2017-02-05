@@ -30,8 +30,8 @@
 #ifndef SKUI_CORE_LIBRARY_H
 #define SKUI_CORE_LIBRARY_H
 
-#include "path.h++"
-#include "string.h++"
+#include "core/path.h++"
+#include "core/string.h++"
 
 #include <functional>
 #include <vector>

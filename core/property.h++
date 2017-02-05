@@ -30,7 +30,7 @@
 #ifndef SKUI_CORE_PROPERTY_H
 #define SKUI_CORE_PROPERTY_H
 
-#include "signal.h++"
+#include "core/signal.h++"
 
 #include <type_traits>
 #include <utility>

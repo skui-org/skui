@@ -29,7 +29,7 @@
 #ifndef SKUI_CORE_COMMAND_QUEUE_H
 #define SKUI_CORE_COMMAND_QUEUE_H
 
-#include "command.h++"
+#include "core/command.h++"
 
 #include <condition_variable>
 #include <memory>

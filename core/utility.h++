@@ -30,7 +30,7 @@
 #ifndef SKUI_CORE_UTILITY_H
 #define SKUI_CORE_UTILITY_H
 
-#include "string.h++"
+#include "core/string.h++"
 
 namespace skui
 {

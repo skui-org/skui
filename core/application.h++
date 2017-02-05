@@ -31,10 +31,10 @@
 #ifndef SKUI_CORE_APPLICATION_H
 #define SKUI_CORE_APPLICATION_H
 
-#include "event_loop.h++"
-#include "property.h++"
-#include "string.h++"
-#include "trackable.h++"
+#include "core/event_loop.h++"
+#include "core/property.h++"
+#include "core/string.h++"
+#include "core/trackable.h++"
 
 #include <cstdlib>
 #include <vector>
