@@ -22,54 +22,23 @@
  * THE SOFTWARE.
  **/
 
-/*
- * Graphics canvas on which primitives can be drawn.
- */
-
-#ifndef SKUI_GRAPHICS_CANVAS_H
-#define SKUI_GRAPHICS_CANVAS_H
-
-#include "canvas.h++"
-
-#include "shape.h++"
-
-#include <core/bitflag.h++>
+#include "graphics/gradient/two_point_conical_gradient.h++"
 
 namespace skui
 {
   namespace graphics
   {
-    class rectangle;
-    class ellipse;
-    class label;
-    class path;
-
-    enum class canvas_flag
-    {
-      anti_alias
-    };
-    using canvas_flags = core::bitflag<canvas_flag>;
-
-    class  canvas
-    {
-    public:
-      virtual ~canvas() = default;
-
-      void draw();
-
-      // Primitives
-      virtual void draw(const color& background_color) = 0;
-      virtual void draw(const rectangle& rectangle) = 0;
-      virtual void draw(const ellipse& ellipse) = 0;
-      virtual void draw(const label& label) = 0;
-      virtual void draw(const path& path) = 0;
-
-    protected:
-      canvas(canvas_flags flags);
-
-      canvas_flags flags;
-    };
+    two_point_conical_gradient::two_point_conical_gradient(scalar_position start,
+                                                           scalar start_radius,
+                                                           scalar_position end,
+                                                           scalar end_radius,
+                                                           std::vector<color> colors)
+      : gradient(gradient_type::two_point_conical)
+      , start(start)
+      , start_radius(start_radius)
+      , end(end)
+      , end_radius(end_radius)
+      , colors(colors)
+    {}
   }
 }
-
-#endif

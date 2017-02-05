@@ -22,54 +22,15 @@
  * THE SOFTWARE.
  **/
 
-/*
- * Graphics canvas on which primitives can be drawn.
- */
-
-#ifndef SKUI_GRAPHICS_CANVAS_H
-#define SKUI_GRAPHICS_CANVAS_H
-
-#include "canvas.h++"
-
 #include "shape.h++"
-
-#include <core/bitflag.h++>
 
 namespace skui
 {
   namespace graphics
   {
-    class rectangle;
-    class ellipse;
-    class label;
-    class path;
-
-    enum class canvas_flag
-    {
-      anti_alias
-    };
-    using canvas_flags = core::bitflag<canvas_flag>;
-
-    class  canvas
-    {
-    public:
-      virtual ~canvas() = default;
-
-      void draw();
-
-      // Primitives
-      virtual void draw(const color& background_color) = 0;
-      virtual void draw(const rectangle& rectangle) = 0;
-      virtual void draw(const ellipse& ellipse) = 0;
-      virtual void draw(const label& label) = 0;
-      virtual void draw(const path& path) = 0;
-
-    protected:
-      canvas(canvas_flags flags);
-
-      canvas_flags flags;
-    };
+    shape::shape(scalar_position position)
+      : drawable()
+      , position(position)
+    {}
   }
 }
-
-#endif

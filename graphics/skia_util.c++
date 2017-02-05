@@ -22,54 +22,38 @@
  * THE SOFTWARE.
  **/
 
-/*
- * Graphics canvas on which primitives can be drawn.
- */
-
-#ifndef SKUI_GRAPHICS_CANVAS_H
-#define SKUI_GRAPHICS_CANVAS_H
-
-#include "canvas.h++"
-
-#include "shape.h++"
-
-#include <core/bitflag.h++>
+#include "graphics/skia_util.h++"
 
 namespace skui
 {
-  namespace graphics
-  {
-    class rectangle;
-    class ellipse;
-    class label;
-    class path;
-
-    enum class canvas_flag
+    namespace graphics
     {
-      anti_alias
-    };
-    using canvas_flags = core::bitflag<canvas_flag>;
+      SkPoint to_skia(const scalar_position& position)
+      {
+        return SkPoint::Make(position.x, position.y);
+      }
 
-    class  canvas
-    {
-    public:
-      virtual ~canvas() = default;
+      std::vector<SkPoint> to_skia(const std::vector<scalar_position>& positions)
+      {
+        std::vector<SkPoint> points;
+        points.reserve(positions.size());
+        std::transform(positions.begin(), positions.end(), std::back_inserter(points),
+                       [](const scalar_position& position) { return to_skia(position); });
+        return points;
+      }
 
-      void draw();
+      SkColor to_skia(const color& color)
+      {
+        return SkColorSetARGB(color.alpha, color.red, color.green, color.blue);
+      }
 
-      // Primitives
-      virtual void draw(const color& background_color) = 0;
-      virtual void draw(const rectangle& rectangle) = 0;
-      virtual void draw(const ellipse& ellipse) = 0;
-      virtual void draw(const label& label) = 0;
-      virtual void draw(const path& path) = 0;
-
-    protected:
-      canvas(canvas_flags flags);
-
-      canvas_flags flags;
-    };
+      std::vector<SkColor> to_skia(const std::vector<color>& colors)
+      {
+        std::vector<SkColor> skia_colors;
+        skia_colors.reserve(colors.size());
+        std::transform(colors.begin(), colors.end(), std::back_inserter(skia_colors),
+                       [](const color& color) { return to_skia(color); });
+        return skia_colors;
+      }
   }
 }
-
-#endif

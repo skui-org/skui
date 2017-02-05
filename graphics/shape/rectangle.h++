@@ -23,51 +23,31 @@
  **/
 
 /*
- * Graphics canvas on which primitives can be drawn.
+ * A rectangle shape.
  */
 
-#ifndef SKUI_GRAPHICS_CANVAS_H
-#define SKUI_GRAPHICS_CANVAS_H
+#ifndef SKUI_GRAPHICS_RECTANGLE_H
+#define SKUI_GRAPHICS_RECTANGLE_H
 
-#include "canvas.h++"
-
-#include "shape.h++"
-
-#include <core/bitflag.h++>
+#include "graphics/shape.h++"
+#include "graphics/size.h++"
+#include "graphics/position.h++"
 
 namespace skui
 {
   namespace graphics
   {
-    class rectangle;
-    class ellipse;
-    class label;
-    class path;
+    class canvas;
 
-    enum class canvas_flag
-    {
-      anti_alias
-    };
-    using canvas_flags = core::bitflag<canvas_flag>;
-
-    class  canvas
+    class rectangle : public shape
     {
     public:
-      virtual ~canvas() = default;
+      rectangle(scalar_size size,
+                scalar_position position = {0, 0});
 
-      void draw();
+      void draw(canvas& canvas) const override;
 
-      // Primitives
-      virtual void draw(const color& background_color) = 0;
-      virtual void draw(const rectangle& rectangle) = 0;
-      virtual void draw(const ellipse& ellipse) = 0;
-      virtual void draw(const label& label) = 0;
-      virtual void draw(const path& path) = 0;
-
-    protected:
-      canvas(canvas_flags flags);
-
-      canvas_flags flags;
+      scalar_size size;
     };
   }
 }

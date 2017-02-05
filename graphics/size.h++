@@ -47,6 +47,7 @@ namespace skui
 
     // pixel here means "device independent pixel" aka scaled from 72dpi
     using pixel_size = size<pixel>;
+    using scalar_size = size<float>;
   }
 }
 

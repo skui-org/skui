@@ -23,52 +23,33 @@
  **/
 
 /*
- * Graphics canvas on which primitives can be drawn.
+ * Skia conversion utilities.
  */
 
-#ifndef SKUI_GRAPHICS_CANVAS_H
-#define SKUI_GRAPHICS_CANVAS_H
+#ifndef SKUI_GRAPHICS_INSIDES
+#error "This header contains implementation details and can only be included when building SkUI."
+#endif
 
-#include "canvas.h++"
+#ifndef SKUI_GRAPHICS_SKIA_UTIL_H
+#define SKUI_GRAPHICS_SKIA_UTIL_H
 
-#include "shape.h++"
+#include "graphics/color.h++"
+#include "graphics/position.h++"
 
-#include <core/bitflag.h++>
+#include <SkColor.h>
+#include <SkPoint.h>
+
+#include <vector>
 
 namespace skui
 {
   namespace graphics
   {
-    class rectangle;
-    class ellipse;
-    class label;
-    class path;
+    SkPoint to_skia(const scalar_position& position);
+    std::vector<SkPoint> to_skia(const std::vector<scalar_position>& positions);
 
-    enum class canvas_flag
-    {
-      anti_alias
-    };
-    using canvas_flags = core::bitflag<canvas_flag>;
-
-    class  canvas
-    {
-    public:
-      virtual ~canvas() = default;
-
-      void draw();
-
-      // Primitives
-      virtual void draw(const color& background_color) = 0;
-      virtual void draw(const rectangle& rectangle) = 0;
-      virtual void draw(const ellipse& ellipse) = 0;
-      virtual void draw(const label& label) = 0;
-      virtual void draw(const path& path) = 0;
-
-    protected:
-      canvas(canvas_flags flags);
-
-      canvas_flags flags;
-    };
+    SkColor to_skia(const color& color);
+    std::vector<SkColor> to_skia(const std::vector<color>& colors);
   }
 }
 

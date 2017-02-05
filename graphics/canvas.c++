@@ -22,12 +22,41 @@
  * THE SOFTWARE.
  **/
 
-#include "canvas.h++"
+#include "graphics/canvas.h++"
 
-namespace skia
+#include "graphics/gradient/linear_gradient.h++"
+
+#include "graphics/shape/ellipse.h++"
+#include "graphics/shape/label.h++"
+#include "graphics/shape/rectangle.h++"
+
+namespace skui
 {
   namespace graphics
   {
+    void canvas::draw()
+    {
+      rectangle square({128, 128}, {10, 10});
+      square.fill.color = colors::red;
 
+      ellipse circle({64, 64}, {200, 200});
+      const std::vector<scalar_position> points{{0,0},{300,300}};
+      const std::vector<color> colors{colors::green, colors::black};
+      circle.fill.gradient = std::make_unique<linear_gradient>(points, colors);
+
+      label text_label("Hello Skui!", {300, 300});
+      text_label.fill.color = colors::black;
+
+      draw(colors::white);
+      draw(square);
+      draw(circle);
+      draw(text_label);
+    }
+
+    canvas::canvas(canvas_flags flags)
+      : flags(flags)
+    {
+
+    }
   }
 }

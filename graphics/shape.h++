@@ -23,51 +23,44 @@
  **/
 
 /*
- * Graphics canvas on which primitives can be drawn.
+ * Primitive shape base class.
  */
 
-#ifndef SKUI_GRAPHICS_CANVAS_H
-#define SKUI_GRAPHICS_CANVAS_H
+#ifndef SKUI_GRAPHICS_SHAPE_H
+#define SKUI_GRAPHICS_SHAPE_H
 
-#include "canvas.h++"
+#include "color.h++"
+#include "drawable.h++"
+#include "gradient.h++"
+#include "pixel.h++"
+#include "scalar.h++"
 
-#include "shape.h++"
-
-#include <core/bitflag.h++>
+#include <core/utility.h++>
 
 namespace skui
 {
   namespace graphics
   {
-    class rectangle;
-    class ellipse;
-    class label;
-    class path;
-
-    enum class canvas_flag
-    {
-      anti_alias
-    };
-    using canvas_flags = core::bitflag<canvas_flag>;
-
-    class  canvas
+    class shape : public drawable
     {
     public:
-      virtual ~canvas() = default;
+      shape(scalar_position position);
+      virtual ~shape() = default;
 
-      void draw();
+      struct
+      {
+        graphics::color color = colors::white;
+        std::unique_ptr<graphics::gradient> gradient;
+      } fill;
 
-      // Primitives
-      virtual void draw(const color& background_color) = 0;
-      virtual void draw(const rectangle& rectangle) = 0;
-      virtual void draw(const ellipse& ellipse) = 0;
-      virtual void draw(const label& label) = 0;
-      virtual void draw(const path& path) = 0;
+      struct
+      {
+        scalar thickness = 0;
+        scalar radius = 0;
+        graphics::color color = graphics::colors::black;
+      } border;
 
-    protected:
-      canvas(canvas_flags flags);
-
-      canvas_flags flags;
+      scalar_position position;
     };
   }
 }

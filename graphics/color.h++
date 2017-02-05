@@ -23,52 +23,52 @@
  **/
 
 /*
- * Graphics canvas on which primitives can be drawn.
+ * Color, stored as RGBA.
  */
 
-#ifndef SKUI_GRAPHICS_CANVAS_H
-#define SKUI_GRAPHICS_CANVAS_H
+#ifndef SKUI_GRAPHICS_COLOR_H
+#define SKUI_GRAPHICS_COLOR_H
 
-#include "canvas.h++"
+#include "color.h++"
+#include "pixel.h++"
 
-#include "shape.h++"
-
-#include <core/bitflag.h++>
+#include <core/property.h++>
+#include <core/trackable.h++>
+#include <core/utility.h++>
 
 namespace skui
 {
   namespace graphics
   {
-    class rectangle;
-    class ellipse;
-    class label;
-    class path;
-
-    enum class canvas_flag
-    {
-      anti_alias
-    };
-    using canvas_flags = core::bitflag<canvas_flag>;
-
-    class  canvas
+    class color
     {
     public:
-      virtual ~canvas() = default;
+      explicit constexpr color(std::uint8_t red,
+                               std::uint8_t green,
+                               std::uint8_t blue,
+                               std::uint8_t alpha = 1)
+        : alpha{alpha}
+        , red{red}
+        , green{green}
+        , blue{blue}
+      {}
 
-      void draw();
-
-      // Primitives
-      virtual void draw(const color& background_color) = 0;
-      virtual void draw(const rectangle& rectangle) = 0;
-      virtual void draw(const ellipse& ellipse) = 0;
-      virtual void draw(const label& label) = 0;
-      virtual void draw(const path& path) = 0;
-
-    protected:
-      canvas(canvas_flags flags);
-
-      canvas_flags flags;
+      std::uint8_t alpha;
+      std::uint8_t red;
+      std::uint8_t green;
+      std::uint8_t blue;
     };
+
+    namespace colors
+    {
+      static constexpr color transparent{0, 0, 0, 0};
+      static constexpr color white {255, 255, 255, 255};
+      static constexpr color black {0,   0,   0,   255};
+      static constexpr color red   {255, 0,   0,   255};
+      static constexpr color green {0,   255, 0,   255};
+      static constexpr color blue  {0,   0,   255, 255};
+      static constexpr color grey  {127, 127, 127, 255};
+    }
   }
 }
 

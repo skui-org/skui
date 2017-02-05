@@ -29,6 +29,8 @@
 #ifndef SKUI_GRAPHICS_SKIA_CANVAS_H
 #define SKUI_GRAPHICS_SKIA_CANVAS_H
 
+#include <core/debug.h++>
+
 #include "canvas.h++"
 
 #include "size.h++"
@@ -41,18 +43,54 @@ namespace skui
 {
   namespace graphics
   {
+    namespace implementation
+    {
+      void set_gradient(SkPaint& paint, const gradient& gradient);
+    }
     class skia_canvas : public canvas
     {
     public:
-      skia_canvas(const pixel_size& size, const GrGLInterface& gl_interface);
+      skia_canvas(const pixel_size& size,
+                  const GrGLInterface& gl_interface,
+                  canvas_flags flags);
       ~skia_canvas() override = default;
 
-      void draw() override;
+      void draw(const color& background_color) override;
+      void draw(const rectangle& rectangle) override;
+      void draw(const ellipse& ellipse) override;
+      void draw(const label& label) override;
+      void draw(const path& path) override;
 
     private:
+      template<typename Shape>
+      SkPaint paint(const Shape& shape);
+
       sk_sp<GrContext> gr_context;
       sk_sp<SkSurface> surface;
     };
+
+    template<typename Shape>
+    SkPaint skia_canvas::paint(const Shape& shape)
+    {
+      SkPaint paint;
+
+      paint.setARGB(shape.fill.color.alpha,
+                    shape.fill.color.red,
+                    shape.fill.color.green,
+                    shape.fill.color.blue);
+
+      if(shape.fill.gradient)
+      {
+        core::debug_print("Setting gradient");
+        implementation::set_gradient(paint, *shape.fill.gradient);
+      }
+
+      if(flags.test(canvas_flag::anti_alias))
+        paint.setAntiAlias(true);
+
+      return paint;
+    }
+
   }
 }
 

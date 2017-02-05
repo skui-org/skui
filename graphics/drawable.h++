@@ -23,51 +23,32 @@
  **/
 
 /*
- * Graphics canvas on which primitives can be drawn.
+ * Drawable object.
  */
 
-#ifndef SKUI_GRAPHICS_CANVAS_H
-#define SKUI_GRAPHICS_CANVAS_H
+#ifndef SKUI_GRAPHICS_DRAWABLE_H
+#define SKUI_GRAPHICS_DRAWABLE_H
 
-#include "canvas.h++"
+#include "graphics/position.h++"
 
-#include "shape.h++"
-
-#include <core/bitflag.h++>
+#include <core/signal.h++>
+#include <core/trackable.h++>
 
 namespace skui
 {
   namespace graphics
   {
-    class rectangle;
-    class ellipse;
-    class label;
-    class path;
+    class canvas;
 
-    enum class canvas_flag
-    {
-      anti_alias
-    };
-    using canvas_flags = core::bitflag<canvas_flag>;
-
-    class  canvas
+    class drawable : public core::trackable
     {
     public:
-      virtual ~canvas() = default;
+      drawable() = default;
+      virtual ~drawable() = default;
 
-      void draw();
+      virtual void draw(canvas& canvas) const = 0;
 
-      // Primitives
-      virtual void draw(const color& background_color) = 0;
-      virtual void draw(const rectangle& rectangle) = 0;
-      virtual void draw(const ellipse& ellipse) = 0;
-      virtual void draw(const label& label) = 0;
-      virtual void draw(const path& path) = 0;
-
-    protected:
-      canvas(canvas_flags flags);
-
-      canvas_flags flags;
+      core::signal<> invalidated;
     };
   }
 }

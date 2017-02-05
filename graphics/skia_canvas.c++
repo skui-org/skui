@@ -26,12 +26,25 @@
 
 #include <core/debug.h++>
 
+#include "graphics/gradient/linear_gradient.h++"
+#include "graphics/gradient/radial_gradient.h++"
+#include "graphics/gradient/sweep_gradient.h++"
+#include "graphics/gradient/two_point_conical_gradient.h++"
+
+#include "graphics/shape/ellipse.h++"
+#include "graphics/shape/label.h++"
+#include "graphics/shape/path.h++"
+#include "graphics/shape/rectangle.h++"
+
+#include "graphics/skia_util.h++"
+
 #include <GL/gl.h>
 
 #include <GrContext.h>
 #include <GrGLInterface.h>
 
 #include <SkCanvas.h>
+#include <SkColor.h>
 #include <SkGradientShader.h>
 
 namespace skui
@@ -66,13 +79,18 @@ namespace skui
         return SkSurface::MakeFromBackendRenderTarget(&gr_context, desc, &props);
       }
     }
-    skia_canvas::skia_canvas(const pixel_size& size, const GrGLInterface& gr_gl_interface)
-      : gr_context(GrContext::Create(kOpenGL_GrBackend, reinterpret_cast<GrBackendContext>(&gr_gl_interface)))
+
+    skia_canvas::skia_canvas(const pixel_size& size,
+                             const GrGLInterface& gr_gl_interface,
+                             canvas_flags flags)
+      : canvas(flags)
+      , gr_context(GrContext::Create(kOpenGL_GrBackend, reinterpret_cast<GrBackendContext>(&gr_gl_interface)))
       , surface(implementation::create_surface(size, gr_gl_interface, *gr_context))
     {
       SkASSERT(gr_context);
+      SkASSERT(surface);
     }
-
+/*
     void skia_canvas::draw()
     {
       auto canvas = surface->getCanvas();
@@ -130,6 +148,126 @@ namespace skui
       canvas->drawText(message, strlen(message), 0, 0, paint);
 
       canvas->restore();
+    }
+*/
+    void skia_canvas::draw(const color& background_color)
+    {
+      auto canvas = surface->getCanvas();
+
+      canvas->drawARGB(background_color.alpha,
+                       background_color.red,
+                       background_color.green,
+                       background_color.blue);
+    }
+
+    void skia_canvas::draw(const rectangle& rectangle)
+    {
+      auto canvas = surface->getCanvas();
+
+      canvas->drawRRect(SkRRect::MakeRectXY(SkRect::MakeXYWH(rectangle.position.x,
+                                                             rectangle.position.y,
+                                                             rectangle.size.width,
+                                                             rectangle.size.height),
+                                            rectangle.border.radius,
+                                            rectangle.border.radius),
+                        paint(rectangle));
+    }
+
+    void skia_canvas::draw(const ellipse& ellipse)
+    {
+      auto canvas = surface->getCanvas();
+      SkPaint p = paint(ellipse);
+      SkPoint linearPoints[] = {
+              {0, 0},
+              {300, 300}
+      };
+      SkColor linearColors[] = {SK_ColorGREEN, SK_ColorBLACK};
+
+      p.setShader(SkGradientShader::MakeLinear(linearPoints,
+                                               linearColors,
+                                               nullptr,
+                                               2,
+                                               SkShader::kMirror_TileMode));
+      p.setFlags(SkPaint::kAntiAlias_Flag);
+
+      canvas->drawOval(SkRect::MakeXYWH(ellipse.position.x,
+                                        ellipse.position.y,
+                                        ellipse.axes.height,
+                                        ellipse.axes.width),
+                       p);
+
+      // Detach shader
+      p.setShader(nullptr);
+    }
+
+    void skia_canvas::draw(const label& label)
+    {
+      auto canvas = surface->getCanvas();
+
+      canvas->drawText(label.text.c_str(), label.text.size(),
+                       label.position.x, label.position.y,
+                       paint(label));
+    }
+
+    void skia_canvas::draw(const path& path)
+    {
+      auto canvas = surface->getCanvas();
+
+      SkPath skia_path;
+
+      canvas->drawPath(skia_path,
+                       paint(path));
+
+    }
+
+    namespace implementation
+    {
+      void set_gradient(SkPaint& paint, const gradient& gradient)
+      {
+        switch(gradient.type)
+        {
+          case gradient_type::linear:
+          {
+            const auto& linear = static_cast<const linear_gradient&>(gradient);
+            paint.setShader(SkGradientShader::MakeLinear(to_skia(linear.points).data(),
+                                                         to_skia(linear.colors).data(),
+                                                         nullptr,
+                                                         static_cast<int>(linear.points.size()),
+                                                         SkShader::TileMode::kMirror_TileMode));
+          }
+          case gradient_type::radial:
+          {
+            const auto& radial = static_cast<const radial_gradient&>(gradient);
+            paint.setShader(SkGradientShader::MakeRadial(to_skia(radial.center),
+                                                         radial.radius,
+                                                         to_skia(radial.colors).data(),
+                                                         nullptr,
+                                                         static_cast<int>(radial.positions.size()),
+                                                         SkShader::TileMode::kMirror_TileMode));
+          }
+          case gradient_type::two_point_conical:
+          {
+            const auto& conical = static_cast<const two_point_conical_gradient&>(gradient);
+            paint.setShader(SkGradientShader::MakeTwoPointConical(to_skia(conical.start),
+                                                                  conical.start_radius,
+                                                                  to_skia(conical.end),
+                                                                  conical.end_radius,
+                                                                  to_skia(conical.colors).data(),
+                                                                  nullptr,
+                                                                  static_cast<int>(conical.colors.size()),
+                                                                  SkShader::TileMode::kMirror_TileMode));
+          }
+          case gradient_type::sweep:
+          {
+            const auto& sweep = static_cast<const sweep_gradient&>(gradient);
+            paint.setShader(SkGradientShader::MakeSweep(sweep.center.x,
+                                                        sweep.center.y,
+                                                        to_skia(sweep.colors).data(),
+                                                        nullptr,
+                                                        static_cast<int>(sweep.colors.size())));
+          }
+        }
+      }
     }
   }
 }

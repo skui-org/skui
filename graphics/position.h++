@@ -30,7 +30,7 @@
 #ifndef SKUI_GRAPHICS_POSITION_H
 #define SKUI_GRAPHICS_POSITION_H
 
-#include <core/property.h++>
+#include <cstdint>
 
 namespace skui
 {
@@ -39,12 +39,13 @@ namespace skui
     template<typename T>
     struct position2D
     {
-      core::property<T> x;
-      core::property<T> y;
+      T x;
+      T y;
     };
 
     // pixel here means device independent pixel
     using pixel_position = position2D<std::int32_t>;
+    using scalar_position = position2D<float>;
   }
 }
 
