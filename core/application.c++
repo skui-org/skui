@@ -38,7 +38,7 @@ namespace skui
   {
     namespace implementation
     {
-      application* instance = nullptr;
+      static application* instance = nullptr;
     }
 
     application::application(int argc, char* argv[], string name)
