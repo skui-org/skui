@@ -61,13 +61,16 @@ namespace skui
 
     namespace colors
     {
-      static constexpr color transparent{0, 0, 0, 0};
-      static constexpr color white {255, 255, 255, 255};
-      static constexpr color black {0,   0,   0,   255};
-      static constexpr color red   {255, 0,   0,   255};
-      static constexpr color green {0,   255, 0,   255};
-      static constexpr color blue  {0,   0,   255, 255};
-      static constexpr color grey  {127, 127, 127, 255};
+      static constexpr color transparent {0, 0, 0, 0};
+      static constexpr color white       {255, 255, 255, 255};
+      static constexpr color black       {0,   0,   0,   255};
+      static constexpr color red         {255, 0,   0,   255};
+      static constexpr color green       {0,   255, 0,   255};
+      static constexpr color blue        {0,   0,   255, 255};
+      static constexpr color grey        {127, 127, 127, 255};
+      static constexpr color cyan        {0,   255, 255, 255};
+      static constexpr color magenta     {255, 0,   255, 255};
+      static constexpr color yellow      {255, 255, 0,   255};
     }
   }
 }

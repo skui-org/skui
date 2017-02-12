@@ -57,7 +57,7 @@ namespace skui
       {
         scalar thickness = 0;
         scalar radius = 0;
-        graphics::color color = graphics::colors::black;
+        graphics::color color = graphics::colors::transparent;
       } border;
 
       scalar_position position;

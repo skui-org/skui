@@ -25,6 +25,7 @@
 #include "graphics/canvas.h++"
 
 #include "graphics/gradient/linear_gradient.h++"
+#include "graphics/gradient/sweep_gradient.h++"
 
 #include "graphics/shape/ellipse.h++"
 #include "graphics/shape/label.h++"
@@ -36,19 +37,29 @@ namespace skui
   {
     void canvas::draw()
     {
-      rectangle square({128, 128}, {10, 10});
+      rectangle square({140, 140}, {10, 10});
       square.fill.color = colors::red;
+      square.border.thickness = 20; // black by default
 
-      ellipse circle({64, 64}, {200, 200});
-      const std::vector<scalar_position> points{{0,0},{300,300}};
-      const std::vector<color> colors{colors::green, colors::black};
-      circle.fill.gradient = std::make_unique<linear_gradient>(points, colors);
+      rectangle marker({140,140}, {10.5,10.5});
+      marker.fill.color = colors::transparent;
+      marker.border.thickness = 1;
+      marker.border.color = colors::green;
+
+      ellipse circle({140, 140}, {150, 150});
+      const scalar_position center{220,220};
+      const std::vector<color> rainbow{colors::cyan,
+                                       colors::magenta,
+                                       colors::yellow,
+                                       colors::cyan};
+      circle.fill.gradient = std::make_unique<sweep_gradient>(center, rainbow);
 
       label text_label("Hello Skui!", {300, 300});
-      text_label.fill.color = colors::black;
+      text_label.fill.color = colors::white;
 
-      draw(colors::white);
+      draw(colors::black);
       draw(square);
+      draw(marker);
       draw(circle);
       draw(text_label);
     }

@@ -46,6 +46,7 @@ namespace skui
 
     enum class canvas_flag
     {
+      none,
       anti_alias
     };
     using canvas_flags = core::bitflag<canvas_flag>;
