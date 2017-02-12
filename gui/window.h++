@@ -56,6 +56,7 @@ namespace skui
     enum class window_flag
     {
       none,
+      opengl, // use OpenGL to render window content
       exit_on_close, // Quit application when last window with this flag set closes
     };
     using window_flags = core::bitflag<window_flag>;
@@ -94,6 +95,10 @@ namespace skui
     private:
       const implementation::platform_handle* native_handle;
       void initialize_and_execute_platform_loop();
+      void choose_visual(implementation::platform_handle& handle);
+      void setup_window(implementation::platform_handle& handle);
+      void setup_graphics_backend(implementation::platform_handle& handle);
+      void execute_event_loop();
 
       void set_title(const core::string& title);
       core::string get_title();

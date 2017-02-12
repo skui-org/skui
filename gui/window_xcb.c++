@@ -51,6 +51,7 @@ namespace skui
     {
       using xdisplay_ptr = std::unique_ptr<Display, decltype(&XCloseDisplay)>;
       using xvisualinfo_ptr = std::unique_ptr<XVisualInfo, decltype(&XFree)>;
+      using xstring_ptr = std::unique_ptr<char, decltype(&XFree)>;
       using xcb_intern_atom_reply_ptr = std::unique_ptr<xcb_intern_atom_reply_t, decltype(&free)>;
 
       class platform_handle
@@ -79,6 +80,25 @@ namespace skui
         GLXContext context;
         xcb_window_t id; // synonymous with Xlib's Window
       };
+
+      std::unique_ptr<platform_handle> create_handle()
+      {
+        auto handle = std::make_unique<implementation::platform_handle>();
+
+        // Open Display connection
+        handle->display.reset(XOpenDisplay(nullptr));
+        if(!handle->display)
+        {
+          core::debug_print("Call to XOpenDisplay failed.");
+          return nullptr;
+        }
+
+        // Handover to XCB for event handling
+        handle->connection = XGetXCBConnection(handle->display.get());
+        XSetEventQueueOwner(handle->display.get(), XCBOwnsEventQueue);
+
+        return handle;
+      }
 
       void print_modifiers(std::uint32_t mask)
       {
@@ -128,112 +148,93 @@ namespace skui
 
     void window::initialize_and_execute_platform_loop()
     {
-      auto handle = std::make_unique<implementation::platform_handle>();
+      auto handle_ptr = implementation::create_handle();
+      auto& handle = *handle_ptr;
 
-      // Open Display connection for GLX
-      handle->display.reset(XOpenDisplay(nullptr));
-      if(!handle->display)
-      {
-        core::debug_print("Call to XOpenDisplay failed.");
-        return;
-      }
+      choose_visual(handle);
 
-      // Handover to XCB for event handling
-      handle->connection = XGetXCBConnection(handle->display.get());
-      XSetEventQueueOwner(handle->display.get(), XCBOwnsEventQueue);
+      setup_window(handle);
 
-      Window root = DefaultRootWindow(handle->display.get());
-
-      const int default_screen = DefaultScreen(handle->display.get());
-      //xcb_screen_t* screen = xcb_setup_roots_iterator(xcb_get_setup(handle->connection)).data;
-
-      int attributes[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None };
-      handle->visual_info.reset(glXChooseVisual(handle->display.get(), default_screen, attributes));
-
-      if(!handle->visual_info)
-      {
-        core::debug_print("Call to glXChooseVisual failed.");
-        return;
-      }
-/* BROKEN
-      handle->id = xcb_generate_id(handle->connection);
-
-      xcb_colormap_t colormap = xcb_generate_id(handle->connection);
-      xcb_create_colormap(handle->connection,
-                          XCB_COLORMAP_ALLOC_NONE,
-                          colormap,
-                          screen->root,
-                          screen->root_visual);
-      std::uint32_t cw_mask = XCB_CW_EVENT_MASK | XCB_CW_COLORMAP;
-      std::uint32_t cw_values[]{  colormap,
-                                  XCB_EVENT_MASK_EXPOSURE       | XCB_EVENT_MASK_STRUCTURE_NOTIFY
-                                | XCB_EVENT_MASK_BUTTON_PRESS   | XCB_EVENT_MASK_BUTTON_RELEASE
-                                | XCB_EVENT_MASK_POINTER_MOTION
-                                | XCB_EVENT_MASK_ENTER_WINDOW   | XCB_EVENT_MASK_LEAVE_WINDOW
-                                | XCB_EVENT_MASK_KEY_PRESS      | XCB_EVENT_MASK_KEY_RELEASE };
-
-      xcb_create_window(handle->connection,
-                        static_cast<std::uint8_t>(handle->visual_info->depth), // depth
-                        handle->id,
-                        screen->root, // parent window
-                        static_cast<std::int16_t>(position.x), static_cast<std::int16_t>(position.y),
-                        static_cast<std::uint16_t>(size.width), static_cast<std::uint16_t>(size.width),
-                        0, // border width
-                        XCB_WINDOW_CLASS_INPUT_OUTPUT, // class
-                        static_cast<xcb_visualid_t>(handle->visual_info->visualid), // visual
-                        cw_mask,
-                        cw_values);
-*/
-      XSetWindowAttributes window_attributes;
-      window_attributes.colormap = XCreateColormap(handle->display.get(), root, handle->visual_info->visual, AllocNone);
-      window_attributes.event_mask =   ExposureMask      | PointerMotionMask
-                                     | ButtonPressMask   | ButtonReleaseMask
-                                     | EnterWindowMask   | LeaveWindowMask
-                                     | KeyPressMask      | KeyReleaseMask;
-
-      handle->id = static_cast<xcb_window_t>(XCreateWindow(handle->display.get(),
-                                            root,
-                                 static_cast<int>(position.x), static_cast<int>(position.y),
-                                 static_cast<unsigned int>(size.width), static_cast<unsigned int>(size.width),
-                                               0, // border width
-                                 handle->visual_info->depth,
-                                 InputOutput,
-                                 handle->visual_info->visual,
-                                 CWColormap | CWEventMask,
-                                 &window_attributes));
-
-      //XMapWindow(handle->display.get(), handle->id);
-      core::string name = core::application::instance().name;
-      XStoreName(handle->display.get(), handle->id, name.c_str());
-
-      GLXContext glx_context = glXCreateContext(handle->display.get(), handle->visual_info.get(), nullptr, True);
-      glXMakeCurrent(handle->display.get(), handle->id, glx_context);
-
-      // The magic incantation to receive and be able to check for the "window was closed" event
-      //handle->wm_delete_window = XInternAtom(handle->display.get(), "WM_DELETE_WINDOW", False);
-      //XSetWMProtocols(handle->display.get(), handle->id, &handle->wm_delete_window, 1);
-      xcb_intern_atom_cookie_t cookie = xcb_intern_atom(handle->connection, 1, 12, "WM_PROTOCOLS");
-      implementation::xcb_intern_atom_reply_ptr reply(xcb_intern_atom_reply(handle->connection, cookie, nullptr), &free);
-
-      xcb_intern_atom_cookie_t cookie2 = xcb_intern_atom(handle->connection, 0, 16, "WM_DELETE_WINDOW");
-      handle->wm_delete_window.reset(xcb_intern_atom_reply(handle->connection, cookie2, nullptr));
-
-      xcb_change_property(handle->connection, XCB_PROP_MODE_REPLACE, handle->id, reply->atom, 4, 32, 1, &handle->wm_delete_window->atom);
-      // end magic
-
-      xcb_flush(handle->connection);
+      setup_graphics_backend(handle);
 
       graphics_context = std::make_unique<graphics::skia_context>();
 
       // Ensure calling thread is waiting for draw_condition_variable
       std::unique_lock<decltype(handle_mutex)> handle_lock(handle_mutex);
-      native_handle = handle.release();
+      native_handle = handle_ptr.release();
       handle_condition_variable.notify_one();
 
       // Continue calling thread before initiating event loop
       handle_lock.unlock();
 
-      // Event loop
+      execute_event_loop();
+
+      graphics_context.reset();
+      delete native_handle;
+      native_handle = nullptr;
+
+      if(flags.test(window_flag::exit_on_close))
+        core::application::instance().quit();
+    }
+
+    void window::choose_visual(implementation::platform_handle& handle)
+    {
+      const int default_screen = DefaultScreen(handle.display.get());
+
+      int attributes[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None };
+      handle.visual_info.reset(glXChooseVisual(handle.display.get(), default_screen, attributes));
+
+      if(!handle.visual_info)
+      {
+        core::debug_print("Call to glXChooseVisual failed.");
+      }
+    }
+
+    void window::setup_window(implementation::platform_handle& handle)
+    {
+      Window root = DefaultRootWindow(handle.display.get());
+
+      XSetWindowAttributes window_attributes;
+      window_attributes.colormap = XCreateColormap(handle.display.get(), root, handle.visual_info->visual, AllocNone);
+      window_attributes.event_mask =   ExposureMask      | StructureNotifyMask | PointerMotionMask
+                                     | ButtonPressMask   | ButtonReleaseMask
+                                     | EnterWindowMask   | LeaveWindowMask
+                                     | KeyPressMask      | KeyReleaseMask;
+
+      handle.id = static_cast<xcb_window_t>(XCreateWindow(handle.display.get(),
+                                            root,
+                                            static_cast<int>(position.x), static_cast<int>(position.y),
+                                            static_cast<unsigned int>(size.width), static_cast<unsigned int>(size.width),
+                                            0, // border width
+                                            handle.visual_info->depth,
+                                            InputOutput,
+                                            handle.visual_info->visual,
+                                            CWColormap | CWEventMask,
+                                                          &window_attributes));
+
+      // The magic incantation to receive and be able to check for the "window was closed" event
+      //handle->wm_delete_window = XInternAtom(handle->display.get(), "WM_DELETE_WINDOW", False);
+      //XSetWMProtocols(handle->display.get(), handle->id, &handle->wm_delete_window, 1);
+      xcb_intern_atom_cookie_t cookie = xcb_intern_atom(handle.connection, 1, 12, "WM_PROTOCOLS");
+      implementation::xcb_intern_atom_reply_ptr reply(xcb_intern_atom_reply(handle.connection, cookie, nullptr), &free);
+
+      xcb_intern_atom_cookie_t cookie2 = xcb_intern_atom(handle.connection, 0, 16, "WM_DELETE_WINDOW");
+      handle.wm_delete_window.reset(xcb_intern_atom_reply(handle.connection, cookie2, nullptr));
+
+      xcb_change_property(handle.connection, XCB_PROP_MODE_REPLACE, handle.id, reply->atom, 4, 32, 1, &handle.wm_delete_window->atom);
+      // end magic
+
+      xcb_flush(handle.connection);
+    }
+
+    void window::setup_graphics_backend(implementation::platform_handle&handle)
+    {
+      handle.context = glXCreateContext(handle.display.get(), handle.visual_info.get(), nullptr, True);
+      glXMakeCurrent(handle.display.get(), handle.id, handle.context);
+    }
+
+    void window::execute_event_loop()
+    {
       bool running = true;
 
       while(running)
@@ -253,9 +254,6 @@ namespace skui
             auto expose = reinterpret_cast<xcb_expose_event_t*>(event_ptr.get());
             if(expose->count>0)
               continue;
-
-            core::debug_print("Window ", expose->window, " exposed.\n"
-                              " Region to be redrawn at location (", expose->x, ", ", expose->y, "), with dimension (", expose->width, ", ", expose->height, ").\n");
 
             // fetch true dimensions and position of visual window now because the ConfigureNotify event lies to us
             xcb_get_geometry_reply_t *geom = xcb_get_geometry_reply (native_handle->connection,
@@ -289,9 +287,7 @@ namespace skui
           }
           case XCB_UNMAP_NOTIFY:
           {
-            auto unmap = reinterpret_cast<xcb_unmap_notify_event_t*>(event_ptr.get());
-
-            core::debug_print("Window ", unmap->window, " unmapped.\n");
+            //auto unmap = reinterpret_cast<xcb_unmap_notify_event_t*>(event_ptr.get());
             break;
           }
           case XCB_BUTTON_PRESS:
@@ -302,10 +298,10 @@ namespace skui
             switch (button_press->detail)
             {
               case 4:
-                core::debug_print("Wheel Button up in window ", button_press->event, ", at coordinates (", button_press->event_x, ",", button_press->event_y, ").\n");
+                // Wheel button up
                 break;
               case 5:
-                core::debug_print("Wheel Button down in window ", button_press->event, ", at coordinates (", button_press->event_x, ",", button_press->event_y, ").\n");
+                // wheel button down
                 break;
               default:
                 core::debug_print("Button ", button_press->detail, " pressed in window ", button_press->event, ", at coordinates (", button_press->event_x, ",", button_press->event, ").\n");
@@ -315,47 +311,35 @@ namespace skui
           }
           case XCB_BUTTON_RELEASE:
           {
-            auto button_release = reinterpret_cast<xcb_button_release_event_t*>(event_ptr.get());
-            implementation::print_modifiers(button_release->state);
-
-            core::debug_print("Button ", button_release->detail, " released in window ", button_release->event, ", at coordinates (", button_release->event_x, ",", button_release->event_y, ").\n");
+            //auto button_release = reinterpret_cast<xcb_button_release_event_t*>(event_ptr.get());
+            //implementation::print_modifiers(button_release->state);
             break;
           }
           case XCB_MOTION_NOTIFY:
           {
-            auto motion = reinterpret_cast<xcb_motion_notify_event_t*>(event_ptr.get());
-
-            core::debug_print("Mouse moved in window ", motion->event, ", at coordinates (", motion->event_x, ",", motion->event_y, ").\n");
+            //auto motion = reinterpret_cast<xcb_motion_notify_event_t*>(event_ptr.get());
             break;
           }
           case XCB_ENTER_NOTIFY:
           {
-            auto enter = reinterpret_cast<xcb_enter_notify_event_t*>(event_ptr.get());
-
-            core::debug_print("Mouse entered window ", enter->event, ", at coordinates (", enter->event_x, ",", enter->event_y, ").\n");
+            //auto enter = reinterpret_cast<xcb_enter_notify_event_t*>(event_ptr.get());
             break;
           }
           case XCB_LEAVE_NOTIFY:
           {
-            auto leave = reinterpret_cast<xcb_leave_notify_event_t*>(event_ptr.get());
-
-            core::debug_print("Mouse left window ", leave->event, ", at coordinates (", leave->event_x, ",", leave->event_y, ").\n");
+            //auto leave = reinterpret_cast<xcb_leave_notify_event_t*>(event_ptr.get());
             break;
           }
           case XCB_KEY_PRESS:
           {
-            auto key_press = reinterpret_cast<xcb_key_press_event_t*>(event_ptr.get());
-            implementation::print_modifiers(key_press->state);
-
-            core::debug_print("Key pressed in window ", key_press->event, ".\n");
+            //auto key_press = reinterpret_cast<xcb_key_press_event_t*>(event_ptr.get());
+            //implementation::print_modifiers(key_press->state);
             break;
           }
           case XCB_KEY_RELEASE:
           {
-            auto key_release = reinterpret_cast<xcb_key_release_event_t*>(event_ptr.get());
-            implementation::print_modifiers(key_release->state);
-
-            core::debug_print("Key released in window ", key_release->event, ".\n");
+            //auto key_release = reinterpret_cast<xcb_key_release_event_t*>(event_ptr.get());
+            //implementation::print_modifiers(key_release->state);
             break;
           }
           case XCB_CLIENT_MESSAGE:
@@ -372,11 +356,7 @@ namespace skui
           }
           case XCB_DESTROY_NOTIFY:
           {
-            core::debug_print("Destroy notify.\n");
             running = false;
-            graphics_context.reset();
-            delete native_handle;
-            native_handle = nullptr;
             break;
           }
           default:
@@ -384,12 +364,23 @@ namespace skui
             break;
         }
       }
-      core::debug_print("Ending X event loop.\n");
-      if(flags.test(window_flags::exit_on_close))
-      {
-        core::debug_print("Exiting application after window close.\n");
-        core::application::instance().quit();
-      }
+    }
+
+    void window::set_title(const core::string& title)
+    {
+      XStoreName(native_handle->display.get(), native_handle->id, title.c_str());
+    }
+
+    core::string window::get_title()
+    {
+      char* result = nullptr;
+      XFetchName(native_handle->display.get(), native_handle->id, &result);
+      if(!result)
+        return {};
+
+      core::string title(result);
+      XFree(result);
+      return title;
     }
   }
 }
