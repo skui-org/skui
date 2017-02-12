@@ -59,10 +59,10 @@ namespace skui
         platform_handle()
           : display(nullptr, &XCloseDisplay)
           , connection(nullptr)
-          , id(0)
           , wm_delete_window(nullptr, &free)
           , visual_info(nullptr, &XFree)
           , context(nullptr)
+          , id(0)
         {}
 
         ~platform_handle()
