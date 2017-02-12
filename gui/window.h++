@@ -52,10 +52,13 @@ namespace skui
       class platform_handle;
     }
 
-    enum class window_flags
+    enum class window_flag
     {
+      none,
       exit_on_close, // Quit application when last window with this flag set closes
     };
+    using window_flags = core::bitflag<window_flag>;
+    using namespace core::bitflag_operators;
 
     class window : public core::trackable
     {
@@ -64,7 +67,7 @@ namespace skui
 
       window(graphics::pixel_position position = {0, 0},
              graphics::pixel_size initial_size = {800, 600},
-             core::bitflag<window_flags> flags = window_flags::exit_on_close);
+             window_flags flags = window_flag::exit_on_close | window_flag::opengl);
       virtual ~window();
 
       void show();
@@ -98,7 +101,7 @@ namespace skui
       std::mutex handle_mutex;
       std::condition_variable handle_condition_variable;
       std::thread thread;
-      core::bitflag<window_flags> flags;
+      window_flags flags;
     };
   }
 }

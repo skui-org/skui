@@ -54,7 +54,7 @@ namespace skui
 
     window::window(graphics::pixel_position position,
                    graphics::pixel_size initial_size,
-                   core::bitflag<window_flags> flags)
+                   window_flags flags)
       : trackable()
       , size{initial_size.width, initial_size.height}
       , maximum_size{}
