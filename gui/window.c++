@@ -61,7 +61,8 @@ namespace skui
       , minimum_size{}
       , position{position}
       , icon{}
-      , title{}
+      , title([this](const core::string& title) { set_title(title); },
+              [this] { return get_title(); })
       , native_handle(nullptr)
       , thread()
       , flags(flags)
@@ -71,6 +72,8 @@ namespace skui
       thread.swap(t);
       handle_condition_variable.wait(lock, [this] { return native_handle != nullptr; });
       implementation::windows().push_back(this);
+
+      title = core::application::instance().name;
     }
 
     void window::draw()

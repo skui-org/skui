@@ -32,6 +32,7 @@
 #include "icon.h++"
 
 #include <core/bitflag.h++>
+#include <core/proxy_property.h++>
 #include <core/string.h++>
 #include <core/trackable.h++>
 
@@ -84,7 +85,7 @@ namespace skui
       graphics::pixel_position position;
 
       core::property<gui::icon> icon;
-      core::property<core::string> title;
+      core::proxy_property<core::string> title;
 
       // Signals
       core::signal<> closed;
@@ -93,6 +94,9 @@ namespace skui
     private:
       const implementation::platform_handle* native_handle;
       void initialize_and_execute_platform_loop();
+
+      void set_title(const core::string& title);
+      core::string get_title();
 
       static window_list& windows();
 
