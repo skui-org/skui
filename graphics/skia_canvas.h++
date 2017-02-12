@@ -39,6 +39,8 @@
 
 #include <SkSurface.h>
 
+#include <vector>
+
 namespace skui
 {
   namespace graphics
@@ -62,35 +64,15 @@ namespace skui
       void draw(const path& path) override;
 
     private:
-      template<typename Shape>
-      SkPaint paint(const Shape& shape);
+      std::vector<SkPaint> make_paint(const shape& shape) const;
+      SkPaint make_border_paint(const shape& shape) const;
+      SkPaint make_fill_paint(const shape& shape) const;
+      void set_gradient(SkPaint& paint, const gradient& gradient) const;
+
 
       sk_sp<GrContext> gr_context;
       sk_sp<SkSurface> surface;
     };
-
-    template<typename Shape>
-    SkPaint skia_canvas::paint(const Shape& shape)
-    {
-      SkPaint paint;
-
-      paint.setARGB(shape.fill.color.alpha,
-                    shape.fill.color.red,
-                    shape.fill.color.green,
-                    shape.fill.color.blue);
-
-      if(shape.fill.gradient)
-      {
-        core::debug_print("Setting gradient");
-        implementation::set_gradient(paint, *shape.fill.gradient);
-      }
-
-      if(flags.test(canvas_flag::anti_alias))
-        paint.setAntiAlias(true);
-
-      return paint;
-    }
-
   }
 }
 

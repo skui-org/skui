@@ -69,7 +69,6 @@ namespace skui
         GrGLint buffer;
         gl_interface.fFunctions.fGetIntegerv(GL_FRAMEBUFFER_BINDING, &buffer);
         desc.fRenderTargetHandle = buffer;
-        core::debug_print("buffer: ", buffer, '\n');
 
         // setup SkSurface
         // To use distance field text, use commented out SkSurfaceProps instead
@@ -90,66 +89,7 @@ namespace skui
       SkASSERT(gr_context);
       SkASSERT(surface);
     }
-/*
-    void skia_canvas::draw()
-    {
-      auto canvas = surface->getCanvas();
 
-      // Clear background
-      canvas->drawColor(SK_ColorWHITE);
-
-      SkPaint paint;
-      paint.setColor(SK_ColorRED);
-
-      // Draw a rectangle with red paint
-      SkRect rect = SkRect::MakeXYWH(10, 10, 128, 128);
-      canvas->drawRect(rect, paint);
-
-      // Set up a linear gradient and draw a circle
-      {
-          SkPoint linearPoints[] = {
-                  {0, 0},
-                  {300, 300}
-          };
-          SkColor linearColors[] = {SK_ColorGREEN, SK_ColorBLACK};
-
-          paint.setShader(SkGradientShader::MakeLinear(
-                  linearPoints, linearColors, nullptr, 2,
-                  SkShader::kMirror_TileMode));
-          paint.setFlags(SkPaint::kAntiAlias_Flag);
-
-          canvas->drawCircle(200, 200, 64, paint);
-
-          // Detach shader
-          paint.setShader(nullptr);
-      }
-
-      // Draw a message with a nice black paint.
-      paint.setFlags(
-              SkPaint::kAntiAlias_Flag |
-              SkPaint::kSubpixelText_Flag |  // ... avoid waggly text when rotating.
-              SkPaint::kUnderlineText_Flag);
-      paint.setColor(SK_ColorBLACK);
-      paint.setTextSize(20);
-
-      canvas->save();
-
-      static const char message[] = "Hello World";
-
-      // Translate and rotate
-      canvas->translate(300, 300);
-      SkScalar fRotationAngle = -40.f;
-      if (fRotationAngle > 360) {
-          fRotationAngle -= 360;
-      }
-      canvas->rotate(fRotationAngle);
-
-      // Draw the text:
-      canvas->drawText(message, strlen(message), 0, 0, paint);
-
-      canvas->restore();
-    }
-*/
     void skia_canvas::draw(const color& background_color)
     {
       auto canvas = surface->getCanvas();
@@ -162,51 +102,45 @@ namespace skui
 
     void skia_canvas::draw(const rectangle& rectangle)
     {
+
       auto canvas = surface->getCanvas();
 
-      canvas->drawRRect(SkRRect::MakeRectXY(SkRect::MakeXYWH(rectangle.position.x,
-                                                             rectangle.position.y,
-                                                             rectangle.size.width,
-                                                             rectangle.size.height),
-                                            rectangle.border.radius,
-                                            rectangle.border.radius),
-                        paint(rectangle));
+      const auto rect = SkRect::MakeXYWH(rectangle.position.x,
+                                         rectangle.position.y,
+                                         rectangle.size.width,
+                                         rectangle.size.height);
+      const auto rounded_rect = SkRRect::MakeRectXY(rect,
+                                                    rectangle.border.radius,
+                                                    rectangle.border.radius);
+      SkPath border;
+      border.addRoundRect(rect, rectangle.border.radius, rectangle.border.radius);
+
+      canvas->drawRRect(rounded_rect, make_fill_paint(rectangle));
+      canvas->drawRRect(rounded_rect, make_border_paint(rectangle));
     }
 
     void skia_canvas::draw(const ellipse& ellipse)
     {
       auto canvas = surface->getCanvas();
-      SkPaint p = paint(ellipse);
-      SkPoint linearPoints[] = {
-              {0, 0},
-              {300, 300}
-      };
-      SkColor linearColors[] = {SK_ColorGREEN, SK_ColorBLACK};
 
-      p.setShader(SkGradientShader::MakeLinear(linearPoints,
-                                               linearColors,
-                                               nullptr,
-                                               2,
-                                               SkShader::kMirror_TileMode));
-      p.setFlags(SkPaint::kAntiAlias_Flag);
-
-      canvas->drawOval(SkRect::MakeXYWH(ellipse.position.x,
-                                        ellipse.position.y,
-                                        ellipse.axes.height,
-                                        ellipse.axes.width),
-                       p);
-
-      // Detach shader
-      p.setShader(nullptr);
+      for(const auto& paint : make_paint(ellipse))
+      {
+        canvas->drawOval(SkRect::MakeXYWH(ellipse.position.x, ellipse.position.y,
+                                          ellipse.axes.height, ellipse.axes.width),
+                         paint);
+      }
     }
 
     void skia_canvas::draw(const label& label)
     {
-      auto canvas = surface->getCanvas();
+      auto canvas = surface->getCanvas();;
 
-      canvas->drawText(label.text.c_str(), label.text.size(),
-                       label.position.x, label.position.y,
-                       paint(label));
+      for(const auto& paint : make_paint(label))
+      {
+        canvas->drawText(label.text.c_str(), label.text.size(),
+                         label.position.x, label.position.y,
+                         paint);
+      }
     }
 
     void skia_canvas::draw(const path& path)
@@ -215,57 +149,110 @@ namespace skui
 
       SkPath skia_path;
 
-      canvas->drawPath(skia_path,
-                       paint(path));
-
+      for(const auto& paint : make_paint(path))
+      {
+        canvas->drawPath(skia_path,
+                         paint);
+      }
     }
 
-    namespace implementation
+    std::vector<SkPaint> skia_canvas::make_paint(const shape& shape) const
     {
-      void set_gradient(SkPaint& paint, const gradient& gradient)
+      return {make_fill_paint(shape), make_border_paint(shape)};
+    }
+
+    SkPaint skia_canvas::make_border_paint(const shape& shape) const
+    {
+      SkPaint paint;
+
+      paint.setStyle(SkPaint::Style::kStroke_Style);
+
+      paint.setARGB(shape.border.color.alpha,
+                    shape.border.color.red,
+                    shape.border.color.green,
+                    shape.border.color.blue);
+
+      paint.setStrokeWidth(shape.border.thickness);
+
+      if(flags.test(canvas_flag::anti_alias))
+        paint.setAntiAlias(true);
+
+      return paint;
+    }
+
+
+    SkPaint skia_canvas::make_fill_paint(const shape& shape) const
+    {
+      SkPaint paint;
+
+      paint.setStyle(SkPaint::Style::kFill_Style);
+
+      paint.setARGB(shape.fill.color.alpha,
+                    shape.fill.color.red,
+                    shape.fill.color.green,
+                    shape.fill.color.blue);
+
+      if(shape.fill.gradient)
       {
-        switch(gradient.type)
+        set_gradient(paint, *shape.fill.gradient);
+      }
+
+      if(flags.test(canvas_flag::anti_alias))
+        paint.setAntiAlias(true);
+
+      return paint;
+    }
+
+    void skia_canvas::set_gradient(SkPaint& paint, const gradient& gradient) const
+    {
+      switch(gradient.type)
+      {
+        case gradient_type::linear:
         {
-          case gradient_type::linear:
-          {
-            const auto& linear = static_cast<const linear_gradient&>(gradient);
-            paint.setShader(SkGradientShader::MakeLinear(to_skia(linear.points).data(),
-                                                         to_skia(linear.colors).data(),
-                                                         nullptr,
-                                                         static_cast<int>(linear.points.size()),
-                                                         SkShader::TileMode::kMirror_TileMode));
-          }
-          case gradient_type::radial:
-          {
-            const auto& radial = static_cast<const radial_gradient&>(gradient);
-            paint.setShader(SkGradientShader::MakeRadial(to_skia(radial.center),
-                                                         radial.radius,
-                                                         to_skia(radial.colors).data(),
-                                                         nullptr,
-                                                         static_cast<int>(radial.positions.size()),
-                                                         SkShader::TileMode::kMirror_TileMode));
-          }
-          case gradient_type::two_point_conical:
-          {
-            const auto& conical = static_cast<const two_point_conical_gradient&>(gradient);
-            paint.setShader(SkGradientShader::MakeTwoPointConical(to_skia(conical.start),
-                                                                  conical.start_radius,
-                                                                  to_skia(conical.end),
-                                                                  conical.end_radius,
-                                                                  to_skia(conical.colors).data(),
-                                                                  nullptr,
-                                                                  static_cast<int>(conical.colors.size()),
-                                                                  SkShader::TileMode::kMirror_TileMode));
-          }
-          case gradient_type::sweep:
-          {
-            const auto& sweep = static_cast<const sweep_gradient&>(gradient);
-            paint.setShader(SkGradientShader::MakeSweep(sweep.center.x,
-                                                        sweep.center.y,
-                                                        to_skia(sweep.colors).data(),
-                                                        nullptr,
-                                                        static_cast<int>(sweep.colors.size())));
-          }
+          const auto& linear = static_cast<const linear_gradient&>(gradient);
+          auto points = to_skia(linear.points);
+          auto colors = to_skia(linear.colors);
+          paint.setShader(SkGradientShader::MakeLinear(points.data(),
+                                                       colors.data(),
+                                                       nullptr,
+                                                       static_cast<int>(points.size()),
+                                                       SkShader::TileMode::kMirror_TileMode));
+          return;
+        }
+        case gradient_type::radial:
+        {
+          const auto& radial = static_cast<const radial_gradient&>(gradient);
+          paint.setShader(SkGradientShader::MakeRadial(to_skia(radial.center),
+                                                       radial.radius,
+                                                       to_skia(radial.colors).data(),
+                                                       nullptr,
+                                                       static_cast<int>(radial.positions.size()),
+                                                       SkShader::TileMode::kMirror_TileMode));
+          return;
+        }
+        case gradient_type::two_point_conical:
+        {
+          const auto& conical = static_cast<const two_point_conical_gradient&>(gradient);
+          paint.setShader(SkGradientShader::MakeTwoPointConical(to_skia(conical.start),
+                                                                conical.start_radius,
+                                                                to_skia(conical.end),
+                                                                conical.end_radius,
+                                                                to_skia(conical.colors).data(),
+                                                                nullptr,
+                                                                static_cast<int>(conical.colors.size()),
+                                                                SkShader::TileMode::kMirror_TileMode));
+          return;
+        }
+        case gradient_type::sweep:
+        {
+          const auto& sweep = static_cast<const sweep_gradient&>(gradient);
+          const auto colors = to_skia(sweep.colors);
+          paint.setShader(SkGradientShader::MakeSweep(sweep.center.x,
+                                                      sweep.center.y,
+                                                      colors.data(),
+                                                      nullptr,
+                                                      static_cast<int>(colors.size())));
+          return;
         }
       }
     }
