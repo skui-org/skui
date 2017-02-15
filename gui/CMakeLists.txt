@@ -25,6 +25,7 @@
 # Common source files
 set(gui_src
     icon.h++
+    key.h++
     window.h++ window.c++ window_windows.c++ window_xcb.c++
    )
 
