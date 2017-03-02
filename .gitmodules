@@ -1,4 +1,4 @@
 [submodule "3rdparty/skia"]
     path = 3rdparty/skia
     url = https://github.com/rubenvb/skia.git
-    shallow = true
+    branch = m58

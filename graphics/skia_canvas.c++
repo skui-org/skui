@@ -94,10 +94,7 @@ namespace skui
     {
       auto canvas = surface->getCanvas();
 
-      canvas->drawARGB(background_color.alpha,
-                       background_color.red,
-                       background_color.green,
-                       background_color.blue);
+      canvas->drawColor(to_skia(background_color));
     }
 
     void skia_canvas::draw(const rectangle& rectangle)
