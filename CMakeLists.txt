@@ -22,8 +22,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.4) # previous versions forgot some options like -isystem and -x c++ leading to build failures
 project(skui)
+
+option(SKUI_USE_SYSTEM_ZLIB "Use system zlib" OFF)
+option(SKUI_USE_SYSTEM_LIBEXPAT "Use system libexpat" OFF)
+option(SKUI_USE_SYSTEM_LIBPNG "Use system libpng" OFF)
+option(SKUI_USE_SYSTEM_GIFLIB "Use system giflib" OFF)
+option(SKUI_USE_SYSTEM_LIBJPEG_TURBO "Use system libjpeg-turbo" OFF)
+option(SKUI_USE_SYSTEM_SKIA "Use system Skia library" OFF)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -65,17 +72,12 @@ add_custom_target(miscellaneous SOURCES
     .travis.yml)
 
 # Skia and its dependencies
-if(NOT SKIP_SKIA)
-  set(SKIA_STATIC TRUE)
-  add_subdirectory(3rdparty/skia)
-endif()
+add_subdirectory(3rdparty)
 
 # skui itself
 add_subdirectory(core)
-if(NOT SKIP_SKIA)
-  add_subdirectory(graphics)
-  add_subdirectory(gui)
-endif()
+add_subdirectory(graphics)
+add_subdirectory(gui)
 
 # skui examples
 add_subdirectory(examples)

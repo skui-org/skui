@@ -1,4 +1,3 @@
-[submodule "3rdparty/skia"]
-    path = 3rdparty/skia
-    url = https://github.com/rubenvb/skia.git
-    branch = m58
+[submodule "3rdparty"]
+	path = 3rdparty
+	url = https://github.com/skui-org/3rdparty.git

@@ -42,8 +42,6 @@ namespace skui
     {
       core::debug_print("skia_context thread: ", std::this_thread::get_id(), '\n');
       SkASSERT(gr_gl_interface);
-      // To use NVPR, comment this out
-      gr_gl_interface.reset(GrGLInterfaceRemoveNVPR(gr_gl_interface.get()));
     }
 
     std::unique_ptr<canvas> skia_context::create_canvas(const pixel_size& size) const

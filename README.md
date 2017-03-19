@@ -9,7 +9,7 @@ This including Technical Specifications (TS) that introduce "desktop" facilities
 Skui is in a pre-release development phase, and the API is definitely not stable.
 New functionality must be accompanied by corresponding tests.
 
-[![Build Status](https://travis-ci.org/rubenvb/skui.svg?branch=master)](https://travis-ci.org/rubenvb/skui)
+[![Build Status](https://travis-ci.org/skui-org/skui.svg?branch=master)](https://travis-ci.org/skui-org/skui)
 [![Build status](https://ci.appveyor.com/api/projects/status/s9t7o9k8u0p15e0x?svg=true)](https://ci.appveyor.com/project/RubenVanBoxem/skui)
 
 
