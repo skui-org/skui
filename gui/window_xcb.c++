@@ -52,7 +52,7 @@ namespace skui
       using xdisplay_ptr = std::unique_ptr<Display, decltype(&XCloseDisplay)>;
       using xvisualinfo_ptr = std::unique_ptr<XVisualInfo, decltype(&XFree)>;
       using xstring_ptr = std::unique_ptr<char, decltype(&XFree)>;
-      using xcb_intern_atom_reply_ptr = std::unique_ptr<xcb_intern_atom_reply_t, decltype(&free)>;
+      using xcb_intern_atom_reply_ptr = core::unique_free_ptr<xcb_intern_atom_reply_t>;
 
       class platform_handle
       {

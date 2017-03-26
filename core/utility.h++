@@ -32,10 +32,17 @@
 
 #include "core/string.h++"
 
+#include <memory>
+
+#include <cstdlib>
+
 namespace skui
 {
   namespace core
   {
+    template<typename T>
+    using unique_free_ptr = std::unique_ptr<T, decltype(&std::free)>;
+
 #ifdef _WIN32
     string convert_to_utf8(const std::wstring& utf16_string);
     std::wstring convert_to_utf16(const string& utf8_string);
