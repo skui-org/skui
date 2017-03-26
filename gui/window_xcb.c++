@@ -28,7 +28,7 @@
  * https://www.khronos.org/opengl/wiki/Tutorial:_OpenGL_3.0_Context_Creation_(GLX)
  */
 
-#include "window.h++"
+#include "gui/window.h++"
 
 #include <core/application.h++>
 #include <core/debug.h++>

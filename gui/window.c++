@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  **/
 
-#include "window.h++"
+#include "gui/window.h++"
 
 #include <core/application.h++>
 #include <core/debug.h++>

@@ -29,7 +29,7 @@
 #ifndef SKUI_GUI_WINDOW_H
 #define SKUI_GUI_WINDOW_H
 
-#include "icon.h++"
+#include "gui/icon.h++"
 
 #include <core/bitflag.h++>
 #include <core/proxy_property.h++>
