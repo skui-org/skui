@@ -39,15 +39,15 @@ namespace skui
   namespace graphics
   {
     template<typename T>
-    struct size
+    struct size2D
     {
-      core::property<T> width;
-      core::property<T> height;
+      T width;
+      T height;
     };
 
     // pixel here means "device independent pixel" aka scaled from 72dpi
-    using pixel_size = size<pixel>;
-    using scalar_size = size<float>;
+    using pixel_size = size2D<pixel>;
+    using scalar_size = size2D<float>;
   }
 }
 
