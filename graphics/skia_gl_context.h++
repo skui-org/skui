@@ -22,31 +22,38 @@
  * THE SOFTWARE.
  **/
 
-#include "skia_context.h++"
+#ifndef SKUI_GRAPHICS_SKIA_GL_CONTEXT_H
+#define SKUI_GRAPHICS_SKIA_GL_CONTEXT_H
 
-#include "skia_canvas.h++"
+#include "context.h++"
 
-#include <core/debug.h++>
+#include "size.h++"
 
-#include <gl/GrGLInterface.h>
+#include <GrContext.h>
+#include <GrGLInterface.h>
 
-#include <thread>
+#include <memory>
+
+class SkSurface;
 
 namespace skui
 {
   namespace graphics
   {
-    skia_context::skia_context()
-      : context()
-      , gr_gl_interface(GrGLCreateNativeInterface())
-    {
-      core::debug_print("skia_context thread: ", std::this_thread::get_id(), '\n');
-      SkASSERT(gr_gl_interface);
-    }
+    class canvas;
 
-    std::unique_ptr<canvas> skia_context::create_canvas(const pixel_size& size) const
+    class skia_gl_context : public context
     {
-      return std::make_unique<skia_canvas>(size, *gr_gl_interface, canvas_flag::anti_alias);
-    }
+    public:
+      skia_gl_context();
+      ~skia_gl_context() override = default;
+
+      std::unique_ptr<canvas> create_canvas(const pixel_size& size) const override;
+
+    private:
+      sk_sp<const GrGLInterface> gr_gl_interface;
+    };
   }
 }
+
+#endif

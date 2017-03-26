@@ -23,21 +23,17 @@
  **/
 
 /*
- * Skia conversion utilities.
+ * OpenGL-backed graphics canvas for Skia.
  */
 
-#ifndef SKUI_GRAPHICS_INSIDES
-#error "This header contains implementation details and can only be included when building SkUI."
-#endif
+#ifndef SKUI_GRAPHICS_SKIA_GL_CANVAS_H
+#define SKUI_GRAPHICS_SKIA_GL_CANVAS_H
 
-#ifndef SKUI_GRAPHICS_SKIA_UTIL_H
-#define SKUI_GRAPHICS_SKIA_UTIL_H
+#include "graphics/skia_canvas.h++"
 
-#include "graphics/color.h++"
-#include "graphics/position.h++"
+#include <GrGLInterface.h>
 
-#include <SkColor.h>
-#include <SkPoint.h>
+#include <SkSurface.h>
 
 #include <vector>
 
@@ -45,11 +41,17 @@ namespace skui
 {
   namespace graphics
   {
-    SkPoint to_skia(const scalar_position& position);
-    std::vector<SkPoint> to_skia(const std::vector<scalar_position>& positions);
+    class skia_gl_canvas : public skia_canvas
+    {
+    public:
+      skia_gl_canvas(const pixel_size& size,
+                     const GrGLInterface& gl_interface,
+                     canvas_flags flags);
+      ~skia_gl_canvas() override = default;
 
-    SkColor to_skia(const color& color);
-    std::vector<SkColor> to_skia(const std::vector<color>& colors);
+    private:
+      sk_sp<GrContext> gr_context;
+    };
   }
 }
 

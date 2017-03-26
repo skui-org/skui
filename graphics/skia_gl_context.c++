@@ -22,38 +22,30 @@
  * THE SOFTWARE.
  **/
 
-#include "graphics/skia_util.h++"
+#include "graphics/skia_gl_context.h++"
+
+#include "graphics/skia_gl_canvas.h++"
+
+#include <core/debug.h++>
+
+#include <gl/GrGLInterface.h>
+
+#include <thread>
 
 namespace skui
 {
-    namespace graphics
+  namespace graphics
+  {
+    skia_gl_context::skia_gl_context()
+      : context()
+      , gr_gl_interface(GrGLCreateNativeInterface())
     {
-      SkPoint to_skia(const scalar_position& position)
-      {
-        return SkPoint::Make(position.x, position.y);
-      }
+      SkASSERT(gr_gl_interface);
+    }
 
-      std::vector<SkPoint> to_skia(const std::vector<scalar_position>& positions)
-      {
-        std::vector<SkPoint> points;
-        points.reserve(positions.size());
-        std::transform(positions.begin(), positions.end(), std::back_inserter(points),
-                       [](const scalar_position& position) { return to_skia(position); });
-        return points;
-      }
-
-      SkColor to_skia(const color& color)
-      {
-        return SkColorSetARGB(color.alpha, color.red, color.green, color.blue);
-      }
-
-      std::vector<SkColor> to_skia(const std::vector<color>& colors)
-      {
-        std::vector<SkColor> skia_colors;
-        skia_colors.reserve(colors.size());
-        std::transform(colors.begin(), colors.end(), std::back_inserter(skia_colors),
-                       [](const color& color) { return to_skia(color); });
-        return skia_colors;
-      }
+    std::unique_ptr<canvas> skia_gl_context::create_canvas(const pixel_size& size) const
+    {
+      return std::make_unique<skia_gl_canvas>(size, *gr_gl_interface, canvas_flag::anti_alias);
+    }
   }
 }

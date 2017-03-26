@@ -28,7 +28,7 @@
 #include <core/debug.h++>
 
 #include <graphics/context.h++>
-#include <graphics/skia_context.h++>
+#include <graphics/context.h++>
 
 #include <memory>
 #include <vector>

@@ -23,18 +23,21 @@
  **/
 
 /*
- * Graphics canvas for Skia.
+ * Skia conversion utilities.
  */
 
-#ifndef SKUI_GRAPHICS_SKIA_CANVAS_H
-#define SKUI_GRAPHICS_SKIA_CANVAS_H
+#ifndef SKUI_GRAPHICS_INSIDES
+#error "This header contains implementation details and can only be included when building SkUI."
+#endif
 
-#include "graphics/canvas.h++"
-#include "graphics/size.h++"
+#ifndef SKUI_GRAPHICS_SKIA_UTILITY_H
+#define SKUI_GRAPHICS_SKIA_UTIITYL_H
 
-#include <GrGLInterface.h>
+#include "graphics/color.h++"
+#include "graphics/position.h++"
 
-#include <SkSurface.h>
+#include <SkColor.h>
+#include <SkPoint.h>
 
 #include <vector>
 
@@ -42,29 +45,11 @@ namespace skui
 {
   namespace graphics
   {
-    class skia_canvas : public canvas
-    {
-    public:
-      ~skia_canvas() override = default;
+    SkPoint to_skia(const scalar_position& position);
+    std::vector<SkPoint> to_skia(const std::vector<scalar_position>& positions);
 
-      void draw(const color& background_color) override;
-      void draw(const rectangle& rectangle) override;
-      void draw(const ellipse& ellipse) override;
-      void draw(const label& label) override;
-      void draw(const path& path) override;
-
-    protected:
-      skia_canvas(//sk_sp<SkSurface> surface,
-                  canvas_flags flags);
-
-      sk_sp<SkSurface> surface;
-
-    private:
-      std::vector<SkPaint> make_paint(const shape& shape) const;
-      SkPaint make_border_paint(const shape& shape) const;
-      SkPaint make_fill_paint(const shape& shape) const;
-      void set_gradient(SkPaint& paint, const gradient& gradient) const;
-    };
+    SkColor to_skia(const color& color);
+    std::vector<SkColor> to_skia(const std::vector<color>& colors);
   }
 }
 

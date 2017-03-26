@@ -22,50 +22,38 @@
  * THE SOFTWARE.
  **/
 
-/*
- * Graphics canvas for Skia.
- */
-
-#ifndef SKUI_GRAPHICS_SKIA_CANVAS_H
-#define SKUI_GRAPHICS_SKIA_CANVAS_H
-
-#include "graphics/canvas.h++"
-#include "graphics/size.h++"
-
-#include <GrGLInterface.h>
-
-#include <SkSurface.h>
-
-#include <vector>
+#include "graphics/skia_utility.h++"
 
 namespace skui
 {
-  namespace graphics
-  {
-    class skia_canvas : public canvas
+    namespace graphics
     {
-    public:
-      ~skia_canvas() override = default;
+      SkPoint to_skia(const scalar_position& position)
+      {
+        return SkPoint::Make(position.x, position.y);
+      }
 
-      void draw(const color& background_color) override;
-      void draw(const rectangle& rectangle) override;
-      void draw(const ellipse& ellipse) override;
-      void draw(const label& label) override;
-      void draw(const path& path) override;
+      std::vector<SkPoint> to_skia(const std::vector<scalar_position>& positions)
+      {
+        std::vector<SkPoint> points;
+        points.reserve(positions.size());
+        std::transform(positions.begin(), positions.end(), std::back_inserter(points),
+                       [](const scalar_position& position) { return to_skia(position); });
+        return points;
+      }
 
-    protected:
-      skia_canvas(//sk_sp<SkSurface> surface,
-                  canvas_flags flags);
+      SkColor to_skia(const color& color)
+      {
+        return SkColorSetARGB(color.alpha, color.red, color.green, color.blue);
+      }
 
-      sk_sp<SkSurface> surface;
-
-    private:
-      std::vector<SkPaint> make_paint(const shape& shape) const;
-      SkPaint make_border_paint(const shape& shape) const;
-      SkPaint make_fill_paint(const shape& shape) const;
-      void set_gradient(SkPaint& paint, const gradient& gradient) const;
-    };
+      std::vector<SkColor> to_skia(const std::vector<color>& colors)
+      {
+        std::vector<SkColor> skia_colors;
+        skia_colors.reserve(colors.size());
+        std::transform(colors.begin(), colors.end(), std::back_inserter(skia_colors),
+                       [](const color& color) { return to_skia(color); });
+        return skia_colors;
+      }
   }
 }
-
-#endif

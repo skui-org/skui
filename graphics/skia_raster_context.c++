@@ -22,38 +22,21 @@
  * THE SOFTWARE.
  **/
 
-#ifndef SKUI_GRAPHICS_SKIA_CONTEXT_H
-#define SKUI_GRAPHICS_SKIA_CONTEXT_H
+#include "graphics/skia_raster_context.h++"
 
-#include "context.h++"
+#include "graphics/skia_raster_canvas.h++"
 
-#include "size.h++"
+#include <core/debug.h++>
 
-#include <GrContext.h>
-#include <GrGLInterface.h>
-
-#include <memory>
-
-class SkSurface;
+#include <thread>
 
 namespace skui
 {
   namespace graphics
   {
-    class canvas;
-
-    class skia_context : public context
+    std::unique_ptr<canvas> skia_raster_context::create_canvas(const pixel_size& size) const
     {
-    public:
-      skia_context();
-      ~skia_context() override = default;
-
-      std::unique_ptr<canvas> create_canvas(const pixel_size& size) const override;
-
-    private:
-      sk_sp<const GrGLInterface> gr_gl_interface;
-    };
+      return std::make_unique<skia_raster_canvas>(size, canvas_flag::anti_alias);
+    }
   }
 }
-
-#endif

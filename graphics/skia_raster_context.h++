@@ -22,48 +22,33 @@
  * THE SOFTWARE.
  **/
 
-/*
- * Graphics canvas for Skia.
- */
+#ifndef SKUI_GRAPHICS_SKIA_CONTEXT_H
+#define SKUI_GRAPHICS_SKIA_CONTEXT_H
 
-#ifndef SKUI_GRAPHICS_SKIA_CANVAS_H
-#define SKUI_GRAPHICS_SKIA_CANVAS_H
+#include "context.h++"
 
-#include "graphics/canvas.h++"
-#include "graphics/size.h++"
+#include "size.h++"
 
+#include <GrContext.h>
 #include <GrGLInterface.h>
 
-#include <SkSurface.h>
+#include <memory>
 
-#include <vector>
+class SkSurface;
 
 namespace skui
 {
   namespace graphics
   {
-    class skia_canvas : public canvas
+    class canvas;
+
+    class skia_raster_context : public context
     {
     public:
-      ~skia_canvas() override = default;
+      skia_raster_context() = default;
+      ~skia_raster_context() override = default;
 
-      void draw(const color& background_color) override;
-      void draw(const rectangle& rectangle) override;
-      void draw(const ellipse& ellipse) override;
-      void draw(const label& label) override;
-      void draw(const path& path) override;
-
-    protected:
-      skia_canvas(//sk_sp<SkSurface> surface,
-                  canvas_flags flags);
-
-      sk_sp<SkSurface> surface;
-
-    private:
-      std::vector<SkPaint> make_paint(const shape& shape) const;
-      SkPaint make_border_paint(const shape& shape) const;
-      SkPaint make_fill_paint(const shape& shape) const;
-      void set_gradient(SkPaint& paint, const gradient& gradient) const;
+      std::unique_ptr<canvas> create_canvas(const pixel_size& size) const override;
     };
   }
 }

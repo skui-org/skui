@@ -33,7 +33,7 @@
 #include <core/application.h++>
 #include <core/debug.h++>
 
-#include <graphics/skia_context.h++>
+#include <graphics/skia_gl_context.h++>
 
 #include <X11/X.h>
 #include <X11/Xlib.h>
@@ -157,7 +157,7 @@ namespace skui
 
       setup_graphics_backend(handle);
 
-      graphics_context = std::make_unique<graphics::skia_context>();
+      graphics_context = std::make_unique<graphics::skia_gl_context>();
 
       // Ensure calling thread is waiting for draw_condition_variable
       std::unique_lock<decltype(handle_mutex)> handle_lock(handle_mutex);

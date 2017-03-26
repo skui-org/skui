@@ -43,8 +43,11 @@ set(graphics_src
     shape/rectangle.h++ shape/rectangle.c++
     size.h++
     skia_canvas.h++ skia_canvas.c++
-    skia_context.h++ skia_context.c++
-    skia_util.h++ skia_util.c++
+    skia_gl_context.h++ skia_gl_context.c++
+    skia_raster_context.h++ skia_raster_context.c++
+    skia_gl_canvas.h++ skia_gl_canvas.c++
+    skia_raster_canvas.h++ skia_raster_canvas.c++
+    skia_utility.h++ skia_utility.c++
    )
 
 # The library itself

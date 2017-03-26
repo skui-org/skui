@@ -26,15 +26,14 @@
  * Graphics canvas for Skia.
  */
 
-#ifndef SKUI_GRAPHICS_SKIA_CANVAS_H
-#define SKUI_GRAPHICS_SKIA_CANVAS_H
+#ifndef SKUI_GRAPHICS_SKIA_RASTER_CANVAS_H
+#define SKUI_GRAPHICS_SKIA_RASTER_CANVAS_H
 
-#include "graphics/canvas.h++"
+#include "graphics/skia_canvas.h++"
+
 #include "graphics/size.h++"
 
-#include <GrGLInterface.h>
-
-#include <SkSurface.h>
+#include <SkBitmap.h>
 
 #include <vector>
 
@@ -42,28 +41,12 @@ namespace skui
 {
   namespace graphics
   {
-    class skia_canvas : public canvas
+    class skia_raster_canvas : public skia_canvas
     {
     public:
-      ~skia_canvas() override = default;
-
-      void draw(const color& background_color) override;
-      void draw(const rectangle& rectangle) override;
-      void draw(const ellipse& ellipse) override;
-      void draw(const label& label) override;
-      void draw(const path& path) override;
-
-    protected:
-      skia_canvas(//sk_sp<SkSurface> surface,
-                  canvas_flags flags);
-
-      sk_sp<SkSurface> surface;
-
-    private:
-      std::vector<SkPaint> make_paint(const shape& shape) const;
-      SkPaint make_border_paint(const shape& shape) const;
-      SkPaint make_fill_paint(const shape& shape) const;
-      void set_gradient(SkPaint& paint, const gradient& gradient) const;
+      skia_raster_canvas(const pixel_size& size,
+                         canvas_flags flags);
+      ~skia_raster_canvas() override = default;
     };
   }
 }
