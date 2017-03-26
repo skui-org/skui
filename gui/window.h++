@@ -100,6 +100,8 @@ namespace skui
       void setup_graphics_backend(implementation::platform_handle& handle);
       void execute_event_loop();
 
+      void update_geometry();
+
       void set_title(const core::string& title);
       core::string get_title();
 

@@ -255,30 +255,7 @@ namespace skui
             if(expose->count>0)
               continue;
 
-            // fetch true dimensions and position of visual window now because the ConfigureNotify event lies to us
-            xcb_get_geometry_reply_t *geom = xcb_get_geometry_reply (native_handle->connection,
-                                                                     xcb_get_geometry (native_handle->connection, native_handle->id),
-                                                                     nullptr );
-
-            xcb_query_tree_reply_t *tree = xcb_query_tree_reply (native_handle->connection,
-                                                                 xcb_query_tree (native_handle->connection, native_handle->id),
-                                                                 nullptr );
-
-            xcb_translate_coordinates_cookie_t translateCookie = xcb_translate_coordinates (native_handle->connection,
-                                                                                            native_handle->id,
-                                                                                            tree->parent,
-                                                                                            geom->x, geom->y );
-
-            xcb_translate_coordinates_reply_t *trans = xcb_translate_coordinates_reply (native_handle->connection,
-                                                                                        translateCookie,
-                                                                                        nullptr);
-
-            size = { geom->width, geom->height };
-            position = { trans->dst_x, trans->dst_y };
-
-            free(geom);
-            free(tree);
-            free(trans);
+            update_geometry();
 
             glViewport(0, 0, static_cast<GLsizei>(size.width), static_cast<GLsizei>(size.height));
             draw();
@@ -364,6 +341,33 @@ namespace skui
             break;
         }
       }
+    }
+
+    void window::update_geometry()
+    {
+      // fetch true dimensions and position of visual window now because the ConfigureNotify event lies to us
+      core::unique_free_ptr<xcb_get_geometry_reply_t> geom(xcb_get_geometry_reply(native_handle->connection,
+                                                                                  xcb_get_geometry(native_handle->connection, native_handle->id),
+                                                                                  nullptr),
+                                                           &free);
+
+      core::unique_free_ptr<xcb_query_tree_reply_t> tree(xcb_query_tree_reply(native_handle->connection,
+                                                                              xcb_query_tree(native_handle->connection, native_handle->id),
+                                                                              nullptr),
+                                                         &free);
+
+      xcb_translate_coordinates_cookie_t translateCookie = xcb_translate_coordinates(native_handle->connection,
+                                                                                     native_handle->id,
+                                                                                     tree->parent,
+                                                                                     geom->x, geom->y);
+
+      core::unique_free_ptr<xcb_translate_coordinates_reply_t> trans(xcb_translate_coordinates_reply(native_handle->connection,
+                                                                                                     translateCookie,
+                                                                                                     nullptr),
+                                                                     &free);
+
+      size = { geom->width, geom->height };
+      position = { trans->dst_x, trans->dst_y };
     }
 
     void window::set_title(const core::string& title)
