@@ -35,7 +35,7 @@ namespace
     int changed_value = 0;
     auto slot = [&changed_value](int i) { changed_value = i; };
 
-    skui::core::property<int> property;
+    skui::core::property<int> property{};
     property.value_changed.connect(slot);
 
     property = 1;
