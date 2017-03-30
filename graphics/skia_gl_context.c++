@@ -32,6 +32,11 @@
 
 #include <thread>
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+#include <GL/gl.h>
+
 namespace skui
 {
   namespace graphics

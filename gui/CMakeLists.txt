@@ -26,6 +26,7 @@
 set(gui_src
     icon.h++
     key.h++
+    main_windows.c++
     window.h++ window.c++ window_windows.c++ window_xcb.c++
    )
 
@@ -48,9 +49,6 @@ if(NOT WIN32)
                     )
 endif()
 if(NOT UNIX)
-  if(NOT APPLE)
-  else()
-    exclude_from_build(window_x11.c++
-                      )
-  endif()
+  exclude_from_build(window_xcb.c++
+                    )
 endif()

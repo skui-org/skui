@@ -39,10 +39,6 @@ namespace skui
   {
     namespace implementation
     {
-      // These are implemented in window_<platform>.c++
-      extern platform_handle* initialize_platform_window(const graphics::pixel_position& position,
-                                                         const graphics::pixel_size& size);
-
       static std::unique_ptr<window::window_list> list_of_windows;
       window::window_list& windows()
       {

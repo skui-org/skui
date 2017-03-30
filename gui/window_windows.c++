@@ -24,6 +24,7 @@
 
 #include "gui/window.h++"
 
+#include <core/application.h++>
 #include <core/debug.h++>
 
 #ifndef UNICODE
@@ -34,7 +35,6 @@
 #endif
 
 #include <windows.h>
-#include <GL/gl.h>
 
 namespace skui
 {
@@ -74,59 +74,154 @@ namespace skui
         wc.cbClsExtra    = 0;
         wc.cbWndExtra    = 0;
         wc.hInstance     = application_instance;
-        wc.hIcon         = LoadIcon(application_instance, (LPCWSTR)IDI_WINLOGO);
+        wc.hIcon         = LoadIconW(application_instance, (LPCWSTR)IDI_WINLOGO);
         wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
         wc.hbrBackground = reinterpret_cast<HBRUSH>(COLOR_WINDOW+1);
         wc.lpszMenuName  = L"Skui menu";
         wc.lpszClassName = window_class;
-        wc.hIconSm       = LoadIcon(application_instance, (LPCWSTR)IDI_WINLOGO);
+        wc.hIconSm       = LoadIconW(application_instance, (LPCWSTR)IDI_WINLOGO);
 
-        return RegisterClassExW(&wc);
+        return RegisterClassExW(&wc) == 0;
       }
+    }
 
-      HWND initialize()
+    namespace implementation
+    {
+      class platform_handle
+      {
+      public:
+        HWND window_handle;
+        BITMAPINFO bitmap_info;
+        std::unique_ptr<std::uint32_t> bitmap;
+      };
+
+      std::unique_ptr<platform_handle> create_handle()
       {
         const static bool registered = register_window_class();
 
-        return CreateWindowExW(
-              WS_EX_CLIENTEDGE,
-              window_class,
-              L"A Skui Window",
-              WS_OVERLAPPEDWINDOW,
-              CW_USEDEFAULT, CW_USEDEFAULT,
-              CW_USEDEFAULT, CW_USEDEFAULT,
-              nullptr, nullptr,
-              application_instance, nullptr
-              );
+        auto handle = std::make_unique<platform_handle>();
 
+        return handle;
       }
-    }
-
-    window::window(pixel_position position, pixel_size initial_size)
-      : size{initial_size.width, initial_size.height}
-      , maximum_size{}
-      , minimum_size{}
-      , position{position}
-      , icon{}
-      , title{}
-      , native_handle(initialize())
-    {
-    }
-
-    window::~window()
-    {
     }
 
     void window::show()
     {
-      ShowWindow(static_cast<HWND>(native_handle), SW_SHOWNORMAL);
+      ShowWindow(native_handle->window_handle, SW_SHOWNORMAL);
     }
 
     void window::hide()
     {
-      ShowWindow(static_cast<HWND>(native_handle), SW_HIDE);
+      ShowWindow(native_handle->window_handle, SW_HIDE);
     }
 
+    void window::close()
+    {
+      CloseWindow(native_handle->window_handle);
+    }
+
+    void window::setup_window(implementation::platform_handle &handle)
+    {
+      handle.window_handle = CreateWindowExW(
+            WS_EX_CLIENTEDGE,
+            window_class,
+            L"A Skui Window",
+            WS_OVERLAPPEDWINDOW,
+            CW_USEDEFAULT, CW_USEDEFAULT,
+            CW_USEDEFAULT, CW_USEDEFAULT,
+            nullptr, nullptr,
+            application_instance, nullptr
+            );
+    }
+
+
+    void window::initialize_and_execute_platform_loop()
+    {
+      auto handle_ptr = implementation::create_handle();
+      auto& handle = *handle_ptr;
+
+      setup_window(handle);
+
+      setup_graphics_backend(handle);
+
+
+      // Ensure calling thread is waiting for draw_condition_variable
+      std::unique_lock<decltype(handle_mutex)> handle_lock(handle_mutex);
+      native_handle = handle_ptr.release();
+      handle_condition_variable.notify_one();
+
+      // Continue calling thread before initiating event loop
+      handle_lock.unlock();
+
+      execute_event_loop();
+
+      graphics_context.reset();
+      delete native_handle;
+      native_handle = nullptr;
+
+      if(flags.test(window_flag::exit_on_close))
+        core::application::instance().quit();
+    }
+
+    void window::setup_graphics_backend(implementation::platform_handle& handle)
+    {
+
+
+    }
+
+    void window::execute_event_loop()
+    {
+      MSG message;
+      BOOL result;
+      while((result = GetMessageW(&message, native_handle->window_handle, 0, 0)) > 0)
+      {
+        switch(message.message)
+        {
+          case WM_QUIT:
+            core::debug_print("Quit message received.\n");
+        }
+
+        TranslateMessage(&message);
+        DispatchMessage(&message);
+      }
+
+      core::debug_print("exited event loop.\n");
+
+    }
+
+    void window::update_geometry()
+    {
+
+    }
+
+    void window::swap_buffers()
+    {
+      /*
+      HDC dc = GetDC(native_handle->window_handle);
+      StretchDIBits(dc,
+                    0, 0,
+                    fWidth, fHeight,
+                    0, 0,
+                    fWidth, fHeight,
+                    native_handle->bitmap_info->bmiColors,
+                    native_handle->bitmap_info,
+                    DIB_RGB_COLORS, SRCCOPY);
+      ReleaseDC(fWnd, dc);*/
+    }
+
+    void window::set_title(const core::string& title)
+    {
+      SetWindowTextW(native_handle->window_handle, core::convert_to_utf16(title).c_str());
+    }
+
+    core::string window::get_title() const
+    {
+      int length = GetWindowTextLengthW(native_handle->window_handle);
+      std::wstring title;
+      title.resize(length+1);
+      GetWindowTextW(native_handle->window_handle, &title[0], length);
+      return core::convert_to_utf8(title);
+    }
 
 
 
