@@ -36,6 +36,7 @@
 #define WIN32_MEAN_AND_LEAN
 #include <windows.h>
 #undef WIN32_MEAN_AND_LEAN
+#include <sstream>
 #endif
 
 namespace skui
@@ -56,15 +57,15 @@ namespace skui
       // void() is to prevent overloaded operator, messing things up
       // trick is to use the side effect of list-initializer to call a function on every argument, in order.
       // (void) is to suppress "statement has no effect" warnings
-   // #ifdef _WIN32
-   //   std::stringstream stream;
-   //   (void)expand_variadic_pack{0, ((stream << args), void(), 0)... };
+#ifdef _WIN32
+      std::stringstream stream;
+      (void)expand_variadic_pack{0, ((stream << args), void(), 0)... };
 
-   //   std::wstring stuff = convert_to_utf16(stream.str());
-   //   WriteConsoleW(GetStdHandle(STD_OUTPUT_HANDLE), stuff.c_str(), static_cast<DWORD>(stuff.size()), nullptr, nullptr);
-   // #else
+      OutputDebugStringW(convert_to_utf16(stream.str()).c_str());
+      //WriteConsoleW(GetStdHandle(STD_OUTPUT_HANDLE), stuff.c_str(), static_cast<DWORD>(stuff.size()), nullptr, nullptr);
+#else
       (void)expand_variadic_pack{0, ((std::cerr << args), void(), 0)... };
-   // #endif
+#endif
     }
  #endif
   }
