@@ -62,6 +62,15 @@ namespace skui
     using window_flags = core::bitflag<window_flag>;
     using namespace core::bitflag_operators;
 
+    enum class window_state
+    {
+      hidden,
+      windowed,
+      maximized,
+      fullscreen_maximized,
+      minimized
+    };
+
     class window : public core::trackable
     {
     public:
@@ -78,7 +87,7 @@ namespace skui
 
       void draw();
 
-      // Properties
+      /// Properties
       graphics::pixel_size size;
       graphics::pixel_size maximum_size;
       graphics::pixel_size minimum_size;
@@ -88,9 +97,10 @@ namespace skui
       core::property<gui::icon> icon;
       core::proxy_property<core::string> title;
 
-      // Signals
+      /// Signals
+      // Window manager
       core::signal<> closed;
-      core::signal<> minimized;
+      core::property<window_state> state;
 
     private:
       const implementation::platform_handle* native_handle;
