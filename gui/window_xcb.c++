@@ -136,47 +136,22 @@ namespace skui
       window::windows().erase(std::remove(window::windows().begin(), window::windows().end(), this), window::windows().end());
     }
 
-    void window::initialize_and_execute_platform_loop()
-    {
-      auto handle_ptr = implementation::create_handle();
-      auto& handle = *handle_ptr;
-
-      choose_visual(handle);
-
-      setup_window(handle);
-
-      setup_graphics_backend(handle);
-
-      graphics_context = std::make_unique<graphics::skia_gl_context>();
-
-      // Ensure calling thread is waiting for draw_condition_variable
-      std::unique_lock<decltype(handle_mutex)> handle_lock(handle_mutex);
-      native_handle = handle_ptr.release();
-      handle_condition_variable.notify_one();
-
-      // Continue calling thread before initiating event loop
-      handle_lock.unlock();
-
-      execute_event_loop();
-
-      graphics_context.reset();
-      delete native_handle;
-      native_handle = nullptr;
-
-      if(flags.test(window_flag::exit_on_close))
-        core::application::instance().quit();
-    }
-
     void window::choose_visual(implementation::platform_handle& handle)
     {
       const int default_screen = DefaultScreen(handle.display.get());
 
-      int attributes[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None };
-      handle.visual_info.reset(glXChooseVisual(handle.display.get(), default_screen, attributes));
-
-      if(!handle.visual_info)
+      if(flags.test(window_flag::opengl))
       {
-        core::debug_print("Call to glXChooseVisual failed.");
+        int attributes[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None };
+        handle.visual_info.reset(glXChooseVisual(handle.display.get(), default_screen, attributes));
+  
+        if(!handle.visual_info)
+        {
+          core::debug_print("Call to glXChooseVisual failed.");
+        }
+      }
+      else
+      {
       }
     }
 
@@ -217,6 +192,37 @@ namespace skui
       xcb_flush(handle.connection);
     }
 
+    void window::initialize_and_execute_platform_loop()
+    {
+      auto handle_ptr = implementation::create_handle();
+      auto& handle = *handle_ptr;
+
+      choose_visual(handle);
+
+      setup_window(handle);
+
+      setup_graphics_backend(handle);
+
+      graphics_context = std::make_unique<graphics::skia_gl_context>();
+
+      // Ensure calling thread is waiting for draw_condition_variable
+      std::unique_lock<decltype(handle_mutex)> handle_lock(handle_mutex);
+      native_handle = handle_ptr.release();
+      handle_condition_variable.notify_one();
+
+      // Continue calling thread before initiating event loop
+      handle_lock.unlock();
+
+      execute_event_loop();
+
+      graphics_context.reset();
+      delete native_handle;
+      native_handle = nullptr;
+
+      if(flags.test(window_flag::exit_on_close))
+        core::application::instance().quit();
+    }
+
     void window::setup_graphics_backend(implementation::platform_handle&handle)
     {
       handle.context = glXCreateContext(handle.display.get(), handle.visual_info.get(), nullptr, True);
@@ -247,9 +253,10 @@ namespace skui
 
             update_geometry();
 
-            glViewport(0, 0, static_cast<GLsizei>(size.width), static_cast<GLsizei>(size.height));
             draw();
-            glXSwapBuffers(native_handle->display.get(), native_handle->id);
+
+            swap_buffers();
+
             break;
           }
           case XCB_UNMAP_NOTIFY:
@@ -261,6 +268,13 @@ namespace skui
           {
             auto button_press = reinterpret_cast<xcb_button_press_event_t*>(event_ptr.get());
             implementation::print_modifiers (button_press->state);
+
+            switch (button_press->state)
+            {
+              case XCB_BUTTON_MASK_1:
+                core::debug_print("Primary mouse button pressed.");
+                break;
+            }
 
             switch (button_press->detail)
             {
@@ -358,6 +372,18 @@ namespace skui
 
       size = { geom->width, geom->height };
       position = { trans->dst_x, trans->dst_y };
+    }
+
+    void window::swap_buffers()
+    {
+      if(flags.test(window_flag::opengl))
+      {
+        glXSwapBuffers(native_handle->display.get(), native_handle->id);
+      }
+      else
+      {
+        //TODO
+      }
     }
 
     void window::set_title(const core::string& title)

@@ -45,6 +45,7 @@ namespace skui
 
     std::unique_ptr<canvas> skia_gl_context::create_canvas(const pixel_size& size) const
     {
+      glViewport(0, 0, static_cast<GLsizei>(size.width), static_cast<GLsizei>(size.height));
       return std::make_unique<skia_gl_canvas>(size, *gr_gl_interface, canvas_flag::anti_alias);
     }
   }

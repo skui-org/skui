@@ -111,6 +111,7 @@ namespace skui
       void execute_event_loop();
 
       void update_geometry();
+      void swap_buffers();
 
       void set_title(const core::string& title);
       core::string get_title() const;
