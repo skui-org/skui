@@ -39,8 +39,10 @@ namespace
     property.value_changed.connect(slot);
 
     property = 1;
-
     assert(changed_value == 1, "changed slot called on assignment");
+
+    property = std::move(2);
+    assert(changed_value == 2, "moving value into property emits signal");
   }
 
   void test_basic_operations()
@@ -48,7 +50,7 @@ namespace
     bool slot_called = false;
     auto slot = [&slot_called](int) { slot_called = true; };
 
-    skui::core::property<int> property;
+    skui::core::property<int> property{0};
     property.value_changed.connect(slot);
 
     assert(property == 0, "==");

@@ -48,14 +48,24 @@ namespace skui
       using const_reference = std::add_lvalue_reference_t<std::add_const_t<T>>;
       using rvalue_reference = std::add_rvalue_reference_t<T>;
 
-      property(const_reference value_ = {}) : value(value_) {}
+      property() = default;
+      property(const_reference value_) : value(value_) {}
 
       operator const_reference() const { return value; }
 
-      property& operator=(const_reference& other)
+      property& operator=(const_reference other)
       {
         const bool changed = value != other;
         value = other;
+        if(changed)
+          value_changed.emit(value);
+
+        return *this;
+      }
+      property& operator=(rvalue_reference other)
+      {
+        const bool changed = value != other;
+        value = std::move(other);
         if(changed)
           value_changed.emit(value);
 
@@ -69,7 +79,7 @@ namespace skui
       bool operator> (const_reference other) const { return value >  other; }
       bool operator>=(const_reference other) const { return value >= other; }
 
-      signal<value_type> value_changed;
+      signal<const_reference> value_changed;
 
       private:
         value_type value;
