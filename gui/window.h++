@@ -113,7 +113,7 @@ namespace skui
       void update_geometry();
 
       void set_title(const core::string& title);
-      core::string get_title();
+      core::string get_title() const;
 
       static window_list& windows();
 

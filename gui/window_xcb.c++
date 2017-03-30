@@ -365,7 +365,7 @@ namespace skui
       XStoreName(native_handle->display.get(), native_handle->id, title.c_str());
     }
 
-    core::string window::get_title()
+    core::string window::get_title() const
     {
       char* result = nullptr;
       XFetchName(native_handle->display.get(), native_handle->id, &result);
