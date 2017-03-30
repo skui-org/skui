@@ -115,16 +115,6 @@ namespace skui
       }
     }
 
-    window::~window()
-    {
-      core::debug_print("Destroying window.\n");
-      if(native_handle)
-      {
-        close();
-      }
-      thread.join();
-    }
-
     void window::show()
     {
       xcb_map_window(native_handle->connection, native_handle->id);

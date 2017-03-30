@@ -76,6 +76,16 @@ namespace skui
       title = core::application::instance().name;
     }
 
+    window::~window()
+    {
+      core::debug_print("Destroying window.\n");
+      if(native_handle)
+      {
+        close();
+      }
+      thread.join();
+    }
+
     void window::draw()
     {
       auto canvas = graphics_context->create_canvas(size);
