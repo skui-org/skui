@@ -37,7 +37,7 @@ target_link_libraries(gui PUBLIC core graphics)
 if(UNIX)
   if(NOT APPLE)
       find_package(X11 REQUIRED)
-      target_link_libraries(gui PUBLIC xcb X11-xcb X11 GL)
+      target_link_libraries(gui PUBLIC xcb X11-xcb X11)
   endif()
 endif()
 
