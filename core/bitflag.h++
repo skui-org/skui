@@ -37,6 +37,9 @@ namespace skui
 {
   namespace core
   {
+    template<typename Enum>
+    struct enum_is_bitflag : std::false_type {};
+
     template<typename Enum, std::size_t number_of_bits = std::numeric_limits<std::underlying_type_t<Enum>>::digits>
     class bitflag
     {
@@ -57,17 +60,24 @@ namespace skui
       bool any() const { return bits.any(); }
       bool all() const { return bits.all(); }
       bool none() const { return bits.none(); }
+      std::size_t count() const { return bits.count(); }
       operator bool() { return any(); }
 
-      bool test(Enum value) const { return bits.test(static_cast<std::size_t>(value)); }
-      void set(Enum value) { bits.set(static_cast<std::size_t>(value)); }
-      void unset(Enum value) { bits.reset(static_cast<std::size_t>(value)); }
+      bool test(Enum value) const { return *this & value; }
+      void set(Enum value) { bits |= enum_to_bits(value); }
+      void unset(Enum value) { bits &= ~enum_to_bits(value); }
+      void clear() { bits.reset(); }
 
     private:
       std::bitset<number_of_bits> bits;
 
-      static std::bitset<number_of_bits> enum_to_bits(Enum value)
+      template<typename SFINAE = Enum>
+      static std::bitset<number_of_bits> enum_to_bits(std::enable_if_t<!enum_is_bitflag<SFINAE>::value, SFINAE> value)
       { return { 1ULL << static_cast<std::size_t>(value) }; }
+
+      template<typename SFINAE = Enum>
+      static std::bitset<number_of_bits> enum_to_bits(std::enable_if_t<enum_is_bitflag<SFINAE>::value, SFINAE> value)
+      { return { static_cast<std::size_t>(value) }; }
     };
 
     namespace bitflag_operators
