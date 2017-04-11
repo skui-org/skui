@@ -27,6 +27,8 @@
 #include <core/application.h++>
 #include <core/debug.h++>
 
+#include <graphics/skia_raster_context.h++>
+
 #ifndef UNICODE
 #define UNICODE
 #endif
@@ -35,6 +37,7 @@
 #endif
 
 #include <Windows.h>
+#include <wingdi.h>
 
 namespace skui
 {
@@ -52,9 +55,15 @@ namespace skui
           case WM_CLOSE:
             DestroyWindow(hwnd);
             break;
-          case WM_DESTROY:
-            PostQuitMessage(0);
+          case WM_PAINT:
+          {
+            PAINTSTRUCT paint_struct;
+            BeginPaint(hwnd, &paint_struct);
+            auto the_window = reinterpret_cast<window*>(GetWindowLongPtrW(hwnd, GWLP_USERDATA));
+            the_window->repaint();
+            EndPaint(hwnd, &paint_struct);
             break;
+          }
           default:
             return DefWindowProcW(hwnd, msg, wParam, lParam);
         }
@@ -125,6 +134,9 @@ namespace skui
 
     void window::choose_visual(implementation::platform_handle &handle)
     {
+      // temporary: OpenGL not supported on Windows.
+      flags.unset(window_flag::opengl);
+
       if(flags.test(window_flag::opengl))
       {
         static const PIXELFORMATDESCRIPTOR pixel_format_descriptor =
@@ -217,6 +229,28 @@ namespace skui
       {
         if(SwapBuffers(native_handle->device_context) != TRUE)
           core::debug_print("Call to SwapBuffers failed.\n");
+      }
+      else
+      {
+        BITMAPINFO bitmap_info{};
+        bitmap_info.bmiHeader.biSize        = sizeof(BITMAPINFOHEADER);
+        bitmap_info.bmiHeader.biWidth       = static_cast<LONG>(size.width);
+        bitmap_info.bmiHeader.biHeight      = -static_cast<LONG>(size.height); // top-down image
+        bitmap_info.bmiHeader.biPlanes      = 1;
+        bitmap_info.bmiHeader.biBitCount    = 32;
+        bitmap_info.bmiHeader.biCompression = BI_RGB;
+        bitmap_info.bmiHeader.biSizeImage   = 0;
+
+        int ret = SetDIBitsToDevice(native_handle->device_context,
+                                    0, 0,
+                                    static_cast<DWORD>(size.width), static_cast<DWORD>(size.height),
+                                    0, 0,
+                                    0, static_cast<UINT>(size.height),
+                                    static_cast<graphics::skia_raster_context&>(*graphics_context).raw_pixels().data(),
+                                    &bitmap_info,
+                                    DIB_RGB_COLORS);
+        if(ret == 0)
+          core::debug_print("SetDIBitsToDevice failed.\n");
       }
     }
 

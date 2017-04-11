@@ -33,6 +33,7 @@
 #include <GrGLInterface.h>
 
 #include <memory>
+#include <vector>
 
 class SkSurface;
 
@@ -49,6 +50,11 @@ namespace skui
       ~skia_raster_context() override = default;
 
       std::unique_ptr<canvas> create_canvas(const pixel_size& size) const override;
+
+      const std::vector<std::uint32_t>& raw_pixels() const;
+
+    private:
+      mutable std::vector<std::uint32_t> pixels;
     };
   }
 }

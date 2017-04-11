@@ -44,7 +44,8 @@ namespace skui
     class skia_raster_canvas : public skia_canvas
     {
     public:
-      skia_raster_canvas(const pixel_size& size,
+      skia_raster_canvas(std::vector<uint32_t>& pixels,
+                         const pixel_size& size,
                          canvas_flags flags);
       ~skia_raster_canvas() override = default;
     };
