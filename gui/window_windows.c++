@@ -206,7 +206,9 @@ namespace skui
 
     void window::update_geometry()
     {
-
+      RECT rect;
+      GetClientRect(native_handle->window_handle, &rect);
+      size = {static_cast<graphics::pixel>(rect.right), static_cast<graphics::pixel>(rect.bottom)};
     }
 
     void window::swap_buffers()
