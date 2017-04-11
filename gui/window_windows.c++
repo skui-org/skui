@@ -123,6 +123,10 @@ namespace skui
       CloseWindow(native_handle->window_handle);
     }
 
+    void window::choose_visual(implementation::platform_handle &handle)
+    {
+    }
+
     void window::setup_window(implementation::platform_handle &handle)
     {
       handle.window_handle = CreateWindowExW(
@@ -135,35 +139,8 @@ namespace skui
             nullptr, nullptr,
             application_instance, nullptr
             );
-    }
 
 
-    void window::initialize_and_execute_platform_loop()
-    {
-      auto handle_ptr = implementation::create_handle();
-      auto& handle = *handle_ptr;
-
-      setup_window(handle);
-
-      setup_graphics_backend(handle);
-
-
-      // Ensure calling thread is waiting for draw_condition_variable
-      std::unique_lock<decltype(handle_mutex)> handle_lock(handle_mutex);
-      native_handle = handle_ptr.release();
-      handle_condition_variable.notify_one();
-
-      // Continue calling thread before initiating event loop
-      handle_lock.unlock();
-
-      execute_event_loop();
-
-      graphics_context.reset();
-      delete native_handle;
-      native_handle = nullptr;
-
-      if(flags.test(window_flag::exit_on_close))
-        core::application::instance().quit();
     }
 
     void window::setup_graphics_backend(implementation::platform_handle& handle)

@@ -27,8 +27,8 @@
 #include <core/application.h++>
 #include <core/debug.h++>
 
-#include <graphics/context.h++>
-#include <graphics/context.h++>
+#include <graphics/skia_gl_context.h++>
+#include <graphics/skia_raster_context.h++>
 
 #include <memory>
 #include <vector>
@@ -86,6 +86,43 @@ namespace skui
     {
       auto canvas = graphics_context->create_canvas(size);
       canvas->draw();
+    }
+
+    void window::initialize_and_execute_platform_loop()
+    {
+      native_handle = implementation::create_handle();
+      auto& handle = *native_handle;
+
+      choose_visual(handle);
+
+      setup_window(handle);
+
+      setup_graphics_backend(handle);
+
+      create_graphics_context();
+
+      // Ensure calling thread is waiting for draw_condition_variable
+      std::unique_lock<decltype(handle_mutex)> handle_lock(handle_mutex);
+      handle_condition_variable.notify_one();
+
+      // Continue calling thread before initiating event loop
+      handle_lock.unlock();
+
+      execute_event_loop();
+
+      graphics_context.reset();
+      native_handle.reset();
+
+      if(flags.test(window_flag::exit_on_close))
+        core::application::instance().quit();
+    }
+
+    void window::create_graphics_context()
+    {
+      if(flags.test(window_flag::opengl))
+        graphics_context = std::make_unique<graphics::skia_gl_context>();
+      else
+        graphics_context = std::make_unique<graphics::skia_raster_context>();
     }
 
     window::window_list& window::windows()

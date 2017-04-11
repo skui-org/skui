@@ -114,6 +114,7 @@ namespace skui
       void choose_visual(implementation::platform_handle& handle);
       void setup_window(implementation::platform_handle& handle);
       void setup_graphics_backend(implementation::platform_handle& handle);
+      void create_graphics_context();
       void execute_event_loop();
 
       void update_geometry();

@@ -201,37 +201,6 @@ namespace skui
       xcb_flush(handle.connection);
     }
 
-    void window::initialize_and_execute_platform_loop()
-    {
-      auto handle_ptr = implementation::create_handle();
-      auto& handle = *handle_ptr;
-
-      choose_visual(handle);
-
-      setup_window(handle);
-
-      setup_graphics_backend(handle);
-
-      graphics_context = std::make_unique<graphics::skia_gl_context>();
-
-      // Ensure calling thread is waiting for draw_condition_variable
-      std::unique_lock<decltype(handle_mutex)> handle_lock(handle_mutex);
-      native_handle = handle_ptr.release();
-      handle_condition_variable.notify_one();
-
-      // Continue calling thread before initiating event loop
-      handle_lock.unlock();
-
-      execute_event_loop();
-
-      graphics_context.reset();
-      delete native_handle;
-      native_handle = nullptr;
-
-      if(flags.test(window_flag::exit_on_close))
-        core::application::instance().quit();
-    }
-
     void window::setup_graphics_backend(implementation::platform_handle&handle)
     {
       handle.context = glXCreateContext(handle.display.get(), handle.visual_info.get(), nullptr, True);
