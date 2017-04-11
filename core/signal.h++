@@ -148,11 +148,9 @@ namespace skui
           const trackable* object = connection->first;
 
           slots.erase(connection);
-          if(object && std::find_if(slots.begin(), slots.end(),
+          if(object && std::any_of(slots.begin(), slots.end(),
                                    [&object](const object_slot_type& object_slot)
-                                   {
-                                     return object_slot.first == object;
-                                   }) == slots.end())
+                                   { return object_slot.first == object; }))
             object->untrack(this);
         }
 
