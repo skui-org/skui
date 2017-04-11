@@ -55,6 +55,7 @@ namespace skui
 
     protected:
       skia_canvas(//sk_sp<SkSurface> surface,
+                  float pixel_offset,
                   canvas_flags flags);
 
       sk_sp<SkSurface> surface;
@@ -64,6 +65,8 @@ namespace skui
       SkPaint make_border_paint(const shape& shape) const;
       SkPaint make_fill_paint(const shape& shape) const;
       void set_gradient(SkPaint& paint, const gradient& gradient) const;
+
+      const float pixel_offset;
     };
   }
 }

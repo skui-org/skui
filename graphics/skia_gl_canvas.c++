@@ -72,7 +72,7 @@ namespace skui
     skia_gl_canvas::skia_gl_canvas(const pixel_size& size,
                                 const GrGLInterface& gr_gl_interface,
                                 canvas_flags flags)
-      : skia_canvas(flags)
+      : skia_canvas(0.5f, flags)
       , gr_context(GrContext::Create(kOpenGL_GrBackend, reinterpret_cast<GrBackendContext>(&gr_gl_interface)))
     {
       surface = implementation::create_gl_surface(size, gr_gl_interface, *gr_context);

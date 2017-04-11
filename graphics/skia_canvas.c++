@@ -49,9 +49,11 @@ namespace skui
   namespace graphics
   {
     skia_canvas::skia_canvas(//sk_sp<SkSurface> surface,
+                             float pixel_offset,
                              canvas_flags flags)
       : canvas(flags)
       , surface(nullptr/*surface*/)
+      , pixel_offset(pixel_offset)
     {
       //SkASSERT(surface);
     }
@@ -78,7 +80,7 @@ namespace skui
       border.addRoundRect(rect, rectangle.border.radius, rectangle.border.radius);
 
       canvas->save();
-      canvas->translate(.5f, .5f);
+      canvas->translate(pixel_offset, pixel_offset);
       for(const auto& paint : {make_fill_paint(rectangle), make_border_paint(rectangle)})
       {
           canvas->drawRRect(rounded_rect, paint);
@@ -91,7 +93,7 @@ namespace skui
       auto canvas = surface->getCanvas();
 
       canvas->save();
-      canvas->translate(.5f, .5f);
+      canvas->translate(pixel_offset, pixel_offset);
       for(const auto& paint : make_paint(ellipse))
       {
           canvas->drawOval(SkRect::MakeXYWH(ellipse.position.x, ellipse.position.y,
@@ -106,7 +108,7 @@ namespace skui
       auto canvas = surface->getCanvas();;
 
       canvas->save();
-      canvas->translate(.5f, .5f);
+      canvas->translate(pixel_offset, pixel_offset);
       for(const auto& paint : make_paint(label))
       {
           canvas->drawText(label.text.c_str(), label.text.size(),

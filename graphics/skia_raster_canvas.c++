@@ -31,7 +31,7 @@ namespace skui
     skia_raster_canvas::skia_raster_canvas(std::vector<std::uint32_t>& pixels,
                                            const pixel_size& size,
                                            canvas_flags flags)
-      : skia_canvas(flags)
+      : skia_canvas(0.f, flags)
     {
       SkImageInfo info = SkImageInfo::MakeN32(static_cast<int>(size.width),
                                               static_cast<int>(size.height),
