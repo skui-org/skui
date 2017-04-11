@@ -34,7 +34,7 @@
 #define WIN32_MEAN_AND_LEAN
 #endif
 
-#include <windows.h>
+#include <Windows.h>
 
 namespace skui
 {
@@ -91,8 +91,8 @@ namespace skui
       {
       public:
         HWND window_handle;
-        BITMAPINFO bitmap_info;
-        std::unique_ptr<std::uint32_t> bitmap;
+        HDC device_context;
+        HGLRC gl_context;
       };
 
       platform_handle_ptr create_handle()
@@ -125,6 +125,36 @@ namespace skui
 
     void window::choose_visual(implementation::platform_handle &handle)
     {
+      if(flags.test(window_flag::opengl))
+      {
+        static const PIXELFORMATDESCRIPTOR pixel_format_descriptor =
+        {
+          sizeof(PIXELFORMATDESCRIPTOR),
+          1,
+          PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,    //Flags
+          PFD_TYPE_RGBA,            //The kind of framebuffer. RGBA or palette.
+          32,                        //Colordepth of the framebuffer.
+          0, 0, 0, 0, 0, 0,
+          0,
+          0,
+          0,
+          0, 0, 0, 0,
+          24,                        //Number of bits for the depthbuffer
+          8,                        //Number of bits for the stencilbuffer
+          0,                        //Number of Aux buffers in the framebuffer.
+          PFD_MAIN_PLANE,
+          0,
+          0, 0, 0
+        };
+
+        int pixel_format = ChoosePixelFormat(handle.device_context, &pixel_format_descriptor);
+        if(pixel_format == 0)
+          core::debug_print("Failed choosing pixel format.\n");
+
+        BOOL success = SetPixelFormat(handle.device_context, pixel_format, &pixel_format_descriptor);
+        if(success == FALSE)
+          core::debug_print("Failed setting pixel format.\n");
+      }
     }
 
     void window::setup_window(implementation::platform_handle &handle)
@@ -140,13 +170,24 @@ namespace skui
             application_instance, nullptr
             );
 
+      // embed a pointer to this so we can e.g. repaint ourselves
+      SetWindowLongPtrW(handle.window_handle, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
 
+      handle.device_context = GetDC(handle.window_handle);
     }
 
     void window::setup_graphics_backend(implementation::platform_handle& handle)
     {
+      if(flags.test(window_flag::opengl))
+      {
+        handle.gl_context = wglCreateContext(handle.device_context);
+        if(handle.gl_context == nullptr)
+          core::debug_print("Failed creating WGL Context.\n");
 
-
+        BOOL success = wglMakeCurrent(handle.device_context, handle.gl_context);
+        if(success == FALSE)
+          core::debug_print("Failed making WGL Context current.\n");
+      }
     }
 
     void window::execute_event_loop()
@@ -155,12 +196,6 @@ namespace skui
       BOOL result;
       while((result = GetMessageW(&message, native_handle->window_handle, 0, 0)) > 0)
       {
-        switch(message.message)
-        {
-          case WM_QUIT:
-            core::debug_print("Quit message received.\n");
-        }
-
         TranslateMessage(&message);
         DispatchMessage(&message);
       }
@@ -176,17 +211,11 @@ namespace skui
 
     void window::swap_buffers()
     {
-      /*
-      HDC dc = GetDC(native_handle->window_handle);
-      StretchDIBits(dc,
-                    0, 0,
-                    fWidth, fHeight,
-                    0, 0,
-                    fWidth, fHeight,
-                    native_handle->bitmap_info->bmiColors,
-                    native_handle->bitmap_info,
-                    DIB_RGB_COLORS, SRCCOPY);
-      ReleaseDC(fWnd, dc);*/
+      if(flags.test(window_flag::opengl))
+      {
+        if(SwapBuffers(native_handle->device_context) != TRUE)
+          core::debug_print("Call to SwapBuffers failed.\n");
+      }
     }
 
     void window::set_title(const core::string& title)
@@ -202,46 +231,5 @@ namespace skui
       GetWindowTextW(native_handle->window_handle, &title[0], length);
       return core::convert_to_utf8(title);
     }
-
-
-
-
-/*
-
-      HDC hdc = GetDC(native_handle);
-
-      skia_gl_context = SkCreateWGLContext(hdc,
-                                           0,
-                                           true,
-                                           kGLPreferCompatibilityProfile_SkWGLContextRequest);
-
-      glClearStencil(0);
-      glClearColor(0, 0, 0, 0);
-      glStencilMask(0xffffffff);
-      glClear(GL_STENCIL_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-      if(wglMakeCurrent(hdc, skia_gl_context))
-      {
-        // use DescribePixelFormat to get the stencil and color bit depth.
-        int pixelFormat = GetPixelFormat(hdc);
-        PIXELFORMATDESCRIPTOR pfd;
-        DescribePixelFormath(hdc, pixelFormat, sizeof(pfd), &pfd);
-        info->fStencilBits = pfd.cStencilBits;
-        // pfd.cColorBits includes alpha, so it will be 32 in 8/8/8/8 and 10/10/10/2
-        info->fColorBits = pfd.cRedBits + pfd.cGreenBits + pfd.cBlueBits;
-
-        // Get sample count if the MSAA WGL extension is present
-        SkWGLExtensions extensions;
-        if (extensions.hasExtension(dc, "WGL_ARB_multisample")) {
-          static const int kSampleCountAttr = SK_WGL_SAMPLES;
-          extensions.getPixelFormatAttribiv(dc,
-                                            pixelFormat,
-                                            0,
-                                            1,
-                                            &kSampleCountAttr,
-                                            &info->fSampleCount);
-
-                  return native_handle;
-        }
-        */
   }
 }
