@@ -51,6 +51,12 @@ namespace skui
     namespace implementation
     {
       class platform_handle;
+      struct platform_handle_deleter
+      {
+        void operator()(platform_handle*) const;
+      };
+      using platform_handle_ptr = std::unique_ptr<platform_handle, platform_handle_deleter>;
+      platform_handle_ptr create_handle();
     }
 
     enum class window_flag
@@ -103,7 +109,7 @@ namespace skui
       core::property<window_state> state;
 
     private:
-      const implementation::platform_handle* native_handle;
+      implementation::platform_handle_ptr native_handle;
       void initialize_and_execute_platform_loop();
       void choose_visual(implementation::platform_handle& handle);
       void setup_window(implementation::platform_handle& handle);

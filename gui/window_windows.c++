@@ -95,13 +95,16 @@ namespace skui
         std::unique_ptr<std::uint32_t> bitmap;
       };
 
-      std::unique_ptr<platform_handle> create_handle()
+      platform_handle_ptr create_handle()
       {
         const static bool registered = register_window_class();
 
-        auto handle = std::make_unique<platform_handle>();
+        return platform_handle_ptr(new platform_handle);
+      }
 
-        return handle;
+      void platform_handle_deleter::operator()(platform_handle* handle) const
+      {
+        delete handle;
       }
     }
 

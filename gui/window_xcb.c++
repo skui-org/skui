@@ -85,9 +85,14 @@ namespace skui
         xcb_window_t id; // synonymous with Xlib's Window
       };
 
-      std::unique_ptr<platform_handle> create_handle()
+      void platform_handle_deleter::operator()(platform_handle* handle) const
       {
-        auto handle = std::make_unique<implementation::platform_handle>();
+        delete handle;
+      }
+
+      platform_handle_ptr create_handle()
+      {
+        platform_handle_ptr handle(new platform_handle);
 
         // Open Display connection
         handle->display.reset(XOpenDisplay(nullptr));
