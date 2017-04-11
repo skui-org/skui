@@ -49,19 +49,23 @@ namespace skui
   {
     namespace implementation
     {
-      using xdisplay_ptr = std::unique_ptr<Display, decltype(&XCloseDisplay)>;
-      using xvisualinfo_ptr = std::unique_ptr<XVisualInfo, decltype(&XFree)>;
-      using xstring_ptr = std::unique_ptr<char, decltype(&XFree)>;
+      struct xdisplay_deleter { void operator()(Display* d) const { XCloseDisplay(d); } };
+      template<typename XFreeable>
+      struct xfree_deleter { void operator()(XFreeable* resource) const { XFree(resource); } };
+
+      using xdisplay_ptr = std::unique_ptr<Display, xdisplay_deleter>;
+      using xvisualinfo_ptr = std::unique_ptr<XVisualInfo, xfree_deleter<XVisualInfo>>;
+      using xstring_ptr = std::unique_ptr<char, xfree_deleter<char>>;
       using xcb_intern_atom_reply_ptr = core::unique_free_ptr<xcb_intern_atom_reply_t>;
 
       class platform_handle
       {
       public:
         platform_handle()
-          : display(nullptr, &XCloseDisplay)
+          : display(nullptr)
           , connection(nullptr)
-          , wm_delete_window(nullptr, &free)
-          , visual_info(nullptr, &XFree)
+          , wm_delete_window(nullptr)
+          , visual_info(nullptr)
           , context(nullptr)
           , id(0)
         {}
@@ -181,7 +185,7 @@ namespace skui
       //handle->wm_delete_window = XInternAtom(handle->display.get(), "WM_DELETE_WINDOW", False);
       //XSetWMProtocols(handle->display.get(), handle->id, &handle->wm_delete_window, 1);
       xcb_intern_atom_cookie_t cookie = xcb_intern_atom(handle.connection, 1, 12, "WM_PROTOCOLS");
-      implementation::xcb_intern_atom_reply_ptr reply(xcb_intern_atom_reply(handle.connection, cookie, nullptr), &free);
+      implementation::xcb_intern_atom_reply_ptr reply(xcb_intern_atom_reply(handle.connection, cookie, nullptr));
 
       xcb_intern_atom_cookie_t cookie2 = xcb_intern_atom(handle.connection, 0, 16, "WM_DELETE_WINDOW");
       handle.wm_delete_window.reset(xcb_intern_atom_reply(handle.connection, cookie2, nullptr));
@@ -352,13 +356,11 @@ namespace skui
       // fetch true dimensions and position of visual window now because the ConfigureNotify event lies to us
       core::unique_free_ptr<xcb_get_geometry_reply_t> geom(xcb_get_geometry_reply(native_handle->connection,
                                                                                   xcb_get_geometry(native_handle->connection, native_handle->id),
-                                                                                  nullptr),
-                                                           &free);
+                                                                                  nullptr));
 
       core::unique_free_ptr<xcb_query_tree_reply_t> tree(xcb_query_tree_reply(native_handle->connection,
                                                                               xcb_query_tree(native_handle->connection, native_handle->id),
-                                                                              nullptr),
-                                                         &free);
+                                                                              nullptr));
 
       xcb_translate_coordinates_cookie_t translateCookie = xcb_translate_coordinates(native_handle->connection,
                                                                                      native_handle->id,
@@ -367,8 +369,7 @@ namespace skui
 
       core::unique_free_ptr<xcb_translate_coordinates_reply_t> trans(xcb_translate_coordinates_reply(native_handle->connection,
                                                                                                      translateCookie,
-                                                                                                     nullptr),
-                                                                     &free);
+                                                                                                     nullptr));
 
       size = { geom->width, geom->height };
       position = { trans->dst_x, trans->dst_y };

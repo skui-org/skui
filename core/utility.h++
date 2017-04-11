@@ -40,8 +40,10 @@ namespace skui
 {
   namespace core
   {
+    template<typename Freeable>
+    struct free_deleter { void operator()(Freeable* resource) { std::free(resource); } };
     template<typename T>
-    using unique_free_ptr = std::unique_ptr<T, decltype(&std::free)>;
+    using unique_free_ptr = std::unique_ptr<T, free_deleter<T>>;
 
 #ifdef _WIN32
     string convert_to_utf8(const std::wstring& utf16_string);
