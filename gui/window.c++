@@ -82,6 +82,13 @@ namespace skui
       thread.join();
     }
 
+    void window::repaint()
+    {
+      update_geometry();
+      draw();
+      swap_buffers();
+    }
+
     void window::draw()
     {
       auto canvas = graphics_context->create_canvas(size);

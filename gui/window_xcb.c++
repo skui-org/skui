@@ -229,11 +229,7 @@ namespace skui
             if(expose->count>0)
               continue;
 
-            update_geometry();
-
-            draw();
-
-            swap_buffers();
+            repaint();
 
             break;
           }

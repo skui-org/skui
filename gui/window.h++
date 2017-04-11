@@ -91,7 +91,7 @@ namespace skui
       void hide();
       void close();
 
-      void draw();
+      void repaint();
 
       /// Properties
       graphics::pixel_size size;
@@ -109,6 +109,9 @@ namespace skui
       core::property<window_state> state;
 
     private:
+      // temporary drawing of a dummy image
+      void draw();
+
       implementation::platform_handle_ptr native_handle;
       void initialize_and_execute_platform_loop();
       void choose_visual(implementation::platform_handle& handle);
