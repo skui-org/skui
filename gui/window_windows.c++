@@ -117,6 +117,8 @@ namespace skui
       }
     }
 
+    const window_flags window::default_flags = window_flag::exit_on_close;
+
     void window::show()
     {
       ShowWindow(native_handle->window_handle, SW_SHOWNORMAL);

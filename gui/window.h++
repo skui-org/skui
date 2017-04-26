@@ -82,9 +82,11 @@ namespace skui
     public:
       using window_list = std::vector<window*>;
 
+      static const window_flags default_flags;
+
       window(graphics::pixel_position position = {0, 0},
              graphics::pixel_size initial_size = {800, 600},
-             window_flags flags = window_flag::exit_on_close | window_flag::opengl);
+             window_flags flags = default_flags);
       virtual ~window();
 
       void show();

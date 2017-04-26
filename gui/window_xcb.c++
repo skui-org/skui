@@ -124,6 +124,8 @@ namespace skui
       }
     }
 
+    const window_flags window::default_flags = window_flag::exit_on_close | window_flag::opengl;
+
     void window::show()
     {
       xcb_map_window(native_handle->connection, native_handle->id);
