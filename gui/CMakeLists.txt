@@ -37,8 +37,7 @@ target_link_libraries(gui PUBLIC core graphics)
 # Platform specific libraries
 if(UNIX)
   if(NOT APPLE)
-      find_package(X11 REQUIRED)
-      target_link_libraries(gui PUBLIC xcb X11-xcb X11)
+    target_link_libraries(gui PUBLIC xcb EGL)
   endif()
 endif()
 

@@ -22,6 +22,8 @@ matrix:
           packages:
             - g++-6
             - libgl1-mesa-dev
+            - libegl1-mesa-dev
+            - libgles2-mesa-dev
       env:
         - C_COMPILER=gcc-6
         - CXX_COMPILER=g++-6
@@ -33,6 +35,8 @@ matrix:
             - libc++-dev
             - libc++abi-dev
             - libgl1-mesa-dev
+            - libegl1-mesa-dev
+            - libgles2-mesa-dev
           sources:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise
