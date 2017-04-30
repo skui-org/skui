@@ -22,6 +22,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+find_package(OpenGL REQUIRED)
+
 # Common source files
 set(graphics_src
     canvas.h++ canvas.c++
