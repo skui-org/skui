@@ -1,40 +1,58 @@
 environment:
   matrix:
-  - config: Debug
-  - config: RelWithDebInfo
+  # MSVC
+  - GENERATOR: Visual Studio 14 2015
+    VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
+    VCVARSARG: x86
+  - GENERATOR: Visual Studio 14 2015 Win64
+    VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
+    VCVARSARG: amd64
+
+  # Mingw-w64
+  - GENERATOR: MinGW Makefiles
+    PATH: C:\mingw-w64\x86_64-6.3.0-posix-seh-rt_v5-rev1\mingw64\bin;%PATH%
+
+  # Clang/C2
+  #- GENERATOR: Visual Studio 14 2015 Win64
+  #  VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
+  #  VCVARSARG: amd64
+  #  PATH: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\
+  #  CMAKE_ARGS: -T"v140_clang_3_7"
+
+  # Clang targeting MSVC
+  #- GENERATOR: NMake Makefiles
+  #  VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
+  #  VCVARSARG: amd64
+  #  CMAKE_ARGS: -DCMAKE_CXX_COMPILER="C:/Program Files/LLVM/msbuild-bin/cl.exe" -DCMAKE_CXX_FLAGS="-fms-compatibility-version=19" -DCMAKE_C_COMPILER="C:/Program Files/LLVM/msbuild-bin/cl.exe" -DCMAKE_C_FLAGS"-fms-compatibility-version=19"
+
+  # Clang targeting mingw-w64
+  - GENERATOR: MinGW Makefiles
+    PATH: C:\mingw-w64\x86_64-6.3.0-posix-seh-rt_v5-rev1\mingw64\bin;%PATH%
+    CMAKE_ARGS: -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_CXX_FLAGS=--target=x86_64-w64-mingw32 -DCMAKE_C_COMPILER=clang -DCMAKE_C_FLAGS=--target=x86_64-w64-mingw32
+
+configuration:
+ - Debug
+ - Release
 
 shallow_clone: true
 
-# Operating system (build VM template)
-os: Visual Studio 2015
-
-# scripts that are called at very beginning, before repo cloning
-init:
-
-# clone directory
-clone_folder: c:\skui
-
-platform: x64
-
-install:
-  - set
-  - echo cmake on AppVeyor
-  - cmake -version
-  - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64
 clone_script:
-  - git clone -q --branch=%APPVEYOR_REPO_BRANCH% https://github.com/%APPVEYOR_REPO_NAME%.git %APPVEYOR_BUILD_FOLDER%
+  - git clone -q --branch=%APPVEYOR_REPO_BRANCH% https://github.com/skui-org/skui.git %APPVEYOR_BUILD_FOLDER%
   - cd %APPVEYOR_BUILD_FOLDER%
   - git checkout -qf %APPVEYOR_REPO_COMMIT%
-  - git submodule update --init --recursive
+  - git submodule -q update --init --recursive
 
-build_script:
-  - cd c:\skui
+before_build:
   - mkdir build
   - cd build
-  - echo %config%
-  - cmake -LA -G "NMake Makefiles" -DSKIP_SKIA=TRUE -DCMAKE_BUILD_TYPE=%config%
-    ..
-  - nmake
+  - if defined (VCVARS) call "%VCVARS%" %VCVARSARG%
+  - set PATH=%PATH:C:\Program Files\Git\usr\bin;=%
+  - set PATH
+  - cmake --version
+  - cmake %CMAKE_ARGS% -G"%GENERATOR%" -DCMAKE_BUILD_TYPE="%CONFIGURATION%" .. || (echo CMAKEERROR && type CMakeFiles\CMakeError.log && echo CMAKEOUTPUT && type CMakeFiles\CMakeOutput.log && exit 1)
+
+build_script:
+  - cmake --build . --config %CONFIGURATION%
 
 test_script:
-  - ctest --output-on-failure -C %config%
+  - ctest --output-on-failure -C %CONFIGURATION%
