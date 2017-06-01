@@ -4,11 +4,11 @@ dist: trusty
 language: c++
 
 script:
- - wget https://cmake.org/files/v3.4/cmake-3.4.0-Linux-x86_64.tar.gz
- - tar -xf cmake-3.4.0-Linux-x86_64.tar.gz
+ - wget https://cmake.org/files/v3.5/cmake-3.5.2-Linux-x86_64.tar.gz
+ - tar -xf cmake-3.5.2-Linux-x86_64.tar.gz
  - mkdir build
  - cd build
- - ../cmake-3.4.0-Linux-x86_64/bin/cmake .. -DCMAKE_C_COMPILER=$C_COMPILER -DCMAKE_CXX_COMPILER=$CXX_COMPILER
+ - ../cmake-3.5.2-Linux-x86_64/bin/cmake .. -DCMAKE_C_COMPILER=$C_COMPILER -DCMAKE_CXX_COMPILER=$CXX_COMPILER
  - make
  - ctest --output-on-failure
 
@@ -46,9 +46,9 @@ matrix:
         - C_COMPILER=clang-3.9
         - CXX_COMPILER=clang++-3.9
       before_install:
-        - wget https://cmake.org/files/v3.7/cmake-3.7.2-Linux-x86_64.tar.gz
-        - tar -xf cmake-3.7.2-Linux-x86_64.tar.gz
-        - export PATH=$PWD/cmake-3.7.2-Linux-x86_64/bin:$PATH
+        - wget https://cmake.org/files/v3.5/cmake-3.5.2-Linux-x86_64.tar.gz
+        - tar -xf cmake-3.5.2-Linux-x86_64.tar.gz
+        - export PATH=$PWD/cmake-3.5.2-Linux-x86_64/bin:$PATH
         - wget http://llvm.org/releases/3.9.1/libcxxabi-3.9.1.src.tar.xz
         - tar -xf libcxxabi-3.9.1.src.tar.xz
         - mkdir libcxxabi-build && cd libcxxabi-build
