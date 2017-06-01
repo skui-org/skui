@@ -62,10 +62,8 @@ namespace skui
         ~signal_base() { disconnect_all(); }
 
         signal_base(const signal_base& other)
-          : slots()
-        {
-          std::copy(other.slots.begin(), other.slots.end(), std::back_inserter(slots));
-        }
+          : slots(other.slots.begin(), other.slots.end())
+        {}
 
         signal_base(signal_base&& other) : slots(std::move(other.slots)) {}
         signal_base& operator=(signal_base other) { swap(slots, other.slots); return *this; }
