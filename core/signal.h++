@@ -112,7 +112,7 @@ namespace skui
 
           const std::lock_guard<decltype(slots_mutex)> lock(slots_mutex);
 
-          slots.emplace_back(object, make_value<member_function_slot<Class, ReturnType, ArgTypes...>>(slot));
+          slots.emplace_back(object, make_value<member_function_slot<Class, ReturnType(Class::*)(ArgTypes...), ReturnType, ArgTypes...>>(slot));
           object->track(this);
 
           return --slots.end();
@@ -125,7 +125,7 @@ namespace skui
                         "You can only connect to member functions of a trackable object");
           const std::lock_guard<decltype(slots_mutex)> lock(slots_mutex);
 
-          object_slot_type object_slot(object, make_value<const_member_function_slot<Class, ReturnType, ArgTypes...>>(slot));
+          object_slot_type object_slot(object, make_value<const_member_function_slot<Class, ReturnType(Class::*)(ArgTypes...) const, ReturnType, ArgTypes...>>(slot));
           slots.emplace_back(std::move(object_slot));
           object->track(this);
 

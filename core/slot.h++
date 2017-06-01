@@ -79,13 +79,11 @@ namespace skui
       template<typename Callable, typename ReturnType, typename... ArgTypes>
       using function_slot = callable_slot<Callable, ReturnType, ArgTypes...>;
 
-      template<typename Class, typename ReturnType, typename... ArgTypes>
+      template<typename Class, typename MemberFunctionPointer, typename ReturnType, typename... ArgTypes>
       class member_function_slot : public slot<ReturnType, ArgTypes...>
       {
-        using member_function_pointer = ReturnType(Class::*)(ArgTypes...);
-
       public:
-        member_function_slot(member_function_pointer member_function)
+        member_function_slot(MemberFunctionPointer member_function)
           : member_function_ptr(member_function)
         {}
 
@@ -95,16 +93,16 @@ namespace skui
         }
 
       private:
-        member_function_pointer member_function_ptr;
+        const MemberFunctionPointer member_function_ptr;
       };
 
-      template<typename Class, typename ReturnType>
-      class member_function_slot<Class, ReturnType> : public slot<ReturnType>
+      template<typename Class, typename MemberFunctionPointer, typename ReturnType>
+      class member_function_slot<Class, MemberFunctionPointer, ReturnType> : public slot<ReturnType>
       {
         using member_function_pointer = ReturnType(Class::*)();
 
       public:
-        member_function_slot(member_function_pointer member_function)
+        member_function_slot(MemberFunctionPointer member_function)
           : member_function_ptr(member_function)
         {}
 
@@ -115,16 +113,15 @@ namespace skui
         }
 
       private:
-        member_function_pointer member_function_ptr;
+        const MemberFunctionPointer member_function_ptr;
       };
 
-      template<typename Class, typename ReturnType, typename... ArgTypes>
+      template<typename Class, typename ConstMemberFunctionPointer, typename ReturnType, typename... ArgTypes>
       class const_member_function_slot : public slot<ReturnType, ArgTypes...>
       {
-        using const_member_function_pointer = ReturnType(Class::*)(ArgTypes...) const;
 
       public:
-        const_member_function_slot(const_member_function_pointer const_member_function)
+        const_member_function_slot(ConstMemberFunctionPointer const_member_function)
           : const_member_function_ptr(const_member_function)
         {}
 
@@ -134,16 +131,14 @@ namespace skui
         }
 
       private:
-        const_member_function_pointer const_member_function_ptr;
+        const ConstMemberFunctionPointer const_member_function_ptr;
       };
 
-      template<typename Class, typename ReturnType>
-      class const_member_function_slot<Class, ReturnType> : public slot<ReturnType>
+      template<typename Class, typename ConstMemberFunctionPointer, typename ReturnType>
+      class const_member_function_slot<Class, ConstMemberFunctionPointer, ReturnType> : public slot<ReturnType>
       {
-        using const_member_function_pointer = ReturnType(Class::*)() const;
-
       public:
-        const_member_function_slot(const_member_function_pointer const_member_function)
+        const_member_function_slot(ConstMemberFunctionPointer const_member_function)
           : const_member_function_ptr(const_member_function)
         {}
 
@@ -153,7 +148,7 @@ namespace skui
         }
 
       private:
-        const_member_function_pointer const_member_function_ptr;
+        const ConstMemberFunctionPointer const_member_function_ptr;
       };
     }
   }
