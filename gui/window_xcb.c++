@@ -64,8 +64,6 @@ namespace skui
   {
     namespace implementation
     {
-      using xcb_intern_atom_reply_ptr = core::unique_free_ptr<xcb_intern_atom_reply_t>;
-
       class platform_handle
       {
       public:
@@ -96,7 +94,7 @@ namespace skui
 
         xcb_connection_t* connection;
         xcb_screen_t* preferred_screen;
-        xcb_intern_atom_reply_ptr wm_delete_window;
+        core::unique_free_ptr<xcb_intern_atom_reply_t> wm_delete_window;
         xcb_visualid_t visualid;
         xcb_window_t id;
 
@@ -249,7 +247,7 @@ namespace skui
 
       // The magic incantation to receive and be able to check for the "window was closed" event
       xcb_intern_atom_cookie_t cookie = xcb_intern_atom(handle.connection, 1, 12, "WM_PROTOCOLS");
-      implementation::xcb_intern_atom_reply_ptr reply(xcb_intern_atom_reply(handle.connection, cookie, nullptr));
+      core::unique_free_ptr<xcb_intern_atom_reply_t> reply(xcb_intern_atom_reply(handle.connection, cookie, nullptr));
 
       xcb_intern_atom_cookie_t cookie2 = xcb_intern_atom(handle.connection, 0, 16, "WM_DELETE_WINDOW");
       handle.wm_delete_window.reset(xcb_intern_atom_reply(handle.connection, cookie2, nullptr));
