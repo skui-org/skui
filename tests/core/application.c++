@@ -30,13 +30,13 @@
 
 namespace
 {
-  using skui::test::assert;
+  using skui::test::check;
 
   void test_arguments()
   {
     const auto& arguments = skui::core::application::instance().commandline_arguments;
 
-    assert(arguments[0] == "skui is awesome", "arguments passed correctly.\n");
+    check(arguments[0] == "skui is awesome", "arguments passed correctly.\n");
   }
 
   void test_execute_and_quit()
@@ -50,7 +50,7 @@ namespace
 
     t.join();
 
-    assert(return_value = exit_code, "application::execute returns exit code passed to quit().");
+    check(return_value = exit_code, "application::execute returns exit code passed to quit().");
   }
 }
 

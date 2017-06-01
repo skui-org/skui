@@ -28,7 +28,7 @@
 
 namespace
 {
-  using skui::test::assert;
+  using skui::test::check;
 
   bool command_executed = false;
 
@@ -40,7 +40,7 @@ namespace
 
     command.execute();
 
-    assert(command_executed, "Command executed function.");
+    check(command_executed, "Command executed function.");
   }
 }
 

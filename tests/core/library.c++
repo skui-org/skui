@@ -28,19 +28,19 @@
 
 int main()
 {
-  using skui::test::assert;
+  using skui::test::check;
 
   skui::core::library library("core/library_lib");
 
-  assert(library.load(), "library loaded correctly");
+  check(library.load(), "library loaded correctly");
 
   auto func = library.resolve<const char*>("library_function");
-  assert(func != nullptr, "function name resolved");
-  assert(func() == skui::core::string("test string"), "function call returns correct value");
+  check(func != nullptr, "function name resolved");
+  check(func() == skui::core::string("test string"), "function call returns correct value");
 
   auto func_arg = library.resolve<int, int>("library_function_int");
-  assert(func_arg != nullptr, "function name with arg resolved");
-  assert(func_arg(2) == 4, "function call returns correct value");
+  check(func_arg != nullptr, "function name with arg resolved");
+  check(func_arg(2) == 4, "function call returns correct value");
 
   return skui::test::exit_code;
 }

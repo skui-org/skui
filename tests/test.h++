@@ -44,7 +44,7 @@ namespace skui
 
     static int exit_code = EXIT_SUCCESS;
     template<typename... ArgTypes>
-    void assert(bool passed, ArgTypes... message)
+    void check(bool passed, ArgTypes... message)
     {
       if(!passed)
       {

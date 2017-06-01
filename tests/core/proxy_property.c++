@@ -28,7 +28,7 @@
 
 namespace
 {
-  using skui::test::assert;
+  using skui::test::check;
 
   int value;
   int getter() { return value; }
@@ -43,8 +43,8 @@ namespace
     value = 0;
     property = 1;
 
-    assert(value == 1, "proxied object changed through proxy_property.");
-    assert(slot_called, "changing property emits signal.");
+    check(value == 1, "proxied object changed through proxy_property.");
+    check(slot_called, "changing property emits signal.");
   }
 
   void test_basic_operations()
@@ -54,37 +54,37 @@ namespace
     property.value_changed.connect([&slot_called](int) { slot_called = true; });
 
     value = 2;
-    assert(property == 2, "==");
-    assert(2 == property, "== (reversed)");
-    assert(property <  3, "<" );
-    assert(property <= 2, "<=");
-    assert(property >  1, ">" );
-    assert(property >= 2, ">=");
-    assert(property != 1, "!=");
-    assert(!slot_called,  "operators don't emit value_changed");
+    check(property == 2, "==");
+    check(2 == property, "== (reversed)");
+    check(property <  3, "<" );
+    check(property <= 2, "<=");
+    check(property >  1, ">" );
+    check(property >= 2, ">=");
+    check(property != 1, "!=");
+    check(!slot_called,  "operators don't emit value_changed");
 
     property = 1;
-    assert(property == 1, "assignment");
-    assert(value == 1,    "assignment (underlying value)");
-    assert(slot_called,   "assignment emits value_changed");
+    check(property == 1, "assignment");
+    check(value == 1,    "assignment (underlying value)");
+    check(slot_called,   "assignment emits value_changed");
 
     slot_called = false;
     skui::core::proxy_property<int> other_property{property};
-    assert(property == other_property && other_property == 1, "copy construction");
-    assert(!slot_called, "copy construction does not emit value_changed");
+    check(property == other_property && other_property == 1, "copy construction");
+    check(!slot_called, "copy construction does not emit value_changed");
 
     slot_called = false;
     other_property = 0;
-    assert(slot_called, "connection copied");
+    check(slot_called, "connection copied");
 
     slot_called = false;
     other_property = std::move(property);
-    assert(!slot_called, "move constructor does not emit value_changed");
+    check(!slot_called, "move constructor does not emit value_changed");
 
     slot_called = false;
     other_property = 2;
-    assert(slot_called, "moved-to property is connected");
-    assert(value == 2,  "moved-to property changes external value");
+    check(slot_called, "moved-to property is connected");
+    check(value == 2,  "moved-to property changes external value");
   }
 }
 

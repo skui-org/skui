@@ -31,7 +31,7 @@
 
 namespace
 {
-  using skui::test::assert;
+  using skui::test::check;
 
   int count = 0;
   void f() { ++count; }
@@ -49,7 +49,7 @@ namespace
 
     thread.join();
 
-    assert(count == 3, "3 commands executed.");
+    check(count == 3, "3 commands executed.");
   }
 }
 

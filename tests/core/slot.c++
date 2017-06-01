@@ -28,7 +28,7 @@
 
 namespace
 {
-  using skui::test::assert;
+  using skui::test::check;
   using skui::core::implementation::callable_slot;
   using skui::core::implementation::member_function_slot;
 
@@ -46,9 +46,13 @@ namespace
   struct mock
   {
     void m() { called = 1; }
+    void m() const { const_called = 11; }
     void m_arg(int i) { called = i; }
+    void m_arg(int i) const { const_called = i; }
     int m_return() { return 44; }
+    int m_return() const { return 33; }
     int called = 0;
+    mutable int const_called = 0;
   };
 
   void test_callable_slot()
@@ -56,48 +60,72 @@ namespace
     {
       callable_slot<decltype(&f), void> slot(&f);
       slot(nullptr);
-      assert(f_called == 1, "function called through slot.");
+      check(f_called == 1, "function called through slot.");
 
       callable_slot<decltype(&f_arg), void, int> slot_arg(&f_arg);
       slot_arg(nullptr, 2);
-      assert(f_called == 2, "function with argument called through slot.");
+      check(f_called == 2, "function with argument called through slot.");
     }
     {
       callable_slot<decltype(l), void> slot(l);
       slot(nullptr);
-      assert(l_called == 1, "lambda called through slot.");
+      check(l_called == 1, "lambda called through slot.");
 
       callable_slot<decltype(l_arg), void, int> slot_arg(l_arg);
       slot_arg(nullptr, 2);
-      assert(l_called == 2, "lambda with argument called through slot.");
+      check(l_called == 2, "lambda with argument called through slot.");
+    }
+    {
+      int captured = 0;
+      const auto cl = [&captured](int i) { captured = i; };
+
+      callable_slot<decltype(cl), void, int> slot(cl);
+      slot(nullptr, 1);
+      check(captured == 1, "Capturing lambda slot called.");
     }
   }
 
   void test_member_slot()
   {
-    mock object;
+    {
+      mock object;
 
-    member_function_slot<mock, void> slot(&mock::m);
-    slot(&object);
-    assert(object.called == 1, "member function called through slot.");
+      member_function_slot<mock, void(mock::*)(), void> slot(&mock::m);
+      slot(&object);
+      check(object.called == 1, "member function called through slot.");
 
-    member_function_slot<mock, void, int> slot_arg(&mock::m_arg);
-    slot_arg(&object, 2);
-    assert(object.called == 2, "member function with argument called through slot.");
+      member_function_slot<mock, void(mock::*)(int), void, int> slot_arg(&mock::m_arg);
+      slot_arg(&object, 2);
+      check(object.called == 2, "member function with argument called through slot.");
+    }
+    {
+      const mock object;
+
+      const member_function_slot<mock, void(mock::*)() const, void> slot(&mock::m);
+      slot(&object);
+      check(object.const_called == 11, "const member function called through slot.");
+
+      const member_function_slot<mock, void(mock::*)(int) const, void, int> slot_arg(&mock::m_arg);
+      slot_arg(&object, 22);
+      check(object.const_called == 22, "const member function with argument called through slot.");
+    }
   }
 
   void test_return_value_slot()
   {
     callable_slot<decltype(&f_return), int> function_slot(f_return);
-    assert(function_slot(nullptr) == 42, "function slot returns correct return value.");
+    check(function_slot(nullptr) == 42, "function slot returns correct return value.");
 
     callable_slot<decltype(l_return), int> lambda_slot(l_return);
-    assert(lambda_slot(nullptr) == 43, "lambda slot returns correct return value.");
+    check(lambda_slot(nullptr) == 43, "lambda slot returns correct return value.");
 
     mock object;
 
-    member_function_slot<mock, int> member_slot(&mock::m_return);
-    assert(member_slot(&object) == 44, "member slot returns correct return value.");
+    member_function_slot<mock, int(mock::*)(), int> member_slot(&mock::m_return);
+    check(member_slot(&object) == 44, "member slot returns correct return value.");
+
+    member_function_slot<mock, int(mock::*)() const, int> const_member_slot(&mock::m_return);
+    check(const_member_slot(&object) == 33, "const member slot returns correct return value.");
   }
 }
 
@@ -105,6 +133,7 @@ int main()
 {
   test_callable_slot();
   test_member_slot();
+  test_return_value_slot();
 
   return skui::test::exit_code;
 }

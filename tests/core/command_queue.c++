@@ -30,7 +30,7 @@
 
 namespace
 {
-  using skui::test::assert;
+  using skui::test::check;
 
   bool command_executed = false;
   void f() { command_executed = true; }
@@ -42,13 +42,13 @@ namespace
     command_queue.push(std::make_unique<skui::core::command>(f));
 
     auto commands = command_queue.take_commands();
-    assert(commands.size() == 1, "Commands pushed and taken correctly.");
+    check(commands.size() == 1, "Commands pushed and taken correctly.");
 
     commands.front()->execute();
-    assert(command_executed, "Taken command correctly executed.");
+    check(command_executed, "Taken command correctly executed.");
 
     commands = command_queue.take_commands();
-    assert(commands.empty(), "Taking commands empties command_queue.");
+    check(commands.empty(), "Taking commands empties command_queue.");
   }
 
   void f_wait(skui::core::command_queue* queue, std::mutex* mutex, std::condition_variable* cv, bool* should_wakeup)
@@ -57,11 +57,11 @@ namespace
 
     queue->wait();
 
-    assert(*should_wakeup == false, "queue doesn't execute command on wait.");
+    check(*should_wakeup == false, "queue doesn't execute command on wait.");
 
     auto commands = queue->take_commands();
 
-    assert(commands.size() == 1, "Command pushed to queue.");
+    check(commands.size() == 1, "Command pushed to queue.");
 
     commands.front()->execute();
 

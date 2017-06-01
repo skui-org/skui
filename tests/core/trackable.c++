@@ -30,7 +30,7 @@
 
 namespace
 {
-  using skui::test::assert;
+  using skui::test::check;
 
   struct mock_trackable : public skui::core::trackable
   {
@@ -55,9 +55,9 @@ namespace
       trackable.track(&tracker);
     }
 
-    assert(tracker.informed_deleted, "tracker informed when trackable was deleted");
-    assert(!tracker.informed_copied, "tracker not informed of copy when trackable was deleted");
-    assert(!tracker.informed_moved, "tracker not informed of move when trackable was deleted");
+    check(tracker.informed_deleted, "tracker informed when trackable was deleted");
+    check(!tracker.informed_copied, "tracker not informed of copy when trackable was deleted");
+    check(!tracker.informed_moved, "tracker not informed of move when trackable was deleted");
   }
 
   void test_trackable_copy()
@@ -67,9 +67,9 @@ namespace
     trackable.track(&tracker);
 
     mock_trackable other_trackable(trackable);
-    assert(tracker.informed_copied, "tracker informed when trackable was copied");
-    assert(!tracker.informed_moved, "tracker not informed of move when trackable was copied");
-    assert(!tracker.informed_deleted, "tracker not informed of delete when trackable was copied");
+    check(tracker.informed_copied, "tracker informed when trackable was copied");
+    check(!tracker.informed_moved, "tracker not informed of move when trackable was copied");
+    check(!tracker.informed_deleted, "tracker not informed of delete when trackable was copied");
   }
 
   void test_trackable_move()
@@ -79,9 +79,9 @@ namespace
     trackable.track(&tracker);
 
     mock_trackable other_trackable(std::move(trackable));
-    assert(tracker.informed_moved, "tracker informed when trackable was moved");
-    assert(!tracker.informed_copied, "tracker not informed of copy when trackable was moved");
-    assert(!tracker.informed_deleted, "tracker not informed of delete when trackable was moved");
+    check(tracker.informed_moved, "tracker informed when trackable was moved");
+    check(!tracker.informed_copied, "tracker not informed of copy when trackable was moved");
+    check(!tracker.informed_deleted, "tracker not informed of delete when trackable was moved");
   }
 }
 

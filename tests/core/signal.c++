@@ -28,7 +28,7 @@
 
 namespace
 {
-  using skui::test::assert;
+  using skui::test::check;
 
   bool free_slot_called = false;
   void slot() { free_slot_called = true; }
@@ -46,15 +46,22 @@ namespace
     signal.connect(lambda_slot);
 
     signal.emit();
-    assert(free_slot_called, "Free function slot called.");
-    assert(lambda_slot_called, "Lambda function slot called.");
-    assert(!overloaded_slot_called, "Overloaded slot not called.");
+    check(free_slot_called, "Free function slot called.");
+    check(lambda_slot_called, "Lambda function slot called.");
+    check(!overloaded_slot_called, "Overloaded slot not called.");
 
     skui::core::signal<bool> signal_bool;
     signal_bool.connect(static_cast<void(*)(bool)>(slot));
     signal_bool.emit(true);
 
-    assert(overloaded_slot_called, "Overloaded slot called.");
+    check(overloaded_slot_called, "Overloaded slot called.");
+
+    //skui::core::signal<int> signal_int;
+    //signal_int.connect(lambda_slot);
+    //lambda_slot_called = false;
+    //signal_int.emit(5);
+
+    //assert(lambda_slot_called, "Slot with less arguments called.");
   }
 
   void test_signal_copy_move()
@@ -70,24 +77,24 @@ namespace
 
     signal_one.emit();
 
-    assert(slot_called, "Copied-from signal still connected.");
+    check(slot_called, "Copied-from signal still connected.");
 
     slot_called = false;
 
     signal_two.emit();
 
-    assert(slot_called, "Copied-to signal connected.");
+    check(slot_called, "Copied-to signal connected.");
 
     signal_two = std::move(signal_one);
     slot_called = false;
 
     signal_one.emit();
 
-    assert(!slot_called, "Moved-from signal disconnected.");
+    check(!slot_called, "Moved-from signal disconnected.");
 
     signal_two.emit();
 
-    assert(slot_called, "Moved-to signal connected correclty.");
+    check(slot_called, "Moved-to signal connected correclty.");
   }
 
   void test_signal_with_argument()
@@ -100,7 +107,7 @@ namespace
 
     signal.emit(true);
 
-    assert(slot_called, "Argument passed through signal.");
+    check(slot_called, "Argument passed through signal.");
   }
 
   void test_signal_disconnect()
@@ -115,15 +122,15 @@ namespace
     signal.disconnect(slot_connection);
 
     signal.emit();
-    skui::test::assert(!free_slot_called, "Slot disconnected.");
-    skui::test::assert(other_slot_called, "Other slot still connected.");
+    skui::test::check(!free_slot_called, "Slot disconnected.");
+    skui::test::check(other_slot_called, "Other slot still connected.");
 
     signal.disconnect_all();
 
     other_slot_called = false;
     signal.emit();
 
-    skui::test::assert(!other_slot_called, "Disconnect all slots.");
+    skui::test::check(!other_slot_called, "Disconnect all slots.");
   }
 
   struct mock : skui::core::trackable
@@ -142,14 +149,14 @@ namespace
       signal.connect(&object, &mock::f);
 
       signal.emit();
-      assert(object.slot_called, "member function slot called.");
+      check(object.slot_called, "member function slot called.");
 
       skui::core::signal<int> signal_int;
       signal_int.connect(&object, &mock::g);
 
       object.slot_called = false;
       signal_int.emit(0);
-      assert(object.slot_called, "member function with argument called");
+      check(object.slot_called, "member function with argument called");
     }
     {
       mock other_object;
@@ -159,8 +166,8 @@ namespace
       signal.disconnect(&other_object);
 
       signal.emit();
-      assert(object.slot_called, "connected slot called");
-      assert(!other_object.slot_called, "disconnected slot not called");
+      check(object.slot_called, "connected slot called");
+      check(!other_object.slot_called, "disconnected slot not called");
     }
   }
 
@@ -174,7 +181,7 @@ namespace
 
     mock_ptr.reset();
     signal.emit();
-    assert(mock_object.slot_called, "signal disconnects on object delete");
+    check(mock_object.slot_called, "signal disconnects on object delete");
   }
 }
 

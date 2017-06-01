@@ -51,31 +51,31 @@ using real_flag = skui::core::bitflag<flag>;
 
 namespace
 {
-  using skui::test::assert;
+  using skui::test::check;
   using namespace skui::core::bitflag_operators;
 
   void test_bitflag_set_test()
   {
     test_flag tester(test::one);
 
-    assert( tester.test(test::one), "Construction sets proper bit.");
-    assert(!tester.test(test::two), "Construction doesn't set improper bit.");
-    assert(!tester.test(test::three), "Construction doesn't set improper bit.");
-    assert( tester.count() == 1, "Count with one bit set returns correct value.");
+    check( tester.test(test::one), "Construction sets proper bit.");
+    check(!tester.test(test::two), "Construction doesn't set improper bit.");
+    check(!tester.test(test::three), "Construction doesn't set improper bit.");
+    check( tester.count() == 1, "Count with one bit set returns correct value.");
 
     tester.set(test::three);
 
-    assert( tester.test(test::one), "Set leaves previously set bit set.");
-    assert(!tester.test(test::two), "Set leaves unrelated bit unset.");
-    assert( tester.test(test::three), "Set sets new bit.");
-    assert( tester.count() == 2, "Count with two bits set returns correct value.");
+    check( tester.test(test::one), "Set leaves previously set bit set.");
+    check(!tester.test(test::two), "Set leaves unrelated bit unset.");
+    check( tester.test(test::three), "Set sets new bit.");
+    check( tester.count() == 2, "Count with two bits set returns correct value.");
 
     tester.unset(test::one);
 
-    assert(!tester.test(test::one), "Unset unsets previously set bit.");
-    assert(!tester.test(test::two), "Unset leaves unrelated bit unset.");
-    assert( tester.test(test::three), "Unset leaves unrelated bit set.");
-    assert( tester.count() == 1, "Unset resultsin correct count.");
+    check(!tester.test(test::one), "Unset unsets previously set bit.");
+    check(!tester.test(test::two), "Unset leaves unrelated bit unset.");
+    check( tester.test(test::three), "Unset leaves unrelated bit set.");
+    check( tester.count() == 1, "Unset resultsin correct count.");
   }
 
   void test_bitflag_or_and()
@@ -84,11 +84,11 @@ namespace
 
     tester |= test::four;
 
-    assert(  tester.test(test::one), "First bitflag is set.");
-    assert(  tester & test::two, "Second bitflag is set.");
-    assert(!(tester & test::three), "Third bitflag is set.");
-    assert(  tester & test::four, "Fourth bitflag is set.");
-    assert(  tester.count() == 3, "OR operators set correct number of bits.");
+    check(  tester.test(test::one), "First bitflag is set.");
+    check(  tester & test::two, "Second bitflag is set.");
+    check(!(tester & test::three), "Third bitflag is set.");
+    check(  tester & test::four, "Fourth bitflag is set.");
+    check(  tester.count() == 3, "OR operators set correct number of bits.");
   }
 
   void test_bitflag_clear()
@@ -97,24 +97,24 @@ namespace
 
     tester.clear();
 
-    assert(!tester.test(test::one), "Clear unsets set bit.");
-    assert(!tester.test(test::two), "Clear unsets other set bit.");
-    assert(!tester.test(test::three), "Clear leaves unset bit unset.");
-    assert(!tester.test(test::four), "Clear leaves unset bit unset.");
+    check(!tester.test(test::one), "Clear unsets set bit.");
+    check(!tester.test(test::two), "Clear unsets other set bit.");
+    check(!tester.test(test::three), "Clear leaves unset bit unset.");
+    check(!tester.test(test::four), "Clear leaves unset bit unset.");
 
-    assert( tester.count() == 0, "Clearing bitflag unsets all bits.");
+    check( tester.count() == 0, "Clearing bitflag unsets all bits.");
   }
 
   void test_bitflag_real_bitflag()
   {
     real_flag tester = flag::three | flag::two;
 
-    assert(!tester.test(flag::one), "Real bitflag sets first bit correctly.");
-    assert( tester.test(flag::two), "Real bitflag sets second bit correctly.");
-    assert( tester.test(flag::three), "Real bitflag leaves third bit unset.");
-    assert(!tester.test(flag::four), "Real bitflag leaves fourth bit unset.");
-    assert(!tester.test(flag::five), "Real bitflag leaves fifth bit unset.");
-    assert( tester.count() == 2, "real bitflag sets correct number of bits.");
+    check(!tester.test(flag::one), "Real bitflag sets first bit correctly.");
+    check( tester.test(flag::two), "Real bitflag sets second bit correctly.");
+    check( tester.test(flag::three), "Real bitflag leaves third bit unset.");
+    check(!tester.test(flag::four), "Real bitflag leaves fourth bit unset.");
+    check(!tester.test(flag::five), "Real bitflag leaves fifth bit unset.");
+    check( tester.count() == 2, "real bitflag sets correct number of bits.");
   }
 }
 
