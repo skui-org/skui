@@ -52,11 +52,19 @@ if(NOT UNIX)
   endif()
 endif()
 
+# Missing C++17 features
+if(MINGW)
+  find_package(Boost COMPONENTS regex system filesystem REQUIRED)
+endif()
+
 # The library itself
 add_library(core ${core_src})
 target_include_directories(core PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>)
 target_compile_definitions(core PUBLIC $<$<CONFIG:Debug>:SKUI_DEBUG>)
-target_link_libraries(core PUBLIC $<$<PLATFORM_ID:Linux>:-pthread>)
-target_link_libraries(core PUBLIC $<$<CXX_COMPILER_ID:GNU>:-lstdc++fs>)
-target_link_libraries(core PUBLIC $<$<CXX_COMPILER_ID:Clang>:-lc++experimental>)
-target_link_libraries(core PUBLIC $<$<NOT:$<PLATFORM_ID:Windows>>:-ldl>)
+target_link_libraries(core PUBLIC $<$<PLATFORM_ID:Linux>:-pthread>
+                                  $<$<AND:$<CXX_COMPILER_ID:GNU>,$<NOT:$<PLATFORM_ID:Windows>>>:-lstdc++fs>
+                                  $<$<AND:$<CXX_COMPILER_ID:GNU>,$<PLATFORM_ID:Windows>>:Boost::system>
+                                  $<$<AND:$<CXX_COMPILER_ID:GNU>,$<PLATFORM_ID:Windows>>:Boost::filesystem>
+                                  $<$<AND:$<CXX_COMPILER_ID:GNU>,$<PLATFORM_ID:Windows>>:Boost::regex>
+                                  $<$<CXX_COMPILER_ID:Clang>:-lc++experimental>
+                                  $<$<NOT:$<PLATFORM_ID:Windows>>:-ldl>)

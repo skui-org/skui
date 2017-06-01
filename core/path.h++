@@ -32,17 +32,22 @@
 
 #include <algorithm>
 #include <iterator>
-//#if __cplusplus > 201402L
-//#include <filesystem>
-//#else
+
+#ifdef __MINGW32__
+#include <boost/filesystem.hpp>
+#else
 #include <experimental/filesystem>
-//#endif
+#endif
 
 namespace skui
 {
   namespace core
   {
+#ifdef __MINGW32__
+    namespace fs = boost::filesystem;
+#else
     namespace fs = std::experimental::filesystem;
+#endif
     using path = fs::path;
 
     inline path operator+(const path& left, const path& right)

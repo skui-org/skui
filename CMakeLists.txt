@@ -22,7 +22,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-cmake_minimum_required(VERSION 3.4) # previous versions forgot some options like -isystem and -x c++ leading to build failures
+cmake_minimum_required(VERSION 3.5)
 project(skui)
 
 option(SKUI_USE_SYSTEM_ZLIB "Use system zlib" OFF)
