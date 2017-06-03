@@ -55,7 +55,15 @@ endfunction()
 function(compile_test_library component test_name)
   add_library(${test_name} SHARED ${component}/${test_name}.c++ ${CMAKE_CURRENT_LIST_DIR}/test.h++)
   set_target_properties(${test_name} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${component}
-                                                RUNTIME_OUTPUT_DIRECTORY ${component})
+                                                LIBRARY_OUTPUT_DIRECTORY_DEBUG ${component}
+                                                LIBRARY_OUTPUT_DIRECTORY_RELEASE ${component}
+                                                LIBRARY_OUTPUT_DIRECTORY_RELWITHDEBINFO ${component}
+                                                LIBRARY_OUTPUT_DIRECTORY_MINSIZEREL ${component}
+                                                RUNTIME_OUTPUT_DIRECTORY ${component}
+                                                RUNTIME_OUTPUT_DIRECTORY_DEBUG ${component}
+                                                RUNTIME_OUTPUT_DIRECTORY_RELEASE ${component}
+                                                RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO ${component}
+                                                RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL ${component})
   target_include_directories(${test_name} PUBLIC ${CMAKE_CURRENT_LIST_DIR} ${PROJECT_SOURCE_DIR})
   target_link_libraries(${test_name} ${component})
   add_test(remove/${component}/${test_name} ${CMAKE_COMMAND} -E remove ${component}/${test_name}${CMAKE_EXECUTABLE_SUFFIX})
