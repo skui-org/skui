@@ -10,7 +10,8 @@ environment:
 
   # Mingw-w64
   - GENERATOR: MinGW Makefiles
-    PATH: C:\mingw-w64\x86_64-6.3.0-posix-seh-rt_v5-rev1\mingw64\bin;%PATH%
+    PATH: C:\msys64\mingw64\bin;%PATH%
+    PACMAN_PACKAGES: "mingw-w64-x86_64-boost"
 
   # Clang/C2
   #- GENERATOR: Visual Studio 14 2015 Win64
@@ -27,8 +28,8 @@ environment:
 
   # Clang targeting mingw-w64
   - GENERATOR: MinGW Makefiles
-    PATH: C:\mingw-w64\x86_64-6.3.0-posix-seh-rt_v5-rev1\mingw64\bin;%PATH%
-    CMAKE_ARGS: -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_CXX_FLAGS=--target=x86_64-w64-mingw32 -DCMAKE_C_COMPILER=clang -DCMAKE_C_FLAGS=--target=x86_64-w64-mingw32
+    PATH: C:\msys64\mingw64\bin;%PATH%
+    CMAKE_ARGS: -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang
 
 configuration:
  - Debug
@@ -46,6 +47,7 @@ before_build:
   - mkdir build
   - cd build
   - if defined (VCVARS) call "%VCVARS%" %VCVARSARG%
+  - if DEFINED PACMAN_PACKAGES C:\msys64\usr\bin\bash.exe -lc "pacman --needed --noconfirm -S %PACMAN_PACKAGES%"
   - set PATH=%PATH:C:\Program Files\Git\usr\bin;=%
   - set PATH
   - cmake --version
