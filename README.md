@@ -30,13 +30,16 @@ New functionality must be accompanied by corresponding tests.
 
 Skui is subdivided in several modules which can depend on other modules but shouldn't become a dependency mess:
 
- * Core: basic functionality, including signals, properties, strings, application
+ * Core: basic functionality, including signals, properties, strings, paths, application, ...
+ * Graphics: graphical functionality such as canvases, contexts, shapes, text, ...
+ * GUI: abstraction of platform-specific UI code, including event loops, windows, ...
  * ...
+ * Examples: example programs showing SkUI features
+ * Tests: unit tests for various components to ensure correct and expected behaviour now and in the future.
 
 This list will grow (and change) as the library's design takes shape.
 
 ## Roadmap
-
 
 ### 0.0.x
 
@@ -44,32 +47,30 @@ This list will grow (and change) as the library's design takes shape.
    * signals, properties, strings
    * basic drawing functionality
    * event handling
-   * basic UI controls
-   * Application abstraction
+   * basic UI controls and layout engine
+   * Application window and event abstraction
+     * Windows
+     * Linux
+     * OS X
+     * ...
 
 ### 0.1.x
 
- * Application window abstraction
-   * Windows
-   * Linux
-   * OS X
-   * ...
  * OS Notification system implementation
    * taskbar icon
    * notifications
    * ...
  * Improve core logic and functionality.
+ * OS theming of all controls and windows
 
 ### 0.x.x
 
- * Windows, Linux, OS X support of the above
  * More application logic (model/views, ...)
  * process handling
  * advanced drawing
  * advanced UI controls, including:
    * scrollbars
    * tables, lists, etc.
- * OS theming of all controls and windows
  * File I/O systems?
  * Add missing unit tests
  * Add missing documentation
