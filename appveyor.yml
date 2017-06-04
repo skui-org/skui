@@ -1,34 +1,45 @@
 environment:
   matrix:
   # MSVC
-  - GENERATOR: Visual Studio 14 2015
+  - TOOLCHAIN: "Visual Studio 2015 x86"
+    GENERATOR: Visual Studio 14 2015
     VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
     VCVARSARG: x86
-  - GENERATOR: Visual Studio 14 2015 Win64
+  - TOOLCHAIN: "Visual Studio 2015 x64"
+    GENERATOR: Visual Studio 14 2015 Win64
     VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
     VCVARSARG: amd64
 
   # MinGW-w64 GCC 64-bit
-  - GENERATOR: MinGW Makefiles
+  - TOOLCHAIN: "MinGW-w64 GCC"
+    GENERATOR: MinGW Makefiles
     PATH: C:\msys64\mingw64\bin;%PATH%
-    PACMAN_PACKAGES: "mingw-w64-x86_64-boost"
+    PACMAN_PACKAGES: "mingw-w64-x86_64-{boost,gcc}"
 
   # MinGW-w64 Clang
-  - GENERATOR: MinGW Makefiles
+  - TOOLCHAIN: "MinGW-w64 Clang"
+    GENERATOR: MinGW Makefiles
     PATH: C:\msys64\mingw64\bin;%PATH%
+    PACMAN_PACKAGES: mingw-w64-x86_64-{clang,boost}
     CMAKE_ARGS: -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang
 
+  # LLVM Clang targeting MSVC
+  - TOOLCHAIN: "VS 2015 Clang/LLVM"
+    GENERATOR: MinGW Makefiles
+    VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
+    VCVARSARG: amd64
+    CMAKE_ARGS: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
+
   # Clang/C2
-  - GENERATOR: Visual Studio 14 2015 Win64
+  - TOOLCHAIN: "VS 2015 Clang/C2"
+    GENERATOR: Visual Studio 14 2015 Win64
     VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
     VCVARSARG: amd64
     CMAKE_ARGS: -T"v140_clang_c2"
 
-  # LLVM Clang targeting MSVC
-  - GENERATOR: Visual Studio 14 2015 Win64
-    VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
-    VCVARSARG: amd64
-    CMAKE_ARGS: -T"LLVM-vs2014"
+matrix:
+  allow_failures:
+    - TOOLCHAIN: "VS 2015 Clang/C2"
 
 configuration:
  - Debug
