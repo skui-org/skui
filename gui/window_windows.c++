@@ -265,7 +265,7 @@ namespace skui
     {
       int length = GetWindowTextLengthW(native_handle->window_handle);
       std::wstring title;
-      title.resize(length+1);
+      title.resize(static_cast<std::size_t>(length)+1);
       GetWindowTextW(native_handle->window_handle, &title[0], length);
       return core::convert_to_utf8(title);
     }
