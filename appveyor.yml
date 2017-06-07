@@ -24,11 +24,10 @@ environment:
     CMAKE_ARGS: -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang
 
   # LLVM Clang targeting MSVC
-  - TOOLCHAIN: "VS 2015 Clang/LLVM"
-    GENERATOR: MinGW Makefiles
+  - GENERATOR: Visual Studio 14 2015 Win64
     VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
     VCVARSARG: amd64
-    CMAKE_ARGS: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
+    CMAKE_ARGS: -DCMAKE_CXX_COMPILER="C:/Program Files/LLVM/msbuild-bin/cl.exe" -DCMAKE_C_COMPILER="C:/Program Files/LLVM/msbuild-bin/cl.exe" -DCMAKE_CXX_FLAGS="-fms-compatibility-version=19" -DCMAKE_C_FLAGS="-fms-compatibility-version=19"
 
   # Clang/C2
   - TOOLCHAIN: "VS 2015 Clang/C2"
