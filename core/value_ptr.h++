@@ -82,7 +82,7 @@ namespace skui
       using deleter_type = Deleter;
 
     public:
-      explicit constexpr value_ptr() = default;
+      explicit constexpr value_ptr() {} // = default gives an erronous error on Intel C++ 17.0.4
       explicit constexpr value_ptr(std::nullptr_t) : value_ptr() {}
       explicit value_ptr(pointer p) : data{p, copier_type(), deleter_type()} {}
 
