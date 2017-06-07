@@ -63,7 +63,7 @@ target_include_directories(core PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>)
 target_compile_definitions(core PUBLIC $<$<CONFIG:Debug>:SKUI_DEBUG>)
 target_link_libraries(core PUBLIC $<$<PLATFORM_ID:Linux>:-pthread>
                                   $<$<AND:$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Intel>>,$<NOT:$<PLATFORM_ID:Windows>>>:-lstdc++fs>
-                                  $<$<CXX_COMPILER_ID:Clang>:-lc++experimental>
+                                  $<$<AND:$<CXX_COMPILER_ID:Clang>,$<NOT:$<PLATFORM_ID:Windows>>>:-lc++experimental>
                                   $<$<NOT:$<PLATFORM_ID:Windows>>:-ldl>)
 if(MINGW)
   target_link_libraries(core PUBLIC Boost::system Boost::regex Boost::filesystem)
