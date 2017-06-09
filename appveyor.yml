@@ -1,50 +1,89 @@
 environment:
   matrix:
-  # MSVC
+  - TOOLCHAIN: "Visual Studio 2017 x86"
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    GENERATOR: Visual Studio 15 2017
+    VCVARS: C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat
+    VCVARSARG: x86
+  - TOOLCHAIN: "Visual Studio 2017 x64"
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    GENERATOR: Visual Studio 15 2017 Win64
+    VCVARS: C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat
+    VCVARSARG: amd64
   - TOOLCHAIN: "Visual Studio 2015 x86"
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     GENERATOR: Visual Studio 14 2015
     VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
     VCVARSARG: x86
   - TOOLCHAIN: "Visual Studio 2015 x64"
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     GENERATOR: Visual Studio 14 2015 Win64
     VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
     VCVARSARG: amd64
 
-  # MinGW-w64 GCC 64-bit
+  # Mingw-w64
   - TOOLCHAIN: "MinGW-w64 GCC"
-    GENERATOR: MinGW Makefiles
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    GENERATOR: Ninja
+    PACMAN_PACKAGES: "mingw-w64-x86_64-{gcc,boost,ninja}"
     PATH: C:\msys64\mingw64\bin;%PATH%
-    PACMAN_PACKAGES: "mingw-w64-x86_64-{boost,gcc}"
-
-  # MinGW-w64 Clang
-  - TOOLCHAIN: "MinGW-w64 Clang"
-    GENERATOR: MinGW Makefiles
-    PATH: C:\msys64\mingw64\bin;%PATH%
-    PACMAN_PACKAGES: mingw-w64-x86_64-{clang,boost}
-    CMAKE_ARGS: -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang
-
-  # LLVM Clang targeting MSVC
-  - GENERATOR: Visual Studio 14 2015 Win64
-    VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
-    VCVARSARG: amd64
-    CMAKE_ARGS: -DCMAKE_CXX_COMPILER="C:/Program Files/LLVM/msbuild-bin/cl.exe" -DCMAKE_C_COMPILER="C:/Program Files/LLVM/msbuild-bin/cl.exe" -DCMAKE_CXX_FLAGS="-fms-compatibility-version=19" -DCMAKE_C_FLAGS="-fms-compatibility-version=19"
 
   # Clang/C2
-  - TOOLCHAIN: "VS 2015 Clang/C2"
-    GENERATOR: Visual Studio 14 2015 Win64
+  - TOOLCHAIN: "Visual Studio 2017 Clang/C2"
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    GENERATOR: Visual Studio 15 2017 Win64
+    VCVARS: C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat
+    VCVARSARG: amd64
+    CMAKE_ARGS: -T"v141_clang_c2"
+  - TOOLCHAIN: "Visual Studio 2015 Clang/C2"
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+    GENERATOR: Visual Studio 15 2017 Win64
     VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
     VCVARSARG: amd64
     CMAKE_ARGS: -T"v140_clang_c2"
 
+  # Clang targeting MSVC
+  - TOOLCHAIN: "Visual Studio 2015 Clang/LLVM"
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+    GENERATOR: Ninja
+    PACMAN_PACKAGES: "mingw-w64-x86_64-ninja"
+    PATH: C:\msys64\mingw64\bin;%PATH%
+    VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
+    VCVARSARG: amd64
+    CMAKE_ARGS: -DCMAKE_C_COMPILER=clang-cl.exe -DCMAKE_CXX_COMPILER=clang-cl.exe
+  - TOOLCHAIN: "Visual Studio 2017 Clang/LLVM"
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    GENERATOR: Ninja
+    PACMAN_PACKAGES: "mingw-w64-x86_64-ninja"
+    PATH: C:\msys64\mingw64\bin;%PATH%
+    VCVARS: C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat
+    VCVARSARG: amd64
+    CMAKE_ARGS: -DCMAKE_C_COMPILER=clang-cl.exe -DCMAKE_CXX_COMPILER=clang-cl.exe
+    CLANG_URL: http://llvm.org/pre-releases/win-snapshots/LLVM-5.0.0-r303050-win64.exe
+
+  # Clang targeting mingw-w64
+  - TOOLCHAIN: "MinGW-w64 Clang"
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    GENERATOR: Ninja
+    PACMAN_PACKAGES: "mingw-w64-x86_64-{boost,clang,ninja}"
+    PATH: C:\msys64\mingw64\bin;%PATH%
+    CMAKE_ARGS: -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang
+
 matrix:
   allow_failures:
     - TOOLCHAIN: "VS 2015 Clang/C2"
+    - TOOLCHAIN: "MinGW-w64 GCC"
+      configuration: Release
 
 configuration:
  - Debug
  - Release
 
 shallow_clone: true
+
+install:
+ - if defined CLANG_URL appveyor DownloadFile %CLANG_URL% -FileName llvm-installer.exe
+ - if defined CLANG_URL START /WAIT llvm-installer.exe /S /D=C:\"Program Files\LLVM"
 
 clone_script:
   - git clone -q --branch=%APPVEYOR_REPO_BRANCH% https://github.com/skui-org/skui.git %APPVEYOR_BUILD_FOLDER%
@@ -55,11 +94,9 @@ clone_script:
 before_build:
   - mkdir build
   - cd build
-  - if defined (VCVARS) call "%VCVARS%" %VCVARSARG%
+  - if defined VCVARS call "%VCVARS%" %VCVARSARG%
   - if DEFINED PACMAN_PACKAGES C:\msys64\usr\bin\bash.exe -lc "pacman --needed --noconfirm -S %PACMAN_PACKAGES%"
   - set PATH=%PATH:C:\Program Files\Git\usr\bin;=%
-  - set PATH
-  - cmake --version
   - cmake %CMAKE_ARGS% -G"%GENERATOR%" -DCMAKE_BUILD_TYPE="%CONFIGURATION%" .. || (echo CMAKEERROR && type CMakeFiles\CMakeError.log && echo CMAKEOUTPUT && type CMakeFiles\CMakeOutput.log && exit 1)
 
 build_script:
