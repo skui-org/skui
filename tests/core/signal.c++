@@ -226,6 +226,21 @@ namespace
     signal.emit();
     check(mock_object.slot_called, "signal disconnects on object delete");
   }
+
+  void test_relay_signal()
+  {
+    skui::core::signal<> signal;
+    skui::core::signal<> receiving;
+    bool receiving_called = false;
+
+    receiving.connect([&receiving_called] { receiving_called = true; });
+
+    signal.relay(receiving);
+
+    signal.emit();
+
+    check(receiving_called, "Signal connected to signal was called.");
+  }
 }
 
 int main()
@@ -236,6 +251,7 @@ int main()
   test_signal_disconnect();
   test_member_functions();
   test_deleted_connected_object();
+  test_relay_signal();
 
   return skui::test::exit_code;
 }

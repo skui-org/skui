@@ -138,11 +138,13 @@ namespace skui
           return --slots.end();
         }
 
-        // connects first object like second object
-        connection_type connect(trackable* /*first*/, trackable* /*second*/)
+        template<typename Signal>
+        connection_type relay(const Signal& signal)
         {
-          // trackable copy constructor makes second->track(this) unnecessary
           mutex_lock lock(slots_mutex);
+          slots.emplace_back(&signal, make_value<const_member_function_slot<Signal, void(Signal::*)(ArgTypes...) const, void, ArgTypes...>>(&Signal::emit));
+          signal.track(this);
+          return --slots.end();
         }
 
         // removes a previously made connection, handles lifetime tracking if it was the last connection to a specific object
