@@ -133,12 +133,21 @@ namespace
     skui::test::check(!other_slot_called, "Disconnect all slots.");
   }
 
-  struct mock : skui::core::trackable
+  struct parent
+  {
+    virtual ~parent() = default;
+    virtual void f(){}
+    virtual void g(int) const = 0;
+    virtual void h() { slot_called = true; }
+
+    mutable bool slot_called = false;
+  };
+  struct mock : public parent
+              , public skui::core::trackable
   {
     mock() = default;
     void f() const { slot_called = true; }
     void g(int) const { slot_called = true; }
-    mutable bool slot_called = false;
   };
 
   void test_member_functions()
@@ -157,6 +166,13 @@ namespace
       object.slot_called = false;
       signal_int.emit(0);
       check(object.slot_called, "member function with argument called");
+
+      skui::core::signal<> other_signal;
+      other_signal.connect(&object, &mock::h);
+
+      object.slot_called = false;
+      other_signal.emit();
+      check(object.slot_called, "not overridden virtual function called.");
     }
     {
       mock other_object;

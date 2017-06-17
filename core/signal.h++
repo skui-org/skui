@@ -104,29 +104,33 @@ namespace skui
           return --slots.end();
         }
 
-        template<typename Class, typename ReturnType>
-        connection_type connect(Class* object, ReturnType(Class::* slot)(ArgTypes...))
+        template<typename Class, typename FunctionClass, typename ReturnType>
+        connection_type connect(Class* object, ReturnType(FunctionClass::* slot)(ArgTypes...))
         {
           static_assert(std::is_base_of<trackable, Class>::value,
-                        "You can only connect to member functions of a trackable object.");
+                        "You can only connect to member functions of a trackable subclass.");
+          static_assert(std::is_base_of<FunctionClass, Class>::value,
+                        "You can only connect to member functions of a related object.");
 
           mutex_lock lock(slots_mutex);
 
-          slots.emplace_back(object, make_value<member_function_slot<Class, ReturnType(Class::*)(ArgTypes...), ReturnType, ArgTypes...>>(slot));
+          slots.emplace_back(object, make_value<member_function_slot<Class, ReturnType(FunctionClass::*)(ArgTypes...), ReturnType, ArgTypes...>>(slot));
           object->track(this);
 
           return --slots.end();
         }
 
-        template<typename Class, typename ReturnType>
-        connection_type connect(const Class* object, ReturnType(Class::* slot)(ArgTypes...) const)
+        template<typename Class, typename FunctionClass, typename ReturnType>
+        connection_type connect(const Class* object, ReturnType(FunctionClass::* slot)(ArgTypes...) const)
         {
           static_assert(std::is_base_of<trackable, Class>::value,
-                        "You can only connect to member functions of a trackable object");
+                        "You can only connect to member functions of a trackable subclass");
+          static_assert(std::is_base_of<FunctionClass, Class>::value,
+                        "You can only connect to member functions of a related object.");
 
           mutex_lock lock(slots_mutex);
 
-          slots.emplace_back(object, make_value<const_member_function_slot<Class, ReturnType(Class::*)(ArgTypes...) const, ReturnType, ArgTypes...>>(slot));
+          slots.emplace_back(object, make_value<const_member_function_slot<Class, ReturnType(FunctionClass::*)(ArgTypes...) const, ReturnType, ArgTypes...>>(slot));
           object->track(this);
 
           return --slots.end();
