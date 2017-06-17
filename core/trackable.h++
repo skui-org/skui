@@ -54,7 +54,7 @@ namespace skui
 
       protected:
         tracker() = default;
-        virtual ~tracker() =default;
+        virtual ~tracker() = default;
       };
     }
 
@@ -74,7 +74,7 @@ namespace skui
       trackable() = default;
 
     private:
-      // mutable so you can connect to const objects
+      // mutable so you can be track const objects
       mutable std::unordered_set<implementation::tracker*> trackers;
       mutable std::mutex trackers_mutex;
     };

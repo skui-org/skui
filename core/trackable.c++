@@ -64,12 +64,6 @@ namespace skui
       }
     }
 
-    trackable& trackable::operator=(trackable other)
-    {
-      swap(trackers, other.trackers);
-      return *this;
-    }
-
     void trackable::track(implementation::tracker* tracker) const
     {
       const std::lock_guard<decltype(trackers_mutex)> lock(trackers_mutex);
