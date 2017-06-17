@@ -19,10 +19,10 @@ New functionality must be accompanied by corresponding tests.
 | Windows          | VS 2015 Clang/LLVM   | :heavy_check_mark: |       |
 | Windows          | MinGW-w64 GCC 6.3+   | :heavy_check_mark: | Cross-compilation is possible. |
 | Windows          | MinGW-w64 Clang 3.9+ | :heavy_check_mark: | Cross-compilation is possible. |
-| Windows          | Intel C++ 17.0.4     |        :x:         | Fails to compile value_ptr. See https://software.intel.com/en-us/comment/1895294 |
+| Windows          | Intel C++ 17.0.4     | :heavy_check_mark: |       |
 | Linux            | GCC 6.3+             | :heavy_check_mark: |       |
 | Linux            | Clang 4.0            | :heavy_check_mark: |       |
-| Linux            | Intel C++ 17.0.4     |        :x:         | Fails to compile value_ptr. See https://software.intel.com/en-us/comment/1895294 |
+| Linux            | Intel C++ 17.0.4     | :heavy_check_mark: |       |
 | Mac OS X 10.12   | XCode 8.3 Clang      |        :x:         | Missing implementation of core window/application classes. |
 | Mac OS X 10.12   | Homebrew GCC 6.3+    |        :x:         | Missing implementation of core window/application classes. |
 
