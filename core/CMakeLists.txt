@@ -30,6 +30,7 @@ set(core_src
     command_queue.h++ command_queue.c++
     debug.h++
     event_loop.h++ event_loop.c++
+    traits/arity.h++
     library.h++ library.c++ library_windows.c++ library_unix.c++
     path.h++
     property.h++
