@@ -71,7 +71,8 @@ environment:
 
 matrix:
   allow_failures:
-    - TOOLCHAIN: "VS 2015 Clang/C2"
+    - TOOLCHAIN: "Visual Studio 2015 Clang/C2"
+    - TOOLCHAIN: "Visual Studio 2017 Clang/C2"
     - TOOLCHAIN: "MinGW-w64 GCC"
       configuration: Release
 
