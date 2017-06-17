@@ -52,5 +52,14 @@ namespace skui
         exit_code = EXIT_FAILURE;
       }
     }
+    template<typename... ArgTypes>
+    void require(bool passed, ArgTypes... message)
+    {
+      if(!passed)
+      {
+        print_error(message..., '\n');
+        std::exit(EXIT_FAILURE);
+      }
+    }
   }
 }

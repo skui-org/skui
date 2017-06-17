@@ -29,17 +29,18 @@
 int main()
 {
   using skui::test::check;
+  using skui::test::require;
 
   skui::core::library library("core/library_lib");
 
-  check(library.load(), "library loaded correctly");
+  require(library.load(), "library loaded correctly");
 
   auto func = library.resolve<const char*>("library_function");
-  check(func != nullptr, "function name resolved");
+  require(func != nullptr, "function name resolved");
   check(func() == skui::core::string("test string"), "function call returns correct value");
 
   auto func_arg = library.resolve<int, int>("library_function_int");
-  check(func_arg != nullptr, "function name with arg resolved");
+  require(func_arg != nullptr, "function name with arg resolved");
   check(func_arg(2) == 4, "function call returns correct value");
 
   return skui::test::exit_code;

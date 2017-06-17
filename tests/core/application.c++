@@ -31,12 +31,14 @@
 namespace
 {
   using skui::test::check;
+  using skui::test::require;
 
   void test_arguments()
   {
     const auto& arguments = skui::core::application::instance().commandline_arguments;
 
-    check(arguments[0] == "skui is awesome", "arguments passed correctly.\n");
+    require(arguments.size() == 1, "correct number of arguments.");
+    check(arguments[0] == "skui is awesome", "arguments passed correctly.");
   }
 
   void test_execute_and_quit()
