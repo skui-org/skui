@@ -25,7 +25,7 @@
 /*
  * Slot
  * Wrapper for functions connected to slots.
- * All this is needed so that a member_function_slot can keep a pointer to the address of the member function it wraps.
+ * This provides a uniform interface across all callables for e.g. signals.
  */
 
 #ifndef SKUI_CORE_SLOT_H
@@ -34,12 +34,15 @@
 #include <functional>
 #include <utility>
 
+#include "core/traits/arity.h++"
+
 namespace skui
 {
   namespace core
   {
     namespace implementation
     {
+      // interface
       template<typename ReturnType, typename... ArgTypes>
       class slot
       {
@@ -52,33 +55,31 @@ namespace skui
         slot() = default;
       };
 
+      // Implementation for function pointers and functors (including lambdas)
       template<typename Callable, typename ReturnType = void, typename... ArgTypes>
       class callable_slot : public slot<ReturnType, ArgTypes...>
       {
       public:
         callable_slot(Callable function_pointer_or_lambda) : callable(function_pointer_or_lambda) {}
 
-        ReturnType operator()(const void*, ArgTypes... args) const override { return callable(args...); }
+        ReturnType operator()(const void*, ArgTypes... args) const override
+        {
+          return call(std::make_index_sequence<arity_v<Callable>>{},
+                      std::forward<ArgTypes>(args)...);
+        }
 
       private:
+        template<std::size_t... Indices>
+        ReturnType call(const std::index_sequence<Indices...>&,
+                        ArgTypes&&... args) const
+        {
+          return callable(std::get<Indices>(std::make_tuple(args...))...);
+        }
+
         Callable callable;
       };
 
-      template<typename Callable, typename ReturnType>
-      class callable_slot<Callable, ReturnType> : public slot<ReturnType>
-      {
-      public:
-        callable_slot(Callable function_pointer_or_lambda) : callable(function_pointer_or_lambda) {}
-
-        ReturnType operator()(const void*) const override { return callable(); }
-
-      private:
-        Callable callable;
-      };
-
-      template<typename Callable, typename ReturnType, typename... ArgTypes>
-      using function_slot = callable_slot<Callable, ReturnType, ArgTypes...>;
-
+      // Implementation for member functions
       template<typename Class, typename MemberFunctionPointer, typename ReturnType, typename... ArgTypes>
       class member_function_slot : public slot<ReturnType, ArgTypes...>
       {
@@ -89,33 +90,24 @@ namespace skui
 
         ReturnType operator()(const void* object, ArgTypes... args) const override
         {
-          return (const_cast<Class*>(static_cast<const Class*>(object))->*member_function_ptr)(args...);
+          return call(std::make_index_sequence<arity_v<MemberFunctionPointer>>{},
+                      const_cast<Class*>(static_cast<const Class*>(object)),
+                      std::forward<ArgTypes>(args)...);
         }
 
       private:
-        const MemberFunctionPointer member_function_ptr;
-      };
-
-      template<typename Class, typename MemberFunctionPointer, typename ReturnType>
-      class member_function_slot<Class, MemberFunctionPointer, ReturnType> : public slot<ReturnType>
-      {
-        using member_function_pointer = ReturnType(Class::*)();
-
-      public:
-        member_function_slot(MemberFunctionPointer member_function)
-          : member_function_ptr(member_function)
-        {}
-
-        virtual ReturnType operator()(const void* object) const override
+        template<std::size_t ... Indices>
+        ReturnType call(const std::index_sequence<Indices...>&,
+                        Class* object,
+                        ArgTypes&&... args) const
         {
-          // Slot objects are stored as pointers to const, but the original connection was to a non-const object and member function
-          return (const_cast<Class*>(static_cast<const Class*>(object))->*member_function_ptr)();
+          return (object->*member_function_ptr)(std::get<Indices>(std::make_tuple(args...))...);
         }
 
-      private:
-        const MemberFunctionPointer member_function_ptr;
+        MemberFunctionPointer member_function_ptr;
       };
 
+      // Implementation for const member functions
       template<typename Class, typename ConstMemberFunctionPointer, typename ReturnType, typename... ArgTypes>
       class const_member_function_slot : public slot<ReturnType, ArgTypes...>
       {
@@ -127,28 +119,21 @@ namespace skui
 
         ReturnType operator()(const void* object, ArgTypes... args) const override
         {
-          return (static_cast<const Class*>(object)->*const_member_function_ptr)(args...);
+          return call(std::make_index_sequence<arity_v<ConstMemberFunctionPointer>>{},
+                      static_cast<const Class*>(object),
+                      std::forward<ArgTypes>(args)...);
         }
 
       private:
-        const ConstMemberFunctionPointer const_member_function_ptr;
-      };
-
-      template<typename Class, typename ConstMemberFunctionPointer, typename ReturnType>
-      class const_member_function_slot<Class, ConstMemberFunctionPointer, ReturnType> : public slot<ReturnType>
-      {
-      public:
-        const_member_function_slot(ConstMemberFunctionPointer const_member_function)
-          : const_member_function_ptr(const_member_function)
-        {}
-
-        ReturnType operator()(const void* object) const override
+        template<std::size_t... Indices>
+        ReturnType call(const std::index_sequence<Indices...>&,
+                        const Class* object,
+                        ArgTypes&&... args) const
         {
-          return (static_cast<const Class*>(object)->*const_member_function_ptr)();
+          return (object->*const_member_function_ptr)(std::get<Indices>(std::make_tuple(args...))...);
         }
 
-      private:
-        const ConstMemberFunctionPointer const_member_function_ptr;
+        ConstMemberFunctionPointer const_member_function_ptr;
       };
     }
   }

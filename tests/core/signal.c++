@@ -56,12 +56,12 @@ namespace
 
     check(overloaded_slot_called, "Overloaded slot called.");
 
-    //skui::core::signal<int> signal_int;
-    //signal_int.connect(lambda_slot);
-    //lambda_slot_called = false;
-    //signal_int.emit(5);
+    skui::core::signal<int> signal_int;
+    signal_int.connect(lambda_slot);
+    lambda_slot_called = false;
+    signal_int.emit(5);
 
-    //assert(lambda_slot_called, "Slot with less arguments called.");
+    check(lambda_slot_called, "Slot with less arguments called.");
   }
 
   void test_signal_copy_move()
@@ -133,48 +133,75 @@ namespace
     skui::test::check(!other_slot_called, "Disconnect all slots.");
   }
 
-  struct parent
+  struct parent : public skui::core::trackable
   {
     virtual ~parent() = default;
-    virtual void f(){}
+    virtual void f() const {};
     virtual void g(int) const = 0;
     virtual void h() { slot_called = true; }
 
     mutable bool slot_called = false;
   };
   struct mock : public parent
-              , public skui::core::trackable
   {
     mock() = default;
-    void f() const { slot_called = true; }
-    void g(int) const { slot_called = true; }
+    void f() const override { slot_called = true; }
+    void g(int) const override { slot_called = true; }
   };
 
   void test_member_functions()
   {
-    mock object;
     {
+      mock object;
       skui::core::signal<> signal;
       signal.connect(&object, &mock::f);
 
       signal.emit();
       check(object.slot_called, "member function slot called.");
-
+    }
+    {
+      mock object;
       skui::core::signal<int> signal_int;
       signal_int.connect(&object, &mock::g);
 
-      object.slot_called = false;
       signal_int.emit(0);
       check(object.slot_called, "member function with argument called");
+    }
+    {
+      mock object;
+      skui::core::signal<int> signal_int;
+      signal_int.connect(&object, &mock::f);
 
-      skui::core::signal<> other_signal;
-      other_signal.connect(&object, &mock::h);
+      signal_int.emit(0);
+      check(object.slot_called, "member function with argument less called");
+    }
+    {
+      mock object;
+      skui::core::signal<> signal;
+      signal.connect(&object, &mock::h);
 
-      object.slot_called = false;
-      other_signal.emit();
+      signal.emit();
       check(object.slot_called, "not overridden virtual function called.");
     }
     {
+      mock object;
+      skui::core::signal<> signal;
+      signal.connect(&object, &parent::f);
+
+      signal.emit();
+      check(object.slot_called, "overridden virtual function called through function pointer to base member function");
+    }
+    {
+      mock object;
+      parent& parent_object = object;
+      skui::core::signal<> signal;
+      signal.connect(&parent_object, &parent::f);
+
+      signal.emit();
+      check(object.slot_called, "overridden virtual function called through function pointer to base member function with base class pointer");
+    }
+    {
+      mock object;
       mock other_object;
       skui::core::signal<> signal;
       signal.connect(&object, &mock::f);

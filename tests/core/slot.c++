@@ -45,6 +45,8 @@ namespace
 
   struct mock
   {
+    mock() {}
+
     void m() { called = 1; }
     void m() const { const_called = 11; }
     void m_arg(int i) { called = i; }
@@ -65,6 +67,10 @@ namespace
       callable_slot<decltype(&f_arg), void, int> slot_arg(&f_arg);
       slot_arg(nullptr, 2);
       check(f_called == 2, "function with argument called through slot.");
+
+      callable_slot<decltype(&f), void, int> slot_arg_less(&f);
+      slot_arg_less(nullptr, 3);
+      check(f_called == 1, "function called through slot extra arguments ignored.");
     }
     {
       callable_slot<decltype(l), void> slot(l);
@@ -74,6 +80,10 @@ namespace
       callable_slot<decltype(l_arg), void, int> slot_arg(l_arg);
       slot_arg(nullptr, 2);
       check(l_called == 2, "lambda with argument called through slot.");
+
+      callable_slot<decltype(l), void, int> slot_arg_less(l);
+      slot_arg_less(nullptr, 3);
+      check(l_called == 1, "lambda called through slot extra arguments ignored.");
     }
     {
       int captured = 0;
@@ -97,6 +107,10 @@ namespace
       member_function_slot<mock, void(mock::*)(int), void, int> slot_arg(&mock::m_arg);
       slot_arg(&object, 2);
       check(object.called == 2, "member function with argument called through slot.");
+
+      member_function_slot<mock, void(mock::*)(), void, int> slot_arg_less(&mock::m);
+      slot_arg_less(&object, 3);
+      check(object.called == 1, "member function called through slot extra arguments ignored.");
     }
     {
       const mock object;
@@ -108,6 +122,10 @@ namespace
       const member_function_slot<mock, void(mock::*)(int) const, void, int> slot_arg(&mock::m_arg);
       slot_arg(&object, 22);
       check(object.const_called == 22, "const member function with argument called through slot.");
+
+      const member_function_slot<mock, void(mock::*)() const, void, int> slot_arg_less(&mock::m);
+      slot_arg_less(&object, 33);
+      check(object.const_called == 11, "const member function called through slot extra arguments ignored.");
     }
   }
 

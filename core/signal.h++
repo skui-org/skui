@@ -51,6 +51,7 @@ namespace skui
     {
       template<typename... ArgTypes>
       class signal_base : public tracker
+                        , public trackable
       {
         using mutex_type = std::mutex;
         using mutex_lock = const std::lock_guard<mutex_type>;
@@ -65,7 +66,8 @@ namespace skui
         ~signal_base() override { disconnect_all(); }
 
         signal_base(const signal_base& other)
-          : slots(other.slots.begin(), other.slots.end())
+          : trackable(other)
+          , slots(other.slots.begin(), other.slots.end())
         {}
 
         signal_base(signal_base&& other) : slots(std::move(other.slots)) {}
@@ -104,8 +106,8 @@ namespace skui
           return --slots.end();
         }
 
-        template<typename Class, typename FunctionClass, typename ReturnType>
-        connection_type connect(Class* object, ReturnType(FunctionClass::* slot)(ArgTypes...))
+        template<typename Class, class FunctionClass, typename ReturnType, typename... FunctionArgTypes>
+        connection_type connect(Class* object, ReturnType(FunctionClass::* slot)(FunctionArgTypes...))
         {
           static_assert(std::is_base_of<trackable, Class>::value,
                         "You can only connect to member functions of a trackable subclass.");
@@ -114,14 +116,14 @@ namespace skui
 
           mutex_lock lock(slots_mutex);
 
-          slots.emplace_back(object, make_value<member_function_slot<Class, ReturnType(FunctionClass::*)(ArgTypes...), ReturnType, ArgTypes...>>(slot));
+          slots.emplace_back(object, make_value<member_function_slot<Class, ReturnType(FunctionClass::*)(FunctionArgTypes...), ReturnType, ArgTypes...>>(slot));
           object->track(this);
 
           return --slots.end();
         }
 
-        template<typename Class, typename FunctionClass, typename ReturnType>
-        connection_type connect(const Class* object, ReturnType(FunctionClass::* slot)(ArgTypes...) const)
+        template<typename Class, typename FunctionClass, typename ReturnType, typename... FunctionArgTypes>
+        connection_type connect(const Class* object, ReturnType(FunctionClass::* slot)(FunctionArgTypes...) const)
         {
           static_assert(std::is_base_of<trackable, Class>::value,
                         "You can only connect to member functions of a trackable subclass");
@@ -130,7 +132,7 @@ namespace skui
 
           mutex_lock lock(slots_mutex);
 
-          slots.emplace_back(object, make_value<const_member_function_slot<Class, ReturnType(FunctionClass::*)(ArgTypes...) const, ReturnType, ArgTypes...>>(slot));
+          slots.emplace_back(object, make_value<const_member_function_slot<Class, ReturnType(FunctionClass::*)(FunctionArgTypes...) const, ReturnType, ArgTypes...>>(slot));
           object->track(this);
 
           return --slots.end();
@@ -198,23 +200,8 @@ namespace skui
         std::lock_guard<decltype(this->slots_mutex)> lock(this->slots_mutex);
         for(auto&& object_slot : this->slots)
         {
-          (*object_slot.second)(object_slot.first, arguments...);
-        }
-      }
-    };
-
-    // Parameterless specialization
-    template<> class signal<> : public implementation::signal_base<>
-    {
-    public:
-      signal() = default;
-
-      void emit() const
-      {
-        std::lock_guard<decltype(this->slots_mutex)> lock(this->slots_mutex);
-        for(auto&& object_slot : this->slots)
-        {
-          (*object_slot.second)(object_slot.first);
+          // This needs a dynamic_cast<const void*> e.g. when trackable is not the first parent class
+          object_slot.second->operator()(dynamic_cast<const void*>(object_slot.first), arguments...);
         }
       }
     };
