@@ -30,8 +30,8 @@
 #define SKUI_GUI_WINDOW_H
 
 #include "gui/icon.h++"
+#include "gui/window_flags.h++"
 
-#include <core/bitflag.h++>
 #include <core/proxy_property.h++>
 #include <core/string.h++>
 #include <core/trackable.h++>
@@ -58,15 +58,6 @@ namespace skui
       using platform_handle_ptr = std::unique_ptr<platform_handle, platform_handle_deleter>;
       platform_handle_ptr create_handle();
     }
-
-    enum class window_flag
-    {
-      none,
-      opengl, // use OpenGL to render window content
-      exit_on_close, // Quit application when last window with this flag set closes
-    };
-    using window_flags = core::bitflag<window_flag>;
-    using namespace core::bitflag_operators;
 
     enum class window_state
     {

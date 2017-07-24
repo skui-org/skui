@@ -34,6 +34,7 @@ set(gui_src
     key.h++
     main_windows.c++
     window.h++ window.c++ window_windows.c++ window_xcb.c++
+    window_flags.h++
    )
 
 # The library itself
