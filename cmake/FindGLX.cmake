@@ -22,38 +22,42 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-find_package(XCB COMPONENTS XCB AUX)
-find_package(X11_XCB)
-find_package(X11)
-find_package(GLX)
-find_package(EGL)
+#
+# FindGLX
+#
+# This will will define the following variables:
+#
+# GLX_FOUND - system has GLX
+# GLX_INCLUDE_DIRS - the GLX include directory
+# GLX_LIBRARIES - the GLX libraries
+#
+# and the following imported targets::
+#
+#   GLX - The GLX library
 
-# Common source files
-set(gui_src
-    icon.h++
-    key.h++
-    main_windows.c++
-    window.h++ window.c++ window_windows.c++ window_xcb.c++
-   )
+if(PKG_CONFIG_FOUND)
+  pkg_check_modules(PC_GLX glx QUIET)
+endif()
 
-# The library itself
-add_library(gui ${gui_src})
-target_link_libraries(gui PUBLIC core graphics)
+find_path(GLX_INCLUDE_DIR NAMES GL/glx.h
+                          PATHS ${PC_GLX_INCLUDEDIR})
+find_library(GLX_LIBRARY NAMES GL
+                         PATHS ${PC_GLX_LIBDIR})
 
-# Platform specific libraries
-if(UNIX)
-  if(NOT APPLE)
-    target_link_libraries(gui PUBLIC xcb EGL)
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(GLX
+                                  REQUIRED_VARS GLX_LIBRARY GLX_INCLUDE_DIR)
+
+if(GLX_FOUND)
+  set(GLX_LIBRARIES ${GLX_LIBRARY})
+  set(GLX_INCLUDE_DIRS ${GLX_INCLUDE_DIR})
+
+  if(NOT TARGET GLX)
+    add_library(GLX UNKNOWN IMPORTED)
+    set_target_properties(GLX PROPERTIES
+                              IMPORTED_LOCATION "${GLX_LIBRARY}"
+                              INTERFACE_INCLUDE_DIRECTORIES "${GLX_INCLUDE_DIR}")
   endif()
 endif()
 
-# Platform specific files
-if(NOT WIN32)
-  exclude_from_build(main_windows.c++
-                     window_windows.c++
-                    )
-endif()
-if(NOT UNIX)
-  exclude_from_build(window_xcb.c++
-                    )
-endif()
+mark_as_advanced(GLX_INCLUDE_DIR GLX_LIBRARY)

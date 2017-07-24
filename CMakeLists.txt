@@ -24,6 +24,7 @@
 
 cmake_minimum_required(VERSION 3.5)
 project(skui)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
 option(SKUI_USE_SYSTEM_ZLIB "Use system zlib" OFF)
 option(SKUI_USE_SYSTEM_LIBEXPAT "Use system libexpat" OFF)
