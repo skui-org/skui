@@ -59,19 +59,19 @@ namespace skui
       platform_handle_ptr create_handle();
     }
 
-    enum class window_state
-    {
-      hidden,
-      windowed,
-      maximized,
-      fullscreen_maximized,
-      minimized
-    };
-
     class window : public core::trackable
     {
     public:
       using window_list = std::vector<window*>;
+
+      enum class state
+      {
+        hidden,
+        windowed,
+        maximized,
+        fullscreen_maximized,
+        minimized
+      };
 
       static const window_flags default_flags;
 
@@ -99,7 +99,7 @@ namespace skui
       /// Signals
       // Window manager
       core::signal<> closed;
-      core::property<window_state> state;
+      core::property<state> state;
 
     private:
       // temporary drawing of a dummy image
