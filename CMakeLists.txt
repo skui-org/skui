@@ -80,6 +80,7 @@ add_subdirectory(3rdparty)
 add_subdirectory(core)
 add_subdirectory(graphics)
 add_subdirectory(gui)
+add_subdirectory(opengl)
 
 # skui examples
 add_subdirectory(examples)
