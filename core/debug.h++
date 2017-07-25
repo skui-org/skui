@@ -33,10 +33,13 @@
 #include <iostream>
 
 #ifdef _WIN32
+#include "core/utility.h++"
+#include <sstream>
+#ifndef WIN32_MEAN_AND_LEAN
 #define WIN32_MEAN_AND_LEAN
+#endif
 #include <windows.h>
 #undef WIN32_MEAN_AND_LEAN
-#include <sstream>
 #endif
 
 namespace skui
