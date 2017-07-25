@@ -45,7 +45,9 @@ namespace skui
     class skia_gl_context : public context
     {
     public:
-      skia_gl_context();
+      using gl_function = void(*)();
+      using gr_gl_get_function = gl_function(*)(void*, const char[]);
+      skia_gl_context(gr_gl_get_function get_function);
       ~skia_gl_context() override = default;
 
       std::unique_ptr<canvas> create_canvas(const pixel_size& size,

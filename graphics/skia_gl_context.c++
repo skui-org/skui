@@ -40,11 +40,11 @@ namespace skui
 {
   namespace graphics
   {
-    skia_gl_context::skia_gl_context()
+    skia_gl_context::skia_gl_context(gr_gl_get_function get_function)
       : context()
-      , gr_gl_interface(GrGLCreateNativeInterface())
+      , gr_gl_interface(GrGLAssembleInterface(nullptr, get_function))
     {
-      SkASSERT(gr_gl_interface);
+      SkASSERT(get_function);
     }
 
     std::unique_ptr<canvas> skia_gl_context::create_canvas(const pixel_size& size,
