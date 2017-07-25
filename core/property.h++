@@ -51,8 +51,6 @@ namespace skui
       property() = default;
       property(const_reference value_) : value(value_) {}
 
-      operator const_reference() const { return value; }
-
       property& operator=(const_reference other)
       {
         const bool changed = value != other;
@@ -70,6 +68,12 @@ namespace skui
           value_changed.emit(value);
 
         return *this;
+      }
+
+      operator const_reference() const { return value; }
+      const value_type* operator->() const
+      {
+        return &value;
       }
 
       bool operator==(const_reference other) const { return value == other; }
