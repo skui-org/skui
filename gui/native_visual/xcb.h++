@@ -23,17 +23,15 @@
  **/
 
 /*
- * Implementation based on Khronos examples at
- * https://www.khronos.org/opengl/wiki/Programming_OpenGL_in_Linux:_GLX_and_Xlib
- * https://www.khronos.org/opengl/wiki/Tutorial:_OpenGL_3.0_Context_Creation_(GLX)
+ * Visual info interface for XCB.
  */
 
-#include "gui/window.h++"
+#ifndef SKUI_GUI_NATIVE_VISUAL_XCB_H
+#define SKUI_GUI_NATIVE_VISUAL_XCB_H
 
-#include <core/application.h++>
-#include <core/debug.h++>
+#include "gui/native_visual.h++"
 
-#include <EGL/egl.h>
+#include <vector>
 
 #include <xcb/xcb.h>
 
@@ -41,6 +39,23 @@ namespace skui
 {
   namespace gui
   {
-    const window_flags window::default_flags = window_flag::exit_on_close | window_flag::opengl;
+    namespace native_visual
+    {
+      class xcb : public base
+      {
+      public:
+        xcb();
+        ~xcb() override;
+
+        void create_surface(std::uintptr_t window) override;
+        void make_current() const override;
+        void swap_buffers(const graphics::pixel_size& size) const override;
+
+      private:
+        std::vector<std::uint32_t> pixels;
+      };
+    }
   }
 }
+
+#endif

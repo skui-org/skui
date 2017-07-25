@@ -23,24 +23,53 @@
  **/
 
 /*
- * Implementation based on Khronos examples at
- * https://www.khronos.org/opengl/wiki/Programming_OpenGL_in_Linux:_GLX_and_Xlib
- * https://www.khronos.org/opengl/wiki/Tutorial:_OpenGL_3.0_Context_Creation_(GLX)
+ * Visual info implementation for GLX
  */
 
-#include "gui/window.h++"
+#ifndef SKUI_GUI_NATIVE_VISUAL_GLX_H
+#define SKUI_GUI_NATIVE_VISUAL_GLX_H
 
-#include <core/application.h++>
-#include <core/debug.h++>
+#include "gui/native_visual.h++"
 
-#include <EGL/egl.h>
+#include "gui/native_window.h++"
 
-#include <xcb/xcb.h>
+#include <GrGLAssembleInterface.h>
+
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
+
+#include <GL/glx.h>
 
 namespace skui
 {
   namespace gui
   {
-    const window_flags window::default_flags = window_flag::exit_on_close | window_flag::opengl;
+    namespace native_visual
+    {
+      class glx : public base
+      {
+      public:
+        glx(Display* display);
+        ~glx() override;
+
+        void create_surface(std::uintptr_t window) override;
+        void make_current() const override;
+        void swap_buffers(const graphics::pixel_size&) const override;
+
+        gl_get_function_type get_gl_function() const override;
+
+        XVisualInfo* get_xvisualinfo() const;
+
+      private:
+        XVisualInfo* create_xvisualinfo();
+
+        Display* display;
+        XVisualInfo* xvisualinfo;
+        GLXContext context;
+        GLXDrawable drawable;
+      };
+    }
   }
 }
+
+#endif

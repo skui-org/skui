@@ -30,6 +30,7 @@
 #define SKUI_GUI_WINDOW_H
 
 #include "gui/icon.h++"
+#include "gui/native_window.h++"
 #include "gui/window_flags.h++"
 
 #include <core/proxy_property.h++>
@@ -37,8 +38,6 @@
 #include <core/trackable.h++>
 
 #include <graphics/context.h++>
-#include <graphics/position.h++>
-#include <graphics/size.h++>
 
 #include <condition_variable>
 #include <thread>
@@ -48,17 +47,6 @@ namespace skui
 {
   namespace gui
   {
-    namespace implementation
-    {
-      class platform_handle;
-      struct platform_handle_deleter
-      {
-        void operator()(platform_handle*) const;
-      };
-      using platform_handle_ptr = std::unique_ptr<platform_handle, platform_handle_deleter>;
-      platform_handle_ptr create_handle();
-    }
-
     class window : public core::trackable
     {
     public:
@@ -78,6 +66,7 @@ namespace skui
       window(graphics::pixel_position position = {0, 0},
              graphics::pixel_size initial_size = {800, 600},
              window_flags flags = default_flags);
+      explicit window(window_flags flags);
       virtual ~window();
 
       void show();
@@ -101,26 +90,22 @@ namespace skui
       core::signal<> closed;
       core::property<state> state;
 
+      native_window::base& get_native_window() const;
+
     private:
       // temporary drawing of a dummy image
       void draw();
 
-      implementation::platform_handle_ptr native_handle;
       void initialize_and_execute_platform_loop();
-      void choose_visual(implementation::platform_handle& handle);
-      void setup_window(implementation::platform_handle& handle);
-      void setup_graphics_backend(implementation::platform_handle& handle);
       void create_graphics_context();
       void execute_event_loop();
 
       void update_geometry();
       void swap_buffers();
 
-      void set_title(const core::string& title);
-      core::string get_title() const;
-
       static window_list& windows();
 
+      std::unique_ptr<native_window::base> native_window;
       std::unique_ptr<graphics::context> graphics_context;
 
       std::mutex handle_mutex;

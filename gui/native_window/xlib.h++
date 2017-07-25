@@ -23,24 +23,46 @@
  **/
 
 /*
- * Implementation based on Khronos examples at
- * https://www.khronos.org/opengl/wiki/Programming_OpenGL_in_Linux:_GLX_and_Xlib
- * https://www.khronos.org/opengl/wiki/Tutorial:_OpenGL_3.0_Context_Creation_(GLX)
+ * XLib implementation of a window.
  */
 
-#include "gui/window.h++"
+#include "gui/native_window/xcb.h++"
 
-#include <core/application.h++>
-#include <core/debug.h++>
+#include <memory>
 
-#include <EGL/egl.h>
-
-#include <xcb/xcb.h>
+#include <X11/X.h>
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
 
 namespace skui
 {
   namespace gui
   {
-    const window_flags window::default_flags = window_flag::exit_on_close | window_flag::opengl;
+    namespace native_window
+    {
+      // helper struct to ensure correct base class constructor can be called
+      struct display_container
+      {
+        display_container(Display* display) : display{display} {}
+        struct display_deleter
+        {
+          void operator()(Display* display) const { XCloseDisplay(display); }
+        };
+        std::unique_ptr<Display, display_deleter> display;
+      };
+
+      class xlib : public display_container
+                 , public xcb
+      {
+      public:
+        xlib(const window_flags& flags);
+        ~xlib() override;
+
+        void create(const graphics::pixel_position& initial_position,
+                    const graphics::pixel_size& initial_size) override;
+
+        XVisualInfo* get_xvisualinfo() const;
+      };
+    }
   }
 }

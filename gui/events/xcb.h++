@@ -23,17 +23,15 @@
  **/
 
 /*
- * Implementation based on Khronos examples at
- * https://www.khronos.org/opengl/wiki/Programming_OpenGL_in_Linux:_GLX_and_Xlib
- * https://www.khronos.org/opengl/wiki/Tutorial:_OpenGL_3.0_Context_Creation_(GLX)
+ * Event handling implementation for XCB.
  */
 
-#include "gui/window.h++"
+#ifndef SKUI_GUI_EVENTS_XCB_H
+#define SKUI_GUI_EVENTS_XCB_H
 
-#include <core/application.h++>
-#include <core/debug.h++>
+#include "gui/events.h++"
 
-#include <EGL/egl.h>
+#include <core/utility.h++>
 
 #include <xcb/xcb.h>
 
@@ -41,6 +39,24 @@ namespace skui
 {
   namespace gui
   {
-    const window_flags window::default_flags = window_flag::exit_on_close | window_flag::opengl;
+    namespace events
+    {
+      class xcb : public base
+      {
+      public:
+        xcb(gui::window& window);
+        ~xcb() override;
+
+        void exec() override;
+
+      private:
+        xcb_connection_t* connection;
+        xcb_window_t xcb_window;
+
+        core::unique_free_ptr<xcb_intern_atom_reply_t> wm_delete_window;
+      };
+    }
   }
 }
+
+#endif

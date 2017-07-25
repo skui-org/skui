@@ -22,25 +22,34 @@
  * THE SOFTWARE.
  **/
 
-/*
- * Implementation based on Khronos examples at
- * https://www.khronos.org/opengl/wiki/Programming_OpenGL_in_Linux:_GLX_and_Xlib
- * https://www.khronos.org/opengl/wiki/Tutorial:_OpenGL_3.0_Context_Creation_(GLX)
- */
-
-#include "gui/window.h++"
-
-#include <core/application.h++>
-#include <core/debug.h++>
-
-#include <EGL/egl.h>
-
-#include <xcb/xcb.h>
+#include "gui/native_window.h++"
 
 namespace skui
 {
   namespace gui
   {
-    const window_flags window::default_flags = window_flag::exit_on_close | window_flag::opengl;
+    namespace native_window
+    {
+      base::base(std::unique_ptr<native_visual::base>&& native_visual)
+        : native_visual(std::move(native_visual))
+      {}
+
+      void base::make_current() const
+      {
+        native_visual->make_current();
+      }
+
+      void base::swap_buffers(const graphics::pixel_size& size)
+      {
+        native_visual->swap_buffers(size);
+      }
+
+      const native_visual::base& base::get_native_visual() const
+      {
+        return *native_visual;
+      }
+
+      base::~base() = default;
+    }
   }
 }

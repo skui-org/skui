@@ -23,24 +23,44 @@
  **/
 
 /*
- * Implementation based on Khronos examples at
- * https://www.khronos.org/opengl/wiki/Programming_OpenGL_in_Linux:_GLX_and_Xlib
- * https://www.khronos.org/opengl/wiki/Tutorial:_OpenGL_3.0_Context_Creation_(GLX)
+ * Visual info implementation for EGL.
  */
 
-#include "gui/window.h++"
+#ifndef SKUI_GUI_NATIVE_VISUAL_EGL_H
+#define SKUI_GUI_NATIVE_VISUAL_EGL_H
 
-#include <core/application.h++>
-#include <core/debug.h++>
+#include "gui/native_visual.h++"
 
 #include <EGL/egl.h>
-
-#include <xcb/xcb.h>
 
 namespace skui
 {
   namespace gui
   {
-    const window_flags window::default_flags = window_flag::exit_on_close | window_flag::opengl;
+    namespace native_visual
+    {
+      class egl : public base
+      {
+      public:
+        egl();
+        ~egl() override;
+
+        void create_surface(std::uintptr_t window) override;
+        void make_current() const override;
+        void swap_buffers(const graphics::pixel_size&) const override;
+
+        EGLint get_egl_visual();
+
+        gl_get_function_type get_gl_function() const override;
+
+      private:
+        EGLDisplay egl_display;
+        EGLContext egl_context;
+        EGLConfig egl_config;
+        EGLSurface egl_surface;
+      };
+    }
   }
 }
+
+#endif

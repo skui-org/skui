@@ -23,24 +23,48 @@
  **/
 
 /*
- * Implementation based on Khronos examples at
- * https://www.khronos.org/opengl/wiki/Programming_OpenGL_in_Linux:_GLX_and_Xlib
- * https://www.khronos.org/opengl/wiki/Tutorial:_OpenGL_3.0_Context_Creation_(GLX)
+ * Win32 Native Visual.
+ * Native Visual implementation for Win32.
  */
 
-#include "gui/window.h++"
+#ifndef SKUI_GUI_NATIVE_VISUAL_WIN32_H
+#define SKUI_GUI_NATIVE_VISUAL_WIN32_H
 
-#include <core/application.h++>
-#include <core/debug.h++>
+#include "gui/native_visual.h++"
 
-#include <EGL/egl.h>
+#include "gui/native_window.h++"
 
-#include <xcb/xcb.h>
+#include <vector>
+
+#ifndef WIN32_MEAN_AND_LEAN
+#define WIN32_MEAN_AND_LEAN
+#endif
+#include <windows.h>
+#undef WIN32_MEAN_AND_LEAN
 
 namespace skui
 {
   namespace gui
   {
-    const window_flags window::default_flags = window_flag::exit_on_close | window_flag::opengl;
+    namespace native_visual
+    {
+      class win32 : public base
+      {
+      public:
+        win32();
+        ~win32() override;
+
+        void create_surface(std::uintptr_t window) override;
+        void make_current() const override;
+        void swap_buffers(const graphics::pixel_size& size) const override;
+
+      private:
+        HDC device_context;
+        std::vector<std::uint32_t> pixels;
+      };
+    }
   }
 }
+
+#endif
+

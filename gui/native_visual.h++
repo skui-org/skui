@@ -23,24 +23,40 @@
  **/
 
 /*
- * Implementation based on Khronos examples at
- * https://www.khronos.org/opengl/wiki/Programming_OpenGL_in_Linux:_GLX_and_Xlib
- * https://www.khronos.org/opengl/wiki/Tutorial:_OpenGL_3.0_Context_Creation_(GLX)
+ * Abstraction of the graphical backend of a native_window.
  */
 
-#include "gui/window.h++"
+#ifndef SKUI_GUI_VISUAL_H
+#define SKUI_GUI_VISUAL_H
 
-#include <core/application.h++>
-#include <core/debug.h++>
+#include <core/string.h++>
 
-#include <EGL/egl.h>
+#include <graphics/size.h++>
 
-#include <xcb/xcb.h>
+#include <cstdint>
 
 namespace skui
 {
   namespace gui
   {
-    const window_flags window::default_flags = window_flag::exit_on_close | window_flag::opengl;
+    namespace native_visual
+    {
+      class base
+      {
+      public:
+        base();
+        virtual ~base() = 0;
+
+        virtual void create_surface(std::uintptr_t window) = 0;
+        virtual void make_current() const = 0;
+        virtual void swap_buffers(const graphics::pixel_size& size) const = 0;
+
+        using gl_function_type = void(*)();
+        using gl_get_function_type = gl_function_type (*)(void* ctx, const char name[]);
+        virtual gl_get_function_type get_gl_function() const;
+      };
+    }
   }
 }
+
+#endif

@@ -23,24 +23,44 @@
  **/
 
 /*
- * Implementation based on Khronos examples at
- * https://www.khronos.org/opengl/wiki/Programming_OpenGL_in_Linux:_GLX_and_Xlib
- * https://www.khronos.org/opengl/wiki/Tutorial:_OpenGL_3.0_Context_Creation_(GLX)
+ * Event handling implementation for Win32.
  */
 
+#ifndef SKUI_GUI_EVENTS_WIN32_H
+#define SKUI_GUI_EVENTS_WIN32_H
+
+#include "gui/events.h++"
 #include "gui/window.h++"
 
-#include <core/application.h++>
-#include <core/debug.h++>
+#include <core/utility.h++>
 
-#include <EGL/egl.h>
-
-#include <xcb/xcb.h>
+#ifndef WIN32_MEAN_AND_LEAN
+#define WIN32_MEAN_AND_LEAN
+#endif
+#include <windows.h>
+#undef WIN32_MEAN_AND_LEAN
 
 namespace skui
 {
   namespace gui
   {
-    const window_flags window::default_flags = window_flag::exit_on_close | window_flag::opengl;
+    namespace events
+    {
+      class win32 : public base
+      {
+      public:
+        win32(gui::window& window);
+        ~win32() override;
+
+        void exec() override;
+
+        static LRESULT CALLBACK window_procedure(HWND hwnd,
+                                                 UINT msg,
+                                                 WPARAM wparam,
+                                                 LPARAM lparam);
+      };
+    }
   }
 }
+
+#endif

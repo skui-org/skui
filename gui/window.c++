@@ -24,6 +24,9 @@
 
 #include "gui/window.h++"
 
+#include "gui/events.h++"
+#include "gui/native_window.h++"
+
 #include <core/application.h++>
 #include <core/debug.h++>
 
@@ -57,54 +60,83 @@ namespace skui
       , minimum_size{}
       , position{position}
       , icon{}
-      , title([this](const core::string& title) { set_title(title); },
-              [this] { return get_title(); })
-      , native_handle(nullptr)
+      , title([this](const core::string& title) { native_window->set_title(title); },
+              [this] { return native_window->get_title(); })
+      , native_window(nullptr)
       , thread()
       , flags(flags)
     {
       std::unique_lock<decltype(handle_mutex)> lock(handle_mutex);
       std::thread t(&window::initialize_and_execute_platform_loop, this);
       thread.swap(t);
-      handle_condition_variable.wait(lock, [this] { return native_handle != nullptr; });
+      handle_condition_variable.wait(lock, [this] { return native_window != nullptr; });
       implementation::windows().push_back(this);
 
       title = core::application::instance().name;
     }
 
+    window::window(window_flags flags)
+      : window({0,0}, {800,600}, flags)
+    {}
+
     window::~window()
     {
       core::debug_print("Destroying window.\n");
-      if(native_handle)
+      if(native_window)
       {
         close();
       }
       thread.join();
     }
 
+    void window::show()
+    {
+      core::debug_print("Showing window.\n");
+      native_window->show();
+    }
+
+    void window::hide()
+    {
+      core::debug_print("Hiding window.\n");
+      native_window->hide();
+    }
+
+    void window::close()
+    {
+      core::debug_print("window::close called.\n");
+      native_window->close();
+      window::windows().erase(std::remove(window::windows().begin(), window::windows().end(), this), window::windows().end());
+    }
+
     void window::repaint()
     {
-      update_geometry();
+      native_window->get_current_geometry(position, size);
+
+      native_window->make_current();
+
       draw();
-      swap_buffers();
+
+      native_window->swap_buffers(size);
+    }
+
+    native_window::base& window::get_native_window() const
+    {
+      return *native_window;
     }
 
     void window::draw()
     {
-      auto canvas = graphics_context->create_canvas(size);
+      graphics::canvas_flags canvas_flags;
+      if(flags.test(window_flag::anti_alias))
+        canvas_flags |= graphics::canvas_flag::anti_alias;
+
+      auto canvas = graphics_context->create_canvas(size, canvas_flags);
       canvas->draw();
     }
 
     void window::initialize_and_execute_platform_loop()
     {
-      native_handle = implementation::create_handle();
-      auto& handle = *native_handle;
-
-      choose_visual(handle);
-
-      setup_window(handle);
-
-      setup_graphics_backend(handle);
+      native_window = native_window::create(position, size, flags);
 
       create_graphics_context();
 
@@ -118,7 +150,7 @@ namespace skui
       execute_event_loop();
 
       graphics_context.reset();
-      native_handle.reset();
+      native_window.reset();
 
       if(flags.test(window_flag::exit_on_close))
         core::application::instance().quit();
@@ -127,9 +159,20 @@ namespace skui
     void window::create_graphics_context()
     {
       if(flags.test(window_flag::opengl))
-        graphics_context = std::make_unique<graphics::skia_gl_context>();
+      {
+        const auto& native_visual = native_window->get_native_visual();
+        native_visual.make_current();
+        graphics_context = std::make_unique<graphics::skia_gl_context>(native_visual.get_gl_function());
+      }
       else
         graphics_context = std::make_unique<graphics::skia_raster_context>();
+    }
+
+    void window::execute_event_loop()
+    {
+      std::unique_ptr<events::base> events = events::create(*this);
+
+      events->exec();
     }
 
     window::window_list& window::windows()

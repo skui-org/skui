@@ -22,25 +22,36 @@
  * THE SOFTWARE.
  **/
 
-/*
- * Implementation based on Khronos examples at
- * https://www.khronos.org/opengl/wiki/Programming_OpenGL_in_Linux:_GLX_and_Xlib
- * https://www.khronos.org/opengl/wiki/Tutorial:_OpenGL_3.0_Context_Creation_(GLX)
- */
+#include "gui/native_window.h++"
 
-#include "gui/window.h++"
+#include "gui/native_window/win32.h++"
 
-#include <core/application.h++>
-#include <core/debug.h++>
-
-#include <EGL/egl.h>
-
-#include <xcb/xcb.h>
+#include "gui/native_visual/wgl.h++"
+#include "gui/native_visual/win32.h++"
 
 namespace skui
 {
   namespace gui
   {
-    const window_flags window::default_flags = window_flag::exit_on_close | window_flag::opengl;
+    namespace native_window
+    {
+      std::unique_ptr<base> create(const graphics::pixel_position& position,
+                                   const graphics::pixel_size& size,
+                                   const window_flags& flags)
+      {
+        std::unique_ptr<native_visual::base> visual;
+        if(flags.test(window_flag::opengl))
+          visual = std::make_unique<gui::native_visual::wgl>();
+        else
+          visual = std::make_unique<gui::native_visual::win32>();
+
+        auto window = std::make_unique<gui::native_window::win32>(std::move(visual));
+
+        window->create(position, size);
+
+        return window;
+      }
+    }
   }
 }
+

@@ -22,25 +22,20 @@
  * THE SOFTWARE.
  **/
 
-/*
- * Implementation based on Khronos examples at
- * https://www.khronos.org/opengl/wiki/Programming_OpenGL_in_Linux:_GLX_and_Xlib
- * https://www.khronos.org/opengl/wiki/Tutorial:_OpenGL_3.0_Context_Creation_(GLX)
- */
-
-#include "gui/window.h++"
-
-#include <core/application.h++>
-#include <core/debug.h++>
-
-#include <EGL/egl.h>
-
-#include <xcb/xcb.h>
+#include "gui/events.h++"
 
 namespace skui
 {
   namespace gui
   {
-    const window_flags window::default_flags = window_flag::exit_on_close | window_flag::opengl;
+    namespace events
+    {
+      base::base(gui::window& window)
+        : window(window)
+      {}
+
+      base::~base() = default;
+    }
   }
 }
+

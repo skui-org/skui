@@ -23,24 +23,49 @@
  **/
 
 /*
- * Implementation based on Khronos examples at
- * https://www.khronos.org/opengl/wiki/Programming_OpenGL_in_Linux:_GLX_and_Xlib
- * https://www.khronos.org/opengl/wiki/Tutorial:_OpenGL_3.0_Context_Creation_(GLX)
+ * Win32 Native Window
+ * Native Window implementation for the Win32 API;
  */
 
-#include "gui/window.h++"
+#ifndef SKUI_GUI_NATIVE_WINDOW_WIN32_H
+#define SKUI_GUI_NATIVE_WINDOW_WIN32_H
 
-#include <core/application.h++>
-#include <core/debug.h++>
+#include "gui/native_window.h++"
 
-#include <EGL/egl.h>
-
-#include <xcb/xcb.h>
+#ifndef WIN32_MEAN_AND_LEAN
+#define WIN32_MEAN_AND_LEAN
+#endif
+#include <windows.h>
+#undef WIN32_MEAN_AND_LEAN
 
 namespace skui
 {
   namespace gui
   {
-    const window_flags window::default_flags = window_flag::exit_on_close | window_flag::opengl;
+    namespace native_window
+    {
+      class win32 : public base
+      {
+      public:
+        win32(std::unique_ptr<native_visual::base>&& native_visual);
+        ~win32() override;
+
+        void create(const graphics::pixel_position& initial_position,
+                    const graphics::pixel_size& initial_size) override;
+        void show() override;
+        void hide() override;
+        void close() override;
+        core::string get_title() const override;
+        void set_title(const core::string& title) override;
+        void get_current_geometry(graphics::pixel_position& position, graphics::pixel_size& size) override;
+
+        HWND get_hwnd() const;
+
+      private:
+        HWND window;
+      };
+    }
   }
 }
+
+#endif
