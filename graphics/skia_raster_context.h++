@@ -49,7 +49,8 @@ namespace skui
       skia_raster_context() = default;
       ~skia_raster_context() override = default;
 
-      std::unique_ptr<canvas> create_canvas(const pixel_size& size) const override;
+      std::unique_ptr<canvas> create_canvas(const pixel_size& size,
+                                            canvas_flags flags) const override;
 
       const std::vector<std::uint32_t>& raw_pixels() const;
 

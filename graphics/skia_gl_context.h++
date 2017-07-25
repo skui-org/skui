@@ -48,7 +48,8 @@ namespace skui
       skia_gl_context();
       ~skia_gl_context() override = default;
 
-      std::unique_ptr<canvas> create_canvas(const pixel_size& size) const override;
+      std::unique_ptr<canvas> create_canvas(const pixel_size& size,
+                                            canvas_flags flags) const override;
 
     private:
       sk_sp<const GrGLInterface> gr_gl_interface;

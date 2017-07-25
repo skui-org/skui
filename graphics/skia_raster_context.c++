@@ -34,10 +34,12 @@ namespace skui
 {
   namespace graphics
   {
-    std::unique_ptr<canvas> skia_raster_context::create_canvas(const pixel_size& size) const
+    std::unique_ptr<canvas> skia_raster_context::create_canvas(const pixel_size& size,
+                                                               canvas_flags flags) const
     {
       pixels.resize(size.width*size.height);
-      return std::make_unique<skia_raster_canvas>(pixels, size, canvas_flag::anti_alias);
+
+      return std::make_unique<skia_raster_canvas>(pixels, size, flags);
     }
 
     const std::vector<uint32_t>&skia_raster_context::raw_pixels() const

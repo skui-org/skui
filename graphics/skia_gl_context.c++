@@ -29,8 +29,7 @@
 #include <core/debug.h++>
 
 #include <gl/GrGLInterface.h>
-
-#include <thread>
+#include <gl/GrGLAssembleInterface.h>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -48,10 +47,12 @@ namespace skui
       SkASSERT(gr_gl_interface);
     }
 
-    std::unique_ptr<canvas> skia_gl_context::create_canvas(const pixel_size& size) const
+    std::unique_ptr<canvas> skia_gl_context::create_canvas(const pixel_size& size,
+                                                           canvas_flags flags) const
     {
       glViewport(0, 0, static_cast<GLsizei>(size.width), static_cast<GLsizei>(size.height));
-      return std::make_unique<skia_gl_canvas>(size, *gr_gl_interface, canvas_flag::anti_alias);
+
+      return std::make_unique<skia_gl_canvas>(size, *gr_gl_interface, flags);
     }
   }
 }
