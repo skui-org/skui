@@ -50,7 +50,7 @@ namespace skui
       bool unload();
 
       template<typename ReturnType, typename... ArgTypes>
-      std::function<ReturnType(ArgTypes...)> resolve(const string& symbol_name)
+      auto resolve(const string& symbol_name) -> ReturnType(*)(ArgTypes...)
       {
         using function_type = ReturnType(*)(ArgTypes...);
         return function_type(resolve_symbol(symbol_name));

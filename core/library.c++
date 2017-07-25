@@ -36,6 +36,7 @@ namespace skui
     }
     library::library(path filename)
       : filename(filename)
+      , native_handle(nullptr)
     {}
 
     library::~library()
