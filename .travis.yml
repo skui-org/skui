@@ -30,8 +30,8 @@ matrix:
             - libxcb-util0-dev
     - compiler: GCC 7
       env:
-        - C_COMPILER=gcc-6
-        - CXX_COMPILER=g++-6
+        - C_COMPILER=gcc-7
+        - CXX_COMPILER=g++-7
       addons:
         apt:
           sources:
@@ -50,15 +50,10 @@ matrix:
         apt:
           packages:
             - clang-3.9
-            - llvm-3.9-dev
-            - libc++-dev
-            - libc++abi-dev
             - libgl1-mesa-dev
             - libegl1-mesa-dev
             - libgles2-mesa-dev
           sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise
             - sourceline: 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-3.9 main'
               key_url: 'http://apt.llvm.org/llvm-snapshot.gpg.key'
       before_install:
@@ -90,15 +85,10 @@ matrix:
         apt:
           packages:
             - clang-4.0
-            - llvm-4.0-dev
-            - libc++-dev
-            - libc++abi-dev
             - libgl1-mesa-dev
             - libegl1-mesa-dev
             - libgles2-mesa-dev
           sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise
             - sourceline: 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-4.0 main'
               key_url: 'http://apt.llvm.org/llvm-snapshot.gpg.key'
       before_install:
