@@ -71,6 +71,8 @@ target_link_libraries(core PUBLIC $<$<PLATFORM_ID:Linux>:-pthread>
                                   $<$<AND:$<CXX_COMPILER_ID:Clang>,$<NOT:$<PLATFORM_ID:Windows>>>:-lc++experimental>
                                   $<$<NOT:$<PLATFORM_ID:Windows>>:-ldl>)
 if(MINGW)
-  target_link_libraries(core PUBLIC Boost::system Boost::regex Boost::filesystem)
+  # Using imported targets here will, on Linux add an -isystem to the MinGW system include directory, messing up all libstdc++ #include_next's
+  target_include_directories(core PUBLIC ${Boost_INCLUDE_DIRS})
+  target_link_libraries(core PUBLIC ${Boost_LIBRARIES})
 endif()
 
