@@ -22,13 +22,6 @@
  * THE SOFTWARE.
  **/
 
-/*
- * Event handling implementation for XCB.
- */
-
-#ifndef SKUI_GUI_EVENTS_XCB_H
-#define SKUI_GUI_EVENTS_XCB_H
-
 #include "gui/events/win32.h++"
 
 #include "gui/native_window/win32.h++"
@@ -98,5 +91,3 @@ namespace skui
     }
   }
 }
-
-#endif

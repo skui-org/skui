@@ -74,6 +74,33 @@ namespace skui
           return result;
       }
     }
+
+    std::string get_last_error_string()
+    {
+      DWORD error = GetLastError();
+      if(error)
+      {
+        wchar_t* buffer = nullptr;
+        DWORD length = FormatMessageW(
+                         FORMAT_MESSAGE_ALLOCATE_BUFFER |
+                         FORMAT_MESSAGE_FROM_SYSTEM |
+                         FORMAT_MESSAGE_IGNORE_INSERTS,
+                         nullptr,
+                         error,
+                         MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                         (wchar_t*)&buffer,
+                         0, nullptr);
+        if(length)
+        {
+          std::wstring result(buffer, buffer+length);
+
+          LocalFree(buffer);
+
+          return convert_to_utf8(result);
+        }
+      }
+      return std::string();
+    }
 #endif
   }
 }

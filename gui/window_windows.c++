@@ -24,21 +24,6 @@
 
 #include "gui/window.h++"
 
-#include <core/application.h++>
-#include <core/debug.h++>
-
-#include <graphics/skia_raster_context.h++>
-
-#ifndef UNICODE
-#define UNICODE
-#endif
-#ifndef WIN32_MEAN_AND_LEAN
-#define WIN32_MEAN_AND_LEAN
-#endif
-
-#include <Windows.h>
-#include <wingdi.h>
-
 namespace skui
 {
   namespace gui

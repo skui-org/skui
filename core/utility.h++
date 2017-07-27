@@ -48,6 +48,7 @@ namespace skui
 #ifdef _WIN32
     string convert_to_utf8(const std::wstring& utf16_string);
     std::wstring convert_to_utf16(const string& utf8_string);
+    std::string get_last_error_string();
 #endif
   }
 }

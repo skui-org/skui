@@ -27,6 +27,7 @@
 #include "gui/events/win32.h++"
 
 #include <core/debug.h++>
+#include <core/utility.h++>
 
 namespace skui
 {
@@ -51,12 +52,12 @@ namespace skui
           wc.cbClsExtra    = 0;
           wc.cbWndExtra    = 0;
           wc.hInstance     = application_instance;
-          wc.hIcon         = nullptr;// LoadIconW(application_instance, (LPCWSTR)IDI_WINLOGO);
-          wc.hCursor       = nullptr;// LoadCursor(nullptr, IDC_ARROW);
+          wc.hIcon         = LoadIconW(application_instance, (LPCWSTR)IDI_WINLOGO);
+          wc.hCursor       = LoadCursor(nullptr, IDC_ARROW);
           wc.hbrBackground = reinterpret_cast<HBRUSH>(COLOR_WINDOW+1);
           wc.lpszMenuName  = L"Skui menu";
           wc.lpszClassName = window_class;
-          wc.hIconSm       = nullptr;//LoadIconW(application_instance, (LPCWSTR)IDI_WINLOGO);
+          wc.hIconSm       = LoadIconW(application_instance, (LPCWSTR)IDI_WINLOGO);
 
           return RegisterClassExW(&wc) == 0;
         }
@@ -68,7 +69,7 @@ namespace skui
         const static bool dummy = register_window_class();
         if(!dummy)
         {
-          core::debug_print("Call to RegisterClassExW failed.\n");
+          core::debug_print("Call to RegisterClassExW failed.\n", core::get_last_error_string());
         }
       }
 
@@ -81,8 +82,8 @@ namespace skui
                                  window_class,
                                  L"A Skui Window",
                                  WS_OVERLAPPEDWINDOW,
-                                 CW_USEDEFAULT, CW_USEDEFAULT,
-                                 CW_USEDEFAULT, CW_USEDEFAULT,
+                                 static_cast<int>(initial_position.x), static_cast<int>(initial_position.y),
+                                 static_cast<int>(initial_size.width), static_cast<int>(initial_size.height),
                                  nullptr, nullptr,
                                  application_instance, nullptr
                                  );
@@ -126,7 +127,7 @@ namespace skui
       {
         RECT rect;
         GetClientRect(window, &rect);
-        size = {static_cast<graphics::pixel>(rect.right-rect.left), static_cast<graphics::pixel>(rect.top - rect.bottom)};
+        size = {static_cast<graphics::pixel>(rect.right-rect.left), static_cast<graphics::pixel>(rect.bottom - rect.top)};
         position = {static_cast<std::int32_t>(rect.left), static_cast<std::int32_t>(rect.top)};
       }
 
