@@ -30,7 +30,6 @@ set(core_src
     command_queue.h++ command_queue.c++
     debug.h++
     event_loop.h++ event_loop.c++
-    traits/arity.h++
     library.h++ library.c++ library_windows.c++ library_unix.c++
     path.h++
     property.h++
@@ -41,7 +40,12 @@ set(core_src
     trackable.h++ trackable.c++
     utility.h++ utility.c++
     value_ptr.h++
-    )
+   )
+set(traits_src
+    traits/arity.h++
+   )
+source_group(core FILES ${core_src})
+source_group(traits FILES ${traits_src})
 
 # Platform-specific files
 if(NOT WIN32)

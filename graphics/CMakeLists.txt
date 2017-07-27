@@ -31,18 +31,10 @@ set(graphics_src
     context.h++ context.c++
     drawable.h++
     gradient.h++ gradient.c++
-    gradient/linear_gradient.h++ gradient/linear_gradient.c++
-    gradient/radial_gradient.h++ gradient/radial_gradient.c++
-    gradient/sweep_gradient.h++ gradient/sweep_gradient.c++
-    gradient/two_point_conical_gradient.h++ gradient/two_point_conical_gradient.c++
     pixel.h++
     position.h++
     scalar.h++
     shape.h++ shape.c++
-    shape/ellipse.h++ shape/ellipse.c++
-    shape/label.h++ shape/label.c++
-    shape/path.h++ shape/path.c++
-    shape/rectangle.h++ shape/rectangle.c++
     size.h++
     skia_canvas.h++ skia_canvas.c++
     skia_gl_context.h++ skia_gl_context.c++
@@ -51,9 +43,25 @@ set(graphics_src
     skia_raster_canvas.h++ skia_raster_canvas.c++
     skia_utility.h++ skia_utility.c++
    )
+set(gradient_src
+    gradient/linear_gradient.h++ gradient/linear_gradient.c++
+    gradient/radial_gradient.h++ gradient/radial_gradient.c++
+    gradient/sweep_gradient.h++ gradient/sweep_gradient.c++
+    gradient/two_point_conical_gradient.h++ gradient/two_point_conical_gradient.c++
+   )
+set(shape_src
+    shape/ellipse.h++ shape/ellipse.c++
+    shape/label.h++ shape/label.c++
+    shape/path.h++ shape/path.c++
+    shape/rectangle.h++ shape/rectangle.c++
+   )
+
+source_group("" FILES ${graphics_src})
+source_group(gradient FILES ${gradient_src})
+source_group(shape FILES ${shape_src})
 
 # The library itself
-add_library(graphics ${graphics_src})
+add_library(graphics ${graphics_src} ${gradient_src} ${shape_src})
 target_link_libraries(graphics PUBLIC core skia ${OPENGL_LIBRARIES})
 target_link_libraries(graphics PRIVATE $<$<PLATFORM_ID:Windows>:opengl-api>)
 target_compile_definitions(graphics PRIVATE SKUI_GRAPHICS_INSIDES)

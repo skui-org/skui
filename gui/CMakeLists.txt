@@ -31,27 +31,37 @@ find_package(EGL)
 # Common source files
 set(gui_src
     events.h++ events.c++ events_linux.c++ events_windows.c++
-    events/win32.h++ events/win32.c++
-    events/xcb.h++ events/xcb.c++
     icon.h++
     key.h++
     main_windows.c++
     native_window.h++ native_window.c++ native_window_windows.c++ native_window_linux.c++
+    native_visual.h++ native_visual.c++
+    window.h++ window.c++ window_windows.c++ window_xcb.c++
+    window_flags.h++
+   )
+set(events_src
+    events/win32.h++ events/win32.c++
+    events/xcb.h++ events/xcb.c++
+   )
+set(native_window_src
     native_window/win32.h++ native_window/win32.c++
     native_window/xcb.h++ native_window/xcb.c++
     native_window/xlib.h++ native_window/xlib.c++
-    native_visual.h++ native_visual.c++
+   )
+set(native_visual_src
     native_visual/egl.h++ native_visual/egl.c++
     native_visual/glx.h++ native_visual/glx.c++
     native_visual/wgl.h++ native_visual/wgl.c++
     native_visual/win32.h++ native_visual/win32.c++
     native_visual/xcb.h++ native_visual/xcb.c++
-    window.h++ window.c++ window_windows.c++ window_xcb.c++
-    window_flags.h++
    )
+source_group("" FILES ${gui_src})
+source_group(events FILES ${events_src})
+source_group(native_visual FILES ${native_visual_src})
+source_group(native_window FILES ${native_window_src})
 
 # The library itself
-add_library(gui ${gui_src})
+add_library(gui ${gui_src} ${events_src} ${native_window_src} ${native_visual_src})
 target_link_libraries(gui PUBLIC core graphics)
 
 # Platform specific files and libraries

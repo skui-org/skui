@@ -30,6 +30,7 @@ set(opengl_src
     function_type.h++
     version.h++
    )
+source_group("" FILES ${opengl_src})
 
 # The library itself
 add_library(opengl ${opengl_src})

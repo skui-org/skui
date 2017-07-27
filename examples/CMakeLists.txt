@@ -22,6 +22,4 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-if(NOT SKIP_SKIA)
-  add_subdirectory(widget_gallery)
-endif()
+add_subdirectory(widget_gallery)

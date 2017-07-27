@@ -24,12 +24,15 @@
 #
 
 function(runtime_test component test_name)
-  add_executable(${test_name} ${component}/${test_name}.c++ test.h++)
+  set(test_src ${component}/${test_name}.c++ ${CMAKE_CURRENT_LIST_DIR}/test.h++)
+  source_group("" FILES ${test_src})
+  add_executable(${test_name} ${test_src})
   set_target_properties(${test_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${component}
                                                 RUNTIME_OUTPUT_DIRECTORY_DEBUG ${component}
                                                 RUNTIME_OUTPUT_DIRECTORY_RELEASE ${component}
                                                 RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO ${component}
-                                                RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL ${component})
+                                                RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL ${component}
+                                                FOLDER tests/${component})
   target_include_directories(${test_name} PUBLIC ${CMAKE_CURRENT_LIST_DIR} ${PROJECT_SOURCE_DIR})
   target_link_libraries(${test_name} ${component})
 
@@ -39,8 +42,11 @@ function(runtime_test component test_name)
 endfunction()
 
 function(compile_test component test_name)
-  add_executable(${test_name} ${component}/${test_name}.c++ ${CMAKE_CURRENT_LIST_DIR}/test.h++)
-  set_target_properties(${test_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${component})
+  set(test_src ${component}/${test_name}.c++ ${CMAKE_CURRENT_LIST_DIR}/test.h++)
+  source_group("" FILES ${test_src})
+  add_executable(${test_name} ${test_src})
+  set_target_properties(${test_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${component}
+                                     FOLDER tests/${component})
   target_include_directories(${test_name} PUBLIC ${CMAKE_CURRENT_LIST_DIR} ${PROJECT_SOURCE_DIR})
   target_link_libraries(${test_name} ${component})
 
@@ -50,7 +56,9 @@ function(compile_test component test_name)
 endfunction()
 
 function(compile_test_library component test_name)
-  add_library(${test_name} SHARED ${component}/${test_name}.c++ ${CMAKE_CURRENT_LIST_DIR}/test.h++)
+  set(test_src ${component}/${test_name}.c++ ${CMAKE_CURRENT_LIST_DIR}/test.h++)
+  source_group("" FILES ${test_src})
+  add_library(${test_name} SHARED ${test_src})
   set_target_properties(${test_name} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${component}
                                                 LIBRARY_OUTPUT_DIRECTORY_DEBUG ${component}
                                                 LIBRARY_OUTPUT_DIRECTORY_RELEASE ${component}
@@ -60,7 +68,8 @@ function(compile_test_library component test_name)
                                                 RUNTIME_OUTPUT_DIRECTORY_DEBUG ${component}
                                                 RUNTIME_OUTPUT_DIRECTORY_RELEASE ${component}
                                                 RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO ${component}
-                                                RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL ${component})
+                                                RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL ${component}
+                                                FOLDER tests/${component})
   target_include_directories(${test_name} PUBLIC ${CMAKE_CURRENT_LIST_DIR} ${PROJECT_SOURCE_DIR})
   target_link_libraries(${test_name} ${component})
 
