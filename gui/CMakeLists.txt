@@ -38,6 +38,7 @@ set(gui_src
     native_visual.h++ native_visual.c++
     window.h++ window.c++ window_windows.c++ window_xcb.c++
     window_flags.h++
+    window_state.h++
    )
 set(events_src
     events/win32.h++ events/win32.c++

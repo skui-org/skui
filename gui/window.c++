@@ -93,12 +93,14 @@ namespace skui
     {
       core::debug_print("Showing window.\n");
       native_window->show();
+      state = window_state::windowed;
     }
 
     void window::hide()
     {
       core::debug_print("Hiding window.\n");
       native_window->hide();
+      state = window_state::hidden;
     }
 
     void window::close()

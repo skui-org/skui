@@ -32,6 +32,7 @@
 #include "gui/icon.h++"
 #include "gui/native_window.h++"
 #include "gui/window_flags.h++"
+#include "gui/window_state.h++"
 
 #include <core/proxy_property.h++>
 #include <core/string.h++>
@@ -51,15 +52,6 @@ namespace skui
     {
     public:
       using window_list = std::vector<window*>;
-
-      enum class state
-      {
-        hidden,
-        windowed,
-        maximized,
-        fullscreen_maximized,
-        minimized
-      };
 
       static const window_flags default_flags;
 
@@ -88,7 +80,7 @@ namespace skui
       /// Signals
       // Window manager
       core::signal<> closed;
-      core::property<state> state;
+      core::property<window_state> state;
 
       native_window::base& get_native_window() const;
 
