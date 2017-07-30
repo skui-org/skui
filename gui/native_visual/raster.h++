@@ -22,40 +22,41 @@
  * THE SOFTWARE.
  **/
 
-#ifndef SKUI_GRAPHICS_SKIA_CONTEXT_H
-#define SKUI_GRAPHICS_SKIA_CONTEXT_H
+/*
+ * Raster Native Visual.
+ * Native Visual that provides a local pixel buffer.
+ */
 
-#include "context.h++"
+#ifndef SKUI_GUI_NATIVE_VISUAL_RASTER_H
+#define SKUI_GUI_NATIVE_VISUAL_RASTER_H
 
-#include "size.h++"
+#include "gui/native_visual.h++"
 
-#include <GrContext.h>
-#include <GrGLInterface.h>
+#include "gui/native_window.h++"
 
-#include <memory>
 #include <vector>
-
-class SkSurface;
 
 namespace skui
 {
-  namespace graphics
+  namespace gui
   {
-    class canvas;
-
-    class skia_raster_context : public context
+    namespace native_visual
     {
-    public:
-      skia_raster_context(std::vector<std::uint32_t>& pixels);
-      ~skia_raster_context() override = default;
+      class raster : public base
+      {
+      public:
+        raster();
+        ~raster() override;
 
-      std::unique_ptr<canvas> create_canvas(const pixel_size& size,
-                                            canvas_flags flags) const override;
+        std::vector<std::uint32_t>& pixels();
+        const std::vector<std::uint32_t>& pixels() const;
 
-    private:
-      std::vector<std::uint32_t>& pixels;
-    };
+      protected:
+        mutable std::vector<std::uint32_t> pixel_data;
+      };
+    }
   }
 }
 
 #endif
+

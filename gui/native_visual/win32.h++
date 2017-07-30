@@ -30,7 +30,7 @@
 #ifndef SKUI_GUI_NATIVE_VISUAL_WIN32_H
 #define SKUI_GUI_NATIVE_VISUAL_WIN32_H
 
-#include "gui/native_visual.h++"
+#include "gui/native_visual/raster.h++"
 
 #include "gui/native_window.h++"
 
@@ -48,7 +48,7 @@ namespace skui
   {
     namespace native_visual
     {
-      class win32 : public base
+      class win32 : public raster
       {
       public:
         win32();
@@ -60,7 +60,6 @@ namespace skui
 
       private:
         HDC device_context;
-        std::vector<std::uint32_t> pixels;
       };
     }
   }

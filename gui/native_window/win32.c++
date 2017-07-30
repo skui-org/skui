@@ -88,9 +88,9 @@ namespace skui
                                  application_instance, nullptr
                                  );
         if(!window)
-        {
-          core::debug_print("Call to CreateWindowExW failed.\n");
-        }
+          core::debug_print("Call to CreateWindowExW failed.\n", core::get_last_error_string());
+
+        native_visual->create_surface(reinterpret_cast<std::uintptr_t>(window));
       }
 
       void win32::show()

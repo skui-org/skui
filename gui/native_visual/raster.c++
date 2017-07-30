@@ -22,40 +22,29 @@
  * THE SOFTWARE.
  **/
 
-#ifndef SKUI_GRAPHICS_SKIA_CONTEXT_H
-#define SKUI_GRAPHICS_SKIA_CONTEXT_H
+#include "gui/native_visual/raster.h++"
 
-#include "context.h++"
-
-#include "size.h++"
-
-#include <GrContext.h>
-#include <GrGLInterface.h>
-
-#include <memory>
-#include <vector>
-
-class SkSurface;
+#include <core/debug.h++>
 
 namespace skui
 {
-  namespace graphics
+  namespace gui
   {
-    class canvas;
-
-    class skia_raster_context : public context
+    namespace native_visual
     {
-    public:
-      skia_raster_context(std::vector<std::uint32_t>& pixels);
-      ~skia_raster_context() override = default;
+      raster::raster() = default;
 
-      std::unique_ptr<canvas> create_canvas(const pixel_size& size,
-                                            canvas_flags flags) const override;
+      raster::~raster() = default;
 
-    private:
-      std::vector<std::uint32_t>& pixels;
-    };
+      std::vector<std::uint32_t>& raster::pixels()
+      {
+        return pixel_data;
+      }
+
+      const std::vector<std::uint32_t>& raster::pixels() const
+      {
+        return pixel_data;
+      }
+    }
   }
 }
-
-#endif

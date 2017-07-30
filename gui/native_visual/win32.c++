@@ -72,7 +72,7 @@ namespace skui
                                     static_cast<DWORD>(size.width), static_cast<DWORD>(size.height),
                                     0, 0,
                                     0, static_cast<UINT>(size.height),
-                                    pixels.data(),
+                                    pixels().data(),
                                     &bitmap_info,
                                     DIB_RGB_COLORS);
         if(ret == 0)

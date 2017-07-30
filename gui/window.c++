@@ -25,6 +25,7 @@
 #include "gui/window.h++"
 
 #include "gui/events.h++"
+#include "gui/native_visual/raster.h++"
 #include "gui/native_window.h++"
 
 #include <core/application.h++>
@@ -167,7 +168,13 @@ namespace skui
         graphics_context = std::make_unique<graphics::skia_gl_context>(native_visual.get_gl_function());
       }
       else
-        graphics_context = std::make_unique<graphics::skia_raster_context>();
+      {
+        auto raster_visual = dynamic_cast<native_visual::raster*>(&native_window->get_native_visual());
+        if(!raster_visual)
+          core::debug_print("In case of non-OpenGL, the visual must be a raster visual");
+
+        graphics_context = std::make_unique<graphics::skia_raster_context>(raster_visual->pixels());
+      }
     }
 
     void window::execute_event_loop()

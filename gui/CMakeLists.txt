@@ -52,6 +52,7 @@ set(native_window_src
 set(native_visual_src
     native_visual/egl.h++ native_visual/egl.c++
     native_visual/glx.h++ native_visual/glx.c++
+    native_visual/raster.h++ native_visual/raster.c++
     native_visual/wgl.h++ native_visual/wgl.c++
     native_visual/win32.h++ native_visual/win32.c++
     native_visual/xcb.h++ native_visual/xcb.c++
