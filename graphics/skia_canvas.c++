@@ -172,7 +172,7 @@ namespace skui
       }
 
       if(flags.test(canvas_flag::anti_alias))
-          paint.setAntiAlias(true);
+        paint.setAntiAlias(true);
 
       return paint;
     }
