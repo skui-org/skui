@@ -41,6 +41,6 @@ namespace skui
 {
   namespace gui
   {
-    const window_flags window::default_flags = window_flag::exit_on_close | window_flag::opengl;
+    const window_flags window::default_flags = window_flag::exit_on_close | window_flag::opengl | window_flag::anti_alias;
   }
 }

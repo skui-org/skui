@@ -28,6 +28,6 @@ namespace skui
 {
   namespace gui
   {
-    const window_flags window::default_flags = window_flag::exit_on_close;
+    const window_flags window::default_flags = window_flag::exit_on_close | window_flag::anti_alias;
   }
 }
