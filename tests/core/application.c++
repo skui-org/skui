@@ -52,7 +52,7 @@ namespace
 
     t.join();
 
-    check(return_value = exit_code, "application::execute returns exit code passed to quit().");
+    check(return_value == exit_code, "application::execute returns exit code passed to quit().");
   }
 }
 
