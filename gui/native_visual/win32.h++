@@ -23,7 +23,7 @@
  **/
 
 /*
- * Win32 Native Visual.
+ * native_visual::win32
  * Native Visual implementation for Win32.
  */
 

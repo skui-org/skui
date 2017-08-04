@@ -23,8 +23,8 @@
  **/
 
 /*
- * Win32 Native Window
- * Native Window implementation for the Win32 API;
+ * native_window::win32
+ * Native Window implementation for Win32.
  */
 
 #ifndef SKUI_GUI_NATIVE_WINDOW_WIN32_H

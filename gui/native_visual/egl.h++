@@ -23,7 +23,8 @@
  **/
 
 /*
- * Visual info implementation for EGL.
+ * native_visual::egl
+ * Native Visual implementation for EGL.
  */
 
 #ifndef SKUI_GUI_NATIVE_VISUAL_EGL_H

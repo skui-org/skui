@@ -23,8 +23,12 @@
  **/
 
 /*
- * XLib implementation of a window.
+ * native_window::xlib
+ * Native Window implementation for XLib.
  */
+
+#ifndef SKUI_GUI_NATIVE_WINDOW_XLIB_H
+#define SKUI_GUI_NATIVE_WINDOW_XLIB_H
 
 #include "gui/native_window/xcb.h++"
 
@@ -66,3 +70,5 @@ namespace skui
     }
   }
 }
+
+#endif

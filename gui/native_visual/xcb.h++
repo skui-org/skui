@@ -23,7 +23,8 @@
  **/
 
 /*
- * Visual info interface for XCB.
+ * native_visual::xcb
+ * Native Visual implementation for XCB.
  */
 
 #ifndef SKUI_GUI_NATIVE_VISUAL_XCB_H

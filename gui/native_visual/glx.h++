@@ -23,7 +23,8 @@
  **/
 
 /*
- * Visual info implementation for GLX
+ * native_visual::glx
+ * Native Visual implementation for GLX.
  */
 
 #ifndef SKUI_GUI_NATIVE_VISUAL_GLX_H

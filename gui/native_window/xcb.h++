@@ -23,11 +23,12 @@
  **/
 
 /*
- * Window implementation using XCB.
+ * native_window::xcb
+ * Native Window implementation for XCB.
  */
 
-#ifndef SKUI_GUI_NATIVE_WINDOW_XCB
-#define SKUI_GUI_NATIVE_WINDOW_XCB
+#ifndef SKUI_GUI_NATIVE_WINDOW_XCB_H
+#define SKUI_GUI_NATIVE_WINDOW_XCB_H
 
 #include "gui/native_window.h++"
 

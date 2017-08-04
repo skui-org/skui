@@ -23,8 +23,8 @@
  **/
 
 /*
- * Raster Native Visual.
- * Native Visual that provides a local pixel buffer.
+ * native_visual::raster
+ * Native Visual that provides a pixel buffer.
  */
 
 #ifndef SKUI_GUI_NATIVE_VISUAL_RASTER_H

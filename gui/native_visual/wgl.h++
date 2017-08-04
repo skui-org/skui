@@ -23,12 +23,12 @@
  **/
 
 /*
- * WGL Native Visual
- * Native visual implementation for WGL (Windows GL)
+ * native_visual::wgl
+ * Native Visual implementation for WGL (Windows GL).
  */
 
-#ifndef SKUI_GUI_NATIVE_WINDOW_WGL_H
-#define SKUI_GUI_NATIVE_WINDOW_WGL_H
+#ifndef SKUI_GUI_NATIVE_VISUAL_WGL_H
+#define SKUI_GUI_NATIVE_VISUAL_WGL_H
 
 #include "gui/native_visual.h++"
 
