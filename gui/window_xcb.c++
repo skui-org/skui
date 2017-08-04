@@ -33,8 +33,6 @@
 #include <core/application.h++>
 #include <core/debug.h++>
 
-#include <EGL/egl.h>
-
 #include <xcb/xcb.h>
 
 namespace skui

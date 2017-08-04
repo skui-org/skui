@@ -28,6 +28,8 @@
 
 #include <GL/glx.h>
 
+#include <cstring>
+
 namespace skui
 {
   namespace gui
@@ -40,7 +42,7 @@ namespace skui
         {
           // Avoid calling glXGetProcAddress() for EGL procs.
           // We don't expect it to ever succeed, but somtimes it returns non-null anyway.
-          if (0 == strncmp(name, "egl", 3)) {
+          if (0 == std::strncmp(name, "egl", 3)) {
               return nullptr;
           }
 

@@ -33,11 +33,6 @@
 
 #include "gui/native_window.h++"
 
-#include <GrGLAssembleInterface.h>
-
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-
 #include <GL/glx.h>
 
 namespace skui
