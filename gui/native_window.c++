@@ -34,6 +34,8 @@ namespace skui
         : native_visual(std::move(native_visual))
       {}
 
+      base::~base() = default;
+
       void base::make_current() const
       {
         native_visual->make_current();
@@ -44,12 +46,15 @@ namespace skui
         native_visual->swap_buffers(size);
       }
 
-      const native_visual::base& base::get_native_visual() const
+      native_visual::base& base::get_native_visual()
       {
         return *native_visual;
       }
 
-      base::~base() = default;
+      const native_visual::base& base::get_native_visual() const
+      {
+        return *native_visual;
+      }
     }
   }
 }

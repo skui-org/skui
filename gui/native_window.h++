@@ -69,11 +69,11 @@ namespace skui
 
         void make_current() const;
         void swap_buffers(const graphics::pixel_size& size);
+
+        native_visual::base& get_native_visual();
         const native_visual::base& get_native_visual() const;
 
       protected:
-        base();
-
         std::unique_ptr<native_visual::base> native_visual;
       };
     }
