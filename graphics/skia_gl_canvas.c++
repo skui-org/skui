@@ -24,6 +24,7 @@
 
 #include "graphics/skia_gl_canvas.h++"
 
+#include <GrBackendSurface.h>
 #include <GrContext.h>
 #include <GrGLInterface.h>
 
@@ -49,23 +50,24 @@ namespace skui
       {
         // Wrap the frame buffer object attached to the screen in a Skia render target so Skia can
         // render to it
-        GrBackendRenderTargetDesc desc;
-        desc.fWidth = static_cast<int>(size.width);
-        desc.fHeight = static_cast<int>(size.height);
-        desc.fConfig = kSkia8888_GrPixelConfig;
-        desc.fOrigin = kBottomLeft_GrSurfaceOrigin;
-        desc.fSampleCnt = 0;
-        desc.fStencilBits = 8;
+        GrGLFramebufferInfo framebuffer_info;
         GrGLint buffer;
         gl_interface.fFunctions.fGetIntegerv(GL_FRAMEBUFFER_BINDING, &buffer);
-        desc.fRenderTargetHandle = buffer;
+        framebuffer_info.fFBOID = static_cast<GrGLuint>(buffer);
+
+
+        GrBackendRenderTarget render_target(static_cast<int>(size.width),
+                                            static_cast<int>(size.height),
+                                            0,
+                                            8,
+                                            kSkia8888_GrPixelConfig,
+                                            framebuffer_info);
 
         // setup SkSurface
-        // To use distance field text, use commented out SkSurfaceProps instead
         SkSurfaceProps props(SkSurfaceProps::kUseDeviceIndependentFonts_Flag, // distance field text
                               SkSurfaceProps::kLegacyFontHost_InitType);
 
-        return SkSurface::MakeFromBackendRenderTarget(&gr_context, desc, &props);
+        return SkSurface::MakeFromBackendRenderTarget(&gr_context, render_target, kBottomLeft_GrSurfaceOrigin, nullptr, &props);
       }
     }
 
