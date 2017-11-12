@@ -108,3 +108,35 @@ matrix:
         - make cxx cxx_experimental
         - sudo make install-libcxxabi install-libcxx
         - cd ..
+    - compiler: clang-5.0
+      env:
+        - C_COMPILER=clang-5.0
+        - CXX_COMPILER=clang++-5.0
+      addons:
+        apt:
+          packages:
+            - clang-5.0
+            - libgl1-mesa-dev
+            - libegl1-mesa-dev
+            - libgles2-mesa-dev
+            - libxcb-util0-dev
+            - libxcb-image0-dev
+          sources:
+            - sourceline: 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-5.0 main'
+              key_url: 'http://apt.llvm.org/llvm-snapshot.gpg.key'
+      before_install:
+        - wget https://cmake.org/files/v3.5/cmake-3.5.2-Linux-x86_64.tar.gz
+        - wget http://llvm.org/releases/5.0.0/llvm-5.0.0.src.tar.xz
+        - wget http://llvm.org/releases/5.0.0/libcxxabi-5.0.0.src.tar.xz
+        - wget http://llvm.org/releases/5.0.0/libcxx-5.0.0.src.tar.xz
+        - tar -xf cmake-3.5.2-Linux-x86_64.tar.gz
+        - export PATH=$PWD/cmake-3.5.2-Linux-x86_64/bin:$PATH
+        - mkdir -p llvm/projects/libcxxabi llvm/projects/libcxx
+        - tar --strip-components=1 -xf llvm-5.0.0.src.tar.xz -C llvm
+        - tar --strip-components=1 -xf libcxxabi-5.0.0.src.tar.xz -C llvm/projects/libcxxabi
+        - tar --strip-components=1 -xf libcxx-5.0.0.src.tar.xz -C llvm/projects/libcxx
+        - mkdir llvm-build && cd llvm-build
+        - cmake ../llvm -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang-5.0 -DCMAKE_CXX_COMPILER=clang++-5.0 -DCMAKE_INSTALL_PREFIX=/usr -DLIBCXX_INSTALL_EXPERIMENTAL_LIBRARY=TRUE -DLIBCXX_ENABLE_FILESYSTEM=TRUE
+        - make cxx cxx_experimental
+        - sudo make install-libcxxabi install-libcxx
+        - cd ..
