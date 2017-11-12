@@ -48,6 +48,36 @@ namespace
 
     return nullptr;
   }
+
+  // For some reason, if this code is called from a member function, events don't come through correctly.
+  void make_xcb_window(const skui::graphics::pixel_position& position,
+                       const skui::graphics::pixel_size& size,
+                       xcb_connection_t* connection,
+                       xcb_screen_t* preferred_screen,
+                       xcb_visualid_t visualid,
+                       xcb_window_t& window)
+  {
+    window = xcb_generate_id(connection);
+
+    static const uint32_t mask = XCB_CW_BACK_PIXEL | XCB_CW_EVENT_MASK;
+    static const uint32_t values[] = { preferred_screen->black_pixel,
+                                       XCB_EVENT_MASK_EXPOSURE       | XCB_EVENT_MASK_STRUCTURE_NOTIFY |
+                                       XCB_EVENT_MASK_BUTTON_PRESS   | XCB_EVENT_MASK_BUTTON_RELEASE |
+                                       XCB_EVENT_MASK_POINTER_MOTION |
+                                       XCB_EVENT_MASK_ENTER_WINDOW   | XCB_EVENT_MASK_LEAVE_WINDOW |
+                                       XCB_EVENT_MASK_KEY_PRESS      | XCB_EVENT_MASK_KEY_RELEASE };
+
+    xcb_create_window(connection,
+                      XCB_COPY_FROM_PARENT,
+                      window,
+                      preferred_screen->root,
+                      static_cast<std::int16_t>(position.x), static_cast<std::int16_t>(position.y),
+                      static_cast<std::uint16_t>(size.width), static_cast<std::uint16_t>(size.height),
+                      10,
+                      XCB_WINDOW_CLASS_INPUT_OUTPUT,
+                      visualid,
+                      mask, values);
+  }
 }
 
 namespace skui
@@ -56,24 +86,24 @@ namespace skui
   {
     namespace native_window
     {
-      xcb::xcb(std::unique_ptr<native_visual::base>&& native_visual)
-        : base(std::move(native_visual))
-      {
-        int preferred_screen_index;
-        connection = xcb_connect(nullptr, &preferred_screen_index);
+      xcb_data::xcb_data()
+        : preferred_screen_index()
+        , connection(xcb_connect(nullptr, &preferred_screen_index))
+        , preferred_screen(screen_of_display(connection, preferred_screen_index))
+      {}
 
-        preferred_screen = screen_of_display(connection, preferred_screen_index);
-      }
-
-      xcb::xcb(std::unique_ptr<native_visual::base>&& native_visual,
-               xcb_connection_t* connection,
-               int preferred_screen)
-        : base(std::move(native_visual))
+      xcb_data::xcb_data(xcb_connection_t* connection)
+        : preferred_screen_index()
         , connection(connection)
-        , preferred_screen(xcb_aux_get_screen(connection, preferred_screen))
-      {
+        , preferred_screen(screen_of_display(connection, preferred_screen_index))
+      {}
 
-      }
+      xcb_data::~xcb_data() = default;
+
+      xcb::xcb()
+        : xcb_data()
+        , base(std::make_unique<native_visual::xcb>(connection, preferred_screen))
+      {}
 
       xcb::~xcb() = default;
 
@@ -173,36 +203,28 @@ namespace skui
       void xcb::create(const graphics::pixel_position& position,
                        const graphics::pixel_size& size)
       {
-        window = xcb_generate_id(connection);
-
         const auto xcb_native_visual = dynamic_cast<native_visual::xcb*>(native_visual.get());
         if(!xcb_native_visual)
         {
           core::debug_print("native_window::xcb can only use native_visual::xcb");
           std::exit(1);
         }
-        //auto visualid = static_cast<xcb_visualid_t>(xcb_native_visual->get_native_visualid(*this));
 
-        static const uint32_t mask = XCB_CW_EVENT_MASK;
-        static const uint32_t values[] = { XCB_EVENT_MASK_EXPOSURE       | XCB_EVENT_MASK_STRUCTURE_NOTIFY |
-                                           XCB_EVENT_MASK_BUTTON_PRESS   | XCB_EVENT_MASK_BUTTON_RELEASE |
-                                           XCB_EVENT_MASK_POINTER_MOTION |
-                                           XCB_EVENT_MASK_ENTER_WINDOW   | XCB_EVENT_MASK_LEAVE_WINDOW |
-                                           XCB_EVENT_MASK_KEY_PRESS      | XCB_EVENT_MASK_KEY_RELEASE };
+        make_xcb_window(position,
+                        size,
+                        connection,
+                        preferred_screen,
+                        xcb_native_visual->visualid(),
+                        window);
 
-        xcb_create_window(connection,
-                          XCB_COPY_FROM_PARENT,
-                          window,
-                          preferred_screen->root,
-                          static_cast<std::int16_t>(position.x), static_cast<std::int16_t>(position.y),
-                          static_cast<std::uint16_t>(size.width), static_cast<std::uint16_t>(size.height),
-                          10,
-                          XCB_WINDOW_CLASS_INPUT_OUTPUT,
-                          preferred_screen->root_visual,
-                          mask, values);
-
-        xcb_flush(connection);
+        native_visual->create_surface(window);
       }
+
+      xcb::xcb(std::unique_ptr<native_visual::base>&& native_visual,
+               xcb_connection_t* connection)
+        : xcb_data(connection)
+        , base(std::move(native_visual))
+      {}
     }
   }
 }

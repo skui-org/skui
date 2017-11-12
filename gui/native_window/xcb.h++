@@ -44,13 +44,23 @@ namespace skui
   {
     namespace native_window
     {
-      class xcb : public base
+      class xcb_data
+      {
+      protected:
+        xcb_data();
+        virtual ~xcb_data();
+        xcb_data(xcb_connection_t* connection);
+
+        int preferred_screen_index;
+        xcb_connection_t* connection;
+        xcb_screen_t* preferred_screen;
+      };
+
+      class xcb : public xcb_data
+                , public base
       {
       public:
-        xcb(std::unique_ptr<native_visual::base>&& native_visual);
-        xcb(std::unique_ptr<native_visual::base>&& native_visual,
-            xcb_connection_t* connection,
-            int preferred_screen);
+        xcb();
         ~xcb() override;
 
         void create(const graphics::pixel_position& position,
@@ -68,11 +78,10 @@ namespace skui
         xcb_window_t get_window() const;
 
       protected:
-        xcb_window_t window;
+        xcb(std::unique_ptr<native_visual::base>&& native_visual,
+            xcb_connection_t* connection);
 
-      private:
-        xcb_connection_t* connection;
-        xcb_screen_t* preferred_screen;
+        xcb_window_t window;
       };
     }
   }

@@ -46,14 +46,20 @@ namespace skui
           if(flags.test(window_flag::opengl))
             return std::make_unique<native_visual::glx>(display);
           else
-            return std::make_unique<native_visual::xcb>();
+          {
+            xcb_connection_t* connection = XGetXCBConnection(display);
+            core::debug_print("XCB connection: ", connection, '\n');
+
+            xcb_screen_t* screen = (xcb_setup_roots_iterator(xcb_get_setup(connection))).data;
+
+            return std::make_unique<native_visual::xcb>(connection, screen);
+          }
         }
       }
       xlib::xlib(const window_flags& flags)
-        : display_container{XOpenDisplay(nullptr)}
+        : xlib_data{XOpenDisplay(nullptr)}
         , xcb(create_native_visual(display.get(), flags),
-              XGetXCBConnection(display.get()),
-              XDefaultScreen(display.get()))
+              XGetXCBConnection(display.get()))
       {
         XSetEventQueueOwner(display.get(), XCBOwnsEventQueue);
       }

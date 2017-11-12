@@ -22,7 +22,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-find_package(XCB COMPONENTS XCB AUX)
+find_package(XCB COMPONENTS XCB AUX IMAGE)
 find_package(X11_XCB)
 find_package(X11)
 find_package(GLX)
@@ -98,7 +98,7 @@ if(NOT UNIX OR APPLE)
 endif()
 
 if(XCB_FOUND)
-  target_link_libraries(gui PUBLIC XCB::XCB XCB::AUX)
+  target_link_libraries(gui PUBLIC XCB::XCB XCB::AUX XCB::IMAGE)
 else()
   exclude_from_build(events/xcb.h++ events/xcb.c++
                      native_window/xcb.h++ native_window/xcb.c++

@@ -30,7 +30,7 @@
 #ifndef SKUI_GUI_NATIVE_VISUAL_XCB_H
 #define SKUI_GUI_NATIVE_VISUAL_XCB_H
 
-#include "gui/native_visual.h++"
+#include "gui/native_visual/raster.h++"
 
 #include <vector>
 
@@ -42,18 +42,26 @@ namespace skui
   {
     namespace native_visual
     {
-      class xcb : public base
+      class xcb : public raster
       {
       public:
-        xcb();
+        xcb(xcb_connection_t* connection,
+            xcb_screen_t* screen);
         ~xcb() override;
 
         void create_surface(std::uintptr_t window) override;
         void make_current() const override;
         void swap_buffers(const graphics::pixel_size& size) const override;
 
+        xcb_visualid_t visualid() const;
+
       private:
-        std::vector<std::uint32_t> pixels;
+        xcb_connection_t* connection;
+        xcb_screen_t* screen;
+        xcb_visualtype_t* visualtype;
+
+        xcb_window_t window;
+        xcb_gcontext_t gcontext;
       };
     }
   }

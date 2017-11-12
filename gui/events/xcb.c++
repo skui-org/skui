@@ -56,6 +56,8 @@ namespace skui
                             xcb_window,
                             reply->atom, 4, 32, 1, &wm_delete_window->atom);
         // end magic
+
+        xcb_flush(connection);
       }
 
       xcb::~xcb() = default;

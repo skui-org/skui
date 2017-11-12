@@ -45,9 +45,9 @@ namespace skui
     namespace native_window
     {
       // helper struct to ensure correct base class constructor can be called
-      struct display_container
+      struct xlib_data
       {
-        display_container(Display* display) : display{display} {}
+        xlib_data(Display* display) : display{display} {}
         struct display_deleter
         {
           void operator()(Display* display) const { XCloseDisplay(display); }
@@ -55,7 +55,7 @@ namespace skui
         std::unique_ptr<Display, display_deleter> display;
       };
 
-      class xlib : public display_container
+      class xlib : public xlib_data
                  , public xcb
       {
       public:

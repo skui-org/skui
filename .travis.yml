@@ -28,6 +28,7 @@ matrix:
             - libegl1-mesa-dev
             - libgles2-mesa-dev
             - libxcb-util0-dev
+            - libxcb-image0-dev
     - compiler: GCC 7
       env:
         - C_COMPILER=gcc-7
@@ -42,6 +43,7 @@ matrix:
             - libegl1-mesa-dev
             - libgles2-mesa-dev
             - libxcb-util0-dev
+            - libxcb-image0-dev
     - compiler: clang-3.9
       env:
         - C_COMPILER=clang-3.9
@@ -54,6 +56,7 @@ matrix:
             - libegl1-mesa-dev
             - libgles2-mesa-dev
             - libxcb-util0-dev
+            - libxcb-image0-dev
           sources:
             - sourceline: 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-3.9 main'
               key_url: 'http://apt.llvm.org/llvm-snapshot.gpg.key'
@@ -85,6 +88,7 @@ matrix:
             - libegl1-mesa-dev
             - libgles2-mesa-dev
             - libxcb-util0-dev
+            - libxcb-image0-dev
           sources:
             - sourceline: 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-4.0 main'
               key_url: 'http://apt.llvm.org/llvm-snapshot.gpg.key'
