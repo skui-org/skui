@@ -22,79 +22,13 @@
  * THE SOFTWARE.
  **/
 
-#include "test.h++"
+#include "property_tests.h++"
 
 #include "core/property.h++"
 
-namespace
-{
-  using skui::test::check;
-
-  void test_value_changed_signal()
-  {
-    int changed_value = 0;
-    auto slot = [&changed_value](int i) { changed_value = i; };
-
-    skui::core::property<int> property{};
-    property.value_changed.connect(slot);
-
-    property = 1;
-    check(changed_value == 1, "changed slot called on assignment");
-
-    property = std::move(2);
-    check(changed_value == 2, "moving value into property emits signal");
-  }
-
-  void test_basic_operations()
-  {
-    bool slot_called = false;
-    auto slot = [&slot_called](int) { slot_called = true; };
-
-    skui::core::property<int> property{0};
-    property.value_changed.connect(slot);
-
-    check(property == 0, "==");
-    check(0 == property, "== (reversed)");
-    check(property <  1, "<" );
-    check(property <= 0, "<=");
-    check(property > -1, ">" );
-    check(property >= 0, ">=");
-    check(property != 1, "!=");
-    check(!slot_called,  "operators don't emit value_changed");
-
-    slot_called = false;
-    property = 1;
-    check(property == 1, "assignment");
-    check(slot_called,   "assignment emits value_changed");
-
-    slot_called = false;
-    skui::core::property<int> other_property{property};
-    check(property == other_property && other_property == 1, "copy construction");
-    check(!slot_called, "copy construction does not emit value_changed");
-
-    slot_called = false;
-    other_property = 0;
-    check(slot_called, "connection copied");
-
-    slot_called = false;
-    other_property = std::move(property);
-    check(other_property == 1, "move assignment moves value");
-    check(!slot_called, "move constructor does not emit value_changed");
-
-    slot_called = false;
-    property = 0;
-    check(!slot_called, "moved-from property is disconnected");
-
-    slot_called = false;
-    other_property = 0;
-    check(slot_called, "moved-to property is connected");
-  }
-}
-
 int main()
 {
-  test_value_changed_signal();
-  test_basic_operations();
+  skui::test::run_all_property_tests<skui::core::property<int>>();
 
   return skui::test::exit_code;
 }
