@@ -26,6 +26,7 @@
 set(core_src
     application.h++ application.c++ application_windows.c++ application_unix.c++
     bitflag.h++
+    bounded_property.h++
     command.h++
     command_queue.h++ command_queue.c++
     debug.h++
