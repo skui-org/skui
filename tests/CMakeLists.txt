@@ -24,7 +24,7 @@
 #
 
 function(runtime_test component test_name)
-  set(test_src ${component}/${test_name}.c++ ${CMAKE_CURRENT_LIST_DIR}/test.h++)
+  set(test_src ${component}/${test_name}.c++)
   source_group("" FILES ${test_src})
   add_executable(${test_name} ${test_src})
   set_target_properties(${test_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${component}
@@ -78,6 +78,11 @@ function(compile_test_library component test_name)
                                                       -P ${CMAKE_CURRENT_LIST_DIR}/compile_test.cmake)
 endfunction()
 
+add_custom_target(tests_shared SOURCES
+                  test.h++
+                  runtime_test.cmake
+                  compile_test.cmake
+                 )
 runtime_test(core value_ptr)
 runtime_test(core trackable)
 runtime_test(core signal)

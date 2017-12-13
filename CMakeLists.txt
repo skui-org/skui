@@ -75,8 +75,7 @@ add_custom_target(miscellaneous SOURCES
     .gitmodules
     appveyor.yml
     .travis.yml
-    tests/runtime_test.cmake
-    tests/compile_test.cmake)
+    )
 
 # Skia and its dependencies
 add_subdirectory(3rdparty)
