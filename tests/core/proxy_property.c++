@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  **/
 
-#include "test.h++"
+#include "property_tests.h++"
 
 #include "core/proxy_property.h++"
 
@@ -34,7 +34,16 @@ namespace
   int getter() { return value; }
   void setter(int new_value) { value = new_value; }
 
-  void test_value_changed_signal()
+  struct mock_proxy_property : public skui::core::proxy_property<int>
+  {
+    mock_proxy_property(int initial_value = 0)
+      : proxy_property(initial_value, &setter, &getter)
+    {}
+
+    using proxy_property::operator=;
+  };
+
+  void test_proxy_value_modified()
   {
     bool slot_called = false;
     skui::core::proxy_property<int> property(&setter, &getter);
@@ -44,54 +53,14 @@ namespace
     property = 1;
 
     check(value == 1, "proxied object changed through proxy_property.");
-    check(slot_called, "changing property emits signal.");
-  }
-
-  void test_basic_operations()
-  {
-    bool slot_called = false;
-    skui::core::proxy_property<int> property(&setter, &getter);
-    property.value_changed.connect([&slot_called](int) { slot_called = true; });
-
-    value = 2;
-    check(property == 2, "==");
-    check(2 == property, "== (reversed)");
-    check(property <  3, "<" );
-    check(property <= 2, "<=");
-    check(property >  1, ">" );
-    check(property >= 2, ">=");
-    check(property != 1, "!=");
-    check(!slot_called,  "operators don't emit value_changed");
-
-    property = 1;
-    check(property == 1, "assignment");
-    check(value == 1,    "assignment (underlying value)");
-    check(slot_called,   "assignment emits value_changed");
-
-    slot_called = false;
-    skui::core::proxy_property<int> other_property{property};
-    check(property == other_property && other_property == 1, "copy construction");
-    check(!slot_called, "copy construction does not emit value_changed");
-
-    slot_called = false;
-    other_property = 0;
-    check(slot_called, "connection copied");
-
-    slot_called = false;
-    other_property = std::move(property);
-    check(!slot_called, "move constructor does not emit value_changed");
-
-    slot_called = false;
-    other_property = 2;
-    check(slot_called, "moved-to property is connected");
-    check(value == 2,  "moved-to property changes external value");
   }
 }
 
 int main()
 {
-  test_value_changed_signal();
-  test_basic_operations();
+  skui::test::run_all_property_tests<mock_proxy_property>();
+
+  test_proxy_value_modified();
 
   return skui::test::exit_code;
 }

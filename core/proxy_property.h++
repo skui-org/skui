@@ -26,7 +26,7 @@
  * Proxy Property
  * Property that wraps an external resource.
  * Note: the changed signal is only emitted when the value is changed through
- *       the proxy_property/
+ *       the proxy_property.
  */
 
 #ifndef SKUI_CORE_PROXY_PROPERTY_H
@@ -62,38 +62,42 @@ namespace skui
         , get(getter)
       {}
       proxy_property(const proxy_property& other) = default;
-      proxy_property(proxy_property&&) = default;
+      proxy_property(proxy_property&& other) = default;
 
       proxy_property& operator=(proxy_property other)
       {
         std::swap(other.set, set);
         std::swap(other.get, get);
 
-        value_type current_value = get();
-        if(current_value != other.get())
-          value_changed.emit(current_value);
+        if(get)
+        {
+          value_type current_value = get();
+          if(current_value != other)
+            value_changed.emit(current_value);
+        }
 
         return *this;
       }
 
       proxy_property& operator=(const_reference& other)
       {
-        const bool changed = other != get();
-        set(other);
+        const bool changed = other != static_cast<const_reference>(*this);
+        if(set)
+          set(other);
         if(changed)
           value_changed.emit(other);
 
         return *this;
       }
 
-      operator value_type() const { return get(); }
+      operator value_type() const { return get ? get() : value_type{}; }
 
-      bool operator==(const_reference other) const { return get() == other; }
-      bool operator!=(const_reference other) const { return get() != other; }
-      bool operator< (const_reference other) const { return get() <  other; }
-      bool operator<=(const_reference other) const { return get() <= other; }
-      bool operator> (const_reference other) const { return get() >  other; }
-      bool operator>=(const_reference other) const { return get() >= other; }
+      bool operator==(const_reference other) const { return get ? get() == other : false; }
+      bool operator!=(const_reference other) const { return get ? get() != other : false; }
+      bool operator< (const_reference other) const { return get ? get() <  other : false; }
+      bool operator<=(const_reference other) const { return get ? get() <= other : false; }
+      bool operator> (const_reference other) const { return get ? get() >  other : false; }
+      bool operator>=(const_reference other) const { return get ? get() >= other : false; }
 
       signal<value_type> value_changed;
 
