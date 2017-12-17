@@ -88,7 +88,8 @@ namespace skui
 
       bounded_property& operator=(const_reference other)
       {
-        value = std::clamp(other, minimum, maximum);
+        //value = std::clamp(other, minimum, maximum);
+        value = std::max(minimum, std::min(other, maximum));
 
         return *this;
       }
