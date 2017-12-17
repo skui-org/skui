@@ -22,11 +22,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-find_package(XCB COMPONENTS XCB AUX IMAGE)
-find_package(X11_XCB)
-find_package(X11)
-find_package(GLX)
-find_package(EGL)
+if(UNIX AND NOT MAC)
+  find_package(XCB COMPONENTS XCB AUX IMAGE)
+  find_package(X11_XCB)
+  find_package(X11)
+  find_package(GLX)
+  find_package(EGL)
+endif()
 
 # Common source files
 set(gui_src
