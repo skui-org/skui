@@ -75,6 +75,9 @@ add_custom_target(miscellaneous SOURCES
     .gitmodules
     appveyor.yml
     .travis.yml
+    ci/setup_cmake.sh
+    ci/setup_libcxx.sh
+    ci/setup_ninja.sh
     )
 
 # Skia and its dependencies
