@@ -105,11 +105,11 @@ namespace skui
         check(other_property == 1, "move construction moves value");
 
         slot_called = false;
-        property = 0;
+        property = 2;
         check(!slot_called, "moved-from-initialization property is disconnected");
 
         slot_called = false;
-        other_property = 0;
+        other_property = 3;
         check(slot_called, "moved-to-initialization property is connected");
       }
       {
@@ -122,11 +122,11 @@ namespace skui
         check(!slot_called, "move constructor does not emit value_changed");
 
         slot_called = false;
-        property = 0;
+        property = 2;
         check(!slot_called, "moved-from-assignment property is disconnected");
 
         slot_called = false;
-        other_property = 0;
+        other_property = 3;
         check(slot_called, "moved-to-assignment property is connected");
       }
     }
