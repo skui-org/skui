@@ -25,7 +25,7 @@ environment:
   - TOOLCHAIN: "MinGW-w64 GCC"
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     GENERATOR: Ninja
-    PACMAN_PACKAGES: "mingw-w64-x86_64-{gcc,boost,ninja}"
+    PACMAN_PACKAGES: "mingw-w64-x86_64-{headers,crt,gcc,boost,ninja}"
     PATH: C:\msys64\mingw64\bin;%PATH%
 
   # Clang/C2
@@ -65,7 +65,7 @@ environment:
   - TOOLCHAIN: "MinGW-w64 Clang"
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     GENERATOR: Ninja
-    PACMAN_PACKAGES: "mingw-w64-x86_64-{boost,clang,ninja}"
+    PACMAN_PACKAGES: "mingw-w64-x86_64-{headers,crt,boost,clang,ninja}"
     PATH: C:\msys64\mingw64\bin;%PATH%
     CMAKE_ARGS: -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang
 
