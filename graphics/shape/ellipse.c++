@@ -40,5 +40,10 @@ namespace skui
     {
       canvas.draw(*this);
     }
+
+    scalar_size ellipse::implicit_size() const
+    {
+      return axes;
+    }
   }
 }

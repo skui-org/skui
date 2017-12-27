@@ -40,6 +40,11 @@ namespace skui
     {
       canvas.draw(*this);
     }
+
+    scalar_size rectangle::implicit_size() const
+    {
+      return size;
+    }
   }
 }
 

@@ -22,36 +22,14 @@
  * THE SOFTWARE.
  **/
 
-/*
- * Ellipse.
- */
-
-#ifndef SKUI_GRAPHICS_ELLIPSE_H
-#define SKUI_GRAPHICS_ELLIPSE_H
-
-#include "graphics/scalar.h++"
-#include "graphics/shape.h++"
-#include "graphics/size.h++"
-
-#include <utility>
+#include "graphics/drawable.h++"
 
 namespace skui
 {
   namespace graphics
   {
-    class ellipse : public shape
-    {
-    public:
-      ellipse(scalar_size axes,
-              scalar_position position = {0, 0});
+    drawable::drawable() = default;
 
-      void draw(canvas& canvas) const override;
-
-      scalar_size implicit_size() const override;
-
-      scalar_size axes;
-    };
+    drawable::~drawable() = default;
   }
 }
-
-#endif

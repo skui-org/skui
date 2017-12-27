@@ -26,6 +26,9 @@
 
 #include "graphics/canvas.h++"
 
+#include <SkPaint.h>
+#include <SkRect.h>
+
 namespace skui
 {
   namespace graphics
@@ -40,6 +43,16 @@ namespace skui
     void label::draw(canvas& canvas) const
     {
       canvas.draw(*this);
+    }
+
+    scalar_size label::implicit_size() const
+    {
+      // Skia specific for now. This should be externalized somehow.
+      SkPaint paint;
+      SkRect bounds;
+      paint.measureText(text.c_str(), text.size(), &bounds);
+
+      return { bounds.width(), bounds.height() };
     }
   }
 }

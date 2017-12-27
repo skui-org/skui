@@ -30,9 +30,7 @@
 #define SKUI_GRAPHICS_DRAWABLE_H
 
 #include "graphics/position.h++"
-
-#include <core/signal.h++>
-#include <core/trackable.h++>
+#include "graphics/size.h++"
 
 namespace skui
 {
@@ -40,15 +38,16 @@ namespace skui
   {
     class canvas;
 
-    class drawable : public core::trackable
+    class drawable
     {
     public:
-      drawable() = default;
-      virtual ~drawable() = default;
+      drawable();
+      virtual ~drawable();
 
-      virtual void draw(canvas& canvas) const = 0;
+      virtual void draw(canvas& canvas,
+                        const scalar_position& position) const = 0;
 
-      core::signal<> invalidated;
+      virtual graphics::scalar_size implicit_size() const = 0;
     };
   }
 }

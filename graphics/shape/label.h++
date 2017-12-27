@@ -45,6 +45,8 @@ namespace skui
 
       void draw(canvas& canvas) const override;
 
+      scalar_size implicit_size() const override;
+
       core::string text;
     };
   }
