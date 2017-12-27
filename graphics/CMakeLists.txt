@@ -42,6 +42,7 @@ set(graphics_src
     skia_gl_canvas.h++ skia_gl_canvas.c++
     skia_raster_canvas.h++ skia_raster_canvas.c++
     skia_utility.h++ skia_utility.c++
+    swizzle.h++ swizzle.c++
    )
 set(gradient_src
     gradient/linear_gradient.h++ gradient/linear_gradient.c++

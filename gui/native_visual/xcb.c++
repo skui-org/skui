@@ -28,7 +28,7 @@
 
 #include <core/debug.h++>
 
-#include <SkSwizzle.h>
+#include <graphics/swizzle.h++>
 
 #include <xcb/xcb_image.h>
 
@@ -99,7 +99,7 @@ namespace skui
         const std::uint16_t height = static_cast<std::uint16_t>(size.height);
 
         std::vector<std::uint32_t> bgra(pixel_data.size());
-        SkSwapRB(bgra.data(), pixel_data.data(), static_cast<int>(pixel_data.size()));
+        graphics::swizzle(bgra);
 
         xcb_image_ptr image(xcb_image_create(width, height,
                                              XCB_IMAGE_FORMAT_Z_PIXMAP, 32,
