@@ -191,7 +191,7 @@ namespace skui
         position = { trans->dst_x, trans->dst_y };
       }
 
-      xcb_connection_t*xcb::get_connection() const
+      xcb_connection_t* xcb::get_connection() const
       {
         return connection;
       }

@@ -23,6 +23,7 @@
  **/
 
 /*
+ * events::xcb
  * Event handling implementation for XCB.
  */
 

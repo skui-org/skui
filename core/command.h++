@@ -37,7 +37,9 @@ namespace skui
       command() : function([](){}) {}
 
       template<typename Callable, typename... ArgTypes>
-      command(Callable callable, ArgTypes... args) : function([callable, args...](){ return callable(args...); }), empty(false)  {}
+      command(Callable callable, ArgTypes... args)
+        : function([callable, args...](){ return callable(args...); })
+      {}
 
       virtual ~command() = default;
       virtual void execute() { function(); }

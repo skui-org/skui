@@ -44,6 +44,7 @@ namespace skui
           ".so";
     #endif
       constexpr char so_prefix[] = "lib";
+
       void* load(const path& filename)
       {
         path directory = fs::absolute(filename).remove_filename();

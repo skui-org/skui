@@ -87,7 +87,6 @@ namespace skui
 
         core::debug_print("exited event loop.\n");
       }
-
     }
   }
 }

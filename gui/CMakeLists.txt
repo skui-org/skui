@@ -65,7 +65,12 @@ source_group(native_visual FILES ${native_visual_src})
 source_group(native_window FILES ${native_window_src})
 
 # The library itself
-add_library(gui ${gui_src} ${events_src} ${native_window_src} ${native_visual_src})
+add_library(gui
+            ${gui_src}
+            ${events_src}
+            ${native_window_src}
+            ${native_visual_src}
+           )
 target_link_libraries(gui PUBLIC core graphics)
 
 # Platform specific files and libraries

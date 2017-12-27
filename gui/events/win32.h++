@@ -23,6 +23,7 @@
  **/
 
 /*
+ * events::win32
  * Event handling implementation for Win32.
  */
 

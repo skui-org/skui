@@ -50,10 +50,16 @@ source_group(traits FILES ${traits_src})
 
 # Platform-specific files
 if(NOT WIN32)
-  exclude_from_build(application_windows.c++ library_windows.c++)
+  exclude_from_build(
+                     application_windows.c++
+                     library_windows.c++
+                    )
 endif()
 if(NOT UNIX)
-  exclude_from_build(library_unix.c++ application_unix.c++)
+  exclude_from_build(
+                     application_unix.c++
+                     library_unix.c++
+                    )
   if(NOT APPLE)
   endif()
 endif()
