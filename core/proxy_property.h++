@@ -61,23 +61,6 @@ namespace skui
         : set(setter)
         , get(getter)
       {}
-      proxy_property(const proxy_property& other) = default;
-      proxy_property(proxy_property&& other) = default;
-
-      proxy_property& operator=(proxy_property other)
-      {
-        std::swap(other.set, set);
-        std::swap(other.get, get);
-
-        if(get)
-        {
-          value_type current_value = get();
-          if(current_value != other)
-            value_changed.emit(current_value);
-        }
-
-        return *this;
-      }
 
       proxy_property& operator=(const_reference& other)
       {
