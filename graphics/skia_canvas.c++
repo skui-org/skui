@@ -183,13 +183,10 @@ namespace skui
       SkPath border;
       border.addRoundRect(rect, rectangle.border.radius, rectangle.border.radius);
 
-      canvas->save();
-      canvas->translate(pixel_offset, pixel_offset);
       for(const auto& paint : make_paint(rectangle, flags))
       {
           canvas->drawRRect(rounded_rect, paint);
       }
-      canvas->restore();
     }
 
     void skia_canvas::draw(const ellipse& ellipse,
@@ -197,15 +194,12 @@ namespace skui
     {
       auto canvas = surface->getCanvas();
 
-      canvas->save();
-      canvas->translate(pixel_offset, pixel_offset);
       for(const auto& paint : make_paint(ellipse, flags))
       {
           canvas->drawOval(SkRect::MakeXYWH(position.x, position.y,
                                             ellipse.axes.height, ellipse.axes.width),
                            paint);
       }
-      canvas->restore();
     }
 
     void skia_canvas::draw(const label& label,
@@ -213,15 +207,12 @@ namespace skui
     {
       auto canvas = surface->getCanvas();;
 
-      canvas->save();
-      canvas->translate(pixel_offset, pixel_offset);
       for(const auto& paint : make_paint(label, flags))
       {
           canvas->drawText(label.text.c_str(), label.text.size(),
                            position.x, position.y,
                            paint);
       }
-      canvas->restore();
     }
 
     void skia_canvas::draw(const path& path,
