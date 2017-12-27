@@ -32,11 +32,10 @@
 #include "graphics/canvas.h++"
 #include "graphics/size.h++"
 
-#include <GrGLInterface.h>
-
-#include <SkSurface.h>
-
+#include <memory>
 #include <vector>
+
+class SkSurface;
 
 namespace skui
 {
@@ -58,19 +57,9 @@ namespace skui
                 const scalar_position& position) override;
 
     protected:
-      skia_canvas(//sk_sp<SkSurface> surface,
-                  float pixel_offset,
-                  canvas_flags flags);
+      skia_canvas(canvas_flags flags);
 
-      sk_sp<SkSurface> surface;
-
-    private:
-      std::vector<SkPaint> make_paint(const shape& shape) const;
-      SkPaint make_border_paint(const shape& shape) const;
-      SkPaint make_fill_paint(const shape& shape) const;
-      void set_gradient(SkPaint& paint, const gradient& gradient) const;
-
-      const float pixel_offset;
+      std::unique_ptr<SkSurface> surface;
     };
   }
 }

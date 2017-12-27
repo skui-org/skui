@@ -33,8 +33,6 @@
 
 #include "graphics/size.h++"
 
-#include <SkBitmap.h>
-
 #include <vector>
 
 namespace skui
@@ -47,7 +45,7 @@ namespace skui
       skia_raster_canvas(std::vector<uint32_t>& pixels,
                          const pixel_size& size,
                          canvas_flags flags);
-      ~skia_raster_canvas() override = default;
+      ~skia_raster_canvas() override;
     };
   }
 }

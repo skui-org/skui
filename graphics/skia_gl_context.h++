@@ -29,12 +29,9 @@
 
 #include "size.h++"
 
-#include <GrContext.h>
-#include <GrGLInterface.h>
-
 #include <memory>
 
-class SkSurface;
+class GrGLInterface;
 
 namespace skui
 {
@@ -47,14 +44,15 @@ namespace skui
     public:
       using gl_function = void(*)();
       using gr_gl_get_function = gl_function(*)(void*, const char[]);
+
       skia_gl_context(gr_gl_get_function get_function);
-      ~skia_gl_context() override = default;
+      ~skia_gl_context() override;
 
       std::unique_ptr<canvas> create_canvas(const pixel_size& size,
                                             canvas_flags flags) const override;
 
     private:
-      sk_sp<const GrGLInterface> gr_gl_interface;
+      std::unique_ptr<const GrGLInterface> gr_gl_interface;
     };
   }
 }

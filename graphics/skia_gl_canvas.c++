@@ -31,6 +31,7 @@
 #include <SkCanvas.h>
 #include <SkColor.h>
 #include <SkGradientShader.h>
+#include <SkSurface.h>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -44,9 +45,9 @@ namespace skui
   {
     namespace implementation
     {
-      sk_sp<SkSurface> create_gl_surface(const pixel_size& size,
-                                         const GrGLInterface& gl_interface,
-                                         GrContext& gr_context)
+      std::unique_ptr<SkSurface> create_gl_surface(const pixel_size& size,
+                                                   const GrGLInterface& gl_interface,
+                                                   GrContext& gr_context)
       {
         // Wrap the frame buffer object attached to the screen in a Skia render target so Skia can
         // render to it
@@ -67,18 +68,23 @@ namespace skui
         SkSurfaceProps props(SkSurfaceProps::kUseDeviceIndependentFonts_Flag, // distance field text
                               SkSurfaceProps::kLegacyFontHost_InitType);
 
-        return SkSurface::MakeFromBackendRenderTarget(&gr_context, render_target, kBottomLeft_GrSurfaceOrigin, nullptr, &props);
+        return std::unique_ptr<SkSurface>(SkSurface::MakeFromBackendRenderTarget(&gr_context, render_target, kBottomLeft_GrSurfaceOrigin, nullptr, &props).release());
       }
     }
 
     skia_gl_canvas::skia_gl_canvas(const pixel_size& size,
-                                const GrGLInterface& gr_gl_interface,
-                                canvas_flags flags)
-      : skia_canvas(0.5f, flags)
+                                   const GrGLInterface& gr_gl_interface,
+                                   canvas_flags flags)
+      : skia_canvas(flags)
       , gr_context(GrContext::Create(kOpenGL_GrBackend, reinterpret_cast<GrBackendContext>(&gr_gl_interface)))
     {
       surface = implementation::create_gl_surface(size, gr_gl_interface, *gr_context);
       SkASSERT(gr_context);
+    }
+
+    skia_gl_canvas::~skia_gl_canvas()
+    {
+      surface.reset();
     }
   }
 }

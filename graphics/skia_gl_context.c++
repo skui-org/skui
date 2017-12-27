@@ -47,6 +47,8 @@ namespace skui
       SkASSERT(get_function);
     }
 
+    skia_gl_context::~skia_gl_context() = default;
+
     std::unique_ptr<canvas> skia_gl_context::create_canvas(const pixel_size& size,
                                                            canvas_flags flags) const
     {

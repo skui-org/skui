@@ -29,13 +29,8 @@
 
 #include "size.h++"
 
-#include <GrContext.h>
-#include <GrGLInterface.h>
-
 #include <memory>
 #include <vector>
-
-class SkSurface;
 
 namespace skui
 {

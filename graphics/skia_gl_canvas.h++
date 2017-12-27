@@ -31,11 +31,10 @@
 
 #include "graphics/skia_canvas.h++"
 
-#include <GrGLInterface.h>
-
-#include <SkSurface.h>
-
 #include <vector>
+
+class GrGLInterface;
+class GrContext;
 
 namespace skui
 {
@@ -47,10 +46,10 @@ namespace skui
       skia_gl_canvas(const pixel_size& size,
                      const GrGLInterface& gl_interface,
                      canvas_flags flags);
-      ~skia_gl_canvas() override = default;
+      ~skia_gl_canvas() override;
 
     private:
-      sk_sp<GrContext> gr_context;
+      std::unique_ptr<GrContext> gr_context;
     };
   }
 }
