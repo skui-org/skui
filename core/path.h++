@@ -33,7 +33,7 @@
 #include <algorithm>
 #include <iterator>
 
-#ifdef __MINGW32__
+#if defined(__MINGW32__) || defined(__APPLE__)
 #include <boost/filesystem.hpp>
 #else
 #include <experimental/filesystem>
@@ -43,7 +43,7 @@ namespace skui
 {
   namespace core
   {
-#ifdef __MINGW32__
+#if defined(__MINGW32__) || defined(__APPLE__)
     namespace fs = boost::filesystem;
 #else
     namespace fs = std::experimental::filesystem;

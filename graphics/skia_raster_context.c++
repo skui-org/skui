@@ -39,6 +39,8 @@ namespace skui
       , pixels(pixels)
     {}
 
+    skia_raster_context::~skia_raster_context() = default;
+
     std::unique_ptr<canvas> skia_raster_context::create_canvas(const pixel_size& size,
                                                                canvas_flags flags) const
     {

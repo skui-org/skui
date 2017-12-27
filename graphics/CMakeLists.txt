@@ -66,5 +66,5 @@ add_library(graphics ${graphics_src} ${gradient_src} ${shape_src})
 target_link_libraries(graphics PUBLIC core)
 target_link_libraries(graphics PRIVATE skia
                                        ${OPENGL_LIBRARIES}
-                                       $<$<PLATFORM_ID:Windows>:opengl-api>)
+                                       $<$<OR:$<PLATFORM_ID:Windows>,$<PLATFORM_ID:Darwin>>:opengl-api>)
 target_compile_definitions(graphics PRIVATE SKUI_GRAPHICS_INSIDES)

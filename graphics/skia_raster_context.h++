@@ -42,7 +42,7 @@ namespace skui
     {
     public:
       skia_raster_context(std::vector<std::uint32_t>& pixels);
-      ~skia_raster_context() override = default;
+      ~skia_raster_context() override;
 
       std::unique_ptr<canvas> create_canvas(const pixel_size& size,
                                             canvas_flags flags) const override;

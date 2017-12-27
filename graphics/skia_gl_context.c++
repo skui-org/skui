@@ -34,7 +34,13 @@
 #ifdef _WIN32
 #include <windows.h>
 #endif
+#define GL_GLEXT_PROTOTYPES
+#ifdef __APPLE__
+#include <OpenGL/gl.h>
+#else
 #include <GL/gl.h>
+#endif
+#include <GL/glext.h>
 
 namespace skui
 {
@@ -44,6 +50,7 @@ namespace skui
       : context()
       , gr_gl_interface(GrGLAssembleInterface(nullptr, get_function))
     {
+      SkASSERT(gr_gl_interface);
       SkASSERT(get_function);
     }
 

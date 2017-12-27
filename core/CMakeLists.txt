@@ -65,7 +65,7 @@ if(NOT UNIX)
 endif()
 
 # Missing C++17 features
-if(MINGW)
+if(MINGW OR APPLE)
   find_package(Boost COMPONENTS regex system filesystem REQUIRED)
 endif()
 
@@ -75,11 +75,13 @@ target_include_directories(core PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>)
 target_compile_definitions(core PUBLIC $<$<CONFIG:Debug>:SKUI_DEBUG>)
 target_link_libraries(core PUBLIC $<$<PLATFORM_ID:Linux>:-pthread>
                                   $<$<AND:$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Intel>>,$<NOT:$<PLATFORM_ID:Windows>>>:-lstdc++fs>
-                                  $<$<AND:$<CXX_COMPILER_ID:Clang>,$<NOT:$<PLATFORM_ID:Windows>>>:-lc++experimental>
+                                  $<$<AND:$<CXX_COMPILER_ID:Clang>,$<NOT:$<OR:$<PLATFORM_ID:Darwin>,$<PLATFORM_ID:Windows>>>>:-lc++experimental>
                                   $<$<NOT:$<PLATFORM_ID:Windows>>:-ldl>)
-if(MINGW)
+#if(APPLE)
+#  target_link_libraries(core PUBLIC Boost::filesystem)
+if(APPLE OR MINGW)
   # Using imported targets here will, on Linux add an -isystem to the MinGW system include directory, messing up all libstdc++ #include_next's
-  target_include_directories(core PUBLIC ${Boost_INCLUDE_DIRS})
+  target_include_directories(core SYSTEM PUBLIC ${Boost_INCLUDE_DIRS})
   target_link_libraries(core PUBLIC ${Boost_LIBRARIES})
 endif()
 

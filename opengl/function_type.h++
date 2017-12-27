@@ -43,9 +43,17 @@
 #endif
 
 #define GL_GLEXT_PROTOTYPES
+#ifdef __APPLE__
+#define GL_GLEXT_LEGACY
+#define GL_DO_NOT_WARN_IF_MULTI_GL_VERSION_HEADERS_INCLUDED
+//#undef GL_GLEXT_FUNCTION_POINTERS
+#include <OpenGL/gl.h>
+#include <OpenGL/gl3.h>
+//#include <OpenGL/gl3ext.h>
+#else
 #include <GL/gl.h>
+#endif
 #include <GL/glext.h>
-#include <GL/glcorearb.h>
 
 #define DEFINE_OPENGL_FUNCTION_TYPE(function) \
   template<> struct function_type<function> \

@@ -24,12 +24,11 @@
 
 #include "core/library.h++"
 
+#include "core/path.h++"
+
 #include <dlfcn.h>
 
 #include <array>
-#include <experimental/filesystem>
-
-namespace fs = std::experimental::filesystem;
 
 namespace skui
 {
@@ -38,7 +37,7 @@ namespace skui
     namespace implementation
     {
       constexpr char so_suffix[] =
-    #ifdef APPLE
+    #ifdef __APPLE__
           ".dylib";
     #else
           ".so";
