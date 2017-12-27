@@ -42,9 +42,20 @@ namespace skui
     {
       constexpr char dll_prefix[] = "lib";
       constexpr char dll_suffix[] = ".dll";
+
+      fs::path executable_path()
+      {
+        std::wstring buffer;
+        buffer.resize(MAX_PATH);
+        DWORD size = GetModuleFileNameW(nullptr, &buffer[0], MAX_PATH);
+        buffer.resize(size);
+        buffer.shrink_to_fit();
+        return fs::path(buffer).remove_filename();
+      }
+
       void* load(const path& filename)
       {
-        path directory = fs::absolute(filename).remove_filename();
+        path directory = (fs::current_path() / filename).remove_filename();
         path filename_only = filename.filename();
 
         std::array<path, 3> filenames{{directory / filename_only,
