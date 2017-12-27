@@ -46,7 +46,6 @@ namespace skui
 
     private:
       std::function<void()> function;
-      volatile bool empty = true;
     };
   }
 }
