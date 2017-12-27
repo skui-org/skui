@@ -28,8 +28,6 @@ namespace skui
 {
   namespace graphics
   {
-    path::path(scalar_position position)
-      : shape(position)
-    {}
+    path::path() = default;
   }
 }

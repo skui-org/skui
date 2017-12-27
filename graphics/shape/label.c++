@@ -33,16 +33,16 @@ namespace skui
 {
   namespace graphics
   {
-    label::label(core::string text,
-                 scalar_position position)
-      : shape(position)
-      , text(text)
+    label::label(core::string text)
+      : text(text)
     {}
 
+    label::~label() = default;
 
-    void label::draw(canvas& canvas) const
+    void label::draw(canvas& canvas,
+                     const scalar_position& position) const
     {
-      canvas.draw(*this);
+        canvas.draw(*this, position);
     }
 
     scalar_size label::implicit_size() const

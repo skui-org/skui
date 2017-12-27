@@ -30,15 +30,14 @@ namespace skui
 {
   namespace graphics
   {
-    rectangle::rectangle(scalar_size size,
-                         scalar_position position)
-      : shape(position)
-      , size(size)
+    rectangle::rectangle(scalar_size size)
+      : size(size)
     {}
 
-    void rectangle::draw(canvas& canvas) const
+    void rectangle::draw(canvas& canvas,
+                         const scalar_position& position) const
     {
-      canvas.draw(*this);
+      canvas.draw(*this, position);
     }
 
     scalar_size rectangle::implicit_size() const

@@ -48,10 +48,14 @@ namespace skui
       ~skia_canvas() override = default;
 
       void draw(const color& background_color) override;
-      void draw(const rectangle& rectangle) override;
-      void draw(const ellipse& ellipse) override;
-      void draw(const label& label) override;
-      void draw(const path& path) override;
+      void draw(const rectangle& rectangle,
+                const scalar_position& position) override;
+      void draw(const ellipse& ellipse,
+                const scalar_position& position) override;
+      void draw(const label& label,
+                const scalar_position& position) override;
+      void draw(const path& path,
+                const scalar_position& position) override;
 
     protected:
       skia_canvas(//sk_sp<SkSurface> surface,

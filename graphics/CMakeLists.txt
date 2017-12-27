@@ -29,7 +29,7 @@ set(graphics_src
     canvas.h++ canvas.c++
     color.h++
     context.h++ context.c++
-    drawable.h++
+    drawable.h++ drawable.c++
     gradient.h++ gradient.c++
     pixel.h++
     position.h++

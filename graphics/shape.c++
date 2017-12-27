@@ -28,9 +28,8 @@ namespace skui
 {
   namespace graphics
   {
-    shape::shape(scalar_position position)
-      : drawable()
-      , position(position)
-    {}
+    shape::shape() = default;
+
+    shape::~shape() = default;
   }
 }

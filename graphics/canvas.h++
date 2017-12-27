@@ -60,10 +60,14 @@ namespace skui
 
       // Primitives
       virtual void draw(const color& background_color) = 0;
-      virtual void draw(const rectangle& rectangle) = 0;
-      virtual void draw(const ellipse& ellipse) = 0;
-      virtual void draw(const label& label) = 0;
-      virtual void draw(const path& path) = 0;
+      virtual void draw(const rectangle& rectangle,
+                        const scalar_position& position) = 0;
+      virtual void draw(const ellipse& ellipse,
+                        const scalar_position& position) = 0;
+      virtual void draw(const label& label,
+                        const scalar_position& position) = 0;
+      virtual void draw(const path& path,
+                        const scalar_position& position) = 0;
 
     protected:
       canvas(canvas_flags flags);

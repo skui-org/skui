@@ -40,10 +40,11 @@ namespace skui
     class label : public shape
     {
     public:
-      label(core::string text,
-            scalar_position position);
+      label(core::string text);
+      ~label() override;
 
-      void draw(canvas& canvas) const override;
+      void draw(canvas& canvas,
+                const scalar_position& position) const override;
 
       scalar_size implicit_size() const override;
 

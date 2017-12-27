@@ -44,8 +44,8 @@ namespace skui
     class shape : public drawable
     {
     public:
-      shape(scalar_position position);
-      virtual ~shape() = default;
+      shape();
+      ~shape() override;
 
       struct
       {
@@ -59,8 +59,6 @@ namespace skui
         scalar radius = 0;
         graphics::color color = graphics::colors::transparent;
       } border;
-
-      scalar_position position;
     };
   }
 }

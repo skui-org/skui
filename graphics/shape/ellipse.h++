@@ -42,10 +42,10 @@ namespace skui
     class ellipse : public shape
     {
     public:
-      ellipse(scalar_size axes,
-              scalar_position position = {0, 0});
+      ellipse(scalar_size axes);
 
-      void draw(canvas& canvas) const override;
+      void draw(canvas& canvas,
+                const scalar_position& position) const override;
 
       scalar_size implicit_size() const override;
 

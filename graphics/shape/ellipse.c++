@@ -30,15 +30,14 @@ namespace skui
 {
   namespace graphics
   {
-    ellipse::ellipse(scalar_size axes,
-                     scalar_position position)
-      : shape(position)
-      , axes(axes)
+    ellipse::ellipse(scalar_size axes)
+      : axes(axes)
     {}
 
-    void skui::graphics::ellipse::draw(skui::graphics::canvas& canvas) const
+    void ellipse::draw(skui::graphics::canvas& canvas,
+                       const scalar_position& position) const
     {
-      canvas.draw(*this);
+      canvas.draw(*this, position);
     }
 
     scalar_size ellipse::implicit_size() const

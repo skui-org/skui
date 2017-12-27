@@ -65,14 +65,13 @@ namespace skui
       canvas->drawColor(to_skia(background_color));
     }
 
-    void skia_canvas::draw(const rectangle& rectangle)
+    void skia_canvas::draw(const rectangle& rectangle,
+                           const scalar_position& position)
     {
       auto canvas = surface->getCanvas();
 
-      const auto rect = SkRect::MakeXYWH(rectangle.position.x,
-                                         rectangle.position.y,
-                                         rectangle.size.width,
-                                         rectangle.size.height);
+      const auto rect = SkRect::MakeXYWH(position.x, position.y,
+                                         rectangle.size.width,rectangle.size.height);
       const auto rounded_rect = SkRRect::MakeRectXY(rect,
                                                     rectangle.border.radius,
                                                     rectangle.border.radius);
@@ -88,7 +87,8 @@ namespace skui
       canvas->restore();
     }
 
-    void skia_canvas::draw(const ellipse& ellipse)
+    void skia_canvas::draw(const ellipse& ellipse,
+                           const scalar_position& position)
     {
       auto canvas = surface->getCanvas();
 
@@ -96,14 +96,15 @@ namespace skui
       canvas->translate(pixel_offset, pixel_offset);
       for(const auto& paint : make_paint(ellipse))
       {
-          canvas->drawOval(SkRect::MakeXYWH(ellipse.position.x, ellipse.position.y,
+          canvas->drawOval(SkRect::MakeXYWH(position.x, position.y,
                                             ellipse.axes.height, ellipse.axes.width),
                            paint);
       }
       canvas->restore();
     }
 
-    void skia_canvas::draw(const label& label)
+    void skia_canvas::draw(const label& label,
+                           const scalar_position& position)
     {
       auto canvas = surface->getCanvas();;
 
@@ -112,13 +113,14 @@ namespace skui
       for(const auto& paint : make_paint(label))
       {
           canvas->drawText(label.text.c_str(), label.text.size(),
-                           label.position.x, label.position.y,
+                           position.x, position.y,
                            paint);
       }
       canvas->restore();
     }
 
-    void skia_canvas::draw(const path& path)
+    void skia_canvas::draw(const path& path,
+                           const scalar_position&)
     {
       auto canvas = surface->getCanvas();
 

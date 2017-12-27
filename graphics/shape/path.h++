@@ -38,7 +38,7 @@ namespace skui
     class path : public shape
     {
     public:
-      path(scalar_position position = {0, 0});
+      path();
     };
   }
 }

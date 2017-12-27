@@ -42,10 +42,10 @@ namespace skui
     class rectangle : public shape
     {
     public:
-      rectangle(scalar_size size,
-                scalar_position position = {0, 0});
+      rectangle(scalar_size size);
 
-      void draw(canvas& canvas) const override;
+      void draw(canvas& canvas,
+                const scalar_position& position) const override;
 
       scalar_size implicit_size() const override;
 
