@@ -29,5 +29,5 @@ set(widget_gallery_src
 source_group("" FILES ${widget_gallery_src})
 
 add_executable(widget_gallery WIN32 widget_gallery.c++)
-target_link_libraries(widget_gallery core gui opengl)
+target_link_libraries(widget_gallery core gui)
 set_target_properties(widget_gallery PROPERTIES FOLDER examples)
