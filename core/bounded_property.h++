@@ -118,6 +118,22 @@ namespace skui
     public:
       signal<const_reference>& value_changed;
     };
+
+    template<typename ValueType>
+    std::ostream& operator<<(std::ostream& os, const bounded_property<ValueType>& property)
+    {
+        return os << static_cast<ValueType>(property);
+    }
+    template<typename ValueType>
+    std::istream& operator>>(std::istream& os, bounded_property<ValueType>& property)
+    {
+      ValueType result;
+      os >> result;
+      if(os)
+        property = std::move(result);
+
+      return os;
+    }
   }
 }
 

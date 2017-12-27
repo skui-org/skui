@@ -24,6 +24,8 @@
 
 #include "test.h++"
 
+#include <sstream>
+
 namespace skui
 {
   namespace test
@@ -132,12 +134,46 @@ namespace skui
     }
 
     template<typename PropertyType>
+    void test_stream_operators()
+    {
+      {
+        PropertyType property(42);
+        bool signal_called = false;
+        property.value_changed.connect([&signal_called] { signal_called = true; });
+
+        std::ostringstream stream;
+
+        stream << property;
+
+        check(bool(stream), "stream insertion of property doesn't put stream in invalid state");
+        check(property == 42, "stream insertion doesn't change value");
+        check(!signal_called, "stream insertion does not call signal");
+        check(stream.str() == "42", "stream insertion results in correct value");
+      }
+      {
+        PropertyType property{0};
+        bool signal_called = false;
+        property.value_changed.connect([&signal_called] { signal_called = true; });
+
+        std::string contents = "42";
+        std::istringstream stream(contents);
+
+        stream >> property;
+
+        check(bool(stream), "stream extraction of property doesn't put stream in invalid state");
+        check(property == 42, "stream extraction changes value");
+        check(signal_called, "stream extraction calls changed signal");
+      }
+    }
+
+    template<typename PropertyType>
     void run_all_property_tests()
     {
       skui::test::test_value_changed_signal<PropertyType>();
       skui::test::test_relational_operators<PropertyType>();
       skui::test::test_copy_construction_assignment<PropertyType>();
       skui::test::test_move_construction_assignment<PropertyType>();
+      skui::test::test_stream_operators<PropertyType>();
     }
   }
 }

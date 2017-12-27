@@ -35,6 +35,8 @@
 #include "core/signal.h++"
 
 #include <functional>
+#include <istream>
+#include <ostream>
 
 namespace skui
 {
@@ -88,6 +90,22 @@ namespace skui
       std::function<void(const T&)> set;
       std::function<T()> get;
     };
+
+    template<typename T>
+    std::ostream& operator<<(std::ostream& os, const proxy_property<T>& prop)
+    {
+      return os << static_cast<const T&>(prop);
+    }
+    template<typename ValueType>
+    std::istream& operator>>(std::istream& os, proxy_property<ValueType>& property)
+    {
+      ValueType result;
+      os >> result;
+      if(os)
+        property = std::move(result);
+
+      return os;
+    }
   }
 }
 

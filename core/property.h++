@@ -32,6 +32,8 @@
 
 #include "core/signal.h++"
 
+#include <istream>
+#include <ostream>
 #include <type_traits>
 #include <utility>
 
@@ -88,6 +90,22 @@ namespace skui
       private:
         value_type value;
     };
+
+    template<typename ValueType>
+    std::ostream& operator<<(std::ostream& os, const property<ValueType>& property)
+    {
+      return os << static_cast<ValueType>(property);
+    }
+    template<typename ValueType>
+    std::istream& operator>>(std::istream& os, property<ValueType>& property)
+    {
+      ValueType result;
+      os >> result;
+      if(os)
+        property = std::move(result);
+
+      return os;
+    }
   }
 }
 
