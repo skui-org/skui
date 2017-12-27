@@ -123,7 +123,7 @@ namespace skui
       }
 
       void win32::get_current_geometry(skui::graphics::pixel_position& position,
-                                       skui::graphics::pixel_size& size)
+                                       skui::graphics::pixel_size& size) const
       {
         RECT rect;
         GetClientRect(window, &rect);

@@ -72,7 +72,7 @@ namespace skui
         core::string get_title() const override final;
         void set_title(const core::string& title) override final;
         void get_current_geometry(graphics::pixel_position& position,
-                                  graphics::pixel_size& size) override;
+                                  graphics::pixel_size& size) const override;
 
         xcb_connection_t* get_connection() const;
         xcb_window_t get_window() const;

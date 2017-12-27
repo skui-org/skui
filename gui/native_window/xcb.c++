@@ -166,7 +166,8 @@ namespace skui
         xcb_flush(connection);
       }
 
-      void xcb::get_current_geometry(graphics::pixel_position& position, graphics::pixel_size& size)
+      void xcb::get_current_geometry(graphics::pixel_position& position,
+                                     graphics::pixel_size& size) const
       {
         // fetch true dimensions and position of visual window now because the ConfigureNotify event lies to us
         core::unique_free_ptr<xcb_get_geometry_reply_t> geom(xcb_get_geometry_reply(connection,

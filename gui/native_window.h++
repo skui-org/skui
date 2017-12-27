@@ -65,7 +65,7 @@ namespace skui
         virtual core::string get_title() const = 0;
         virtual void set_title(const core::string& title) = 0;
         virtual void get_current_geometry(graphics::pixel_position& position,
-                                          graphics::pixel_size& size)= 0;
+                                          graphics::pixel_size& size) const = 0;
 
         void make_current() const;
         void swap_buffers(const graphics::pixel_size& size);
