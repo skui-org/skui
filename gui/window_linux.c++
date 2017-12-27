@@ -23,9 +23,7 @@
  **/
 
 /*
- * Implementation based on Khronos examples at
- * https://www.khronos.org/opengl/wiki/Programming_OpenGL_in_Linux:_GLX_and_Xlib
- * https://www.khronos.org/opengl/wiki/Tutorial:_OpenGL_3.0_Context_Creation_(GLX)
+ * Default window flags for Linux.
  */
 
 #include "gui/window.h++"

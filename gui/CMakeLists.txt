@@ -38,7 +38,7 @@ set(gui_src
     main_windows.c++
     native_window.h++ native_window.c++ native_window_windows.c++ native_window_linux.c++
     native_visual.h++ native_visual.c++
-    window.h++ window.c++ window_windows.c++ window_xcb.c++
+    window.h++ window.c++ window_windows.c++ window_linux.c++
     window_flags.h++
     window_state.h++
    )
@@ -96,7 +96,7 @@ if(NOT UNIX OR APPLE)
                      native_window/xcb.h++ native_window/xcb.c++
                      native_window/xlib.h++ native_window/xlib.c++
                      native_window_linux.c++
-                     window_xcb.c++)
+                     window_linux.c++)
 endif()
 
 if(XCB_FOUND)
