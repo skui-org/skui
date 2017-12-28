@@ -24,6 +24,7 @@
 
 #include "core/library.h++"
 
+#include "core/debug.h++"
 #include "core/path.h++"
 
 #include <dlfcn.h>
@@ -54,6 +55,7 @@ namespace skui
                                        directory / (so_prefix + filename_only + so_suffix)}};
         for(const auto& filename : filenames)
         {
+          core::debug_print("skui::core::library: Attempting to load ", filename, '\n');
           void* handle = dlopen(filename.c_str(), RTLD_LAZY);
           if(handle)
             return handle;
