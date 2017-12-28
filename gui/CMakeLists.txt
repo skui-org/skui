@@ -32,26 +32,32 @@ endif()
 
 # Common source files
 set(gui_src
-    events.h++ events.c++ events_linux.c++ events_windows.c++
+    events.h++ events.c++ events_linux.c++ events_windows.c++ events_macosx.c++
     icon.h++
     key.h++
     main_windows.c++
-    native_window.h++ native_window.c++ native_window_windows.c++ native_window_linux.c++
+    native_window.h++ native_window.c++ native_window_windows.c++ native_window_linux.c++ native_window_macosx.c++
     native_visual.h++ native_visual.c++
-    window.h++ window.c++ window_windows.c++ window_linux.c++
+    window.h++ window.c++ window_windows.c++ window_linux.c++ window_macosx.c++
     window_flags.h++
     window_state.h++
    )
 set(events_src
+    events/appkit.h++ events/appkit.c++
+    events/uikit.h++ events/uikit.c++
     events/win32.h++ events/win32.c++
     events/xcb.h++ events/xcb.c++
    )
 set(native_window_src
+    native_window/appkit.h++ native_window/appkit.c++
+    native_window/uikit.h++ native_window/uikit.c++
     native_window/win32.h++ native_window/win32.c++
     native_window/xcb.h++ native_window/xcb.c++
     native_window/xlib.h++ native_window/xlib.c++
    )
 set(native_visual_src
+    native_visual/cgl.h++ native_visual/cgl.c++
+    native_visual/coregraphics.h++ native_visual/coregraphics.c++
     native_visual/egl.h++ native_visual/egl.c++
     native_visual/glx.h++ native_visual/glx.c++
     native_visual/raster.h++ native_visual/raster.c++
@@ -87,10 +93,13 @@ endif()
 if(NOT APPLE)
   exclude_from_build(events/appkit.h++ events/appkit.c++
                      events/uikit.h++ events/uikit.c++
+                     events_macosx.c++
                      native_window/appkit.h++ native_window/appkit.c++
                      native_window/uikit.h++ native_window/uikit.c++
                      native_visual/cgl.h++ native_visual/cgl.c++
-                     native_window_macosx.c++)
+                     native_visual/coregraphics.h++ native_visual/coregraphics.c++
+                     native_window_macosx.c++
+                     window_macosx.c++)
 endif()
 if(NOT UNIX OR APPLE)
   exclude_from_build(events/xcb.h++ events/xcb.c++
