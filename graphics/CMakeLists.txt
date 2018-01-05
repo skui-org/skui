@@ -34,6 +34,7 @@ set(graphics_src
     pixel.h++
     position.h++
     scalar.h++
+    scene.h++ scene.c++
     shape.h++ shape.c++
     size.h++
     skia_canvas.h++ skia_canvas.c++
