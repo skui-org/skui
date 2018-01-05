@@ -48,6 +48,10 @@ set(events_src
     events/win32.h++ events/win32.c++
     events/xcb.h++ events/xcb.c++
    )
+set(layout_src
+    layout/alignment.h++
+    layout/orientation.h++
+   )
 set(native_window_src
     native_window/appkit.h++ native_window/appkit.c++
     native_window/uikit.h++ native_window/uikit.c++
@@ -67,6 +71,7 @@ set(native_visual_src
    )
 source_group("" FILES ${gui_src})
 source_group(events FILES ${events_src})
+source_group(layout FILES ${layout_src})
 source_group(native_visual FILES ${native_visual_src})
 source_group(native_window FILES ${native_window_src})
 
@@ -74,6 +79,7 @@ source_group(native_window FILES ${native_window_src})
 add_library(gui
             ${gui_src}
             ${events_src}
+            ${layout_src}
             ${native_window_src}
             ${native_visual_src}
            )
