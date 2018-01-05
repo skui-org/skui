@@ -44,6 +44,7 @@ set(gui_src
     window_state.h++
    )
 set(element_src
+    element/graphics_view.h++ element/graphics_view.c++
     element/label.h++ element/label.c++
    )
 set(events_src
