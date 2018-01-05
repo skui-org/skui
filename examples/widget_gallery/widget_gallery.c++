@@ -28,13 +28,60 @@
  */
 
 #include <core/application.h++>
+
+#include <graphics/color.h++>
+
+#include <graphics/gradient/sweep_gradient.h++>
+
+#include <graphics/scene.h++>
+
+#include <graphics/shape/ellipse.h++>
+#include <graphics/shape/rectangle.h++>
+#include <graphics/shape/text.h++>
+
+#include <gui/element/graphics_view.h++>
 #include <gui/window.h++>
+
+#include <memory>
 
 int main(int argc, char* argv[])
 {
-  skui::core::application app(argc, argv, "Widget Gallery");
+  using skui::core::application;
+
+  using namespace skui::graphics;
+
+  application app(argc, argv, "Widget Gallery");
+
+  skui::graphics::scene scene;
+  scene.background_color = colors::white;
+
+  auto square = std::make_unique<rectangle>(scalar_size{140, 140});
+  square->fill.color = colors::red;
+  square->border.thickness = 20; // black by default
+
+  auto marker = std::make_unique<rectangle>(scalar_size{140,140});
+  marker->fill.color = colors::transparent;
+  marker->border.thickness = 1;
+  marker->border.color = colors::green;
+
+  auto circle = std::make_unique<ellipse>(scalar_size{140, 140});
+  const scalar_position center{220,220};
+  const std::vector<color> rainbow{colors::cyan,
+                                   colors::magenta,
+                                   colors::yellow,
+                                   colors::cyan};
+  circle->fill.gradient = std::make_unique<sweep_gradient>(center, rainbow);
+
+  auto text_label = std::make_unique<text>("Hello Skui!");
+  text_label->fill.color = colors::black;
+
+  scene.drawables.emplace_back(scalar_position{10, 10}, std::move(square));
+  scene.drawables.emplace_back(scalar_position{10.5, 10.5}, std::move(marker));
+  scene.drawables.emplace_back(scalar_position{150, 150}, std::move(circle));
+  scene.drawables.emplace_back(scalar_position{300, 300}, std::move(text_label));
 
   skui::gui::window window;
+  window.element = std::make_unique<skui::gui::graphics_view>(scene);
   window.show();
 
   return app.execute();

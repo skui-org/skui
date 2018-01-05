@@ -35,39 +35,8 @@ namespace skui
 {
   namespace graphics
   {
-    void canvas::draw()
-    {
-      rectangle square({140, 140});
-      square.fill.color = colors::red;
-      square.border.thickness = 20; // black by default
-
-      rectangle marker({140,140});
-      marker.fill.color = colors::transparent;
-      marker.border.thickness = 1;
-      marker.border.color = colors::green;
-
-      ellipse circle({140, 140});
-      const scalar_position center{220,220};
-      const std::vector<color> rainbow{colors::cyan,
-                                       colors::magenta,
-                                       colors::yellow,
-                                       colors::cyan};
-      circle.fill.gradient = std::make_unique<sweep_gradient>(center, rainbow);
-
-      text text_label("Hello Skui!");
-      text_label.fill.color = colors::white;
-
-      draw(colors::black);
-      draw(square, {10, 10});
-      draw(marker, {10.5,10.5});
-      draw(circle, {150, 150});
-      draw(text_label, {300, 300});
-    }
-
     canvas::canvas(canvas_flags flags)
       : flags(flags)
-    {
-
-    }
+    {}
   }
 }

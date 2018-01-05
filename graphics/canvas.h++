@@ -56,8 +56,6 @@ namespace skui
     public:
       virtual ~canvas() = default;
 
-      void draw();
-
       // Primitives
       virtual void draw(const color& background_color) = 0;
       virtual void draw(const rectangle& rectangle,
