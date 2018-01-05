@@ -41,7 +41,7 @@ namespace skui
   {
     class rectangle;
     class ellipse;
-    class label;
+    class text;
     class path;
 
     enum class canvas_flag
@@ -64,7 +64,7 @@ namespace skui
                         const scalar_position& position) = 0;
       virtual void draw(const ellipse& ellipse,
                         const scalar_position& position) = 0;
-      virtual void draw(const label& label,
+      virtual void draw(const text& text,
                         const scalar_position& position) = 0;
       virtual void draw(const path& path,
                         const scalar_position& position) = 0;

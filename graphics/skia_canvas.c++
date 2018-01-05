@@ -32,7 +32,7 @@
 #include "graphics/gradient/two_point_conical_gradient.h++"
 
 #include "graphics/shape/ellipse.h++"
-#include "graphics/shape/label.h++"
+#include "graphics/shape/text.h++"
 #include "graphics/shape/path.h++"
 #include "graphics/shape/rectangle.h++"
 
@@ -202,16 +202,16 @@ namespace skui
       }
     }
 
-    void skia_canvas::draw(const label& label,
+    void skia_canvas::draw(const text& text,
                            const scalar_position& position)
     {
-      auto canvas = surface->getCanvas();;
+      auto canvas = surface->getCanvas();
 
-      for(const auto& paint : make_paint(label, flags))
+      for(auto& paint : make_paint(text, flags))
       {
-          canvas->drawText(label.text.c_str(), label.text.size(),
-                           position.x, position.y,
-                           paint);
+        canvas->drawText(text.characters.c_str(), text.characters.size(),
+                         position.x, position.y+text.font_size,
+                         paint);
       }
     }
 

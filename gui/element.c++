@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2017 Ruben Van Boxem
+ * Copyright © 2017-2018 Ruben Van Boxem
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,37 +22,23 @@
  * THE SOFTWARE.
  **/
 
-#include "graphics/shape/label.h++"
+#include "gui/element.h++"
 
-#include "graphics/canvas.h++"
+#include "gui/layout/node.h++"
 
-#include <SkPaint.h>
-#include <SkRect.h>
+#include <graphics/drawable.h++>
 
 namespace skui
 {
-  namespace graphics
+  namespace gui
   {
-    label::label(core::string text)
-      : text(text)
-    {}
+    element::~element() = default;
 
-    label::~label() = default;
-
-    void label::draw(canvas& canvas,
-                     const scalar_position& position) const
+    void element::invalidate()
     {
-        canvas.draw(*this, position);
+      should_repaint = true;
     }
 
-    scalar_size label::implicit_size() const
-    {
-      // Skia specific for now. This should be externalized somehow.
-      SkPaint paint;
-      SkRect bounds;
-      paint.measureText(text.c_str(), text.size(), &bounds);
-
-      return { bounds.width(), bounds.height() };
-    }
+    element::element() = default;
   }
 }

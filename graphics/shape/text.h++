@@ -23,7 +23,7 @@
  **/
 
 /*
- * A text label shape.
+ * A text shape.
  */
 
 #ifndef SKUI_GRAPHICS_TEXT_H
@@ -37,18 +37,19 @@ namespace skui
 {
   namespace graphics
   {
-    class label : public shape
+    class text : public shape
     {
     public:
-      label(core::string text);
-      ~label() override;
+      text(core::string text);
+      ~text() override;
 
       void draw(canvas& canvas,
                 const scalar_position& position) const override;
 
       scalar_size implicit_size() const override;
 
-      core::string text;
+      scalar font_size;
+      core::string characters;
     };
   }
 }

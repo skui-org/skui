@@ -22,46 +22,39 @@
  * THE SOFTWARE.
  **/
 
-/*
- * Graphics canvas for Skia.
- */
-
-#ifndef SKUI_GRAPHICS_SKIA_CANVAS_H
-#define SKUI_GRAPHICS_SKIA_CANVAS_H
+#include "graphics/shape/text.h++"
 
 #include "graphics/canvas.h++"
-#include "graphics/size.h++"
 
-#include <memory>
-#include <vector>
-
-class SkSurface;
+#include <SkPaint.h>
+#include <SkRect.h>
 
 namespace skui
 {
   namespace graphics
   {
-    class skia_canvas : public canvas
+    text::text(core::string characters)
+      : font_size(12)
+      , characters(characters)
+
+    {}
+
+    text::~text() = default;
+
+    void text::draw(canvas& canvas,
+                     const scalar_position& position) const
     {
-    public:
-      ~skia_canvas() override = default;
+      canvas.draw(*this, position);
+    }
 
-      void draw(const color& background_color) override;
-      void draw(const rectangle& rectangle,
-                const scalar_position& position) override;
-      void draw(const ellipse& ellipse,
-                const scalar_position& position) override;
-      void draw(const text& text,
-                const scalar_position& position) override;
-      void draw(const path& path,
-                const scalar_position& position) override;
+    scalar_size text::implicit_size() const
+    {
+      // Skia specific for now. This should be externalized somehow.
+      SkPaint paint;
+      SkRect bounds;
+      paint.measureText(characters.c_str(), characters.size(), &bounds);
 
-    protected:
-      skia_canvas(canvas_flags flags);
-
-      std::unique_ptr<SkSurface> surface;
-    };
+      return { bounds.width(), bounds.height() };
+    }
   }
 }
-
-#endif

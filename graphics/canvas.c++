@@ -28,7 +28,7 @@
 #include "graphics/gradient/sweep_gradient.h++"
 
 #include "graphics/shape/ellipse.h++"
-#include "graphics/shape/label.h++"
+#include "graphics/shape/text.h++"
 #include "graphics/shape/rectangle.h++"
 
 namespace skui
@@ -54,7 +54,7 @@ namespace skui
                                        colors::cyan};
       circle.fill.gradient = std::make_unique<sweep_gradient>(center, rainbow);
 
-      label text_label("Hello Skui!");
+      text text_label("Hello Skui!");
       text_label.fill.color = colors::white;
 
       draw(colors::black);

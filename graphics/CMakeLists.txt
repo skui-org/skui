@@ -52,9 +52,9 @@ set(gradient_src
    )
 set(shape_src
     shape/ellipse.h++ shape/ellipse.c++
-    shape/label.h++ shape/label.c++
     shape/path.h++ shape/path.c++
     shape/rectangle.h++ shape/rectangle.c++
+    shape/text.h++ shape/text.c++
    )
 
 source_group("" FILES ${graphics_src})
