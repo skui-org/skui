@@ -24,8 +24,6 @@
 
 #include "gui/element.h++"
 
-#include "gui/layout/node.h++"
-
 #include <graphics/drawable.h++>
 
 namespace skui

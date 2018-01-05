@@ -32,6 +32,7 @@ endif()
 
 # Common source files
 set(gui_src
+    element.h++ element.c++
     events.h++ events.c++ events_linux.c++ events_windows.c++ events_macosx.c++
     icon.h++
     key.h++
