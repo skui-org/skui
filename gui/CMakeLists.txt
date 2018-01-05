@@ -43,6 +43,9 @@ set(gui_src
     window_flags.h++
     window_state.h++
    )
+set(element_src
+    element/label.h++ element/label.c++
+   )
 set(events_src
     events/appkit.h++ events/appkit.c++
     events/uikit.h++ events/uikit.c++
@@ -71,6 +74,7 @@ set(native_visual_src
     native_visual/xcb.h++ native_visual/xcb.c++
    )
 source_group("" FILES ${gui_src})
+source_group(element FILES ${element_src})
 source_group(events FILES ${events_src})
 source_group(layout FILES ${layout_src})
 source_group(native_visual FILES ${native_visual_src})
@@ -79,6 +83,7 @@ source_group(native_window FILES ${native_window_src})
 # The library itself
 add_library(gui
             ${gui_src}
+            ${element_src}
             ${events_src}
             ${layout_src}
             ${native_window_src}
