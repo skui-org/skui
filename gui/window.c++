@@ -24,6 +24,7 @@
 
 #include "gui/window.h++"
 
+#include "gui/element.h++"
 #include "gui/events.h++"
 #include "gui/native_visual/raster.h++"
 #include "gui/native_window.h++"
@@ -134,7 +135,8 @@ namespace skui
         canvas_flags |= graphics::canvas_flag::anti_alias;
 
       auto canvas = graphics_context->create_canvas(size, canvas_flags);
-      canvas->draw();
+
+      element->draw(*canvas, {0, 0});
     }
 
     void window::initialize_and_execute_platform_loop()

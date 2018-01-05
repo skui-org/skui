@@ -48,6 +48,8 @@ namespace skui
 {
   namespace gui
   {
+    class element;
+
     class window : public core::trackable
     {
     public:
@@ -66,6 +68,8 @@ namespace skui
       void close();
 
       void repaint();
+
+      std::unique_ptr<gui::element> element;
 
       /// Properties
       graphics::pixel_size size;
