@@ -13,26 +13,6 @@ script:
 matrix:
   include:
     - os: linux
-      compiler: gcc-6
-      env:
-        - C_COMPILER=gcc-6
-        - CXX_COMPILER=g++-6
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - ninja
-            - g++-6
-            - libgl1-mesa-dev
-            - libegl1-mesa-dev
-            - libgles2-mesa-dev
-            - libxcb-util0-dev
-            - libxcb-image0-dev
-      before_install:
-        - . ./ci/setup_cmake.sh 3.5.2 Linux
-        - . ./ci/setup_ninja.sh 1.8.2 linux
-    - os: linux
       compiler: gcc-7
       env:
         - C_COMPILER=gcc-7
@@ -50,30 +30,8 @@ matrix:
             - libxcb-util0-dev
             - libxcb-image0-dev
       before_install:
-        - . ./ci/setup_cmake.sh 3.5.2 Linux
+        - . ./ci/setup_cmake.sh 3.8.2 Linux
         - . ./ci/setup_ninja.sh 1.8.2 linux
-    - os: linux
-      compiler: clang-3.9
-      env:
-        - C_COMPILER=clang-3.9
-        - CXX_COMPILER=clang++-3.9
-      addons:
-        apt:
-          packages:
-            - ninja
-            - clang-3.9
-            - libgl1-mesa-dev
-            - libegl1-mesa-dev
-            - libgles2-mesa-dev
-            - libxcb-util0-dev
-            - libxcb-image0-dev
-          sources:
-            - sourceline: 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-3.9 main'
-              key_url: 'http://apt.llvm.org/llvm-snapshot.gpg.key'
-      before_install:
-        - . ./ci/setup_cmake.sh 3.5.2 Linux
-        - . ./ci/setup_ninja.sh 1.8.2 linux
-        - . ./ci/setup_libcxx.sh 3.9.1
     - os: linux
       compiler: clang 4.0
       env:
@@ -93,7 +51,7 @@ matrix:
             - sourceline: 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-4.0 main'
               key_url: 'http://apt.llvm.org/llvm-snapshot.gpg.key'
       before_install:
-        - . ./ci/setup_cmake.sh 3.5.2 Linux
+        - . ./ci/setup_cmake.sh 3.8.2 Linux
         - . ./ci/setup_ninja.sh 1.8.2 linux
         - . ./ci/setup_libcxx.sh 4.0.1
     - os: linux
@@ -115,7 +73,7 @@ matrix:
             - sourceline: 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-5.0 main'
               key_url: 'http://apt.llvm.org/llvm-snapshot.gpg.key'
       before_install:
-        - . ./ci/setup_cmake.sh 3.5.2 Linux
+        - . ./ci/setup_cmake.sh 3.8.2 Linux
         - . ./ci/setup_ninja.sh 1.8.2 linux
         - . ./ci/setup_libcxx.sh 5.0.0
     - os: osx
@@ -124,6 +82,6 @@ matrix:
         - C_COMPILER=clang
         - CXX_COMPILER=clang++
       before_install:
-        - . ./ci/setup_cmake.sh 3.5.2 Darwin
+        - . ./ci/setup_cmake.sh 3.8.2 Darwin
         - . ./ci/setup_ninja.sh 1.8.2 mac
         - . ./ci/setup_libcxx.sh 5.0.0

@@ -10,16 +10,6 @@ environment:
     GENERATOR: Visual Studio 15 2017 Win64
     VCVARS: C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat
     VCVARSARG: amd64
-  - TOOLCHAIN: "Visual Studio 2015 x86"
-    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-    GENERATOR: Visual Studio 14 2015
-    VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
-    VCVARSARG: x86
-  - TOOLCHAIN: "Visual Studio 2015 x64"
-    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-    GENERATOR: Visual Studio 14 2015 Win64
-    VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
-    VCVARSARG: amd64
 
   # Mingw-w64
   - TOOLCHAIN: "MinGW-w64 GCC"
@@ -35,12 +25,6 @@ environment:
     VCVARS: C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat
     VCVARSARG: amd64
     CMAKE_ARGS: -T"v141_clang_c2"
-  - TOOLCHAIN: "Visual Studio 2015 Clang/C2"
-    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-    GENERATOR: Visual Studio 15 2017 Win64
-    VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
-    VCVARSARG: amd64
-    CMAKE_ARGS: -T"v140_clang_c2"
 
   # Clang targeting MSVC
   - TOOLCHAIN: "Visual Studio 2015 Clang/LLVM"
@@ -71,7 +55,6 @@ environment:
 
 matrix:
   allow_failures:
-    - TOOLCHAIN: "Visual Studio 2015 Clang/C2"
     - TOOLCHAIN: "Visual Studio 2017 Clang/C2"
     - TOOLCHAIN: "MinGW-w64 GCC"
       configuration: Release

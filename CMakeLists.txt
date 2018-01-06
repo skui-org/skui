@@ -22,7 +22,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.8)
 project(skui)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
@@ -36,7 +36,7 @@ option(SKUI_USE_SYSTEM_GIFLIB "Use system giflib" OFF)
 option(SKUI_USE_SYSTEM_LIBJPEG_TURBO "Use system libjpeg-turbo" OFF)
 option(SKUI_USE_SYSTEM_SKIA "Use system Skia library" OFF)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Compiler options

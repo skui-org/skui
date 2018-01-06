@@ -14,17 +14,17 @@ New functionality must be accompanied by corresponding tests.
 
 | Operating System | Compiler             |     Supported      | Notes |
 | -----------------| -------------------- |:------------------:| ----- |
-| Windows          | Visual Studio 2015   | :heavy_check_mark: |       |
+| Windows          | Visual Studio 2015   |        :x:         | Lacks C++17 structured bindings. |
 | Windows          | VS 2015 Clang/C2     |        :x:         | Skia fails to compile due to unimplemented LLVM intrinsics. |
 | Windows          | VS 2015 Clang/LLVM   | :heavy_check_mark: |       |
 | Windows          | MinGW-w64 GCC 6.3+   | :heavy_check_mark: | Cross-compilation is possible. |
-| Windows          | MinGW-w64 Clang 3.9+ | :heavy_check_mark: | Cross-compilation is possible. |
-| Windows          | Intel C++ 17.0.4     | :heavy_check_mark: |       |
-| Linux            | GCC 6.3+             | :heavy_check_mark: |       |
+| Windows          | MinGW-w64 Clang 4.0+ | :heavy_check_mark: | Cross-compilation is possible. |
+| Windows          | Intel C++            |        :x:         | Lacks C++17 structured bindings. |
+| Linux            | GCC 7.1+             | :heavy_check_mark: |       |
 | Linux            | Clang 4.0            | :heavy_check_mark: |       |
-| Linux            | Intel C++ 17.0.4     | :heavy_check_mark: |       |
+| Linux            | Intel C++            |        :x:         | Lacks C++17 structured bindings. |
 | Mac OS X 10.12   | XCode 8.3 Clang      |        :x:         | Missing implementation of core window/application classes. |
-| Mac OS X 10.12   | Homebrew GCC 6.3+    |        :x:         | Missing implementation of core window/application classes. |
+| Mac OS X 10.12   | Homebrew GCC 7.1+    |        :x:         | Missing implementation of core window/application classes. |
 
 # Components
 
