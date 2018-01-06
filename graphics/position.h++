@@ -30,18 +30,73 @@
 #ifndef SKUI_GRAPHICS_POSITION_H
 #define SKUI_GRAPHICS_POSITION_H
 
+#include <tuple>
+
 #include <cstdint>
 
 namespace skui
 {
   namespace graphics
   {
-    template<typename T>
+    template<typename ValueType>
     struct position2D
     {
-      T x;
-      T y;
+      ValueType x;
+      ValueType y;
+
+      position2D& operator+=(const position2D& other);
+      position2D& operator-=(const position2D& other);
     };
+
+    template<typename ValueType>
+    position2D<ValueType>& position2D<ValueType>::operator+=(const position2D<ValueType>& other)
+    {
+      x += other.x;
+      y += other.y;
+
+      return *this;
+    }
+
+    template<typename ValueType>
+    position2D<ValueType>& position2D<ValueType>::operator-=(const position2D<ValueType>& other)
+    {
+      x -= other.x;
+      y -= other.y;
+
+      return *this;
+    }
+
+    template<typename ValueType>
+    position2D<ValueType> operator+(const position2D<ValueType>& left,
+                                    const position2D<ValueType>& right)
+    {
+      auto result = left;
+      result += right;
+      return result;
+    }
+
+    template<typename ValueType>
+    position2D<ValueType> operator-(const position2D<ValueType>& left,
+                                    const position2D<ValueType>& right)
+    {
+      auto result = left;
+      result -= right;
+      return result;
+    }
+
+    template<typename ValueType>
+    bool operator==(const position2D<ValueType>& left,
+                    const position2D<ValueType>& right)
+    {
+      return std::tie(left.x, left.y) == std::tie(right.x, right.y);
+    }
+
+    template<typename ValueType>
+    bool operator!=(const position2D<ValueType>& left,
+                    const position2D<ValueType>& right)
+    {
+      return !(left == right);
+    }
 
     // pixel here means device independent pixel
     using pixel_position = position2D<std::int32_t>;
