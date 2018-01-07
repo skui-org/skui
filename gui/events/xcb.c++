@@ -25,6 +25,7 @@
 #include "gui/events/xcb.h++"
 
 #include "gui/native_window/xcb.h++"
+#include "gui/window.h++"
 
 #include <core/debug.h++>
 

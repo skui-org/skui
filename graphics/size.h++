@@ -30,9 +30,9 @@
 #ifndef SKUI_GRAPHICS_SIZE_H
 #define SKUI_GRAPHICS_SIZE_H
 
-#include <core/property.h++>
+#include "graphics/pixel.h++"
 
-#include "pixel.h++"
+#include <limits>
 
 namespace skui
 {

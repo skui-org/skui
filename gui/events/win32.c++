@@ -25,6 +25,7 @@
 #include "gui/events/win32.h++"
 
 #include "gui/native_window/win32.h++"
+#include "gui/window.h++"
 
 #include <core/debug.h++>
 #include <core/utility.h++>

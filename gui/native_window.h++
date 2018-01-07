@@ -37,6 +37,8 @@
 #include <graphics/position.h++>
 #include <graphics/size.h++>
 
+#include <memory>
+
 namespace skui
 {
   namespace gui

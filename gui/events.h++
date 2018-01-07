@@ -30,14 +30,14 @@
 #ifndef SKUI_GUI_EVENTS_H
 #define SKUI_GUI_EVENTS_H
 
-#include "gui/window.h++"
-
 #include <memory>
 
 namespace skui
 {
   namespace gui
   {
+    class window;
+
     namespace events
     {
       class base;

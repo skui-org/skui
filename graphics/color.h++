@@ -30,11 +30,8 @@
 #define SKUI_GRAPHICS_COLOR_H
 
 #include "color.h++"
-#include "pixel.h++"
 
-#include <core/property.h++>
-#include <core/trackable.h++>
-#include <core/utility.h++>
+#include <cstdint>
 
 namespace skui
 {

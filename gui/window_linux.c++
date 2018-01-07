@@ -28,11 +28,6 @@
 
 #include "gui/window.h++"
 
-#include <core/application.h++>
-#include <core/debug.h++>
-
-#include <xcb/xcb.h>
-
 namespace skui
 {
   namespace gui
