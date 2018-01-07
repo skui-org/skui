@@ -56,8 +56,6 @@ environment:
 matrix:
   allow_failures:
     - TOOLCHAIN: "Visual Studio 2017 Clang/C2"
-    - TOOLCHAIN: "MinGW-w64 GCC"
-      configuration: Release
 
 configuration:
  - Debug
