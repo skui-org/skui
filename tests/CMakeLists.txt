@@ -102,4 +102,5 @@ compile_test(core arity)
 runtime_test(core bounded_property)
 
 runtime_test(graphics position)
+runtime_test(graphics size)
 runtime_test(graphics swizzle)

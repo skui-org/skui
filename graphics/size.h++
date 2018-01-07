@@ -45,6 +45,17 @@ namespace skui
       T height;
     };
 
+    template<typename T>
+    bool operator==(const size2D<T>& left, const size2D<T>& right)
+    {
+      return left.width == right.width && left.height == right.height;
+    }
+    template<typename T>
+    bool operator!=(const size2D<T>& left, const size2D<T>& right)
+    {
+      return left.width != right.width || left.height != right.height;
+    }
+
     // pixel here means "device independent pixel" aka scaled from 72dpi
     using pixel_size = size2D<pixel>;
     using scalar_size = size2D<float>;
