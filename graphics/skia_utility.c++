@@ -24,6 +24,9 @@
 
 #include "graphics/skia_utility.h++"
 
+#include <algorithm>
+#include <iterator>
+
 namespace skui
 {
     namespace graphics
