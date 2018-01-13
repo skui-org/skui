@@ -36,6 +36,11 @@ namespace skui
   {
     namespace native_visual
     {
+      void xfree_deleter::operator()(void* x_resource)
+      {
+        XFree(x_resource);
+      }
+
       namespace
       {
         base::gl_function_type glx_get(void*, const char name[])
@@ -52,7 +57,7 @@ namespace skui
       glx::glx(Display* display)
         : display(display)
         , xvisualinfo(create_xvisualinfo())
-        , context(glXCreateContext(display, xvisualinfo, nullptr, True))
+        , context(glXCreateContext(display, xvisualinfo.get(), nullptr, True))
         , drawable(0)
       {}
 
@@ -82,10 +87,10 @@ namespace skui
 
       XVisualInfo* glx::get_xvisualinfo() const
       {
-        return xvisualinfo;
+        return xvisualinfo.get();
       }
 
-      XVisualInfo* glx::create_xvisualinfo()
+      std::unique_ptr<XVisualInfo, xfree_deleter> glx::create_xvisualinfo()
       {
         static int attributes[]
         {
@@ -95,7 +100,7 @@ namespace skui
           None
         };
         const int default_screen = DefaultScreen(display);
-        return glXChooseVisual(display, default_screen, attributes);
+        return std::unique_ptr<XVisualInfo, xfree_deleter>(glXChooseVisual(display, default_screen, attributes));
       }
     }
   }

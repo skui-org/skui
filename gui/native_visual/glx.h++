@@ -42,6 +42,11 @@ namespace skui
   {
     namespace native_visual
     {
+      struct xfree_deleter
+      {
+        void operator()(void* x_data);
+      };
+
       class glx : public base
       {
       public:
@@ -57,10 +62,10 @@ namespace skui
         XVisualInfo* get_xvisualinfo() const;
 
       private:
-        XVisualInfo* create_xvisualinfo();
+        std::unique_ptr<XVisualInfo, xfree_deleter> create_xvisualinfo();
 
         Display* display;
-        XVisualInfo* xvisualinfo;
+        std::unique_ptr<XVisualInfo, xfree_deleter> xvisualinfo;
         GLXContext context;
         GLXDrawable drawable;
       };
