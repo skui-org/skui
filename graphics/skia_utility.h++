@@ -39,17 +39,32 @@
 #include <SkColor.h>
 #include <SkPoint.h>
 
+#include <algorithm>
+#include <iterator>
 #include <vector>
 
 namespace skui
 {
   namespace graphics
   {
-    SkPoint to_skia(const scalar_position& position);
-    std::vector<SkPoint> to_skia(const std::vector<scalar_position>& positions);
+    template<typename OutputType, typename InputType>
+    OutputType convert_to(const InputType& input);
 
-    SkColor to_skia(const color& color);
-    std::vector<SkColor> to_skia(const std::vector<color>& colors);
+    template<>
+    SkPoint convert_to<SkPoint, scalar_position>(const scalar_position& position);
+    template<>
+    SkColor convert_to<SkColor, color>(const color& color);
+
+    template<typename OutputContainerType, typename InputContainerType>
+    OutputContainerType convert_to(const InputContainerType& input)
+    {
+        OutputContainerType result;
+        result.reserve(input.size());
+        std::transform(begin(input), end(input), std::back_inserter(result),
+                       convert_to<typename OutputContainerType::value_type,
+                                  typename InputContainerType::value_type>);
+        return result;
+    }
   }
 }
 

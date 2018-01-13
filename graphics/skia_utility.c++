@@ -24,39 +24,20 @@
 
 #include "graphics/skia_utility.h++"
 
-#include <algorithm>
-#include <iterator>
-
 namespace skui
 {
     namespace graphics
     {
-      SkPoint to_skia(const scalar_position& position)
+      template<>
+      SkPoint convert_to<SkPoint, scalar_position>(const scalar_position& position)
       {
         return SkPoint::Make(position.x, position.y);
       }
 
-      std::vector<SkPoint> to_skia(const std::vector<scalar_position>& positions)
-      {
-        std::vector<SkPoint> points;
-        points.reserve(positions.size());
-        std::transform(positions.begin(), positions.end(), std::back_inserter(points),
-                       [](const scalar_position& position) { return to_skia(position); });
-        return points;
-      }
-
-      SkColor to_skia(const color& color)
+      template<>
+      SkColor convert_to<SkColor, color>(const color& color)
       {
         return SkColorSetARGB(color.alpha, color.red, color.green, color.blue);
-      }
-
-      std::vector<SkColor> to_skia(const std::vector<color>& colors)
-      {
-        std::vector<SkColor> skia_colors;
-        skia_colors.reserve(colors.size());
-        std::transform(colors.begin(), colors.end(), std::back_inserter(skia_colors),
-                       [](const color& color) { return to_skia(color); });
-        return skia_colors;
       }
   }
 }

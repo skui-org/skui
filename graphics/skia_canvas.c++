@@ -61,8 +61,8 @@ namespace skui
           case gradient_type::linear:
           {
             const auto& linear = static_cast<const linear_gradient&>(gradient);
-            auto points = to_skia(linear.points);
-            auto colors = to_skia(linear.colors);
+            auto points = convert_to<std::vector<SkPoint>>(linear.points);
+            auto colors = convert_to<std::vector<SkColor>>(linear.colors);
             paint.setShader(SkGradientShader::MakeLinear(points.data(),
                                                          colors.data(),
                                                          nullptr,
@@ -73,9 +73,9 @@ namespace skui
           case gradient_type::radial:
           {
             const auto& radial = static_cast<const radial_gradient&>(gradient);
-            paint.setShader(SkGradientShader::MakeRadial(to_skia(radial.center),
+            paint.setShader(SkGradientShader::MakeRadial(convert_to<SkPoint>(radial.center),
                                                          radial.radius,
-                                                         to_skia(radial.colors).data(),
+                                                         convert_to<std::vector<SkColor>>(radial.colors).data(),
                                                          nullptr,
                                                          static_cast<int>(radial.positions.size()),
                                                          SkShader::TileMode::kMirror_TileMode));
@@ -84,11 +84,11 @@ namespace skui
           case gradient_type::two_point_conical:
           {
             const auto& conical = static_cast<const two_point_conical_gradient&>(gradient);
-            paint.setShader(SkGradientShader::MakeTwoPointConical(to_skia(conical.start),
+            paint.setShader(SkGradientShader::MakeTwoPointConical(convert_to<SkPoint>(conical.start),
                                                                   conical.start_radius,
-                                                                  to_skia(conical.end),
+                                                                  convert_to<SkPoint>(conical.end),
                                                                   conical.end_radius,
-                                                                  to_skia(conical.colors).data(),
+                                                                  convert_to<std::vector<SkColor>>(conical.colors).data(),
                                                                   nullptr,
                                                                   static_cast<int>(conical.colors.size()),
                                                                   SkShader::TileMode::kMirror_TileMode));
@@ -97,7 +97,7 @@ namespace skui
           case gradient_type::sweep:
           {
             const auto& sweep = static_cast<const sweep_gradient&>(gradient);
-            const auto colors = to_skia(sweep.colors);
+            const auto colors = convert_to<std::vector<SkColor>>(sweep.colors);
             paint.setShader(SkGradientShader::MakeSweep(sweep.center.x,
                                                         sweep.center.y,
                                                         colors.data(),
@@ -167,7 +167,7 @@ namespace skui
     {
       auto canvas = surface->getCanvas();
 
-      canvas->drawColor(to_skia(background_color));
+      canvas->drawColor(convert_to<SkColor>(background_color));
     }
 
     void skia_canvas::draw(const rectangle& rectangle,
