@@ -36,6 +36,7 @@ set(gui_src
     events.h++ events.c++ events_linux.c++ events_windows.c++ events_macosx.c++
     icon.h++
     key.h++
+    layout.h++ layout.c++
     main_windows.c++
     make_element.h++
     native_window.h++ native_window.c++ native_window_windows.c++ native_window_linux.c++ native_window_macosx.c++
