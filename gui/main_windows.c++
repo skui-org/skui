@@ -29,13 +29,15 @@
 #ifndef SKUI_GUI_MAIN_WINDOWS_H
 #define SKUI_GUI_MAIN_WINDOWS_H
 
-#include <codecvt>
 #include <cstddef>
 #include <locale>
 #include <memory>
 #include <vector>
 
 #include <core/string.h++>
+#include <core/utility.h++>
+
+#include <algorithm>
 
 #define WIN32_MEAN_AND_LEAN
 #include <windows.h>
@@ -60,13 +62,7 @@ int WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
   arg_vector.reserve(static_cast<std::size_t>(argc));
 
-  // convert to UTF-8
-  std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> converter;
-
-  for(int i = 1; i<argc; ++i)
-  {
-    arg_vector.emplace_back(converter.to_bytes(argz.get()[i]));
-  }
+  std::transform(argz.get(), argz.get() + argc + 1, std::back_inserter(arg_vector), convert_to_utf8);
   std::vector<char*> argv;
   argv.reserve(arg_vector.size()+1);
   for(auto&& arg : arg_vector)
