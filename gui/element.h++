@@ -67,15 +67,15 @@ namespace skui
       core::bounded_property<graphics::scalar_size> size;
 
       // This element inside another
-      layout::alignment vertical_alignment = layout::alignment::center;
-      layout::alignment horizontal_alignment = layout::alignment::center;
+      alignment vertical_alignment = alignment::center;
+      alignment horizontal_alignment = alignment::center;
 
+      orientation_flags stretch = orientation::horizontal | orientation::vertical;
       // This element's children
       layout::orientation_flags orientation = layout::orientation::left_to_right;
       layout::alignment child_alignment = layout::alignment::center;
 
       bool wrap = false;
-      layout::orientation_flags stretch = layout::orientation::horizontal | layout::orientation::vertical;
 
       // Children
       std::vector<std::unique_ptr<element>> children;

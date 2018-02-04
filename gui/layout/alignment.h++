@@ -31,15 +31,12 @@ namespace skui
 {
   namespace gui
   {
-    namespace layout
+    enum class alignment : std::uint8_t
     {
-      enum class alignment : std::uint8_t
-      {
-        begin = 1,
-        center = 2,
-        end = 4,
-      };
-    }
+      begin,
+      center,
+      end
+    };
   }
 }
 
