@@ -51,6 +51,7 @@ namespace skui
     {
       // Skia specific for now. This should be externalized somehow.
       SkPaint paint;
+      paint.setTextSize(font_size);
       SkRect bounds;
       paint.measureText(characters.c_str(), characters.size(), &bounds);
 
