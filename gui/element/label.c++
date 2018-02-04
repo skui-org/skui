@@ -48,9 +48,15 @@ namespace skui
 
     label::~label() = default;
 
-    void label::draw(graphics::canvas& canvas, const graphics::scalar_position& position)
+    void label::draw(graphics::canvas& canvas,
+                     const graphics::scalar_position& position) const
     {
       graphics_label.draw(canvas, position);
+    }
+
+    graphics::scalar_size label::implicit_size() const
+    {
+      return graphics_label.implicit_size();
     }
   }
 }

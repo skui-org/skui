@@ -48,11 +48,15 @@ namespace skui
       ~graphics_view() override;
 
       void draw(graphics::canvas& canvas,
-                const graphics::scalar_position& position) override;
+                const graphics::scalar_position& position) const override;
+
+      graphics::scalar_size implicit_size() const override;
 
     private:
       const graphics::scene& scene;
     };
+
+    using graphics_view_ptr = std::unique_ptr<graphics_view>;
   }
 }
 

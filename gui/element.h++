@@ -35,7 +35,6 @@
 #include "gui/layout/alignment.h++"
 #include "gui/layout/orientation.h++"
 
-#include <core/property.h++>
 #include <core/bounded_property.h++>
 #include <core/trackable.h++>
 
@@ -59,8 +58,10 @@ namespace skui
       ~element() override;
 
       virtual void draw(graphics::canvas& canvas,
-                        const graphics::scalar_position& position) = 0;
+                        const graphics::scalar_position& position) const = 0;
       void invalidate();
+
+      virtual graphics::scalar_size implicit_size() const = 0;
 
       /// Properties
       // This element by itself
@@ -71,14 +72,6 @@ namespace skui
       alignment horizontal_alignment = alignment::center;
 
       orientation_flags stretch = orientation::horizontal | orientation::vertical;
-      // This element's children
-      layout::orientation_flags orientation = layout::orientation::left_to_right;
-      layout::alignment child_alignment = layout::alignment::center;
-
-      bool wrap = false;
-
-      // Children
-      std::vector<std::unique_ptr<element>> children;
 
       /// Signals
       // Input
@@ -91,6 +84,9 @@ namespace skui
     private:
       bool should_repaint = false;
     };
+
+    using element_ptr = std::unique_ptr<element>;
+    using element_ptrs = std::vector<element_ptr>;
   }
 }
 

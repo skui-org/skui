@@ -37,13 +37,19 @@ namespace skui
 
     graphics_view::~graphics_view() = default;
 
-    void graphics_view::draw(graphics::canvas& canvas, const graphics::scalar_position& position)
+    void graphics_view::draw(graphics::canvas& canvas,
+                             const graphics::scalar_position& position) const
     {
       canvas.draw(scene.background_color);
       for(const auto& [offset, drawable] : scene.drawables)
       {
         drawable->draw(canvas, position + offset);
       }
+    }
+
+    graphics::scalar_size graphics_view::implicit_size() const
+    {
+      return size;
     }
   }
 }

@@ -31,6 +31,7 @@
 #define SKUI_GUI_ELEMENT_LABEL_H
 
 #include "gui/element.h++"
+#include "gui/make_element.h++"
 
 #include <core/property.h++>
 #include <core/string.h++>
@@ -48,13 +49,17 @@ namespace skui
       ~label() override;
 
       void draw(graphics::canvas& canvas,
-                const graphics::scalar_position& position) override;
+                const graphics::scalar_position& position) const override;
+
+      graphics::scalar_size implicit_size() const override;
 
       core::property<core::string> text;
 
     private:
       graphics::text graphics_label;
     };
+
+    using label_ptr = std::unique_ptr<label>;
   }
 }
 
