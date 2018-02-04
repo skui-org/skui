@@ -26,6 +26,7 @@ cmake_minimum_required(VERSION 3.8)
 project(skui)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+include(toolchain_options)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
@@ -38,28 +39,6 @@ option(SKUI_USE_SYSTEM_SKIA "Use system Skia library" OFF)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS OFF)
-
-# Compiler options
-if(CMAKE_COMPILER_IS_GNUCXX)
-  set(CMAKE_CXX_FLAGS "-pedantic-errors -Wextra -Wconversion -Winit-self -Wmissing-include-dirs -Wstrict-aliasing -Werror ${CMAKE_CXX_FLAGS}")
-  set(CMAKE_LINK_FLAGS "-Wl,--gc-sections ${CMAKE_LINK_FLAGS}")
-  set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-elseif(MSVC)
-  add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-  string(REPLACE "/W3" "/W4" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
-  if(NOT ${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
-      add_compile_options(/wd4503)
-  endif()
-elseif(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
-  set(CMAKE_CXX_FLAGS "-pedantic-errors -Wextra -Wconversion -Winit-self -Wmissing-include-dirs -Wstrict-aliasing -Werror ${CMAKE_CXX_FLAGS}")
-  if(MINGW)
-    link_libraries(-lpthread)
-  else()
-    set(CMAKE_CXX_FLAGS "-stdlib=libc++ ${CMAKE_CXX_FLAGS}")
-    add_compile_options(-Wno-error=unused-command-line-argument)
-    link_libraries(-lc++ -lc++abi)
-  endif()
-endif()
 
 # Boilerplate
 function(exclude_from_build)
@@ -78,6 +57,7 @@ add_custom_target(miscellaneous SOURCES
     ci/setup_cmake.sh
     ci/setup_libcxx.sh
     ci/setup_ninja.sh
+    cmake/toolchain_options.cmake
     )
 
 # Skia and its dependencies
