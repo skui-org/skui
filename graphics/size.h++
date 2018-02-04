@@ -31,8 +31,7 @@
 #define SKUI_GRAPHICS_SIZE_H
 
 #include "graphics/pixel.h++"
-
-#include <limits>
+#include "graphics/scalar.h++"
 
 namespace skui
 {
@@ -58,7 +57,7 @@ namespace skui
 
     // pixel here means "device independent pixel" aka scaled from 72dpi
     using pixel_size = size2D<pixel>;
-    using scalar_size = size2D<float>;
+    using scalar_size = size2D<scalar>;
   }
 }
 

@@ -30,6 +30,8 @@
 #ifndef SKUI_GRAPHICS_POSITION_H
 #define SKUI_GRAPHICS_POSITION_H
 
+#include "graphics/scalar.h++"
+
 #include <tuple>
 
 #include <cstdint>
@@ -100,7 +102,7 @@ namespace skui
 
     // pixel here means device independent pixel
     using pixel_position = position2D<std::int32_t>;
-    using scalar_position = position2D<float>;
+    using scalar_position = position2D<scalar>;
   }
 }
 
