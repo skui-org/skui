@@ -38,20 +38,20 @@ namespace skui
 {
   namespace graphics
   {
-    template<typename T>
+    template<typename ValueType>
     struct size2D
     {
-      T width;
-      T height;
+      ValueType width;
+      ValueType height;
     };
 
-    template<typename T>
-    bool operator==(const size2D<T>& left, const size2D<T>& right)
+    template<typename ValueType>
+    bool operator==(const size2D<ValueType>& left, const size2D<ValueType>& right)
     {
       return left.width == right.width && left.height == right.height;
     }
-    template<typename T>
-    bool operator!=(const size2D<T>& left, const size2D<T>& right)
+    template<typename ValueType>
+    bool operator!=(const size2D<ValueType>& left, const size2D<ValueType>& right)
     {
       return left.width != right.width || left.height != right.height;
     }
