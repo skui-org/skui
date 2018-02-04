@@ -37,6 +37,7 @@ set(gui_src
     icon.h++
     key.h++
     main_windows.c++
+    make_element.h++
     native_window.h++ native_window.c++ native_window_windows.c++ native_window_linux.c++ native_window_macosx.c++
     native_visual.h++ native_visual.c++
     window.h++ window.c++ window_windows.c++ window_linux.c++ window_macosx.c++
