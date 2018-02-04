@@ -45,6 +45,13 @@ namespace skui
     template<typename T>
     using unique_free_ptr = std::unique_ptr<T, free_deleter<T>>;
 
+    template<typename Functor, typename... ArgumentTypes>
+    void for_each(Functor&& functor,
+                  ArgumentTypes&&... arguments)
+    {
+      int unused[]{(functor(std::forward<ArgumentTypes>(arguments)), void(), 0)...};
+    }
+
 #ifdef _WIN32
     string convert_to_utf8(const std::wstring& utf16_string);
     std::wstring convert_to_utf16(const string& utf8_string);

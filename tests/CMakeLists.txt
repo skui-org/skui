@@ -100,6 +100,7 @@ runtime_test(core event_loop)
 runtime_test(core bitflag)
 compile_test(core arity)
 runtime_test(core bounded_property)
+runtime_test(core utility)
 
 runtime_test(graphics position)
 runtime_test(graphics size)
