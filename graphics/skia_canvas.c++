@@ -209,6 +209,7 @@ namespace skui
 
       for(auto& paint : make_paint(text, flags))
       {
+        paint.setTextSize(text.font_size);
         canvas->drawText(text.characters.c_str(), text.characters.size(),
                          position.x, position.y+text.font_size,
                          paint);
