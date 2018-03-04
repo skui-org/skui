@@ -30,22 +30,9 @@
 namespace
 {
   using skui::test::check;
-
-  void test_for_each()
-  {
-    int i = 0;
-    short s = 0;
-
-    skui::core::for_each([](auto& value) { ++value; }, i, s);
-
-    check(i == 1, "first variadic argument incremented correctly");
-    check(s == 1, "second variadic argument incremented correctly");
-  }
 }
 
 int main()
 {
-  test_for_each();
-
   return skui::test::exit_code;
 }

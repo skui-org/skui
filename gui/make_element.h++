@@ -48,12 +48,10 @@ namespace skui
     }
 
     template<typename... ElementTypes>
-    element_ptrs make_element_ptrs(std::unique_ptr<ElementTypes>... arguments)
+    element_ptrs make_element_ptrs(std::unique_ptr<ElementTypes>&&... elements)
     {
       element_ptrs result;
-      result.reserve(sizeof...(ElementTypes));
-      skui::core::for_each([&result](element_ptr element_pointer) { result.push_back(std::move(element_pointer)); },
-                           std::move(arguments)...);
+      (result.emplace_back(std::move(elements)), ...);
       return result;
     }
   }
