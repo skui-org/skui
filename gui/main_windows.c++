@@ -62,7 +62,7 @@ int WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
   arg_vector.reserve(static_cast<std::size_t>(argc));
 
-  std::transform(argz.get(), argz.get() + argc + 1, std::back_inserter(arg_vector), convert_to_utf8);
+  std::transform(argz.get(), argz.get() + argc + 1, std::back_inserter(arg_vector), skui::core::convert_to_utf8);
   std::vector<char*> argv;
   argv.reserve(arg_vector.size()+1);
   for(auto&& arg : arg_vector)
