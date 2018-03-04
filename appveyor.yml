@@ -82,9 +82,9 @@ before_build:
   - mkdir build
   - cd build
   - if defined VCVARS call "%VCVARS%" %VCVARSARG%
-  - if DEFINED PACMAN_PACKAGES C:\msys64\usr\bin\bash.exe -lc "pacman --needed --noconfirm -Syu"
-  - if DEFINED PACMAN_PACKAGES C:\msys64\usr\bin\bash.exe -lc "pacman --needed --noconfirm -Syu"
-  - if DEFINED PACMAN_PACKAGES C:\msys64\usr\bin\bash.exe -lc "pacman --needed --noconfirm -S %PACMAN_PACKAGES%"
+  - if DEFINED PACMAN_PACKAGES C:\msys64\usr\bin\bash.exe -lc "yes | pacman --needed --noconfirm -Syu"
+  - if DEFINED PACMAN_PACKAGES C:\msys64\usr\bin\bash.exe -lc "yes | pacman --needed --noconfirm -Syu"
+  - if DEFINED PACMAN_PACKAGES C:\msys64\usr\bin\bash.exe -lc "yes | pacman --needed --noconfirm -S %PACMAN_PACKAGES%"
   - set PATH=%PATH:C:\Program Files\Git\usr\bin;=%
   - cmake %CMAKE_ARGS% -G"%GENERATOR%" -DCMAKE_BUILD_TYPE="%CONFIGURATION%" .. || (echo CMAKEERROR && type CMakeFiles\CMakeError.log && echo CMAKEOUTPUT && type CMakeFiles\CMakeOutput.log && exit 1)
 
