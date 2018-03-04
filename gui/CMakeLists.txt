@@ -23,7 +23,7 @@
 # THE SOFTWARE.
 
 if(UNIX AND NOT MAC)
-  find_package(XCB COMPONENTS XCB AUX IMAGE)
+  find_package(XCB COMPONENTS XCB AUX SHM IMAGE)
   find_package(X11_XCB)
   find_package(X11)
   find_package(GLX)
