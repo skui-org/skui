@@ -26,18 +26,19 @@
 function(runtime_test component test_name)
   set(test_src ${component}/${test_name}.c++)
   source_group("" FILES ${test_src})
-  add_executable(${test_name} ${test_src})
-  set_target_properties(${test_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${component}
-                                                RUNTIME_OUTPUT_DIRECTORY_DEBUG ${component}
-                                                RUNTIME_OUTPUT_DIRECTORY_RELEASE ${component}
-                                                RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO ${component}
-                                                RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL ${component}
-                                                FOLDER tests/${component})
-  target_include_directories(${test_name} PUBLIC ${CMAKE_CURRENT_LIST_DIR} ${PROJECT_SOURCE_DIR})
-  target_link_libraries(${test_name} ${component})
+  string(REPLACE "/" "_" test_target_name ${test_name})
+  add_executable(${test_target_name} ${test_src})
+  set_target_properties(${test_target_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${component}
+                                                       RUNTIME_OUTPUT_DIRECTORY_DEBUG ${component}
+                                                       RUNTIME_OUTPUT_DIRECTORY_RELEASE ${component}
+                                                       RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO ${component}
+                                                       RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL ${component}
+                                                       FOLDER tests/${component})
+  target_include_directories(${test_target_name} PUBLIC ${CMAKE_CURRENT_LIST_DIR} ${PROJECT_SOURCE_DIR})
+  target_link_libraries(${test_target_name} ${component})
 
   add_test(${component}/${test_name} ${CMAKE_COMMAND} -Dtest_dir=${component}
-                                                      -Dtest_name=${test_name}
+                                                      -Dtest_name=${test_target_name}
                                                       -P ${CMAKE_CURRENT_LIST_DIR}/runtime_test.cmake)
 endfunction()
 
