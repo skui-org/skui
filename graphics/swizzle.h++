@@ -30,10 +30,6 @@
 #ifndef SKUI_GUI_BOUNDING_BOX_H
 #define SKUI_GUI_BOUNDING_BOX_H
 
-#include "graphics/pixel.h++"
-#include "graphics/position.h++"
-#include "graphics/size.h++"
-
 #include <vector>
 
 namespace skui
