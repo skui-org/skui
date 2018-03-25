@@ -33,6 +33,10 @@
 #include "graphics/pixel.h++"
 #include "graphics/scalar.h++"
 
+#include <core/utility/bound.h++>
+
+#include <limits>
+
 namespace skui
 {
   namespace graphics
@@ -40,17 +44,19 @@ namespace skui
     template<typename ValueType>
     struct size2D
     {
-      ValueType width;
-      ValueType height;
+      using value_type = ValueType;
+
+      value_type width;
+      value_type height;
     };
 
     template<typename ValueType>
-    bool operator==(const size2D<ValueType>& left, const size2D<ValueType>& right)
+    constexpr bool operator==(const size2D<ValueType>& left, const size2D<ValueType>& right)
     {
       return left.width == right.width && left.height == right.height;
     }
     template<typename ValueType>
-    bool operator!=(const size2D<ValueType>& left, const size2D<ValueType>& right)
+    constexpr bool operator!=(const size2D<ValueType>& left, const size2D<ValueType>& right)
     {
       return left.width != right.width || left.height != right.height;
     }
@@ -59,6 +65,46 @@ namespace skui
     using pixel_size = size2D<pixel>;
     using scalar_size = size2D<scalar>;
   }
+
+  namespace core
+  {
+    template<typename ValueType>
+    struct bound<graphics::size2D<ValueType>>
+    {
+      constexpr graphics::size2D<ValueType> operator()(const graphics::size2D<ValueType>& value,
+                                                       const graphics::size2D<ValueType>& lower_bound,
+                                                       const graphics::size2D<ValueType>& upper_bound) const
+      {
+        return {bound<ValueType>{}(value.width, lower_bound.width, upper_bound.width),
+                bound<ValueType>{}(value.height, lower_bound.height, upper_bound.height)};
+      }
+    };
+  }
+}
+
+namespace std
+{
+  template<typename ValueType>
+  class numeric_limits<skui::graphics::size2D<ValueType>> : numeric_limits<ValueType>
+  {
+  private:
+    using size = skui::graphics::size2D<ValueType>;
+    using base = numeric_limits<ValueType>;
+
+  public:
+    static constexpr size min()
+    {
+      return { base::min(), base::min() };
+    }
+    static constexpr size lowest()
+    {
+      return { base::lowest(), base::lowest() };
+    }
+    static constexpr size max()
+    {
+      return { base::max(), base::max() };
+    }
+  };
 }
 
 #endif

@@ -24,40 +24,30 @@
 
 #include "test.h++"
 
+#include "graphics/composite_value_tests.h++"
+
 #include <graphics/size.h++>
 
 namespace
 {
   using skui::test::check;
 
+  using int_size = skui::graphics::size2D<int>;
+
   void test_constructor()
   {
-      skui::graphics::size2D<int> size{1,2};
+    int_size size{1,2};
 
-      check(size.width == 1, "size constructor sets width correctly.");
-      check(size.height == 2, "size constructor sets height correctly.");
-  }
-
-  void test_equality_operators()
-  {
-    skui::graphics::size2D<int> size{1,2};
-
-    check(  size == skui::graphics::size2D<int>{1,2},  "operator== returns true for same size");
-    check(!(size == skui::graphics::size2D<int>{2,2}), "operator== returns false for different width");
-    check(!(size == skui::graphics::size2D<int>{1,1}), "operator== returns false for different height");
-    check(!(size == skui::graphics::size2D<int>{2,1}), "operator== returns false for different size");
-
-    check(!(size != skui::graphics::size2D<int>{1,2}), "operator!= returns false for same size");
-    check(  size != skui::graphics::size2D<int>{2,2},  "operator!= returns true for different width");
-    check(  size != skui::graphics::size2D<int>{1,1},  "operator!= returns true for different height");
-    check(  size != skui::graphics::size2D<int>{2,1},  "operator!= returns true for different size");
+    check(size.width == 1, "constructor sets width correctly.");
+    check(size.height == 2, "constructor sets height correctly.");
   }
 }
 
 int main()
 {
   test_constructor();
-  test_equality_operators();
+
+  skui::test::run_all_composite_value_tests<skui::graphics::size2D<int>>();
 
   return skui::test::exit_code;
 }

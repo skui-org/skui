@@ -82,6 +82,7 @@ endfunction()
 add_custom_target(tests_shared SOURCES
                   test.h++
                   core/property_tests.h++
+                  graphics/composite_value_tests.h++
                   runtime_test.cmake
                   compile_test.cmake
                  )

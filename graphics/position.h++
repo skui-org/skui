@@ -32,6 +32,7 @@
 
 #include "graphics/scalar.h++"
 
+#include <limits>
 #include <tuple>
 
 #include <cstdint>
@@ -43,15 +44,17 @@ namespace skui
     template<typename ValueType>
     struct position2D
     {
-      ValueType x;
-      ValueType y;
+      using value_type = ValueType;
 
-      position2D& operator+=(const position2D& other);
-      position2D& operator-=(const position2D& other);
+      value_type x;
+      value_type y;
+
+      constexpr position2D& operator+=(const position2D& other);
+      constexpr position2D& operator-=(const position2D& other);
     };
 
     template<typename ValueType>
-    position2D<ValueType>& position2D<ValueType>::operator+=(const position2D<ValueType>& other)
+    constexpr position2D<ValueType>& position2D<ValueType>::operator+=(const position2D<ValueType>& other)
     {
       x += other.x;
       y += other.y;
@@ -60,7 +63,7 @@ namespace skui
     }
 
     template<typename ValueType>
-    position2D<ValueType>& position2D<ValueType>::operator-=(const position2D<ValueType>& other)
+    constexpr position2D<ValueType>& position2D<ValueType>::operator-=(const position2D<ValueType>& other)
     {
       x -= other.x;
       y -= other.y;
@@ -69,8 +72,8 @@ namespace skui
     }
 
     template<typename ValueType>
-    position2D<ValueType> operator+(const position2D<ValueType>& left,
-                                    const position2D<ValueType>& right)
+    constexpr position2D<ValueType> operator+(const position2D<ValueType>& left,
+                                              const position2D<ValueType>& right)
     {
       auto result = left;
       result += right;
@@ -78,8 +81,8 @@ namespace skui
     }
 
     template<typename ValueType>
-    position2D<ValueType> operator-(const position2D<ValueType>& left,
-                                    const position2D<ValueType>& right)
+    constexpr position2D<ValueType> operator-(const position2D<ValueType>& left,
+                                              const position2D<ValueType>& right)
     {
       auto result = left;
       result -= right;
@@ -87,15 +90,15 @@ namespace skui
     }
 
     template<typename ValueType>
-    bool operator==(const position2D<ValueType>& left,
-                    const position2D<ValueType>& right)
+    constexpr bool operator==(const position2D<ValueType>& left,
+                              const position2D<ValueType>& right)
     {
       return std::tie(left.x, left.y) == std::tie(right.x, right.y);
     }
 
     template<typename ValueType>
-    bool operator!=(const position2D<ValueType>& left,
-                    const position2D<ValueType>& right)
+    constexpr bool operator!=(const position2D<ValueType>& left,
+                              const position2D<ValueType>& right)
     {
       return !(left == right);
     }
@@ -104,6 +107,32 @@ namespace skui
     using pixel_position = position2D<std::int32_t>;
     using scalar_position = position2D<scalar>;
   }
+}
+
+namespace std
+{
+  template<typename ValueType>
+  struct numeric_limits<skui::graphics::position2D<ValueType>> : std::numeric_limits<ValueType>
+  {
+  private:
+    using position = skui::graphics::position2D<ValueType>;
+    using base = std::numeric_limits<ValueType>;
+
+  public:
+  public:
+    static constexpr position min()
+    {
+      return { base::min(), base::min() };
+    }
+    static constexpr position lowest()
+    {
+      return { base::lowest(), base::lowest() };
+    }
+    static constexpr position max()
+    {
+      return { base::max(), base::max() };
+    }
+  };
 }
 
 #endif

@@ -24,18 +24,30 @@
 
 #include "test.h++"
 
+#include "graphics/composite_value_tests.h++"
+
 #include <graphics/position.h++>
 
 namespace
 {
   using skui::test::check;
 
+  using int_position = skui::graphics::position2D<int>;
+
+  void test_constructor()
+  {
+    int_position position{1,2};
+
+    check(position.x == 1, "constructor sets width correctly.");
+    check(position.y == 2, "constructor sets height correctly.");
+  }
+
   void test_addition_subtraction()
   {
-    skui::graphics::pixel_position position{1,2};
+    int_position position{1,2};
 
-    check((position + position) == skui::graphics::pixel_position{2,4}, "operator+ does the right thing");
-    check((position - position) == skui::graphics::pixel_position{0,0}, "operator- does the right thing");
+    check((position + position) == int_position{2,4}, "operator+ does the right thing");
+    check((position - position) == int_position{0,0}, "operator- does the right thing");
 
     position += {1,2};
 
@@ -49,7 +61,12 @@ namespace
 
 int main()
 {
+  test_constructor();
   test_addition_subtraction();
+
+
+  skui::test::run_all_composite_value_tests<int_position>();
+
 
   return skui::test::exit_code;
 }
