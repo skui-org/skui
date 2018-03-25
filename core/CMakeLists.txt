@@ -45,6 +45,9 @@ set(core_src
 set(traits_src
     traits/arity.h++
    )
+set(utility_src
+    utility/bound.h++
+   )
 source_group(core FILES ${core_src})
 source_group(traits FILES ${traits_src})
 

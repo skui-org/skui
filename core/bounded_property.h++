@@ -32,6 +32,7 @@
 #define SKUI_CORE_BOUNDED_PROPERTY_H
 
 #include "core/property.h++"
+#include "core/utility/bound.h++"
 
 #include <limits>
 
@@ -88,8 +89,7 @@ namespace skui
 
       bounded_property& operator=(const_reference other)
       {
-        //value = std::clamp(other, minimum, maximum);
-        value = std::max(minimum, std::min(other, maximum));
+        value = bound<value_type>{}(other, minimum, maximum);
 
         return *this;
       }
@@ -111,11 +111,12 @@ namespace skui
 
     private:
       property<T> value;
+
       T minimum;
       T maximum;
 
-      // This one needs to come after the thing it references (property<T> value)
     public:
+      // This one needs to come after the thing it references (property<T> value)
       signal<const_reference>& value_changed;
     };
 
