@@ -30,6 +30,7 @@
 #ifndef SKUI_GUI_BOUNDING_BOX_H
 #define SKUI_GUI_BOUNDING_BOX_H
 
+#include <cstdint>
 #include <vector>
 
 namespace skui

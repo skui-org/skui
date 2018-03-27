@@ -28,9 +28,9 @@
 
 namespace
 {
-  void f();
-  void g(int);
-  void h(...);
+  void f() {}
+  void g(int) {}
+  //void h(...) {}
 
   const auto l = []{};
   const auto l_int = [](int){};
