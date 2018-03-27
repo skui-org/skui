@@ -32,6 +32,8 @@
 
 #include "graphics/scalar.h++"
 
+#include <core/utility/bound.h++>
+
 #include <limits>
 #include <tuple>
 
@@ -107,6 +109,26 @@ namespace skui
     using pixel_position = position2D<std::int32_t>;
     using scalar_position = position2D<scalar>;
   }
+
+  namespace core
+  {
+    template<typename ValueType>
+    struct bound<graphics::position2D<ValueType>>
+    {
+    private:
+      using position = graphics::position2D<ValueType>;
+      using value_type = typename position::value_type;
+
+    public:
+      constexpr position operator()(const position& value,
+                                    const position& min,
+                                    const position& max) const
+      {
+        return {bound<value_type>{}(value.x, min.x, max.x),
+                bound<value_type>{}(value.y, min.y, max.y)};
+      }
+    };
+  }
 }
 
 namespace std
@@ -118,7 +140,6 @@ namespace std
     using position = skui::graphics::position2D<ValueType>;
     using base = std::numeric_limits<ValueType>;
 
-  public:
   public:
     static constexpr position min()
     {

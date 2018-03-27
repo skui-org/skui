@@ -25,6 +25,8 @@
 #ifndef SKUI_TEST_COMPOSITE_VALUE_TESTS_H
 #define SKUI_TEST_COMPOSITE_VALUE_TESTS_H
 
+#include <core/utility/bound.h++>
+
 namespace skui
 {
   namespace test
@@ -62,10 +64,45 @@ namespace skui
     }
 
     template<typename CompositeValueType>
+    void test_bound()
+    {
+      constexpr skui::core::bound<CompositeValueType> bound;
+
+      static_assert(bound({-1, -1}, {0, 0}, {2, 2}) == CompositeValueType{0, 0});
+      static_assert(bound({-1,  0}, {0, 0}, {2, 2}) == CompositeValueType{0, 0});
+      static_assert(bound({-1,  1}, {0, 0}, {2, 2}) == CompositeValueType{0, 1});
+      static_assert(bound({-1,  2}, {0, 0}, {2, 2}) == CompositeValueType{0, 2});
+      static_assert(bound({-1,  3}, {0, 0}, {2, 2}) == CompositeValueType{0, 2});
+      static_assert(bound({ 0, -1}, {0, 0}, {2, 2}) == CompositeValueType{0, 0});
+      static_assert(bound({ 0,  0}, {0, 0}, {2, 2}) == CompositeValueType{0, 0});
+      static_assert(bound({ 0,  1}, {0, 0}, {2, 2}) == CompositeValueType{0, 1});
+      static_assert(bound({ 0,  2}, {0, 0}, {2, 2}) == CompositeValueType{0, 2});
+      static_assert(bound({ 0,  3}, {0, 0}, {2, 2}) == CompositeValueType{0, 2});
+      static_assert(bound({ 1, -1}, {0, 0}, {2, 2}) == CompositeValueType{1, 0});
+      static_assert(bound({ 1,  0}, {0, 0}, {2, 2}) == CompositeValueType{1, 0});
+      static_assert(bound({ 1,  1}, {0, 0}, {2, 2}) == CompositeValueType{1, 1});
+      static_assert(bound({ 1,  2}, {0, 0}, {2, 2}) == CompositeValueType{1, 2});
+      static_assert(bound({ 1,  3}, {0, 0}, {2, 2}) == CompositeValueType{1, 2});
+      static_assert(bound({ 2, -1}, {0, 0}, {2, 2}) == CompositeValueType{2, 0});
+      static_assert(bound({ 2,  0}, {0, 0}, {2, 2}) == CompositeValueType{2, 0});
+      static_assert(bound({ 2,  1}, {0, 0}, {2, 2}) == CompositeValueType{2, 1});
+      static_assert(bound({ 2,  2}, {0, 0}, {2, 2}) == CompositeValueType{2, 2});
+      static_assert(bound({ 2,  3}, {0, 0}, {2, 2}) == CompositeValueType{2, 2});
+      static_assert(bound({ 3, -1}, {0, 0}, {2, 2}) == CompositeValueType{2, 0});
+      static_assert(bound({ 3,  0}, {0, 0}, {2, 2}) == CompositeValueType{2, 0});
+      static_assert(bound({ 3,  1}, {0, 0}, {2, 2}) == CompositeValueType{2, 1});
+      static_assert(bound({ 3,  2}, {0, 0}, {2, 2}) == CompositeValueType{2, 2});
+      static_assert(bound({ 3,  3}, {0, 0}, {2, 2}) == CompositeValueType{2, 2});
+
+
+    }
+
+    template<typename CompositeValueType>
     void run_all_composite_value_tests()
     {
       test_equality_operators<CompositeValueType>();
       test_numeric_limits<CompositeValueType>();
+      test_bound<CompositeValueType>();
     }
   }
 }
