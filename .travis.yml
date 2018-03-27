@@ -75,7 +75,29 @@ matrix:
       before_install:
         - . ./ci/setup_cmake.sh 3.8.2 Linux
         - . ./ci/setup_ninja.sh 1.8.2 linux
-        - . ./ci/setup_libcxx.sh 5.0.0
+        - . ./ci/setup_libcxx.sh 5.0.1
+    - os: linux
+      compiler: clang-6.0
+      env:
+        - C_COMPILER=clang-6.0
+        - CXX_COMPILER=clang++-6.0
+      addons:
+        apt:
+          packages:
+            - ninja
+            - clang-6.0
+            - libgl1-mesa-dev
+            - libegl1-mesa-dev
+            - libgles2-mesa-dev
+            - libxcb-util0-dev
+            - libxcb-image0-dev
+          sources:
+            - sourceline: 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-6.0 main'
+              key_url: 'http://apt.llvm.org/llvm-snapshot.gpg.key'
+      before_install:
+        - . ./ci/setup_cmake.sh 3.8.2 Linux
+        - . ./ci/setup_ninja.sh 1.8.2 linux
+        - . ./ci/setup_libcxx.sh 6.0.0
     - os: osx
       osx_image: xcode9.2
       env:
@@ -84,4 +106,13 @@ matrix:
       before_install:
         - . ./ci/setup_cmake.sh 3.8.2 Darwin
         - . ./ci/setup_ninja.sh 1.8.2 mac
-        - . ./ci/setup_libcxx.sh 5.0.0
+        - . ./ci/setup_libcxx.sh 5.0.1
+    - os: osx
+      osx_image: xcode9.2
+      env:
+        - C_COMPILER=clang
+        - CXX_COMPILER=clang++
+      before_install:
+        - . ./ci/setup_cmake.sh 3.8.2 Darwin
+        - . ./ci/setup_ninja.sh 1.8.2 mac
+        - . ./ci/setup_libcxx.sh 6.0.0
