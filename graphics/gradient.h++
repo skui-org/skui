@@ -44,6 +44,7 @@ namespace skui
     class gradient
     {
     public:
+      virtual ~gradient() = 0;
       const gradient_type type;
 
     protected:

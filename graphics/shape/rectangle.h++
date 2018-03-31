@@ -43,6 +43,7 @@ namespace skui
     {
     public:
       rectangle(scalar_size size);
+      ~rectangle() override;
 
       void draw(canvas& canvas,
                 const scalar_position& position) const override;

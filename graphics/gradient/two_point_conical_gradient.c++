@@ -40,5 +40,7 @@ namespace skui
       , end_radius(end_radius)
       , colors(colors)
     {}
+
+    two_point_conical_gradient::~two_point_conical_gradient() = default;
   }
 }

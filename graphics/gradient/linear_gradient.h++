@@ -46,6 +46,7 @@ namespace skui
       linear_gradient(std::vector<scalar_position> points,
                       std::vector<color> colors,
                       std::vector<scalar> positions = {});
+      ~linear_gradient() override;
 
       const std::vector<scalar_position> points;
       const std::vector<color> colors;

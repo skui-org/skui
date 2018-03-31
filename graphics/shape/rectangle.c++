@@ -34,6 +34,8 @@ namespace skui
       : size(size)
     {}
 
+    rectangle::~rectangle() = default;
+
     void rectangle::draw(canvas& canvas,
                          const scalar_position& position) const
     {

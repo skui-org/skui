@@ -22,10 +22,12 @@
  * THE SOFTWARE.
  **/
 
+#include "graphics/context.h++"
+
 namespace skui
 {
   namespace graphics
   {
-
+    context::~context() = default;
   }
 }

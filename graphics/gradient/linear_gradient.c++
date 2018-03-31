@@ -36,5 +36,7 @@ namespace skui
        , colors(colors)
        , positions(positions)
       {}
+
+      linear_gradient::~linear_gradient() = default;
   }
 }

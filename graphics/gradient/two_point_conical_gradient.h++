@@ -48,6 +48,7 @@ namespace skui
                                  scalar_position end,
                                  scalar end_radius,
                                  std::vector<color> colors);
+      ~two_point_conical_gradient() override;
 
       scalar_position start;
       scalar start_radius;

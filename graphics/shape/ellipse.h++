@@ -43,6 +43,7 @@ namespace skui
     {
     public:
       ellipse(scalar_size axes);
+      ~ellipse() override;
 
       void draw(canvas& canvas,
                 const scalar_position& position) const override;

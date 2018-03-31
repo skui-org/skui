@@ -46,7 +46,6 @@ namespace skui
     {
     public:
       scene();
-      ~scene();
 
       color background_color{colors::white};
 

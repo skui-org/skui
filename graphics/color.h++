@@ -29,8 +29,6 @@
 #ifndef SKUI_GRAPHICS_COLOR_H
 #define SKUI_GRAPHICS_COLOR_H
 
-#include "color.h++"
-
 #include <cstdint>
 
 namespace skui

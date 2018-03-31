@@ -27,10 +27,12 @@
 namespace skui
 {
   namespace graphics
-  {    
+  {
     gradient::gradient(gradient_type type)
       : type(type)
     {}
+
+    gradient::~gradient() = default;
   }
 }
 

@@ -36,5 +36,7 @@ namespace skui
       , colors(colors)
       , positions(positions)
     {}
+
+    sweep_gradient::~sweep_gradient() = default;
   }
 }

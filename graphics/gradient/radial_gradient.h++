@@ -47,6 +47,7 @@ namespace skui
                       scalar radius,
                       std::vector<color> colors,
                       std::vector<scalar> positions = {});
+      ~radial_gradient() override;
 
       scalar_position center;
       scalar radius;

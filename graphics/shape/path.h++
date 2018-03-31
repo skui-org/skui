@@ -39,6 +39,7 @@ namespace skui
     {
     public:
       path();
+      ~path() override;
     };
   }
 }

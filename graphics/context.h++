@@ -41,7 +41,7 @@ namespace skui
     class context
     {
     public:
-      virtual ~context() = default;
+      virtual ~context() = 0;
 
       virtual std::unique_ptr<canvas> create_canvas(const pixel_size& size,
                                                     canvas_flags flags) const = 0;

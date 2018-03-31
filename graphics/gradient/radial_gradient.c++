@@ -38,5 +38,7 @@ namespace skui
       , colors(colors)
       , positions(positions)
     {}
+
+    radial_gradient::~radial_gradient() = default;
   }
 }

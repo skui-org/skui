@@ -35,6 +35,8 @@ namespace skui
 {
   namespace graphics
   {
+    canvas::~canvas() = default;
+
     canvas::canvas(canvas_flags flags)
       : flags(flags)
     {}

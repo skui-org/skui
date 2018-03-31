@@ -34,6 +34,8 @@ namespace skui
       : axes(axes)
     {}
 
+    ellipse::~ellipse() = default;
+
     void ellipse::draw(skui::graphics::canvas& canvas,
                        const scalar_position& position) const
     {

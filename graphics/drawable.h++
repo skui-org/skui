@@ -42,7 +42,7 @@ namespace skui
     {
     public:
       drawable();
-      virtual ~drawable();
+      virtual ~drawable() = 0;
 
       virtual void draw(canvas& canvas,
                         const scalar_position& position) const = 0;

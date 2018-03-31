@@ -46,6 +46,7 @@ namespace skui
       sweep_gradient(scalar_position center,
                      std::vector<color> colors,
                      std::vector<scalar> positions = {});
+      ~sweep_gradient() override;
 
       scalar_position center;
       std::vector<color> colors;

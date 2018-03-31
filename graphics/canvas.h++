@@ -54,7 +54,7 @@ namespace skui
     class  canvas
     {
     public:
-      virtual ~canvas() = default;
+      virtual ~canvas() = 0;
 
       // Primitives
       virtual void draw(const color& background_color) = 0;

@@ -31,7 +31,5 @@ namespace skui
   namespace graphics
   {
     scene::scene() = default;
-
-    scene::~scene() = default;
   }
 }

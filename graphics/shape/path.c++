@@ -29,5 +29,7 @@ namespace skui
   namespace graphics
   {
     path::path() = default;
+
+    path::~path() = default;
   }
 }
