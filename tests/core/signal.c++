@@ -135,8 +135,9 @@ namespace
 
   struct parent : public skui::core::trackable
   {
-    virtual ~parent() = default;
-    virtual void f() const {};
+    ~parent() override = default;
+
+    virtual void f() const {}
     virtual void g(int) const = 0;
     virtual void h() { slot_called = true; }
 
@@ -144,7 +145,8 @@ namespace
   };
   struct mock : public parent
   {
-    mock() = default;
+    ~mock() override = default;
+
     void f() const override { slot_called = true; }
     void g(int) const override { slot_called = true; }
   };

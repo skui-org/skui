@@ -45,8 +45,6 @@ namespace
 
   struct mock
   {
-    mock() {}
-
     void m() { called = 1; }
     void m() const { const_called = 11; }
     void m_arg(int i) { called = i; }

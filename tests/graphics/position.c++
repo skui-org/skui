@@ -64,9 +64,7 @@ int main()
   test_constructor();
   test_addition_subtraction();
 
-
   skui::test::run_all_composite_value_tests<int_position>();
-
 
   return skui::test::exit_code;
 }

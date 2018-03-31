@@ -51,13 +51,13 @@ namespace
   void test_value_ptr_constructors_get()
   {
     {
-      Derived* derived = new Derived;
+      auto* derived = new Derived;
       skui::core::value_ptr<Derived> derived_ptr(derived);
 
       check(derived_ptr.get() == derived, "constructor stores pointer");
     }
     {
-      Derived* derived = new Derived;
+      auto* derived = new Derived;
       skui::core::value_ptr<Base> base_ptr(derived);
 
       check(base_ptr.get() == derived, "value_ptr<Base> correctly constructed from derived");

@@ -30,7 +30,7 @@
 #define EXPORT
 #endif
 
-const char test_string[] = "test string";
+const char* test_string = "test string";
 
 extern "C" EXPORT const char* library_function()
 {
