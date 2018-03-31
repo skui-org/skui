@@ -22,32 +22,30 @@
  * THE SOFTWARE.
  **/
 
-#include "property_tests.h++"
+#include "test.h++"
 
-#include "core/bounded_property.h++"
+#include <core/proxy_map.h++>
+
+#include <map>
 
 namespace
 {
   using skui::test::check;
-  void test_boundedness()
+  using skui::test::require;
+
+  void test_set_get()
   {
-    skui::core::bounded_property<int> property(0, 0, 1);
+      std::map<int, int> map;
+      skui::core::proxy_map<int, int> proxy_map([&map](int key) { return map[key]; },
+                                                [&map](int key, int value) { map[key] = value; });
 
-    bool slot_called = false;
-    const auto slot = [&slot_called](int) { slot_called = true; };
-    property.value_changed.connect(slot);
-
-    property = 2;
-    check(property == 1, "Assigning out of bounds value does not emit changed signal.");
-    check(slot_called, "Assigning out of bounds value does not emit changed signal.");
+      map[42] = 41;
   }
 }
 
 int main()
 {
-  skui::test::run_all_property_tests<skui::core::bounded_property<int>>();
-
-  test_boundedness();
+  test_set_get();
 
   return skui::test::exit_code;
 }

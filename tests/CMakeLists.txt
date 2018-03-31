@@ -24,7 +24,7 @@
 #
 
 function(runtime_test component test_name)
-  set(test_src ${component}/${test_name}.c++)
+  set(test_src ${component}/${test_name}.test.c++)
   source_group("" FILES ${test_src})
   string(REPLACE "/" "_" test_target_name ${test_name})
   add_executable(${test_target_name} ${test_src})
@@ -43,7 +43,7 @@ function(runtime_test component test_name)
 endfunction()
 
 function(compile_test component test_name)
-  set(test_src ${component}/${test_name}.c++ ${CMAKE_CURRENT_LIST_DIR}/test.h++)
+  set(test_src ${component}/${test_name}.test.c++ ${CMAKE_CURRENT_LIST_DIR}/test.h++)
   source_group("" FILES ${test_src})
   add_executable(${test_name} ${test_src})
   set_target_properties(${test_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${component}
@@ -57,7 +57,7 @@ function(compile_test component test_name)
 endfunction()
 
 function(compile_test_library component test_name)
-  set(test_src ${component}/${test_name}.c++ ${CMAKE_CURRENT_LIST_DIR}/test.h++)
+  set(test_src ${component}/${test_name}.test.c++ ${CMAKE_CURRENT_LIST_DIR}/test.h++)
   source_group("" FILES ${test_src})
   add_library(${test_name} SHARED ${test_src})
   set_target_properties(${test_name} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${component}
@@ -95,7 +95,7 @@ runtime_test(core proxy_property)
 compile_test(core application)
 add_test(NAME run/core/application COMMAND core/application "skui is awesome")
 compile_test_library(core library_lib)
-runtime_test(core library)
+runtime_test(core library DEPENDS library_lib)
 runtime_test(core command)
 runtime_test(core command_queue)
 runtime_test(core event_loop)
@@ -108,3 +108,5 @@ runtime_test(core utility/bound)
 runtime_test(graphics position)
 runtime_test(graphics size)
 runtime_test(graphics swizzle)
+
+runtime_test(gui layout)
