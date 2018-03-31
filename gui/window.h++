@@ -61,7 +61,7 @@ namespace skui
              graphics::pixel_size initial_size = {800, 600},
              window_flags flags = default_flags);
       explicit window(window_flags flags);
-      virtual ~window();
+      ~window() override;
 
       void show();
       void hide();

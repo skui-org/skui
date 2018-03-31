@@ -65,12 +65,12 @@ namespace skui
 
         void create(const graphics::pixel_position& position,
                     const graphics::pixel_size& size) override;
-        void show() override final;
-        void hide() override final;
-        void close() override final;
+        void show() final;
+        void hide() final;
+        void close() final;
 
-        core::string get_title() const override final;
-        void set_title(const core::string& title) override final;
+        core::string get_title() const final;
+        void set_title(const core::string& title) final;
         void get_current_geometry(graphics::pixel_position& position,
                                   graphics::pixel_size& size) const override;
 

@@ -43,9 +43,9 @@ namespace skui
       ~layout() override;
 
       void draw(graphics::canvas& canvas,
-                const graphics::scalar_position& position) const final override;
+                const graphics::scalar_position& position) const final;
 
-      graphics::scalar_size implicit_size() const final override;
+      graphics::scalar_size implicit_size() const final;
 
       std::vector<std::unique_ptr<element>> children;
 
