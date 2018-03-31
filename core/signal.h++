@@ -70,15 +70,15 @@ namespace skui
           , slots(other.slots.begin(), other.slots.end())
         {}
 
-        signal_base(signal_base&& other) : slots(std::move(other.slots)) {}
+        signal_base(signal_base&& other) noexcept : slots(std::move(other.slots)) {}
         signal_base& operator=(signal_base other) { swap(slots, other.slots); return *this; }
 
-        virtual void trackable_deleted(const trackable* tracker) override
+        void trackable_deleted(const trackable* tracker) override
         {
           disconnect(tracker);
         }
 
-        virtual void trackable_moved(const trackable* old_object, const trackable* new_object) override
+        void trackable_moved(const trackable* old_object, const trackable* new_object) override
         {
           mutex_lock lock(slots_mutex);
           for(auto& object_slot : slots)
@@ -88,7 +88,7 @@ namespace skui
           }
         }
 
-        virtual void trackable_copied(const trackable* old_object, const trackable* new_object) override
+        void trackable_copied(const trackable* old_object, const trackable* new_object) override
         {
           mutex_lock lock(slots_mutex);
           for(const auto& object_slot : slots)

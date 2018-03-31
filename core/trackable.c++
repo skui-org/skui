@@ -55,7 +55,7 @@ namespace skui
       }
     }
 
-    trackable::trackable(trackable&& other)
+    trackable::trackable(trackable&& other) noexcept
     : trackers(other.trackers)
     {
       for(auto tracker : trackers)

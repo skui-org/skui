@@ -53,6 +53,8 @@ namespace skui
       implementation::instance = this;
     }
 
+    application::~application() = default;
+
     application& application::instance()
     {
       if(implementation::instance == nullptr)

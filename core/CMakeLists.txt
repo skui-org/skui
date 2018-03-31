@@ -24,10 +24,10 @@
 
 # Common source files
 set(core_src
-    application.h++ application.c++ application_windows.c++ application_unix.c++
+    application.h++ application.c++
     bitflag.h++
     bounded_property.h++
-    command.h++
+    command.h++ command.c++
     command_queue.h++ command_queue.c++
     debug.h++
     event_loop.h++ event_loop.c++
@@ -37,7 +37,7 @@ set(core_src
     proxy_property.h++
     signal.h++
     slot.h++
-    string.h++ string.c++
+    string.h++
     trackable.h++ trackable.c++
     utility.h++ utility.c++
     value_ptr.h++
@@ -54,13 +54,11 @@ source_group(traits FILES ${traits_src})
 # Platform-specific files
 if(NOT WIN32)
   exclude_from_build(
-                     application_windows.c++
                      library_windows.c++
                     )
 endif()
 if(NOT UNIX)
   exclude_from_build(
-                     application_unix.c++
                      library_unix.c++
                     )
   if(NOT APPLE)

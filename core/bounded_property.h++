@@ -69,7 +69,7 @@ namespace skui
         , maximum(other.maximum)
         , value_changed(value.value_changed)
       {}
-      bounded_property(bounded_property&& other)
+      bounded_property(bounded_property&& other) noexcept
         : value(std::move(other.value))
         , minimum(std::move(other.minimum))
         , maximum(std::move(other.maximum))

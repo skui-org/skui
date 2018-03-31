@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright © 2017-2018 Ruben Van Boxem
+ * Copyright © 2018 Ruben Van Boxem
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,26 +22,21 @@
  * THE SOFTWARE.
  **/
 
-/*
- * Win32-specific implementation of application class/
- */
-
-#include "core/application.h++"
-
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <shellapi.h>
-
-#include <codecvt>
-#include <cstdlib>
-#include <iostream>
-#include <locale>
-#include <string>
-#include <vector>
+#include "core/command.h++"
 
 namespace skui
 {
   namespace core
   {
+    command::command()
+     : function([](){})
+    {}
+
+    command::~command() = default;
+
+    void command::execute()
+    {
+       function();
+    }
   }
 }

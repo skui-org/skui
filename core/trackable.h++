@@ -64,7 +64,7 @@ namespace skui
       virtual ~trackable();
 
       trackable(const trackable& other);
-      trackable(trackable&& other);
+      trackable(trackable&& other) noexcept;
       trackable& operator=(trackable other);
 
       void track(implementation::tracker* tracker) const;

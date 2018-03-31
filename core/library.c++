@@ -35,7 +35,7 @@ namespace skui
       bool unload(void*);
     }
     library::library(path filename)
-      : filename(filename)
+      : filename(std::move(filename))
       , native_handle(nullptr)
     {}
 

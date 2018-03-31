@@ -34,15 +34,16 @@ namespace skui
     class command
     {
     public:
-      command() : function([](){}) {}
+      command();
 
       template<typename Callable, typename... ArgTypes>
       command(Callable callable, ArgTypes... args)
         : function([callable, args...](){ return callable(args...); })
       {}
 
-      virtual ~command() = default;
-      virtual void execute() { function(); }
+      virtual ~command();
+
+      virtual void execute();
 
     private:
       std::function<void()> function;

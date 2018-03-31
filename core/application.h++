@@ -47,6 +47,7 @@ namespace skui
     {
     public:
       application(int argc, char* argv[], string name = "");
+      ~application() override;
 
       const std::vector<string> commandline_arguments;
 
