@@ -52,6 +52,7 @@ set(utility_src
    )
 source_group(core FILES ${core_src})
 source_group(traits FILES ${traits_src})
+source_group(utility FILES ${utility_src})
 
 # Platform-specific files
 if(NOT WIN32)
@@ -73,7 +74,10 @@ if(MINGW OR APPLE)
 endif()
 
 # The library itself
-add_library(core ${core_src})
+add_library(core
+            ${core_src}
+            ${traits_src}
+            ${utility_src})
 target_include_directories(core PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>)
 target_compile_definitions(core PUBLIC $<$<CONFIG:Debug>:SKUI_DEBUG>)
 target_link_libraries(core PUBLIC $<$<PLATFORM_ID:Linux>:-pthread>
