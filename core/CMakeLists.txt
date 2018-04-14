@@ -46,6 +46,7 @@ set(traits_src
     traits/arity.h++
    )
 set(utility_src
+    utility/approximate_equal_to.h++
     utility/bound.h++
     utility/norm.h++
    )
