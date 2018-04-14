@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright © 2018 Ruben Van Boxem
+ * Copyright © 2017-2018 Ruben Van Boxem
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,32 +22,27 @@
  * THE SOFTWARE.
  **/
 
-/*
- * Bound
- * Generalization of std::clamp allowing for specializations for user-defined types.
- */
+#include "test.h++"
 
-#ifndef SKUI_CORE_UTILITY_BOUND_H
-#define SKUI_CORE_UTILITY_BOUND_H
+#include <core/utility/norm.h++>
 
-#include <algorithm>
-
-namespace skui
+namespace
 {
-  namespace core
+  using skui::test::check;
+
+  void test_norm_int()
   {
-    //! \brief Bounds \param value between \param lower_bound and \param upper_bound.
-    template<typename T>
-    struct bound
-    {
-      constexpr T operator()(const T& value,
-                             const T& lower_bound,
-                             const T& upper_bound) const
-      {
-        return std::clamp(value, lower_bound, upper_bound);
-      }
-    };
+    constexpr skui::core::norm<int> norm;
+
+    check(norm(-1) == 1, "norm of negative value is positive");
+    check(norm(0) == 0, "norm of zero is zero");
+    check(norm(1) == 1, "norm of positive value is positive");
   }
 }
 
-#endif
+int main()
+{
+  test_norm_int();
+
+  return skui::test::exit_code;
+}

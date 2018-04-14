@@ -23,31 +23,30 @@
  **/
 
 /*
- * Bound
- * Generalization of std::clamp allowing for specializations for user-defined types.
+ * Norm
+ * General size comparison reduction operation that can be specialized for user defined types..
  */
 
-#ifndef SKUI_CORE_UTILITY_BOUND_H
-#define SKUI_CORE_UTILITY_BOUND_H
+#ifndef SKUI_CORE_UTILITY_NORM_H
+#define SKUI_CORE_UTILITY_NORM_H
 
 #include <algorithm>
+#include <cmath>
 
 namespace skui
 {
   namespace core
   {
-    //! \brief Bounds \param value between \param lower_bound and \param upper_bound.
-    template<typename T>
-    struct bound
+    template<typename ValueType>
+    struct norm
     {
-      constexpr T operator()(const T& value,
-                             const T& lower_bound,
-                             const T& upper_bound) const
+      constexpr ValueType operator()(const ValueType& value) const
       {
-        return std::clamp(value, lower_bound, upper_bound);
+        return std::abs(value);
       }
     };
   }
 }
+
 
 #endif

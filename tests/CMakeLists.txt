@@ -104,6 +104,7 @@ compile_test(core arity)
 runtime_test(core bounded_property)
 runtime_test(core utility)
 runtime_test(core utility/bound)
+runtime_test(core utility/norm)
 
 runtime_test(graphics position)
 runtime_test(graphics size)

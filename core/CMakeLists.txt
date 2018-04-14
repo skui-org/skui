@@ -47,6 +47,7 @@ set(traits_src
    )
 set(utility_src
     utility/bound.h++
+    utility/norm.h++
    )
 source_group(core FILES ${core_src})
 source_group(traits FILES ${traits_src})
