@@ -44,20 +44,20 @@ namespace skui
 
     static int exit_code = EXIT_SUCCESS;
     template<typename... ArgTypes>
-    void check(bool passed, ArgTypes... message)
+    void check(bool passed, ArgTypes&&... message)
     {
       if(!passed)
       {
-        print_error(message..., '\n');
+        print_error(std::forward<ArgTypes>(message)..., '\n');
         exit_code = EXIT_FAILURE;
       }
     }
     template<typename... ArgTypes>
-    void require(bool passed, ArgTypes... message)
+    void require(bool passed, ArgTypes&&... message)
     {
       if(!passed)
       {
-        print_error(message..., '\n');
+        print_error(std::forward<ArgTypes>(message)..., '\n');
         std::exit(EXIT_FAILURE);
       }
     }
