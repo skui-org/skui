@@ -45,8 +45,6 @@ namespace skui
       right_to_left = 4 | horizontal,
       top_to_bottom = vertical,
       bottom_to_top = 8 | vertical,
-
-      grid = 16
     };
   }
   namespace core

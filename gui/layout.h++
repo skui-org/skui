@@ -45,8 +45,6 @@ namespace skui
       void draw(graphics::canvas& canvas,
                 const graphics::scalar_position& position) const final;
 
-      graphics::scalar_size implicit_size() const final;
-
       std::vector<std::unique_ptr<element>> children;
 
       orientation_flags orientation = orientation::left_to_right;

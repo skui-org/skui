@@ -45,10 +45,5 @@ namespace skui
         children[i]->draw(canvas, position + child_offsets[i]);
       }
     }
-
-    graphics::scalar_size layout::implicit_size() const
-    {
-      return {};
-    }
   }
 }
