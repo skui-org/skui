@@ -34,8 +34,10 @@
 #include "graphics/scalar.h++"
 
 #include <core/utility/bound.h++>
+#include <core/utility/norm.h++>
 
 #include <limits>
+#include <cmath>
 
 namespace skui
 {
@@ -79,13 +81,21 @@ namespace skui
                 bound<ValueType>{}(value.height, lower_bound.height, upper_bound.height)};
       }
     };
+    template<typename ValueType>
+    struct norm<graphics::size2D<ValueType>>
+    {
+      constexpr ValueType operator()(const graphics::size2D<ValueType>& value) const
+      {
+        return std::abs(value.width)+std::abs(value.height);
+      }
+    };
   }
 }
 
 namespace std
 {
   template<typename ValueType>
-  class numeric_limits<skui::graphics::size2D<ValueType>> : numeric_limits<ValueType>
+  class numeric_limits<skui::graphics::size2D<ValueType>> : public numeric_limits<ValueType>
   {
   private:
     using size = skui::graphics::size2D<ValueType>;
