@@ -70,7 +70,16 @@ namespace
   {
   public:
     mock_layout(skui::gui::element_ptrs children = {}) : layout(std::move(children)) {}
+    template<typename... ElementPointerTypes>
+    mock_layout(ElementPointerTypes&&... element_pointers)
+      : layout(make_element_ptrs(std::forward<ElementPointerTypes>(element_pointers)...))
+    {}
     ~mock_layout() override = default;
+
+    skui::graphics::scalar_size implicit_size() const override
+    {
+      return {1, 2};
+    }
 
   private:
     std::vector<skui::graphics::scalar_position> calculate_child_offsets() const override
@@ -82,10 +91,9 @@ namespace
   void test_layout_draw_uses_calculate_offsets()
   {
     mock_canvas canvas;
-    mock_layout layout;
-    layout.children = skui::gui::make_element_ptrs(skui::gui::make<mock_element>(),
-                                                   skui::gui::make<mock_element>(),
-                                                   skui::gui::make<mock_element>());
+    mock_layout layout(std::make_unique<mock_element>(),
+                       std::make_unique<mock_element>(),
+                       std::make_unique<mock_element>());
 
     layout.draw(canvas, {5, 5});
 
