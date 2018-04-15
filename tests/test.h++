@@ -27,8 +27,11 @@
  * Skui testing helpers.
  */
 
+#include <core/utility/approximate_equal_to.h++>
+
 #include <cstdlib>
 #include <iostream>
+#include <limits>
 
 namespace skui
 {
@@ -61,5 +64,18 @@ namespace skui
         std::exit(EXIT_FAILURE);
       }
     }
+    template<typename ValueType, typename EpsilonType, typename... ArgTypes>
+    void check_close(const ValueType& left,
+                     const ValueType& right,
+                     EpsilonType& epsilon,
+                     ArgTypes&&... message)
+    {
+      static constexpr core::approximate_equal_to<ValueType, EpsilonType> approximate_equal_to;
+
+      check(approximate_equal_to(left, right, epsilon), std::forward<ArgTypes>(message)...);
+    }
+
+    template<typename ValueType>
+    constexpr auto epsilon = std::numeric_limits<ValueType>::epsilon();
   }
 }
