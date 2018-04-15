@@ -49,31 +49,27 @@ namespace skui
       using const_reference = std::add_lvalue_reference_t<std::add_const_t<T>>;
       using rvalue_reference = std::add_rvalue_reference_t<T>;
 
-      bounded_property(value_type initial_value = {})
-        : value(initial_value)
-        , minimum(std::numeric_limits<value_type>::lowest())
-        , maximum(std::numeric_limits<value_type>::max())
-        , value_changed(value.value_changed)
+      bounded_property(value_type initial_value,
+                       value_type initial_minimum,
+                       value_type initial_maximum)
+        : bounded_property(property<T>(std::move(initial_value)),
+                           property<T>(std::move(initial_minimum)),
+                           property<T>(std::move(initial_maximum)))
       {}
-      bounded_property(const_reference initial_value,
-                       const_reference initial_minimum,
-                       const_reference initial_maximum)
-        : value(initial_value)
-        , minimum(initial_minimum)
-        , maximum(initial_maximum)
-        , value_changed(value.value_changed)
+      bounded_property(value_type initial_value = {})
+        : bounded_property(std::move(initial_value),
+                           std::numeric_limits<value_type>::lowest(),
+                           std::numeric_limits<value_type>::max())
       {}
       bounded_property(const bounded_property& other)
-        : value(other.value)
-        , minimum(other.minimum)
-        , maximum(other.maximum)
-        , value_changed(value.value_changed)
+        : bounded_property(other.value,
+                           other.minimum,
+                           other.maximum)
       {}
       bounded_property(bounded_property&& other) noexcept
-        : value(std::move(other.value))
-        , minimum(std::move(other.minimum))
-        , maximum(std::move(other.maximum))
-        , value_changed(value.value_changed)
+        : bounded_property(std::move(other.value),
+                           std::move(other.minimum),
+                           std::move(other.maximum))
       {}
 
       bounded_property& operator=(bounded_property other)
@@ -116,11 +112,21 @@ namespace skui
 
       bool fixed() const { return minimum == maximum; }
 
-    private:
-      property<T> value;
+      const property<T> minimum;
+      const property<T> maximum;
 
-      T minimum;
-      T maximum;
+    private:
+      bounded_property(property<T> initial_value,
+                       property<T> initial_minimum,
+                       property<T> initial_maximum)
+        : value(std::move(initial_value))
+        // these ensure changing a minimum/maximum bounds the value within the new bounds
+        , minimum(std::move(initial_minimum), [this](value_type) { *this = static_cast<value_type>(value); })
+        , maximum(std::move(initial_maximum), [this](value_type) { *this = static_cast<value_type>(value); })
+        , value_changed(value.value_changed)
+      {}
+
+      property<T> value;
 
     public:
       // This one needs to come after the thing it references (property<T> value)

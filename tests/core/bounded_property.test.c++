@@ -32,7 +32,7 @@ namespace
 {
   using skui::test::check;
 
-  void test_boundedness()
+  void test_bounding()
   {
     skui::core::bounded_property<int> property(0, 0, 1);
 
@@ -49,7 +49,27 @@ namespace
   {
     skui::core::bounded_property<int> property;
 
-    check(property.maximum == std::numeric_limits<int>::max(), "default maximum is ");
+    check(property.maximum == std::numeric_limits<int>::max(), "default maximum is largest value");
+    check(property.minimum == std::numeric_limits<int>::lowest(), "default minimum is smallest value");
+  }
+
+  void test_minimum_maximum()
+  {
+    skui::core::bounded_property<int> property(2);
+
+    property.minimum = 1;
+
+    check(property == 2, "setting minimum below current value does not change value");
+
+    property.maximum = 1;
+
+    check(property == 1, "setting maximum below current value clamps value");
+  }
+
+  void test_fixed()
+  {
+    skui::core::bounded_property<int> property(0, 0, 0);
+    check(property.fixed(), "property is fixed when minimum == maximum");
   }
 }
 
@@ -57,8 +77,10 @@ int main()
 {
   skui::test::run_all_property_tests<skui::core::bounded_property<int>>();
 
+  test_bounding();
   test_initial_bounds();
-  test_boundedness();
+  test_minimum_maximum();
+  test_fixed();
 
   return skui::test::exit_code;
 }
