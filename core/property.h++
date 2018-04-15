@@ -51,7 +51,11 @@ namespace skui
       using rvalue_reference = std::add_rvalue_reference_t<T>;
 
       property() = default;
-      property(const_reference value_) : value(value_) {}
+      template<typename... SlotTypes>
+      property(value_type value, SlotTypes&&... slots) : value(std::move(value))
+      {
+        (value_changed.connect(std::forward<SlotTypes>(slots)), ...);
+      }
 
       property& operator=(const_reference other)
       {

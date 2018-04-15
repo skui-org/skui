@@ -26,9 +26,27 @@
 
 #include "core/property.h++"
 
+namespace
+{
+  using skui::test::check;
+
+  void test_construct_with_slots()
+  {
+    bool changed = false;
+    auto property_changed = [&changed] { changed = true; };
+    skui::core::property<int> property(0, property_changed);
+
+    property = 1;
+
+    check(changed, "slot passed to constructor connected");
+  }
+}
+
 int main()
 {
   skui::test::run_all_property_tests<skui::core::property<int>>();
+
+  test_construct_with_slots();
 
   return skui::test::exit_code;
 }
