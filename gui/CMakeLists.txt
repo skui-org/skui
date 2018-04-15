@@ -57,7 +57,9 @@ set(events_src
    )
 set(layout_src
     layout/alignment.h++
+    layout/column.h++ layout/column.c++
     layout/orientation.h++
+    layout/row.h++ layout/row.c++
    )
 set(native_window_src
     native_window/appkit.h++ native_window/appkit.c++
