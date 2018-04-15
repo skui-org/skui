@@ -50,6 +50,13 @@ namespace skui
 
       value_type width;
       value_type height;
+
+      constexpr size2D& operator+=(const size2D& other);
+      constexpr size2D& operator-=(const size2D& other);
+      template<typename FactorType>
+      constexpr size2D& operator*=(const FactorType& factor);
+      template<typename FactorType>
+      constexpr size2D& operator/=(const FactorType& factor);
     };
 
     template<typename ValueType>
@@ -61,6 +68,60 @@ namespace skui
     constexpr bool operator!=(const size2D<ValueType>& left, const size2D<ValueType>& right)
     {
       return left.width != right.width || left.height != right.height;
+    }
+    template<typename ValueType>
+    constexpr size2D<ValueType>& size2D<ValueType>::operator+=(const size2D<ValueType>& other)
+    {
+      width += other.width;
+      height += other.height;
+
+      return *this;
+    }
+    template<typename ValueType>
+    constexpr size2D<ValueType>& size2D<ValueType>::operator-=(const size2D<ValueType>& other)
+    {
+      width -= other.width;
+      height -= other.height;
+
+      return *this;
+    }
+    template<typename ValueType>
+    template<typename FactorType>
+    constexpr size2D<ValueType>& size2D<ValueType>::operator*=(const FactorType& factor)
+    {
+      width *= factor;
+      height *= factor;
+
+      return *this;
+    }
+    template<typename ValueType>
+    template<typename FactorType>
+    constexpr size2D<ValueType>& size2D<ValueType>::operator/=(const FactorType& factor)
+    {
+      width /= factor;
+      height /= factor;
+
+      return *this;
+    }
+    template<typename ValueType>
+    constexpr size2D<ValueType> operator+(const size2D<ValueType>& left, const size2D<ValueType>& right)
+    {
+      return {left.width + right.width, left.height + right.height};
+    }
+    template<typename ValueType>
+    constexpr size2D<ValueType> operator-(const size2D<ValueType>& left, const size2D<ValueType>& right)
+    {
+      return {left.width - right.width, left.height - right.height};
+    }
+    template<typename ValueType, typename FactorType>
+    constexpr size2D<ValueType> operator*(const size2D<ValueType>& size, FactorType factor)
+    {
+      return {size.width*static_cast<ValueType>(factor), size.height*static_cast<ValueType>(factor)};
+    }
+    template<typename ValueType, typename FactorType>
+    constexpr size2D<ValueType> operator/(const size2D<ValueType>& size, FactorType factor)
+    {
+      return {size.width/static_cast<ValueType>(factor), size.height/static_cast<ValueType>(factor)};
     }
 
     // pixel here means "device independent pixel" aka scaled from 72dpi
