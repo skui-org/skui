@@ -47,6 +47,8 @@ namespace skui
 
       std::vector<std::unique_ptr<element>> children;
 
+      core::property<graphics::scalar> spacing;
+
       orientation_flags orientation = orientation::left_to_right;
       alignment child_alignment = alignment::center;
 
