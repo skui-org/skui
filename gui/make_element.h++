@@ -41,12 +41,6 @@ namespace skui
 {
   namespace gui
   {
-    template<typename ElementType, typename... ArgumentTypes>
-    std::unique_ptr<ElementType> make(ArgumentTypes&&... arguments)
-    {
-      return std::make_unique<ElementType>(std::forward<ArgumentTypes>(arguments)...);
-    }
-
     template<typename... ElementTypes>
     element_ptrs make_element_ptrs(std::unique_ptr<ElementTypes>&&... elements)
     {
