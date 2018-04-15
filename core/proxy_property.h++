@@ -75,6 +75,17 @@ namespace skui
         return *this;
       }
 
+      const proxy_property& operator=(const_reference& other) const
+      {
+        const bool changed = other != static_cast<const_reference>(*this);
+        if(set)
+          set(other);
+        if(changed)
+          value_changed.emit(other);
+
+        return *this;
+      }
+
       operator value_type() const { return get ? get() : value_type{}; }
 
       bool operator==(const_reference other) const { return get ? get() == other : false; }

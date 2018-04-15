@@ -62,7 +62,25 @@ namespace skui
 
         return *this;
       }
+      const property& operator=(const_reference other) const
+      {
+        const bool changed = value != other;
+        value = other;
+        if(changed)
+          value_changed.emit(value);
+
+        return *this;
+      }
       property& operator=(rvalue_reference other)
+      {
+        const bool changed = value != other;
+        value = std::move(other);
+        if(changed)
+          value_changed.emit(value);
+
+        return *this;
+      }
+      const property& operator=(rvalue_reference other) const
       {
         const bool changed = value != other;
         value = std::move(other);
@@ -87,8 +105,9 @@ namespace skui
 
       signal<const_reference> value_changed;
 
-      private:
-        value_type value;
+    private:
+      // mutable because a property<non-const T> can be assigned a value
+      mutable value_type value;
     };
 
     template<typename ValueType>

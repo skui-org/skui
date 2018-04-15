@@ -167,13 +167,28 @@ namespace skui
     }
 
     template<typename PropertyType>
+    void test_assign_to_const_property()
+    {
+      bool signal_called = false;
+      PropertyType property(1);
+      property.value_changed.connect([&signal_called] { signal_called = true; });
+
+      const PropertyType& const_property = property;
+
+      const_property = 2;
+
+      check(signal_called, "can assign const property<T>");
+    }
+
+    template<typename PropertyType>
     void run_all_property_tests()
     {
-      skui::test::test_value_changed_signal<PropertyType>();
-      skui::test::test_relational_operators<PropertyType>();
-      skui::test::test_copy_construction_assignment<PropertyType>();
-      skui::test::test_move_construction_assignment<PropertyType>();
-      skui::test::test_stream_operators<PropertyType>();
+      test_value_changed_signal<PropertyType>();
+      test_relational_operators<PropertyType>();
+      test_copy_construction_assignment<PropertyType>();
+      test_move_construction_assignment<PropertyType>();
+      test_stream_operators<PropertyType>();
+      test_assign_to_const_property<PropertyType>();
     }
   }
 }

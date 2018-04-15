@@ -94,6 +94,13 @@ namespace skui
         return *this;
       }
 
+      const bounded_property& operator=(const_reference other) const
+      {
+        value = bound<value_type>{}(other, minimum, maximum);
+
+        return *this;
+      }
+
       operator const_reference() const { return value; }
       const value_type* operator->() const
       {
