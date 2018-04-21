@@ -65,7 +65,7 @@ int main(int argc, char* argv[])
   marker->border.color = colors::green;
 
   auto circle = std::make_unique<ellipse>(scalar_size{140, 140});
-  const scalar_position center{220,220};
+  const scalar_position center{70, 70};
   const std::vector<color> rainbow{colors::cyan,
                                    colors::magenta,
                                    colors::yellow,

@@ -54,13 +54,19 @@ namespace skui
     namespace
     {
       void set_gradient(SkPaint& paint,
-                        const gradient& gradient)
+                        const gradient& gradient,
+                        const scalar_position& offset)
       {
         switch(gradient.type)
         {
           case gradient_type::linear:
           {
             const auto& linear = static_cast<const linear_gradient&>(gradient);
+
+            auto original_points = linear.points;
+            std::for_each(original_points.begin(), original_points.end(),
+                          [&offset](auto& point) { point += offset; });
+
             auto points = convert_to<std::vector<SkPoint>>(linear.points);
             auto colors = convert_to<std::vector<SkColor>>(linear.colors);
             paint.setShader(SkGradientShader::MakeLinear(points.data(),
@@ -73,7 +79,7 @@ namespace skui
           case gradient_type::radial:
           {
             const auto& radial = static_cast<const radial_gradient&>(gradient);
-            paint.setShader(SkGradientShader::MakeRadial(convert_to<SkPoint>(radial.center),
+            paint.setShader(SkGradientShader::MakeRadial(convert_to<SkPoint>(radial.center + offset),
                                                          radial.radius,
                                                          convert_to<std::vector<SkColor>>(radial.colors).data(),
                                                          nullptr,
@@ -84,9 +90,9 @@ namespace skui
           case gradient_type::two_point_conical:
           {
             const auto& conical = static_cast<const two_point_conical_gradient&>(gradient);
-            paint.setShader(SkGradientShader::MakeTwoPointConical(convert_to<SkPoint>(conical.start),
+            paint.setShader(SkGradientShader::MakeTwoPointConical(convert_to<SkPoint>(conical.start + offset),
                                                                   conical.start_radius,
-                                                                  convert_to<SkPoint>(conical.end),
+                                                                  convert_to<SkPoint>(conical.end + offset),
                                                                   conical.end_radius,
                                                                   convert_to<std::vector<SkColor>>(conical.colors).data(),
                                                                   nullptr,
@@ -98,8 +104,8 @@ namespace skui
           {
             const auto& sweep = static_cast<const sweep_gradient&>(gradient);
             const auto colors = convert_to<std::vector<SkColor>>(sweep.colors);
-            paint.setShader(SkGradientShader::MakeSweep(sweep.center.x,
-                                                        sweep.center.y,
+            paint.setShader(SkGradientShader::MakeSweep(sweep.center.x + offset.x,
+                                                        sweep.center.y + offset.y,
                                                         colors.data(),
                                                         nullptr,
                                                         static_cast<int>(colors.size())));
@@ -129,6 +135,7 @@ namespace skui
       }
 
       SkPaint make_fill_paint(const shape& shape,
+                              const scalar_position& offset,
                               const canvas_flags& flags)
       {
         SkPaint paint;
@@ -142,7 +149,7 @@ namespace skui
 
         if(shape.fill.gradient)
         {
-          set_gradient(paint, *shape.fill.gradient);
+          set_gradient(paint, *shape.fill.gradient, offset);
         }
 
         if(flags.test(canvas_flag::anti_alias))
@@ -152,9 +159,11 @@ namespace skui
       }
 
       std::array<SkPaint, 2> make_paint(const shape& shape,
+                                        const scalar_position& offset,
                                         const canvas_flags& flags)
       {
-        return {make_fill_paint(shape, flags), make_border_paint(shape, flags)};
+        return {{make_fill_paint(shape, offset, flags),
+                 make_border_paint(shape, flags)}};
       }
     }
 
@@ -183,7 +192,7 @@ namespace skui
       SkPath border;
       border.addRoundRect(rect, rectangle.border.radius, rectangle.border.radius);
 
-      for(const auto& paint : make_paint(rectangle, flags))
+      for(const auto& paint : make_paint(rectangle, position, flags))
       {
           canvas->drawRRect(rounded_rect, paint);
       }
@@ -194,7 +203,7 @@ namespace skui
     {
       auto canvas = surface->getCanvas();
 
-      for(const auto& paint : make_paint(ellipse, flags))
+      for(const auto& paint : make_paint(ellipse, position, flags))
       {
           canvas->drawOval(SkRect::MakeXYWH(position.x, position.y,
                                             ellipse.axes.height, ellipse.axes.width),
@@ -207,7 +216,7 @@ namespace skui
     {
       auto canvas = surface->getCanvas();
 
-      for(auto& paint : make_paint(text, flags))
+      for(auto& paint : make_paint(text, position, flags))
       {
         paint.setTextSize(text.font_size);
         canvas->drawText(text.characters.c_str(), text.characters.size(),
@@ -217,13 +226,13 @@ namespace skui
     }
 
     void skia_canvas::draw(const path& path,
-                           const scalar_position&)
+                           const scalar_position& position)
     {
       auto canvas = surface->getCanvas();
 
       SkPath skia_path;
 
-      for(const auto& paint : make_paint(path, flags))
+      for(const auto& paint : make_paint(path, position, flags))
       {
           canvas->drawPath(skia_path,
                            paint);
