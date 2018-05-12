@@ -61,7 +61,7 @@ namespace skui
     {
       glViewport(0, 0, static_cast<GLsizei>(size.width), static_cast<GLsizei>(size.height));
 
-      return std::make_unique<skia_gl_canvas>(size, *gr_gl_interface, flags);
+      return std::make_unique<skia_gl_canvas>(size, gr_gl_interface.get(), flags);
     }
   }
 }

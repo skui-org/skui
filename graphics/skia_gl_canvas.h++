@@ -44,7 +44,7 @@ namespace skui
     {
     public:
       skia_gl_canvas(const pixel_size& size,
-                     const GrGLInterface& gl_interface,
+                     const GrGLInterface* gr_gl_interface,
                      canvas_flags flags);
       ~skia_gl_canvas() override;
 
