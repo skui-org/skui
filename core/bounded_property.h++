@@ -119,10 +119,10 @@ namespace skui
       bounded_property(property<T> initial_value,
                        property<T> initial_minimum,
                        property<T> initial_maximum)
-        : value(std::move(initial_value))
         // these ensure changing a minimum/maximum bounds the value within the new bounds
-        , minimum(std::move(initial_minimum), [this](value_type) { *this = static_cast<value_type>(value); })
+        : minimum(std::move(initial_minimum), [this](value_type) { *this = static_cast<value_type>(value); })
         , maximum(std::move(initial_maximum), [this](value_type) { *this = static_cast<value_type>(value); })
+        , value(std::move(initial_value))
         , value_changed(value.value_changed)
       {}
 
