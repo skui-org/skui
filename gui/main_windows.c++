@@ -26,9 +26,6 @@
  * Windows wrapper function providing WinMain so that users can use a cross-platform int main entry point.
  */
 
-#ifndef SKUI_GUI_MAIN_WINDOWS_H
-#define SKUI_GUI_MAIN_WINDOWS_H
-
 #include <cstddef>
 #include <locale>
 #include <memory>
@@ -73,5 +70,3 @@ int WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
   return main(argc, argv.data());
 }
-
-#endif
