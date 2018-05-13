@@ -98,8 +98,7 @@ namespace skui
         const std::uint16_t width = static_cast<std::uint16_t>(size.width);
         const std::uint16_t height = static_cast<std::uint16_t>(size.height);
 
-        std::vector<std::uint32_t> bgra(pixel_data.size());
-        graphics::swizzle(bgra);
+        graphics::swizzle(pixel_data);
 
         xcb_image_ptr image(xcb_image_create(width, height,
                                              XCB_IMAGE_FORMAT_Z_PIXMAP, 32,
@@ -107,7 +106,7 @@ namespace skui
                                              XCB_IMAGE_ORDER_LSB_FIRST, XCB_IMAGE_ORDER_LSB_FIRST,
                                              nullptr,
                                              0,
-                                             reinterpret_cast<std::uint8_t*>(bgra.data())));
+                                             reinterpret_cast<std::uint8_t*>(pixel_data.data())));
         xcb_image_put(connection, window, gcontext, image.get(), 0, 0, 0);
       }
     }
