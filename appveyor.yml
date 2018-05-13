@@ -19,12 +19,12 @@ environment:
     PATH: C:\msys64\mingw64\bin;%PATH%
 
   # Clang/C2
-  - TOOLCHAIN: "Visual Studio 2017 Clang/C2"
-    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-    GENERATOR: Visual Studio 15 2017 Win64
-    VCVARS: C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat
-    VCVARSARG: amd64
-    CMAKE_ARGS: -T"v141_clang_c2"
+  #- TOOLCHAIN: "Visual Studio 2017 Clang/C2"
+  #  APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+  #  GENERATOR: Visual Studio 15 2017 Win64
+  #  VCVARS: C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat
+  #  VCVARSARG: amd64
+  #  CMAKE_ARGS: -T"v141_clang_c2"
 
   # Clang targeting MSVC
   - TOOLCHAIN: "Visual Studio 2015 Clang/LLVM"
@@ -53,9 +53,9 @@ environment:
     PATH: C:\msys64\mingw64\bin;%PATH%
     CMAKE_ARGS: -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang
 
-matrix:
-  allow_failures:
-    - TOOLCHAIN: "Visual Studio 2017 Clang/C2"
+#matrix:
+#  allow_failures:
+#    - TOOLCHAIN: "Visual Studio 2017 Clang/C2"
 
 configuration:
  - Debug
@@ -66,11 +66,11 @@ shallow_clone: true
 install:
  - if defined CLANG_URL appveyor DownloadFile %CLANG_URL% -FileName llvm-installer.exe
  - if defined CLANG_URL START /WAIT llvm-installer.exe /S /D=C:\"Program Files\LLVM"
- - set CMAKE_URL="https://cmake.org/files/v3.10/cmake-3.10.1-win64-x64.zip"
+ - set CMAKE_URL="https://cmake.org/files/v3.11/cmake-3.11.1-win64-x64.zip"
  - appveyor DownloadFile %CMAKE_URL% -FileName cmake.zip
  - mkdir C:\cmake
  - 7z x cmake.zip -oC:\cmake > nul
- - set PATH=C:\cmake\cmake-3.10.1-win64-x64\bin;%PATH%
+ - set PATH=C:\cmake\cmake-3.11.1-win64-x64\bin;%PATH%
 
 clone_script:
   - git clone -q --branch=%APPVEYOR_REPO_BRANCH% https://github.com/skui-org/skui.git %APPVEYOR_BUILD_FOLDER%
