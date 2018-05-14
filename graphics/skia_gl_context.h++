@@ -31,7 +31,7 @@
 
 #include <memory>
 
-class GrGLInterface;
+struct GrGLInterface;
 
 namespace skui
 {

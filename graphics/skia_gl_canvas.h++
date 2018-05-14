@@ -33,7 +33,7 @@
 
 #include <vector>
 
-class GrGLInterface;
+struct GrGLInterface;
 class GrContext;
 
 namespace skui
