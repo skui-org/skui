@@ -27,19 +27,20 @@ environment:
   #  CMAKE_ARGS: -T"v141_clang_c2"
 
   # Clang targeting MSVC
-  - TOOLCHAIN: "Visual Studio 2015 Clang/LLVM"
+  - TOOLCHAIN: "Visual Studio 2015 Clang/LLVM 6.0.0"
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
     GENERATOR: Ninja
     PACMAN_PACKAGES: "mingw-w64-x86_64-ninja"
-    PATH: C:\msys64\mingw64\bin;%PATH%
+    PATH: C:\Program Files\LLVM\bin;C:\msys64\mingw64\bin;%PATH%
     VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
     VCVARSARG: amd64
     CMAKE_ARGS: -DCMAKE_C_COMPILER=clang-cl.exe -DCMAKE_CXX_COMPILER=clang-cl.exe
-  - TOOLCHAIN: "Visual Studio 2017 Clang/LLVM"
+    CLANG_URL: http://releases.llvm.org/6.0.0/LLVM-6.0.0-win64.exe
+  - TOOLCHAIN: "Visual Studio 2017 Clang/LLVM 6.0.0"
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     GENERATOR: Ninja
     PACMAN_PACKAGES: "mingw-w64-x86_64-ninja"
-    PATH: C:\msys64\mingw64\bin;%PATH%
+    PATH: C:\Program Files\LLVM\bin;C:\msys64\mingw64\bin;%PATH%
     VCVARS: C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat
     VCVARSARG: amd64
     CMAKE_ARGS: -DCMAKE_C_COMPILER=clang-cl.exe -DCMAKE_CXX_COMPILER=clang-cl.exe
