@@ -43,7 +43,7 @@ environment:
     VCVARS: C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat
     VCVARSARG: amd64
     CMAKE_ARGS: -DCMAKE_C_COMPILER=clang-cl.exe -DCMAKE_CXX_COMPILER=clang-cl.exe
-    CLANG_URL: http://prereleases.llvm.org/win-snapshots/LLVM-5.0.0-r306282-win64.exe
+    CLANG_URL: http://releases.llvm.org/6.0.0/LLVM-6.0.0-win64.exe
 
   # Clang targeting mingw-w64
   - TOOLCHAIN: "MinGW-w64 Clang"
