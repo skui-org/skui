@@ -83,8 +83,12 @@ namespace skui
 
     public:
       explicit constexpr value_ptr() = default;
-      explicit constexpr value_ptr(std::nullptr_t) : value_ptr() {}
-      explicit value_ptr(pointer p) : data{p, copier_type(), deleter_type()} {}
+      explicit constexpr value_ptr(std::nullptr_t)
+        : value_ptr{}
+      {}
+      explicit value_ptr(pointer p)
+        : data{p, copier_type{}, deleter_type{}}
+      {}
 
       ~value_ptr()
       {
@@ -92,21 +96,37 @@ namespace skui
       }
 
       explicit value_ptr(const value_ptr& other)
-        : data{static_cast<pointer>(other.get_copier()(other.get())), other.get_copier(), other.get_deleter()} {}
+        : data{static_cast<pointer>(other.get_copier()(other.get())), other.get_copier(), other.get_deleter()}
+      {}
       explicit value_ptr(value_ptr&& other) noexcept
-        : data{other.get(), other.get_copier(), other.get_deleter()} { other.release(); }
+        : data{other.get(), other.get_copier(), other.get_deleter()}
+      {
+        other.release();
+      }
       template<typename U, typename OtherCopier>
       value_ptr(const value_ptr<U, OtherCopier>& other)
-        : data{static_cast<pointer>(other.get_copier().get_copy_function()(other.get())), other.get_copier(), other.get_deleter()} {}
+        : data{static_cast<pointer>(other.get_copier().get_copy_function()(other.get())), other.get_copier(), other.get_deleter()}
+      {}
       template<typename U, typename OtherCopier>
       value_ptr(value_ptr<U, OtherCopier>&& other)
-        : data{other.get(), other.get_copier(), other.get_deleter()} { other.release(); }
+        : data{other.get(), other.get_copier(), other.get_deleter()}
+      {
+        other.release();
+      }
 
-      value_ptr& operator=(value_ptr other) { swap(data, other.data); return *this; }
+      value_ptr& operator=(value_ptr other)
+      {
+        swap(data, other.data);
+        return *this;
+      }
       template<typename U, typename OtherCopier, typename OtherDeleter>
-      value_ptr& operator=(value_ptr<U, OtherCopier, OtherDeleter> other) { std::swap(data, other.data); return *this; }
+      value_ptr& operator=(value_ptr<U, OtherCopier, OtherDeleter> other)
+      {
+        std::swap(data, other.data);
+        return *this;
+      }
 
-      pointer operator->() { return get(); }
+      pointer operator->(){ return get(); }
       const pointer operator->() const { return get(); }
 
       reference operator*() { return *get(); }
@@ -137,13 +157,13 @@ namespace skui
       }
 
     private:
-      std::tuple<pointer, copier_type, deleter_type> data = {nullptr, smart_copy<T>(), std::default_delete<T>()};
+      std::tuple<pointer, copier_type, deleter_type> data = {nullptr, smart_copy<T>{}, std::default_delete<T>{}};
     };
 
     template<typename T, typename... ArgTypes>
     value_ptr<T> make_value(ArgTypes&&... args)
     {
-      return value_ptr<T>(new T(std::forward<ArgTypes>(args)...));;
+      return value_ptr<T>(new T{std::forward<ArgTypes>(args)...});
     }
   }
 }

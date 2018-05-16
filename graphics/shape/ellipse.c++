@@ -31,7 +31,7 @@ namespace skui
   namespace graphics
   {
     ellipse::ellipse(scalar_size axes)
-      : axes(axes)
+      : axes{axes}
     {}
 
     ellipse::~ellipse() = default;

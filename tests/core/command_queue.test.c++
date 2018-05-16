@@ -53,7 +53,7 @@ namespace
 
   void f_wait(skui::core::command_queue* queue, std::mutex* mutex, std::condition_variable* cv, bool* should_wakeup)
   {
-    std::unique_lock<std::mutex> lock(*mutex);
+    std::unique_lock lock{*mutex};
 
     queue->wait();
 
@@ -75,7 +75,7 @@ namespace
     std::condition_variable cv;
     bool should_wakeup = false;
 
-    std::unique_lock<std::mutex> lock(mutex);
+    std::unique_lock lock{mutex};
 
     std::thread thread(&f_wait, &command_queue, &mutex, &cv, &should_wakeup);
 

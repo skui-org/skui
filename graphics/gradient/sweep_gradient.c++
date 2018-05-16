@@ -31,10 +31,10 @@ namespace skui
     sweep_gradient::sweep_gradient(scalar_position center,
                                    std::vector<color> colors,
                                    std::vector<scalar> positions)
-      : gradient(gradient_type::sweep)
-      , center(center)
-      , colors(colors)
-      , positions(positions)
+      : gradient{gradient_type::sweep}
+      , center{center}
+      , colors{std::move(colors)}
+      , positions{std::move(positions)}
     {}
 
     sweep_gradient::~sweep_gradient() = default;

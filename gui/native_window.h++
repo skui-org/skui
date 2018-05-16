@@ -54,7 +54,7 @@ namespace skui
       class base
       {
       public:
-        base(std::unique_ptr<native_visual::base>&& native_visual);
+        base(std::unique_ptr<native_visual::base> native_visual);
         virtual ~base() = 0;
 
         virtual void create(const graphics::pixel_position& initial_position,

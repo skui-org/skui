@@ -39,7 +39,7 @@ namespace
   void test_signal_connect_emit()
   {
     bool lambda_slot_called = false;
-    auto lambda_slot = [&lambda_slot_called]() { lambda_slot_called = true; };
+    auto lambda_slot = [&lambda_slot_called] { lambda_slot_called = true; };
 
     skui::core::signal<> signal;
     signal.connect(static_cast<void(*)()>(slot));
@@ -67,7 +67,7 @@ namespace
   void test_signal_copy_move()
   {
     bool slot_called = false;
-    auto slot = [&slot_called]() { slot_called = true; };
+    auto slot = [&slot_called] { slot_called = true; };
     skui::core::signal<> signal_one;
     skui::core::signal<> signal_two;
 
@@ -114,7 +114,7 @@ namespace
   {
     free_slot_called = false;
     bool other_slot_called = false;
-    auto other_slot = [&other_slot_called]() { other_slot_called = true; };
+    auto other_slot = [&other_slot_called] { other_slot_called = true; };
 
     skui::core::signal<> signal;
     auto slot_connection = signal.connect(static_cast<void(*)()>(&slot));

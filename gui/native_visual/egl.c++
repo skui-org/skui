@@ -51,7 +51,7 @@ namespace skui
       }
 
       egl::egl()
-        : egl_display(eglGetDisplay(EGL_DEFAULT_DISPLAY))
+        : egl_display{eglGetDisplay(EGL_DEFAULT_DISPLAY)}
       {
         if(egl_display == EGL_NO_DISPLAY)
           core::debug_print("Call to eglGetDisplay failed.\n");

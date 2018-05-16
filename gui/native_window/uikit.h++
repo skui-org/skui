@@ -41,7 +41,7 @@ namespace skui
       class uikit : public base
       {
       public:
-        uikit(std::unique_ptr<native_visual::base>&& native_visual);
+        uikit(std::unique_ptr<native_visual::base> native_visual);
         ~uikit() override;
 
         void create(const graphics::pixel_position& initial_position,

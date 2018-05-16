@@ -36,7 +36,7 @@ namespace skui
     namespace events
     {
       xcb::xcb(gui::window& window)
-        : base(window)
+        : base{window}
       {
         auto native_xcb_window = dynamic_cast<native_window::xcb*>(&window.get_native_window());
         if(!native_xcb_window)

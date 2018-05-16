@@ -52,8 +52,8 @@ namespace skui
 
       }
       functions::functions(opengl::version version)
-        : version(version)
-        , function_pointers(static_cast<std::size_t>(function::last))
+        : version{version}
+        , function_pointers{static_cast<std::size_t>(function::last)}
       {
         if(version >= opengl::version::gl_es_1_0)
           initialize_gl_es();

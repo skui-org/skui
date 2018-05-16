@@ -52,7 +52,8 @@ namespace skui
 
       property() = default;
       template<typename... SlotTypes>
-      property(value_type value, SlotTypes&&... slots) : value(std::move(value))
+      property(value_type value, SlotTypes&&... slots)
+        : value{std::move(value)}
       {
         (value_changed.connect(std::forward<SlotTypes>(slots)), ...);
       }

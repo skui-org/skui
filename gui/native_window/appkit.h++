@@ -41,7 +41,7 @@ namespace skui
       class appkit : public base
       {
       public:
-        appkit(std::unique_ptr<native_visual::base>&& native_visual);
+        appkit(std::unique_ptr<native_visual::base> native_visual);
         ~appkit() override;
 
         void create(const graphics::pixel_position& initial_position,

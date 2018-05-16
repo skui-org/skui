@@ -43,7 +43,7 @@ namespace skui
 
     application::application(int argc, char* argv[], string name)
       : commandline_arguments{argv+1, argv+argc}
-      , name(std::move(name))
+      , name{std::move(name)}
     {
       if(implementation::instance != nullptr)
       {

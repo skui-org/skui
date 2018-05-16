@@ -35,8 +35,8 @@ namespace skui
   namespace graphics
   {
     skui::graphics::skia_raster_context::skia_raster_context(std::vector<std::uint32_t>& pixels)
-      : context()
-      , pixels(pixels)
+      : context{}
+      , pixels{pixels}
     {}
 
     skia_raster_context::~skia_raster_context() = default;

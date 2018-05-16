@@ -87,22 +87,22 @@ namespace skui
     namespace native_window
     {
       xcb_data::xcb_data()
-        : preferred_screen_index()
-        , connection(xcb_connect(nullptr, &preferred_screen_index))
-        , preferred_screen(screen_of_display(connection, preferred_screen_index))
+        : preferred_screen_index{}
+        , connection{xcb_connect(nullptr, &preferred_screen_index)}
+        , preferred_screen{screen_of_display(connection, preferred_screen_index)}
       {}
 
       xcb_data::xcb_data(xcb_connection_t* connection)
-        : preferred_screen_index()
-        , connection(connection)
-        , preferred_screen(screen_of_display(connection, preferred_screen_index))
+        : preferred_screen_index{}
+        , connection{connection}
+        , preferred_screen{screen_of_display(connection, preferred_screen_index)}
       {}
 
       xcb_data::~xcb_data() = default;
 
       xcb::xcb()
-        : xcb_data()
-        , base(std::make_unique<native_visual::xcb>(connection, preferred_screen))
+        : xcb_data{}
+        , base{std::make_unique<native_visual::xcb>(connection, preferred_screen)}
       {}
 
       xcb::~xcb() = default;

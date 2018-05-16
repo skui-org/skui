@@ -37,7 +37,7 @@ namespace skui
     namespace events
     {
       win32::win32(gui::window& window)
-        : base(window)
+        : base{window}
       {}
 
       win32::~win32() = default;

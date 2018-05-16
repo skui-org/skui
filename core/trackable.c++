@@ -47,7 +47,7 @@ namespace skui
     }
 
     trackable::trackable(const trackable& other)
-    : trackers(other.trackers)
+      : trackers{other.trackers}
     {
       for(auto tracker : trackers)
       {
@@ -56,7 +56,7 @@ namespace skui
     }
 
     trackable::trackable(trackable&& other) noexcept
-    : trackers(other.trackers)
+      : trackers{other.trackers}
     {
       for(auto tracker : trackers)
       {
@@ -66,13 +66,13 @@ namespace skui
 
     void trackable::track(implementation::tracker* tracker) const
     {
-      const std::lock_guard<decltype(trackers_mutex)> lock(trackers_mutex);
+      const std::lock_guard lock(trackers_mutex);
       trackers.insert(tracker);
     }
 
     void trackable::untrack(implementation::tracker* tracker) const
     {
-      const std::lock_guard<decltype (trackers_mutex)> lock(trackers_mutex);
+      const std::lock_guard lock(trackers_mutex);
       trackers.erase(tracker);
     }
   }

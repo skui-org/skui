@@ -33,12 +33,12 @@ namespace skui
                                                            scalar_position end,
                                                            scalar end_radius,
                                                            std::vector<color> colors)
-      : gradient(gradient_type::two_point_conical)
-      , start(start)
-      , start_radius(start_radius)
-      , end(end)
-      , end_radius(end_radius)
-      , colors(colors)
+      : gradient{gradient_type::two_point_conical}
+      , start{start}
+      , start_radius{start_radius}
+      , end{end}
+      , end_radius{end_radius}
+      , colors{std::move(colors)}
     {}
 
     two_point_conical_gradient::~two_point_conical_gradient() = default;

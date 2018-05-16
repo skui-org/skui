@@ -70,9 +70,9 @@ namespace skui
       }
       xcb::xcb(xcb_connection_t* connection,
                xcb_screen_t* screen)
-        : connection(connection)
-        , screen(screen)
-        , visualtype(determine_proper_visualtype(screen))
+        : connection{connection}
+        , screen{screen}
+        , visualtype{determine_proper_visualtype(screen)}
       {}
 
       xcb_visualid_t xcb::visualid() const

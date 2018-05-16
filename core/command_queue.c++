@@ -30,7 +30,7 @@ namespace skui
   {
     void command_queue::push(command_ptr&& command)
     {
-      const std::lock_guard<decltype(queue_mutex)> lock(queue_mutex);
+      const std::lock_guard lock{queue_mutex};
 
       queue.emplace(std::move(command));
       condition_variable.notify_one();
@@ -38,14 +38,14 @@ namespace skui
 
     void command_queue::wait()
     {
-      std::unique_lock<decltype(queue_mutex)> lock(queue_mutex);
+      std::unique_lock lock{queue_mutex};
 
-      condition_variable.wait(lock, [this]() { return !queue.empty(); });
+      condition_variable.wait(lock, [this] { return !queue.empty(); });
     }
 
     std::queue<command_queue::command_ptr> command_queue::take_commands()
     {
-      const std::lock_guard<decltype(queue_mutex)> lock(queue_mutex);
+      const std::lock_guard lock{queue_mutex};
 
       std::queue<command_queue::command_ptr> result;
       std::swap(result, queue);

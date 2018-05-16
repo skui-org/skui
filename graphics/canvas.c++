@@ -38,7 +38,7 @@ namespace skui
     canvas::~canvas() = default;
 
     canvas::canvas(canvas_flags flags)
-      : flags(flags)
+      : flags{flags}
     {}
   }
 }

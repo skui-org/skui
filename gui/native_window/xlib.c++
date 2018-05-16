@@ -58,8 +58,8 @@ namespace skui
       }
       xlib::xlib(const window_flags& flags)
         : xlib_data{XOpenDisplay(nullptr)}
-        , xcb(create_native_visual(display.get(), flags),
-              XGetXCBConnection(display.get()))
+        , xcb{create_native_visual(display.get(), flags),
+              XGetXCBConnection(display.get())}
       {
         XSetEventQueueOwner(display.get(), XCBOwnsEventQueue);
       }

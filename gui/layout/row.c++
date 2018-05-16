@@ -32,7 +32,7 @@ namespace skui
   namespace gui
   {
     row::row(element_ptrs children)
-      : layout(std::move(children))
+      : layout{std::move(children)}
     {
       spacing.value_changed.connect(this, &element::invalidate);
     }

@@ -31,7 +31,7 @@ namespace skui
     namespace events
     {
       uikit::uikit(gui::window& window)
-        : base(window)
+        : base{window}
       {}
 
       uikit::~uikit() = default;

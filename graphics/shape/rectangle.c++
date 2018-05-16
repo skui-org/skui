@@ -31,7 +31,7 @@ namespace skui
   namespace graphics
   {
     rectangle::rectangle(scalar_size size)
-      : size(size)
+      : size{size}
     {}
 
     rectangle::~rectangle() = default;

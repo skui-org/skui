@@ -84,8 +84,8 @@ namespace skui
     skia_gl_canvas::skia_gl_canvas(const pixel_size& size,
                                    const GrGLInterface* gr_gl_interface,
                                    canvas_flags flags)
-      : skia_canvas(flags)
-      , gr_context(GrContext::MakeGL(sk_sp<const GrGLInterface>(gr_gl_interface)).release())
+      : skia_canvas{flags}
+      , gr_context{GrContext::MakeGL(sk_sp{gr_gl_interface}).release()}
     {
       SkASSERT(gr_context);
 

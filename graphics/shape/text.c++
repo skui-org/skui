@@ -34,9 +34,8 @@ namespace skui
   namespace graphics
   {
     text::text(core::string characters)
-      : font_size(12)
-      , characters(characters)
-
+      : font_size{12}
+      , characters{characters}
     {}
 
     text::~text() = default;

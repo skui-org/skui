@@ -62,9 +62,9 @@ namespace skui
           return RegisterClassExW(&wc) == 0;
         }
       }
-      win32::win32(std::unique_ptr<native_visual::base>&& native_visual)
-        : base(std::move(native_visual))
-        , window(nullptr)
+      win32::win32(std::unique_ptr<native_visual::base> native_visual)
+        : base{std::move(native_visual)}
+        , window{nullptr}
       {
         const static bool dummy = register_window_class();
         if(!dummy)

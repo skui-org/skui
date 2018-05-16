@@ -31,10 +31,10 @@ namespace skui
       linear_gradient::linear_gradient(std::vector<scalar_position> points,
                                        std::vector<color> colors,
                                        std::vector<scalar> positions)
-       : gradient(gradient_type::linear)
-       , points(points)
-       , colors(colors)
-       , positions(positions)
+        : gradient{gradient_type::linear}
+        , points{points}
+        , colors{colors}
+        , positions{positions}
       {}
 
       linear_gradient::~linear_gradient() = default;

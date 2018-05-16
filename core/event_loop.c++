@@ -56,7 +56,7 @@ namespace skui
     void event_loop::stop(int return_code)
     {
       exit_code = return_code;
-      queue.push(std::make_unique<command>([this]() { exit=true; }));
+      queue.push(std::make_unique<command>([this] { exit=true; }));
     }
   }
 }

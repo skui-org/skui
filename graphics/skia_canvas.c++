@@ -168,8 +168,8 @@ namespace skui
     }
 
     skia_canvas::skia_canvas(canvas_flags flags)
-      : canvas(flags)
-      , surface(nullptr)
+      : canvas{flags}
+      , surface{nullptr}
     {}
 
     void skia_canvas::draw(const color& background_color)

@@ -31,7 +31,7 @@ namespace skui
     namespace events
     {
       appkit::appkit(gui::window& window)
-        : base(window)
+        : base{window}
       {}
 
       appkit::~appkit() = default;

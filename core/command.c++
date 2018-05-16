@@ -29,7 +29,7 @@ namespace skui
   namespace core
   {
     command::command()
-     : function([](){})
+     : function{[] {}}
     {}
 
     command::~command() = default;

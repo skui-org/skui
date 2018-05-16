@@ -32,11 +32,11 @@ namespace skui
                                      scalar radius,
                                      std::vector<color> colors,
                                      std::vector<scalar> positions)
-      : gradient(gradient_type::radial)
-      , center(center)
-      , radius(radius)
-      , colors(colors)
-      , positions(positions)
+      : gradient{gradient_type::radial}
+      , center{center}
+      , radius{radius}
+      , colors{colors}
+      , positions{positions}
     {}
 
     radial_gradient::~radial_gradient() = default;

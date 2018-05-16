@@ -45,7 +45,7 @@ namespace skui
     {
     public:
       constexpr bitflag() = default;
-      bitflag(Enum value) : bits(enum_to_bits(value)) {}
+      bitflag(Enum value) : bits{enum_to_bits(value)} {}
 
       bitflag operator|(Enum value) const { bitflag result = *this; result.bits |= enum_to_bits(value); return result; }
       bitflag operator&(Enum value) const { bitflag result = *this; result.bits &= enum_to_bits(value); return result; }

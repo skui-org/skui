@@ -37,7 +37,7 @@ namespace skui
   namespace gui
   {
     label::label(core::string text)
-      : graphics_label(text)
+      : graphics_label{text}
     {
       graphics_label.fill.color = graphics::colors::white;
       graphics_label.font_size = 20;

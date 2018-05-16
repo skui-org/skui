@@ -31,7 +31,7 @@ namespace skui
     namespace events
     {
       base::base(gui::window& window)
-        : window(window)
+        : window{window}
       {}
 
       base::~base() = default;

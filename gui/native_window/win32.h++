@@ -47,7 +47,7 @@ namespace skui
       class win32 : public base
       {
       public:
-        win32(std::unique_ptr<native_visual::base>&& native_visual);
+        win32(std::unique_ptr<native_visual::base> native_visual);
         ~win32() override;
 
         void create(const graphics::pixel_position& initial_position,

@@ -47,30 +47,22 @@ namespace skui
   namespace core
   {
     template<typename... ArgTypes>
-
 #ifndef SKUI_DEBUG
     inline void debug_print(ArgTypes...)
     {}
 #else
     inline void debug_print(ArgTypes... args)
     {
-      // trick to expand variadic argument pack without recursion
-      using expand_variadic_pack  = int[];
-      // first zero is to prevent empty braced-init-list
-      // void() is to prevent overloaded operator, messing things up
-      // trick is to use the side effect of list-initializer to call a function on every argument, in order.
-      // (void) is to suppress "statement has no effect" warnings
 #ifdef _WIN32
       std::stringstream stream;
-      (void)expand_variadic_pack{0, ((stream << args), void(), 0)... };
+      ((stream << args), ...);
 
       OutputDebugStringW(convert_to_utf16(stream.str()).c_str());
-      //WriteConsoleW(GetStdHandle(STD_OUTPUT_HANDLE), stuff.c_str(), static_cast<DWORD>(stuff.size()), nullptr, nullptr);
 #else
-      (void)expand_variadic_pack{0, ((std::cerr << args), void(), 0)... };
+      ((std::cerr << args), ...);
 #endif
     }
- #endif
+#endif
   }
 }
 

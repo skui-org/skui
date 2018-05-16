@@ -56,19 +56,17 @@ namespace skui
     window::window(graphics::pixel_position position,
                    graphics::pixel_size initial_size,
                    window_flags flags)
-      : trackable()
-      , size{initial_size.width, initial_size.height}
-      , maximum_size{}
-      , minimum_size{}
+      : trackable{}
+      , size{initial_size}
       , position{position}
       , icon{}
-      , title([this](const core::string& title) { native_window->set_title(title); },
-              [this] { return native_window->get_title(); })
-      , native_window(nullptr)
-      , thread()
-      , flags(flags)
+      , title{[this](const core::string& title) { native_window->set_title(title); },
+              [this] { return native_window->get_title(); }}
+      , native_window{nullptr}
+      , thread{}
+      , flags{flags}
     {
-      std::unique_lock<decltype(handle_mutex)> lock(handle_mutex);
+      std::unique_lock lock{mutex};
       std::thread t(&window::initialize_and_execute_platform_loop, this);
       thread.swap(t);
       handle_condition_variable.wait(lock, [this] { return native_window != nullptr; });
@@ -146,7 +144,7 @@ namespace skui
       create_graphics_context();
 
       // Ensure calling thread is waiting for draw_condition_variable
-      std::unique_lock<decltype(handle_mutex)> handle_lock(handle_mutex);
+      std::unique_lock handle_lock{mutex};
       handle_condition_variable.notify_one();
 
       // Continue calling thread before initiating event loop

@@ -104,7 +104,7 @@ namespace skui
       std::unique_ptr<native_window::base> native_window;
       std::unique_ptr<graphics::context> graphics_context;
 
-      std::mutex handle_mutex;
+      std::mutex mutex;
       std::condition_variable handle_condition_variable;
       std::thread thread;
       window_flags flags;

@@ -30,8 +30,8 @@ namespace skui
   {
     namespace native_window
     {
-      base::base(std::unique_ptr<native_visual::base>&& native_visual)
-        : native_visual(std::move(native_visual))
+      base::base(std::unique_ptr<native_visual::base> native_visual)
+        : native_visual{std::move(native_visual)}
       {}
 
       base::~base() = default;

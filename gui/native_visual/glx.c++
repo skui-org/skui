@@ -54,11 +54,12 @@ namespace skui
           return glXGetProcAddress(reinterpret_cast<const GLubyte*>(name));
         }
       }
+
       glx::glx(Display* display)
-        : display(display)
-        , xvisualinfo(create_xvisualinfo())
-        , context(glXCreateContext(display, xvisualinfo.get(), nullptr, True))
-        , drawable(0)
+        : display{display}
+        , xvisualinfo{create_xvisualinfo()}
+        , context{glXCreateContext(display, xvisualinfo.get(), nullptr, True)}
+        , drawable{0}
       {}
 
       void glx::create_surface(std::uintptr_t drawable)

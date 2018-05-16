@@ -38,7 +38,7 @@ namespace skui
 
       template<typename Callable, typename... ArgTypes>
       command(Callable callable, ArgTypes... args)
-        : function([callable, args...](){ return callable(args...); })
+        : function{[callable, args...] { return callable(args...); }}
       {}
 
       virtual ~command();

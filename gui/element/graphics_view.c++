@@ -32,7 +32,7 @@ namespace skui
   namespace gui
   {
     graphics_view::graphics_view(const graphics::scene& scene)
-      : scene(scene)
+      : scene{scene}
     {}
 
     graphics_view::~graphics_view() = default;

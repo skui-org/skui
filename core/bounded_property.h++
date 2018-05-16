@@ -52,24 +52,24 @@ namespace skui
       bounded_property(value_type initial_value,
                        value_type initial_minimum,
                        value_type initial_maximum)
-        : bounded_property(property<T>(std::move(initial_value)),
+        : bounded_property{property<T>(std::move(initial_value)),
                            property<T>(std::move(initial_minimum)),
-                           property<T>(std::move(initial_maximum)))
+                           property<T>(std::move(initial_maximum))}
       {}
       bounded_property(value_type initial_value = {})
-        : bounded_property(std::move(initial_value),
+        : bounded_property{std::move(initial_value),
                            std::numeric_limits<value_type>::lowest(),
-                           std::numeric_limits<value_type>::max())
+                           std::numeric_limits<value_type>::max()}
       {}
       bounded_property(const bounded_property& other)
-        : bounded_property(other.value,
+        : bounded_property{other.value,
                            other.minimum,
-                           other.maximum)
+                           other.maximum}
       {}
       bounded_property(bounded_property&& other) noexcept
-        : bounded_property(std::move(other.value),
+        : bounded_property{std::move(other.value),
                            std::move(other.minimum),
-                           std::move(other.maximum))
+                           std::move(other.maximum)}
       {}
 
       bounded_property& operator=(bounded_property other)
@@ -120,10 +120,10 @@ namespace skui
                        property<T> initial_minimum,
                        property<T> initial_maximum)
         // these ensure changing a minimum/maximum bounds the value within the new bounds
-        : minimum(std::move(initial_minimum), [this](value_type) { *this = static_cast<value_type>(value); })
-        , maximum(std::move(initial_maximum), [this](value_type) { *this = static_cast<value_type>(value); })
-        , value(std::move(initial_value))
-        , value_changed(value.value_changed)
+        : minimum{std::move(initial_minimum), [this](value_type) { *this = static_cast<value_type>(value); }}
+        , maximum{std::move(initial_maximum), [this](value_type) { *this = static_cast<value_type>(value); }}
+        , value{std::move(initial_value)}
+        , value_changed{value.value_changed}
       {}
 
       property<T> value;

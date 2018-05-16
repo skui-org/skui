@@ -37,11 +37,11 @@ namespace
   void f_arg(int i) { f_called = i; }
 
   int l_called = 0;
-  const auto l = []() { l_called = 1; };
+  const auto l = [] { l_called = 1; };
   const auto l_arg = [](int i) { l_called = i; };
 
   int f_return() { return 42; }
-  const auto l_return = []() { return 43; };
+  const auto l_return = [] { return 43; };
 
   struct mock
   {
