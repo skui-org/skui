@@ -79,7 +79,8 @@ add_library(core
             ${traits_src}
             ${utility_src})
 target_include_directories(core PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>)
-target_compile_definitions(core PUBLIC $<$<CONFIG:Debug>:SKUI_DEBUG>)
+target_compile_definitions(core PUBLIC $<$<CONFIG:Debug>:SKUI_DEBUG>
+                                       $<$<PLATFORM_ID:Windows>:NOMINMAX>)
 target_link_libraries(core PUBLIC $<$<PLATFORM_ID:Linux>:-pthread>
                                   $<$<AND:$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Intel>>,$<NOT:$<PLATFORM_ID:Windows>>>:-lstdc++fs>
                                   $<$<AND:$<CXX_COMPILER_ID:Clang>,$<NOT:$<OR:$<PLATFORM_ID:Darwin>,$<PLATFORM_ID:Windows>>>>:-lc++experimental>

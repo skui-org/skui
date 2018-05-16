@@ -95,6 +95,7 @@ add_library(gui
             ${native_visual_src}
            )
 target_link_libraries(gui PUBLIC core graphics)
+target_compile_definitions(gui PRIVATE $<$<PLATFORM_ID:Windows>:NOMINMAX>)
 
 # Platform specific files and libraries
 if(NOT WIN32)
