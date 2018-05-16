@@ -39,7 +39,7 @@ namespace skui
     label::label(core::string text)
       : graphics_label{text}
     {
-      graphics_label.fill.color = graphics::colors::white;
+      graphics_label.fill.color = graphics::colors::black;
       graphics_label.font_size = 20;
 
       this->text.value_changed.connect([this](const core::string& text) { graphics_label.characters = text; });
