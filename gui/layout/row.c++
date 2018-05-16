@@ -24,6 +24,8 @@
 
 #include "gui/layout/row.h++"
 
+#include <core/debug.h++>
+
 #include <cmath>
 #include <numeric>
 
@@ -33,9 +35,7 @@ namespace skui
   {
     row::row(element_ptrs children)
       : layout{std::move(children)}
-    {
-      spacing.value_changed.connect(this, &element::invalidate);
-    }
+    {}
 
     row::~row() = default;
 
@@ -43,12 +43,12 @@ namespace skui
     {
       return std::accumulate(children.begin(), children.end(),
                              graphics::scalar_size{spacing, spacing}*(children.size()-1),
-                             [](const auto& value, const auto& child)
+                             [](const auto value, const auto& child)
                              -> graphics::scalar_size
                              {
                                const auto child_size = child->implicit_size();
-                               return {std::max(value.width, child_size.width),
-                                       value.height + child_size.height};
+                               return {value.width + child_size.width,
+                                       std::max(value.height, child_size.height)};
                              });
     }
 
@@ -62,7 +62,7 @@ namespace skui
       {
         offsets.emplace_back(offset);
 
-        offset.x += child->implicit_size().width;
+        offset.x += child->implicit_size().width + spacing;
       }
 
       return offsets;

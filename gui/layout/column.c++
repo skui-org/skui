@@ -33,9 +33,7 @@ namespace skui
   {
     column::column(element_ptrs children)
       : layout{std::move(children)}
-    {
-      spacing.value_changed.connect(this, &element::invalidate);
-    }
+    {}
 
     column::~column() = default;
 
@@ -62,7 +60,7 @@ namespace skui
       {
         offsets.emplace_back(offset);
 
-        offset.y += child->implicit_size().height;
+        offset.y += child->implicit_size().height + spacing;
       }
 
       return offsets;

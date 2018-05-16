@@ -34,7 +34,10 @@ namespace skui
 
     layout::layout(element_ptrs children)
       : children{std::move(children)}
-    {}
+      , spacing{0}
+    {
+      spacing.value_changed.connect(this, &element::invalidate);
+    }
 
     void layout::draw(graphics::canvas& canvas, const graphics::scalar_position& position) const
     {
