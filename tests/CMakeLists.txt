@@ -113,3 +113,5 @@ runtime_test(graphics size)
 runtime_test(graphics swizzle)
 
 runtime_test(gui layout)
+runtime_test(gui layout/row)
+runtime_test(gui layout/column)
