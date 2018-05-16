@@ -40,11 +40,11 @@ namespace
                        std::make_unique<mock_element>(0),
                        std::make_unique<mock_element>(5));
     check_close(row.implicit_size(),
-                {10, 15},
+                {15, 10},
                 epsilon<skui::graphics::scalar_size>, "implicit_size returns correct value");
     row.spacing = 3;
     check_close(row.implicit_size(),
-                {10, 21},
+                {21, 10},
                 epsilon<skui::graphics::scalar_size>, "implicit_size takes spacing into account correctly");
   }
 }
