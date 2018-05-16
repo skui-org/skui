@@ -43,11 +43,11 @@ namespace skui
 {
   namespace core
   {
-    class application : public trackable
+    class application
     {
     public:
       application(int argc, char* argv[], string name = "");
-      ~application() override;
+      ~application();
 
       const std::vector<string> commandline_arguments;
 
