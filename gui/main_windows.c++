@@ -27,6 +27,7 @@
  */
 
 #include <cstddef>
+#include <iterator>
 #include <locale>
 #include <memory>
 #include <vector>
