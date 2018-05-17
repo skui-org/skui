@@ -31,7 +31,7 @@ namespace skui
     namespace native_window
     {
         appkit::appkit(std::unique_ptr<native_visual::base> native_visual)
-          : base{std::move(native_visual})
+          : base{std::move(native_visual)}
         {}
 
         appkit::~appkit() = default;
