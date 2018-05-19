@@ -14,20 +14,19 @@ New functionality must be accompanied by corresponding tests.
 
 | Operating System | Compiler                | Supported          | Notes |
 |------------------| ------------------------|--------------------| ----- |
-| Windows          | Visual Studio 2015      |        :x:         | Lacks C++17 structured bindings. |
-| Windows          | VS 2015 Clang/C2        |        :x:         | Skia fails to compile due to unimplemented LLVM intrinsics. |
-| Windows          | VS 2015 Clang/LLVM 4.0+ | :heavy_check_mark: |       |
+| Windows          | Visual Studio 2015      |        :x:         | Lacks required C++17 features. |
+| Windows          | VS 2015 Clang/LLVM 6.0+ | :heavy_check_mark: |       |
 | Windows          | Visual Studio 2017      | :heavy_check_mark: |       |
-| Windows          | VS 2017 Clang/C2        |        :x:         | Skia fails to compile due to unimplemented LLVM intrinsics. |
-| Windows          | VS 2017 Clang/LLVM 4.0+ | :heavy_check_mark: |       |
+| Windows          | VS 2017 Clang/LLVM 6.0+ | :heavy_check_mark: |       |
 | Windows          | MinGW-w64 GCC 7.1+      | :heavy_check_mark: | Requires Boost. |
-| Windows          | MinGW-w64 Clang 4.0+    | :heavy_check_mark: | Requires Boost. |
+| Windows          | MinGW-w64 Clang 6.0+    | :heavy_check_mark: | Requires Boost. |
 | Windows          | Intel C++ 18+           | :heavy_check_mark: |       |
 | Linux            | GCC 7.1+                | :heavy_check_mark: |       |
-| Linux            | Clang 4.0+              | :heavy_check_mark: |       |
+| Linux            | Clang 6.0+              | :heavy_check_mark: |       |
 | Linux            | Intel C++ 18+           | :heavy_check_mark: |       |
-| Mac OS X 10.12   | XCode 9.2 Clang         |      :soon:        | Missing implementation of core window/application classes. |
-| Mac OS X 10.12   | Homebrew GCC 7.1+       |      :soon:        | Missing implementation of core window/application classes. |
+| Mac OS X 10.12+  | XCode 9.3 Clang         |      :soon:        | Missing implementation of core window/application classes. |
+| Mac OS X 10.12+  | Homebrew GCC 7.1+       |      :soon:        | Missing implementation of core window/application classes. |
+| Mac OS X 10.12+  | Homebrew Clang 6.0      |      :soon:        | Missing implementation of core window/application classes. |
 
 # Components
 
@@ -43,9 +42,37 @@ Skui is subdivided in several modules which can depend on other modules but shou
 
 This list will grow (and change) as the library's design takes shape.
 
-## Roadmap
+# How to get started
 
-### 0.0.x
+Clone this repository
+
+    git clone https://github.com/skui-org/skui.git
+
+After cloning this repository, make sure the submodules are up to date
+
+    cd skui
+    git submodule update --init --recursive
+
+Create and navigate to a seperate build directory, e.g.
+
+    mkdir ../skui-build
+    cd ../skui-build
+
+Run CMake (here, the [ninja](https://ninja-build.org/) build system is used, but any generator should work fine)
+
+    cmake ../skui -G Ninja
+
+Then build
+
+    cmake --build .
+
+And run the tests to ensure nothing is wrong
+
+    ctest
+
+# Roadmap
+
+## 0.0.x
 
  * establish a logical basis for UI functionality, including:
    * signals, properties, strings
@@ -58,7 +85,7 @@ This list will grow (and change) as the library's design takes shape.
      * OS X
      * ...
 
-### 0.1.x
+## 0.1.x
 
  * OS Notification system implementation
    * taskbar icon
@@ -67,7 +94,7 @@ This list will grow (and change) as the library's design takes shape.
  * Improve core logic and functionality.
  * OS theming of all controls and windows
 
-### 0.x.x
+## 0.x.x
 
  * More application logic (model/views, ...)
  * process handling
@@ -80,13 +107,13 @@ This list will grow (and change) as the library's design takes shape.
  * Add missing documentation
  * ...
 
-### 1.x.x
+## 1.x.x
 
  * Stability and features of a basic UI framework
  * Improve platform support
  * Solve all them bugs.
  * Correct all them documentation typos.
 
-### x.x.x
+## x.x.x
 
  * Supreme world domination through superiour benevolent A.I.
