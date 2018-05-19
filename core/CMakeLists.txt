@@ -44,6 +44,7 @@ set(core_src
    )
 set(traits_src
     traits/arity.h++
+    traits/number_of_bits.h++
    )
 set(utility_src
     utility/approximate_equal_to.h++

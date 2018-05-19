@@ -27,12 +27,12 @@
  * Convenience class template for bit flags.
  */
 
-#include <bitset>
-#include <limits>
-
 #ifndef SKUI_CORE_BITFLAG_H
 #define SKUI_CORE_BITFLAG_H
 
+#include "core/traits/number_of_bits.h++"
+
+#include <bitset>
 namespace skui
 {
   namespace core
@@ -40,7 +40,7 @@ namespace skui
     template<typename Enum>
     struct enum_is_bitflag : std::false_type {};
 
-    template<typename Enum, std::size_t number_of_bits = std::numeric_limits<std::underlying_type_t<Enum>>::digits>
+    template<typename Enum, std::size_t number_of_bits = number_of_bits_v<Enum>>
     class bitflag
     {
     public:
