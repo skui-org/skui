@@ -33,6 +33,7 @@
 #include "core/traits/number_of_bits.h++"
 
 #include <bitset>
+
 namespace skui
 {
   namespace core
@@ -47,14 +48,17 @@ namespace skui
       constexpr bitflag() = default;
       bitflag(Enum value) : bits{enum_to_bits(value)} {}
 
-      bitflag operator|(Enum value) const { bitflag result = *this; result.bits |= enum_to_bits(value); return result; }
-      bitflag operator&(Enum value) const { bitflag result = *this; result.bits &= enum_to_bits(value); return result; }
-      bitflag operator^(Enum value) const { bitflag result = *this; result.bits ^= enum_to_bits(value); return result; }
+      bitflag operator|(bitflag other) const { bitflag result = *this; result |= other; return result; }
+      bitflag operator&(bitflag other) const { bitflag result = *this; result &= other; return result; }
+      bitflag operator^(bitflag other) const { bitflag result = *this; result ^= other; return result; }
       bitflag operator~() const { bitflag result = *this; result.bits.flip(); return result; }
 
-      bitflag& operator|=(Enum value) { bits |= enum_to_bits(value); return *this; }
-      bitflag& operator&=(Enum value) { bits &= enum_to_bits(value); return *this; }
-      bitflag& operator^=(Enum value) { bits ^= enum_to_bits(value); return *this; }
+      bitflag& operator|=(bitflag other) { bits |= other.bits; return *this; }
+      bitflag& operator&=(bitflag other) { bits &= other.bits; return *this; }
+      bitflag& operator^=(bitflag other) { bits ^= other.bits; return *this; }
+
+      bool operator==(const bitflag& other) const { return bits == other.bits; }
+      bool operator!=(const bitflag& other) const { return bits != other.bits; }
 
       bool any() const { return bits.any(); }
       bool all() const { return bits.all(); }
