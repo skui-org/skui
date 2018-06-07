@@ -108,6 +108,7 @@ namespace skui
       std::condition_variable handle_condition_variable;
       std::thread thread;
       window_flags flags;
+      bool has_been_closed;
     };
   }
 }

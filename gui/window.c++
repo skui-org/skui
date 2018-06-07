@@ -65,6 +65,7 @@ namespace skui
       , native_window{nullptr}
       , thread{}
       , flags{flags}
+      , has_been_closed{false}
     {
       std::unique_lock lock{mutex};
       std::thread t(&window::initialize_and_execute_platform_loop, this);
@@ -107,11 +108,14 @@ namespace skui
     {
       core::debug_print("window::close called.\n");
       native_window->close();
-      window::windows().erase(std::remove(window::windows().begin(), window::windows().end(), this), window::windows().end());
+      has_been_closed = true;
+      window::windows().erase(std::remove(windows().begin(), windows().end(), this), windows().end());
     }
 
     void window::repaint()
     {
+      if(has_been_closed)
+        return;
 
       std::tie(position, size) = native_window->get_current_geometry();
 
