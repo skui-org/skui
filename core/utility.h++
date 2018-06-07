@@ -35,6 +35,7 @@
 #include <memory>
 
 #include <cstdlib>
+#include <ostream>
 
 namespace skui
 {
@@ -44,6 +45,23 @@ namespace skui
     struct free_deleter { void operator()(Freeable* resource) { std::free((void*)resource); } };
     template<typename T>
     using unique_free_ptr = std::unique_ptr<T, free_deleter<T>>;
+
+    class ostream_format_keeper
+    {
+    public:
+      ostream_format_keeper(std::ostream& stream)
+        : stream(stream)
+        , flags(stream.flags())
+      {}
+      ~ostream_format_keeper()
+      {
+        stream.flags(flags);
+      }
+
+      private:
+        std::ostream& stream;
+        std::ios_base::fmtflags flags;
+    };
 
 #ifdef _WIN32
     string convert_to_utf8(const std::wstring& utf16_string);

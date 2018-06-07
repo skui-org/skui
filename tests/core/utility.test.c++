@@ -30,9 +30,23 @@
 namespace
 {
   using skui::test::check;
+
+  void check_format_flags()
+  {
+    std::ostream stream(nullptr);
+    const auto original_flags = stream.flags();
+    {
+      skui::core::ostream_format_keeper guard(stream);
+
+      stream.setf(~original_flags);
+    }
+    check(stream.flags() == original_flags, "All flags reset");
+  }
 }
 
 int main()
 {
+  check_format_flags();
+
   return skui::test::exit_code;
 }
