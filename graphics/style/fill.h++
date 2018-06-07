@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright © 2017-2018 Ruben Van Boxem
+ * Copyright © 2018 Ruben Van Boxem
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,37 +23,31 @@
  **/
 
 /*
- * Primitive shape base class.
+ * style::fill
+ * Describes the interior filling of graphical objects.
  */
 
-#ifndef SKUI_GRAPHICS_SHAPE_H
-#define SKUI_GRAPHICS_SHAPE_H
+#ifndef SKUI_GRAPHICS_STYLE_FILL_H
+#define SKUI_GRAPHICS_STYLE_FILL_H
 
-#include "color.h++"
-#include "drawable.h++"
-#include "gradient.h++"
-#include "pixel.h++"
-#include "scalar.h++"
+#include "graphics/color.h++"
+#include "graphics/gradient.h++"
 
-#include "graphics/style/border.h++"
-#include "graphics/style/fill.h++"
-
-#include <core/utility.h++>
+#include <memory>
 
 namespace skui
 {
   namespace graphics
   {
-    class shape : public drawable
+    namespace style
     {
-    public:
-      shape();
-      ~shape() override;
-
-      style::border border;
-      style::fill fill;
-    };
+      struct fill
+      {
+        graphics::color color = colors::transparent;
+        std::unique_ptr<graphics::gradient> gradient;
+      };
+    }
   }
 }
 
-#endif
+#endif // FILL_H

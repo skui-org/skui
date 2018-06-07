@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright © 2017-2018 Ruben Van Boxem
+ * Copyright © 2018 Ruben Van Boxem
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,36 +23,26 @@
  **/
 
 /*
- * Primitive shape base class.
+ * Border
+ * Styling for border.
  */
 
-#ifndef SKUI_GRAPHICS_SHAPE_H
-#define SKUI_GRAPHICS_SHAPE_H
+#ifndef SKUI_GRAPHICS_STYLE_BORDER_H
+#define SKUI_GRAPHICS_STYLE_BORDER_H
 
-#include "color.h++"
-#include "drawable.h++"
-#include "gradient.h++"
-#include "pixel.h++"
-#include "scalar.h++"
-
-#include "graphics/style/border.h++"
-#include "graphics/style/fill.h++"
-
-#include <core/utility.h++>
+#include "graphics/style/line.h++"
 
 namespace skui
 {
   namespace graphics
   {
-    class shape : public drawable
+    namespace style
     {
-    public:
-      shape();
-      ~shape() override;
-
-      style::border border;
-      style::fill fill;
-    };
+      struct border : line
+      {
+        scalar radius = 0;
+      };
+    }
   }
 }
 

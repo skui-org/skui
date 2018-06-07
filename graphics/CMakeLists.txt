@@ -57,13 +57,19 @@ set(shape_src
     shape/rectangle.h++ shape/rectangle.c++
     shape/text.h++ shape/text.c++
    )
+set(style_src
+    style/border.h++
+    style/fill.h++
+    style/line.h++
+   )
 
 source_group("" FILES ${graphics_src})
 source_group(gradient FILES ${gradient_src})
 source_group(shape FILES ${shape_src})
+source_group(style FILES ${style_src})
 
 # The library itself
-add_library(graphics ${graphics_src} ${gradient_src} ${shape_src})
+add_library(graphics ${graphics_src} ${gradient_src} ${shape_src} ${style_src})
 target_link_libraries(graphics PUBLIC core)
 target_link_libraries(graphics PRIVATE skia
                                        ${OPENGL_LIBRARIES}
