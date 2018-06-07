@@ -29,8 +29,11 @@
 #ifndef SKUI_GRAPHICS_DRAWABLE_H
 #define SKUI_GRAPHICS_DRAWABLE_H
 
+#include "graphics/bounding_box.h++"
 #include "graphics/position.h++"
 #include "graphics/size.h++"
+
+#include <optional>
 
 namespace skui
 {
@@ -45,7 +48,8 @@ namespace skui
       virtual ~drawable() = 0;
 
       virtual void draw(canvas& canvas,
-                        const scalar_position& position) const = 0;
+                        const scalar_position& position,
+                        const std::optional<scalar_bounding_box>& clipping_box) const = 0;
 
       virtual graphics::scalar_size implicit_size() const = 0;
     };

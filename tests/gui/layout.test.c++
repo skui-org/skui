@@ -39,11 +39,20 @@ namespace
     mock_canvas(skui::graphics::canvas_flags flags = skui::graphics::canvas_flag::none) : canvas(flags) {}
     ~mock_canvas() override = default;
 
-    void draw(const skui::graphics::color&) override {}
-    void draw(const skui::graphics::rectangle&, const skui::graphics::scalar_position&) override {}
-    void draw(const skui::graphics::ellipse&, const skui::graphics::scalar_position&) override {}
-    void draw(const skui::graphics::text&, const skui::graphics::scalar_position&) override {}
-    void draw(const skui::graphics::path&, const skui::graphics::scalar_position&) override {}
+    void draw(const skui::graphics::color&,
+              const std::optional<skui::graphics::scalar_bounding_box>&) override {}
+    void draw(const skui::graphics::rectangle&,
+              const skui::graphics::scalar_position&,
+              const std::optional<skui::graphics::scalar_bounding_box>&) override {}
+    void draw(const skui::graphics::ellipse&,
+              const skui::graphics::scalar_position&,
+              const std::optional<skui::graphics::scalar_bounding_box>&) override {}
+    void draw(const skui::graphics::text&,
+              const skui::graphics::scalar_position&,
+              const std::optional<skui::graphics::scalar_bounding_box>&) override {}
+    void draw(const skui::graphics::path&,
+              const skui::graphics::scalar_position&,
+              const std::optional<skui::graphics::scalar_bounding_box>&) override {}
   };
 
   struct mock_element : public skui::gui::element

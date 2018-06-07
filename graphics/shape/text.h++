@@ -44,7 +44,8 @@ namespace skui
       ~text() override;
 
       void draw(canvas& canvas,
-                const scalar_position& position) const override;
+                const scalar_position& position,
+                const std::optional<scalar_bounding_box>& clipping_box = {}) const override;
 
       scalar_size implicit_size() const override;
 

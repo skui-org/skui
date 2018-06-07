@@ -40,10 +40,12 @@ namespace skui
     void graphics_view::draw(graphics::canvas& canvas,
                              const graphics::scalar_position& position) const
     {
-      canvas.draw(scene.background_color);
+      canvas.draw(scene.background_color, {{position, size}});
+
       for(const auto& [offset, drawable] : scene.drawables)
       {
-        drawable->draw(canvas, position + offset);
+        const auto top_left = position+offset;
+        drawable->draw(canvas, top_left, {{top_left, size}});
       }
     }
 

@@ -46,15 +46,20 @@ namespace skui
     public:
       ~skia_canvas() override = default;
 
-      void draw(const color& background_color) override;
+      void draw(const color& background_color,
+                const std::optional<scalar_bounding_box>& clipping_box = {}) override;
       void draw(const rectangle& rectangle,
-                const scalar_position& position) override;
+                const scalar_position& position,
+                const std::optional<scalar_bounding_box>& clipping_box = {}) override;
       void draw(const ellipse& ellipse,
-                const scalar_position& position) override;
+                const scalar_position& position,
+                const std::optional<scalar_bounding_box>& clipping_box = {}) override;
       void draw(const text& text,
-                const scalar_position& position) override;
+                const scalar_position& position,
+                const std::optional<scalar_bounding_box>& clipping_box = {}) override;
       void draw(const path& path,
-                const scalar_position& position) override;
+                const scalar_position& position,
+                const std::optional<scalar_bounding_box>& clipping_box = {}) override;
 
     protected:
       skia_canvas(canvas_flags flags);

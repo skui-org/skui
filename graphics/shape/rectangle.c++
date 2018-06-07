@@ -37,9 +37,10 @@ namespace skui
     rectangle::~rectangle() = default;
 
     void rectangle::draw(canvas& canvas,
-                         const scalar_position& position) const
+                         const scalar_position& position,
+                         const std::optional<scalar_bounding_box>& clipping_box) const
     {
-      canvas.draw(*this, position);
+      canvas.draw(*this, position, clipping_box);
     }
 
     scalar_size rectangle::implicit_size() const

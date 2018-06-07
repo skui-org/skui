@@ -167,6 +167,23 @@ namespace skui
         return {{make_fill_paint(shape, offset, flags),
                  make_border_paint(shape, flags)}};
       }
+
+      struct canvas_guard
+      {
+        canvas_guard(SkCanvas* canvas,
+                     const std::optional<scalar_bounding_box>& clipping_box)
+          : auto_restore(canvas, true)
+        {
+          if(clipping_box)
+          {
+            canvas->clipRect(SkRect::MakeXYWH(clipping_box->top_left.x,
+                                              clipping_box->top_left.y,
+                                              clipping_box->size.width,
+                                              clipping_box->size.height));
+          }
+        }
+        SkAutoCanvasRestore auto_restore;
+      };
     }
 
     skia_canvas::skia_canvas(canvas_flags flags)
@@ -174,15 +191,19 @@ namespace skui
       , surface{nullptr}
     {}
 
-    void skia_canvas::draw(const color& background_color)
+    void skia_canvas::draw(const color& background_color,
+                           const std::optional<scalar_bounding_box>& clipping_box)
     {
       auto canvas = surface->getCanvas();
+
+      const canvas_guard guard(canvas, clipping_box);
 
       canvas->drawColor(convert_to<SkColor>(background_color));
     }
 
     void skia_canvas::draw(const rectangle& rectangle,
-                           const scalar_position& position)
+                           const scalar_position& position,
+                           const std::optional<scalar_bounding_box>& clipping_box)
     {
       auto canvas = surface->getCanvas();
 
@@ -201,9 +222,12 @@ namespace skui
     }
 
     void skia_canvas::draw(const ellipse& ellipse,
-                           const scalar_position& position)
+                           const scalar_position& position,
+                           const std::optional<scalar_bounding_box>& clipping_box)
     {
       auto canvas = surface->getCanvas();
+
+      const canvas_guard guard(canvas, clipping_box);
 
       for(const auto& paint : make_paint(ellipse, position, flags))
       {
@@ -214,7 +238,8 @@ namespace skui
     }
 
     void skia_canvas::draw(const text& text,
-                           const scalar_position& position)
+                           const scalar_position& position,
+                           const std::optional<scalar_bounding_box>& clipping_box)
     {
       auto canvas = surface->getCanvas();
 
@@ -228,9 +253,12 @@ namespace skui
     }
 
     void skia_canvas::draw(const path& path,
-                           const scalar_position& position)
+                           const scalar_position& position,
+                           const std::optional<scalar_bounding_box>& clipping_box)
     {
       auto canvas = surface->getCanvas();
+
+      const canvas_guard guard(canvas, clipping_box);
 
       SkPath skia_path;
 

@@ -31,9 +31,12 @@
 
 #include "canvas.h++"
 
+#include "bounding_box.h++"
 #include "shape.h++"
 
 #include <core/bitflag.h++>
+
+#include <optional>
 
 namespace skui
 {
@@ -51,21 +54,26 @@ namespace skui
     };
     using canvas_flags = core::bitflag<canvas_flag>;
 
-    class  canvas
+    class canvas
     {
     public:
       virtual ~canvas() = 0;
 
       // Primitives
-      virtual void draw(const color& background_color) = 0;
+      virtual void draw(const color& background_color,
+                        const std::optional<scalar_bounding_box>& clipping_box = {}) = 0;
       virtual void draw(const rectangle& rectangle,
-                        const scalar_position& position) = 0;
+                        const scalar_position& position,
+                        const std::optional<scalar_bounding_box>& clipping_box = {}) = 0;
       virtual void draw(const ellipse& ellipse,
-                        const scalar_position& position) = 0;
+                        const scalar_position& position,
+                        const std::optional<scalar_bounding_box>& clipping_box = {}) = 0;
       virtual void draw(const text& text,
-                        const scalar_position& position) = 0;
+                        const scalar_position& position,
+                        const std::optional<scalar_bounding_box>& clipping_box = {}) = 0;
       virtual void draw(const path& path,
-                        const scalar_position& position) = 0;
+                        const scalar_position& position,
+                        const std::optional<scalar_bounding_box>& clipping_box = {}) = 0;
 
     protected:
       canvas(canvas_flags flags);
