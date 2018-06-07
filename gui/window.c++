@@ -150,7 +150,7 @@ namespace skui
 
       auto canvas = graphics_context->create_canvas(size, canvas_flags);
 
-      element->draw(*canvas, {0, 0});
+      element->draw(*canvas, {.5, .5}); // half pixel offset so line (1,1)---(1,10) lies on exactly one pixel line
     }
 
     void window::initialize_and_execute_platform_loop()
