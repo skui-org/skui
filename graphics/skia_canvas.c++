@@ -142,14 +142,16 @@ namespace skui
 
         paint.setStyle(SkPaint::Style::kFill_Style);
 
-        paint.setARGB(shape.fill.color.alpha,
-                      shape.fill.color.red,
-                      shape.fill.color.green,
-                      shape.fill.color.blue);
-
         if(shape.fill.gradient)
         {
           set_gradient(paint, *shape.fill.gradient, offset);
+        }
+        else
+        {
+          paint.setARGB(shape.fill.color.alpha,
+                        shape.fill.color.red,
+                        shape.fill.color.green,
+                        shape.fill.color.blue);
         }
 
         if(flags.test(canvas_flag::anti_alias))
