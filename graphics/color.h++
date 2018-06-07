@@ -29,6 +29,8 @@
 #ifndef SKUI_GRAPHICS_COLOR_H
 #define SKUI_GRAPHICS_COLOR_H
 
+#include <core/utility.h++>
+
 #include <cstdint>
 
 namespace skui
@@ -54,11 +56,23 @@ namespace skui
         , blue{static_cast<std::uint8_t>(argb)}
       {}
 
+      explicit constexpr operator std::uint32_t() const
+      {
+        return static_cast<std::uint32_t>(alpha << 24 | red << 16 | green << 8 | blue);
+      }
+
       std::uint8_t alpha;
       std::uint8_t red;
       std::uint8_t green;
       std::uint8_t blue;
     };
+
+    inline std::ostream& operator<<(std::ostream& os, const color& color)
+    {
+      core::ostream_format_keeper keeper(os);
+
+      return os << std::hex << std::uint32_t(color) << '\n';
+    }
 
     namespace colors
     {
