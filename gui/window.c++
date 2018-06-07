@@ -112,7 +112,8 @@ namespace skui
 
     void window::repaint()
     {
-      native_window->get_current_geometry(position, size);
+
+      std::tie(position, size) = native_window->get_current_geometry();
 
       native_window->make_current();
 

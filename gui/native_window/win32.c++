@@ -122,13 +122,13 @@ namespace skui
         SetWindowTextW(window, core::convert_to_utf16(title).c_str());
       }
 
-      void win32::get_current_geometry(skui::graphics::pixel_position& position,
-                                       skui::graphics::pixel_size& size) const
+      std::pair<graphics::pixel_position, graphics::pixel_size> win32::get_current_geometry() const
       {
         RECT rect;
         GetClientRect(window, &rect);
-        size = {static_cast<graphics::pixel>(rect.right-rect.left), static_cast<graphics::pixel>(rect.bottom - rect.top)};
-        position = {static_cast<std::int32_t>(rect.left), static_cast<std::int32_t>(rect.top)};
+
+        return {{static_cast<std::int32_t>(rect.left), static_cast<std::int32_t>(rect.top)},
+                {static_cast<graphics::pixel>(rect.right-rect.left), static_cast<graphics::pixel>(rect.bottom - rect.top)}};
       }
 
       HWND win32::get_hwnd() const

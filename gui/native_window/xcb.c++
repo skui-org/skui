@@ -166,29 +166,33 @@ namespace skui
         xcb_flush(connection);
       }
 
-      void xcb::get_current_geometry(graphics::pixel_position& position,
-                                     graphics::pixel_size& size) const
+      std::pair<graphics::pixel_position, graphics::pixel_size> xcb::get_current_geometry() const
       {
         // fetch true dimensions and position of visual window now because the ConfigureNotify event lies to us
-        core::unique_free_ptr<xcb_get_geometry_reply_t> geom(xcb_get_geometry_reply(connection,
-                                                                                    xcb_get_geometry(connection, window),
-                                                                                    nullptr));
+        core::unique_free_ptr<xcb_get_geometry_reply_t> geometry(xcb_get_geometry_reply(connection,
+                                                                                        xcb_get_geometry(connection, window),
+                                                                                        nullptr));
+        if(!geometry)
+          return {};
 
         core::unique_free_ptr<xcb_query_tree_reply_t> tree(xcb_query_tree_reply(connection,
                                                                                 xcb_query_tree(connection, window),
                                                                                 nullptr));
+        if(!tree)
+          return {};
 
         xcb_translate_coordinates_cookie_t translateCookie = xcb_translate_coordinates(connection,
                                                                                        window,
                                                                                        tree->parent,
-                                                                                       geom->x, geom->y);
+                                                                                       geometry->x, geometry->y);
 
-        core::unique_free_ptr<xcb_translate_coordinates_reply_t> trans(xcb_translate_coordinates_reply(connection,
-                                                                                                       translateCookie,
-                                                                                                       nullptr));
+        core::unique_free_ptr<xcb_translate_coordinates_reply_t> translation(xcb_translate_coordinates_reply(connection,
+                                                                                                             translateCookie,
+                                                                                                             nullptr));
+        if(!translation)
+          return {};
 
-        size = { geom->width, geom->height };
-        position = { trans->dst_x, trans->dst_y };
+        return {{translation->dst_x, translation->dst_y}, {geometry->width, geometry->height}};
       }
 
       xcb_connection_t* xcb::get_connection() const
