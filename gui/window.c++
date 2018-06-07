@@ -92,21 +92,30 @@ namespace skui
 
     void window::show()
     {
+      std::unique_lock lock{mutex};
+
       core::debug_print("Showing window.\n");
+
       native_window->show();
       state = window_state::windowed;
     }
 
     void window::hide()
     {
+      std::unique_lock lock{mutex};
+
       core::debug_print("Hiding window.\n");
+
       native_window->hide();
       state = window_state::hidden;
     }
 
     void window::close()
     {
+      std::unique_lock lock{mutex};
+
       core::debug_print("window::close called.\n");
+
       native_window->close();
       has_been_closed = true;
       window::windows().erase(std::remove(windows().begin(), windows().end(), this), windows().end());
@@ -114,6 +123,8 @@ namespace skui
 
     void window::repaint()
     {
+      std::unique_lock lock{mutex};
+
       if(has_been_closed)
         return;
 
