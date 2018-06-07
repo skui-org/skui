@@ -29,11 +29,11 @@
 #ifndef SKUI_GRAPHICS_SHAPE_H
 #define SKUI_GRAPHICS_SHAPE_H
 
-#include "color.h++"
-#include "drawable.h++"
-#include "gradient.h++"
-#include "pixel.h++"
-#include "scalar.h++"
+#include "graphics/color.h++"
+#include "graphics/drawable.h++"
+#include "graphics/gradient.h++"
+#include "graphics/pixel.h++"
+#include "graphics/scalar.h++"
 
 #include "graphics/style/border.h++"
 #include "graphics/style/fill.h++"
