@@ -1,8 +1,6 @@
 #! /usr/bin/env bash
 
 VERSION=${1}
-C_COMPILER=${2}
-CXX_COMPILER=${3}
 
 MAJOR=`echo ${VERSION} | cut -d. -f1`
 MINOR=`echo ${VERSION} | cut -d. -f2`
@@ -19,8 +17,8 @@ mkdir llvm-build
 cd llvm-build
 cmake ../llvm \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_C_COMPILER=${C_COMPILER} \
-    -DCMAKE_CXX_COMPILER=${CXX_COMPILER} \
+    -DCMAKE_C_COMPILER=clang-${MAJOR}.${MINOR} \
+    -DCMAKE_CXX_COMPILER=clang++-${MAJOR}.${MINOR} \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DLIBCXX_INSTALL_EXPERIMENTAL_LIBRARY=TRUE \
     -DLIBCXX_ENABLE_FILESYSTEM=TRUE

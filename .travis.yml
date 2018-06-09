@@ -73,7 +73,7 @@ matrix:
       before_install:
         - . ./ci/setup_cmake.sh 3.8.2 Linux
         - . ./ci/setup_ninja.sh 1.8.2 linux
-        - . ./ci/setup_libcxx.sh 5.0.2 clang-5.0 clang++-5.0
+        - . ./ci/setup_libcxx.sh 5.0.2
 
     - os: linux
       compiler: clang-6.0
@@ -91,12 +91,13 @@ matrix:
             - libxcb-util0-dev
             - libxcb-image0-dev
           sources:
+            - ubuntu-toolchain-r-test
             - sourceline: 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-6.0 main'
               key_url: 'http://apt.llvm.org/llvm-snapshot.gpg.key'
       before_install:
         - . ./ci/setup_cmake.sh 3.8.2 Linux
         - . ./ci/setup_ninja.sh 1.8.2 linux
-        - . ./ci/setup_libcxx.sh 6.0.0 clang-6.0 clang++-6.0
+        - . ./ci/setup_libcxx.sh 6.0.0
     - os: osx
       osx_image: xcode9.3
       env:
@@ -105,7 +106,6 @@ matrix:
       before_install:
         - . ./ci/setup_cmake.sh 3.8.2 Darwin
         - . ./ci/setup_ninja.sh 1.8.2 mac
-        - . ./ci/setup_libcxx.sh 5.0.2 clang clang++
     - os: osx
       osx_image: xcode9.3
       env:
@@ -114,4 +114,3 @@ matrix:
       before_install:
         - . ./ci/setup_cmake.sh 3.8.2 Darwin
         - . ./ci/setup_ninja.sh 1.8.2 mac
-        - . ./ci/setup_libcxx.sh 6.0.0 clang clang++
