@@ -62,6 +62,7 @@ set(style_src
     style/border.h++
     style/fill.h++
     style/line.h++
+    style/spacing.h++
    )
 
 source_group("" FILES ${graphics_src})
