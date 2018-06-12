@@ -56,7 +56,7 @@ namespace skui
       layout(element_ptrs children);
 
     private:
-      virtual std::vector<graphics::scalar_position> calculate_child_offsets() const = 0;
+      virtual std::vector<graphics::scalar_position> calculate_child_offsets(const graphics::canvas& canvas) const = 0;
     };
   }
 }

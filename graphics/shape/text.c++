@@ -33,9 +33,10 @@ namespace skui
 {
   namespace graphics
   {
-    text::text(core::string characters)
-      : font_size{12}
-      , characters{characters}
+    text::text(core::string characters,
+               style::font font)
+      : characters{std::move(characters)}
+      , font{std::move(font)}
     {}
 
     text::~text() = default;
@@ -47,15 +48,9 @@ namespace skui
       canvas.draw(*this, position, clipping_box);
     }
 
-    scalar_size text::implicit_size() const
+    scalar_size text::implicit_size(const canvas& canvas) const
     {
-      // Skia specific for now. This should be externalized somehow.
-      SkPaint paint;
-      paint.setTextSize(font_size);
-      SkRect bounds;
-      paint.measureText(characters.c_str(), characters.size(), &bounds);
-
-      return { bounds.width(), bounds.height() };
+      return canvas.measure_text(*this);
     }
   }
 }

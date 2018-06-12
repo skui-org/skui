@@ -61,6 +61,8 @@ namespace skui
                 const scalar_position& position,
                 const std::optional<scalar_bounding_box>& clipping_box = {}) override;
 
+      scalar_size measure_text(const text& text) const override;
+
     protected:
       skia_canvas(canvas_flags flags);
 

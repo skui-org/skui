@@ -60,7 +60,7 @@ namespace skui
                         const graphics::scalar_position& position) const = 0;
       void invalidate();
 
-      virtual graphics::scalar_size implicit_size() const = 0;
+      virtual graphics::scalar_size implicit_size(const graphics::canvas& canvas) const = 0;
 
       /// Properties
       // This element by itself

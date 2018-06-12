@@ -76,6 +76,9 @@ namespace skui
                         const scalar_position& position,
                         const std::optional<scalar_bounding_box>& clipping_box = {}) = 0;
 
+      // text size needs knowledge of underlying graphics system exposed through canvas
+      virtual scalar_size measure_text(const text& text) const = 0;
+
      style::fill background = graphics::colors::white;
 
     protected:

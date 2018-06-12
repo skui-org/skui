@@ -43,7 +43,7 @@ namespace skui
       canvas.draw(*this, position, clipping_box);
     }
 
-    scalar_size ellipse::implicit_size() const
+    scalar_size ellipse::implicit_size(const canvas&) const
     {
       return axes;
     }

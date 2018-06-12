@@ -51,12 +51,13 @@ namespace skui
       void draw(graphics::canvas& canvas,
                 const graphics::scalar_position& position) const override;
 
-      graphics::scalar_size implicit_size() const override;
 
       core::property<core::string> text;
 
     private:
       graphics::text graphics_label;
+
+      graphics::scalar_size implicit_size(const graphics::canvas& canvas) const override;
     };
 
     using label_ptr = std::unique_ptr<label>;

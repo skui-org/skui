@@ -37,20 +37,20 @@ namespace skui
 
     column::~column() = default;
 
-    graphics::scalar_size column::implicit_size() const
+    graphics::scalar_size column::implicit_size(const graphics::canvas& canvas) const
     {
       return std::accumulate(children.begin(), children.end(),
                              graphics::scalar_size{spacing, spacing}*(children.size()-1),
-                             [](const auto& value, const auto& child)
+                             [&canvas](const auto& value, const auto& child)
                              -> graphics::scalar_size
                              {
-                               const auto child_size = child->implicit_size();
+                               const auto child_size = child->implicit_size(canvas);
                                return {std::max(value.width, child_size.width),
                                        value.height + child_size.height};
                              });
     }
 
-    std::vector<graphics::scalar_position> column::calculate_child_offsets() const
+    std::vector<graphics::scalar_position> column::calculate_child_offsets(const graphics::canvas& canvas) const
     {
       std::vector<graphics::scalar_position> offsets;
       offsets.reserve(children.size());
@@ -58,9 +58,9 @@ namespace skui
 
       for(const auto& child : children)
       {
-        offsets.emplace_back(offset);
+        offsets.push_back(offset);
 
-        offset.y += child->implicit_size().height + spacing;
+        offset.y += child->implicit_size(canvas).height + spacing;
       }
 
       return offsets;

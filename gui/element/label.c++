@@ -54,9 +54,10 @@ namespace skui
       graphics_label.draw(canvas, position);
     }
 
-    graphics::scalar_size label::implicit_size() const
+    graphics::scalar_size label::implicit_size(const graphics::canvas& canvas) const
     {
-      return graphics_label.implicit_size();
+      auto graphics_text = make_text(text, fill, outline, font);
+      return canvas.measure_text(graphics_text);
     }
   }
 }

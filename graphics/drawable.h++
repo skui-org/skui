@@ -51,7 +51,7 @@ namespace skui
                         const scalar_position& position,
                         const std::optional<scalar_bounding_box>& clipping_box) const = 0;
 
-      virtual graphics::scalar_size implicit_size() const = 0;
+      virtual graphics::scalar_size implicit_size(const canvas& canvas) const = 0;
     };
   }
 }

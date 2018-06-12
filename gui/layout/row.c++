@@ -26,7 +26,7 @@
 
 #include <core/debug.h++>
 
-#include <cmath>
+#include <algorithm>
 #include <numeric>
 
 namespace skui
@@ -39,20 +39,20 @@ namespace skui
 
     row::~row() = default;
 
-    graphics::scalar_size row::implicit_size() const
+    graphics::scalar_size row::implicit_size(const graphics::canvas& canvas) const
     {
       return std::accumulate(children.begin(), children.end(),
                              graphics::scalar_size{spacing, spacing}*(children.size()-1),
-                             [](const auto value, const auto& child)
+                             [&canvas](const auto value, const auto& child)
                              -> graphics::scalar_size
                              {
-                               const auto child_size = child->implicit_size();
+                               const auto child_size = child->implicit_size(canvas);
                                return {value.width + child_size.width,
                                        std::max(value.height, child_size.height)};
                              });
     }
 
-    std::vector<graphics::scalar_position> row::calculate_child_offsets() const
+    std::vector<graphics::scalar_position> row::calculate_child_offsets(const graphics::canvas& canvas) const
     {
       std::vector<graphics::scalar_position> offsets;
       offsets.reserve(children.size());
@@ -62,7 +62,7 @@ namespace skui
       {
         offsets.emplace_back(offset);
 
-        offset.x += child->implicit_size().width + spacing;
+        offset.x += child->implicit_size(canvas).width + spacing;
       }
 
       return offsets;

@@ -30,6 +30,7 @@
 #define SKUI_GRAPHICS_TEXT_H
 
 #include "graphics/shape.h++"
+#include "graphics/style/font.h++"
 
 #include <core/string.h++>
 
@@ -40,17 +41,19 @@ namespace skui
     class text : public shape
     {
     public:
-      text(core::string text);
+      text(core::string text,
+           style::font font = {});
       ~text() override;
 
       void draw(canvas& canvas,
                 const scalar_position& position,
                 const std::optional<scalar_bounding_box>& clipping_box = {}) const override;
 
-      scalar_size implicit_size() const override;
+      scalar_size implicit_size(const canvas& canvas) const override;
 
-      scalar font_size;
       core::string characters;
+      style::font font;
+      style::border& outline = shape::border;
     };
   }
 }

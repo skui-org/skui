@@ -50,7 +50,7 @@ namespace skui
       void draw(graphics::canvas& canvas,
                 const graphics::scalar_position& position) const override;
 
-      graphics::scalar_size implicit_size() const override;
+      graphics::scalar_size implicit_size(const graphics::canvas& canvas) const override;
 
     private:
       const graphics::scene& scene;

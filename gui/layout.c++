@@ -41,7 +41,7 @@ namespace skui
 
     void layout::draw(graphics::canvas& canvas, const graphics::scalar_position& position) const
     {
-      const auto child_offsets = calculate_child_offsets();
+      auto child_offsets = calculate_child_offsets(canvas);
 
       for(std::size_t i = 0; i < children.size(); ++i)
       {

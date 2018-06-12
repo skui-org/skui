@@ -241,5 +241,27 @@ namespace skui
                            paint);
       }
     }
+
+    scalar_size skia_canvas::measure_text(const text& text) const
+    {
+      SkPaint paint = text.border.color == colors::transparent ? make_fill_paint(text, {0, 0}, flags)
+                                                           : make_border_paint(text, flags);
+      paint.setTextSize(text.font.size);
+
+      SkPaint::FontMetrics metrics;
+      paint.getFontMetrics(&metrics);
+
+      SkRect bounds;
+      const SkScalar width = paint.measureText(text.characters.c_str(), text.characters.size(), &bounds);
+      const SkScalar height = std::abs(metrics.fAscent - metrics.fDescent);
+
+      core::debug_print("printing text: \'", text.characters, "\'\n",
+                        "bounding rect top: (", bounds.left(), ", ", bounds.top(), ")\n",
+                        "bounding rect size: ", bounds.width(), "x", bounds.height(), "\n",
+                        "font height: ", height, "\n",
+                        "text width: ", width, "\n");
+
+      return {width, height};
+    }
   }
 }

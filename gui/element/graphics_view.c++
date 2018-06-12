@@ -49,7 +49,7 @@ namespace skui
       }
     }
 
-    graphics::scalar_size graphics_view::implicit_size() const
+    graphics::scalar_size graphics_view::implicit_size(const graphics::canvas&) const
     {
       return size;
     }

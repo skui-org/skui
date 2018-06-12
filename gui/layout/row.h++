@@ -47,10 +47,10 @@ namespace skui
       row(element_ptrs children = {});
       ~row() override;
 
-      graphics::scalar_size implicit_size() const override;
+      graphics::scalar_size implicit_size(const graphics::canvas& canvas) const override;
 
     private:
-      std::vector<graphics::scalar_position> calculate_child_offsets() const override;
+      std::vector<graphics::scalar_position> calculate_child_offsets(const graphics::canvas& canvas) const override;
     };
 
     using row_ptr = std::unique_ptr<row>;

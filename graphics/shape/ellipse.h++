@@ -49,7 +49,7 @@ namespace skui
                 const scalar_position& position,
                 const std::optional<scalar_bounding_box>& clipping_box = {}) const override;
 
-      scalar_size implicit_size() const override;
+      scalar_size implicit_size(const canvas& canvas) const override;
 
       scalar_size axes;
     };
