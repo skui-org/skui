@@ -37,10 +37,10 @@ set(graphics_src
     shape.h++ shape.c++
     size.h++
     skia_canvas.h++ skia_canvas.c++
+    skia_gl_canvas.h++ skia_gl_canvas.c++
     skia_gl_context.h++ skia_gl_context.c++
     skia_gradient.h++ skia_gradient.c++
     skia_raster_context.h++ skia_raster_context.c++
-    skia_gl_canvas.h++ skia_gl_canvas.c++
     skia_raster_canvas.h++ skia_raster_canvas.c++
     skia_utility.h++ skia_utility.c++
     swizzle.h++ swizzle.c++
