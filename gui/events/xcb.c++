@@ -29,6 +29,14 @@
 
 #include <core/debug.h++>
 
+namespace
+{
+  std::uint8_t mask_send_event_bit(std::uint8_t response_type)
+  {
+    return response_type & 0b0111'1111;
+  }
+}
+
 namespace skui
 {
   namespace gui
@@ -77,7 +85,7 @@ namespace skui
             break;
           }
 
-          switch(event_ptr->response_type & ~0x80)
+          switch(mask_send_event_bit(event_ptr->response_type))
           {
             case XCB_EXPOSE:
             {
@@ -187,7 +195,7 @@ namespace skui
               break;
             }
             default:
-              core::debug_print("Unknown event: ", event_ptr->response_type & ~0x80, ".\n");
+              core::debug_print("Unknown event: ", (int)mask_send_event_bit(event_ptr->response_type), ".\n");
               break;
           }
         }
