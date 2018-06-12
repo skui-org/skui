@@ -32,6 +32,8 @@
 
 #include "gui/events.h++"
 
+#include "gui/input/button.h++"
+#include <core/bitflag.h++>
 #include <core/utility.h++>
 
 #include <xcb/xcb.h>
@@ -55,6 +57,7 @@ namespace skui
         xcb_window_t xcb_window;
 
         core::unique_free_ptr<xcb_intern_atom_reply_t> wm_delete_window;
+        core::bitflag<input::button> pressed_buttons;
       };
     }
   }

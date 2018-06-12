@@ -31,9 +31,43 @@
 
 namespace
 {
+  using namespace skui::gui::input;
+
   std::uint8_t mask_send_event_bit(std::uint8_t response_type)
   {
     return response_type & 0b0111'1111;
+  }
+
+  std::optional<button> get_button(xcb_button_t xcb_button)
+  {
+    switch(xcb_button)
+    {
+      case 1:
+        return button::primary;
+      case 2:
+        return button::middle;
+      case 3:
+        return button::secondary;
+      default:
+        return {};
+    }
+  }
+
+  std::optional<scroll> get_scroll(xcb_button_t xcb_button)
+  {
+    switch(xcb_button)
+    {
+      case 4:
+        return scroll::up;
+      case 5:
+        return scroll::down;
+      case 6:
+        return scroll::left; //?
+      case 7:
+        return scroll::right; //?
+      default:
+        return {};
+    }
   }
 }
 
@@ -114,48 +148,71 @@ namespace skui
             }
             case XCB_BUTTON_PRESS:
             {
-              auto button_press = reinterpret_cast<xcb_button_press_event_t*>(event_ptr.get());
+              const auto& button_press = reinterpret_cast<const xcb_button_press_event_t&>(*event_ptr);
 
-              switch (button_press->state)
+              const graphics::pixel_position position{button_press.event_x,
+                                                      button_press.event_y};
+
+              if(const auto button = get_button(button_press.detail); button)
               {
-                case XCB_BUTTON_MASK_1:
-                  core::debug_print("Primary mouse button pressed.");
-                  break;
+                pressed_buttons.set(*button);
+
+                window.pointer.pressed(*button, position);
+              }
+              else if(const auto scroll = get_scroll(button_press.detail); scroll)
+              {
+                window.pointer.scroll(*scroll, position);
               }
 
-              switch (button_press->detail)
-              {
-                case 4:
-                  // Wheel button up
-                  break;
-                case 5:
-                  // wheel button down
-                  break;
-                default:
-                  core::debug_print("Button ", button_press->detail, " pressed in window ", button_press->event, ", at coordinates (", button_press->event_x, ",", button_press->event, ").\n");
-                  break;
-              }
               break;
             }
             case XCB_BUTTON_RELEASE:
             {
-              //auto button_release = reinterpret_cast<xcb_button_release_event_t*>(event_ptr.get());
-              //implementation::print_modifiers(button_release->state);
+              const auto& button_release = reinterpret_cast<const xcb_button_release_event_t&>(*event_ptr);
+
+              const graphics::pixel_position position{button_release.event_x,
+                                                      button_release.event_y};
+
+              if(const auto button = get_button(button_release.detail); button)
+              {
+                const bool click = pressed_buttons.test(*button);
+                pressed_buttons.unset(*button);
+
+                window.pointer.released(*button, position);
+                if(click)
+                  window.pointer.clicked(*button, position);
+              }
+
               break;
             }
             case XCB_MOTION_NOTIFY:
             {
-              //auto motion = reinterpret_cast<xcb_motion_notify_event_t*>(event_ptr.get());
+              const auto& motion = reinterpret_cast<const xcb_motion_notify_event_t&>(*event_ptr);
+
+              const graphics::pixel_position position{motion.event_x,
+                                                      motion.event_y};
+              window.pointer.moved(position);
+
               break;
             }
             case XCB_ENTER_NOTIFY:
             {
-              //auto enter = reinterpret_cast<xcb_enter_notify_event_t*>(event_ptr.get());
+              const auto& enter = reinterpret_cast<const xcb_enter_notify_event_t&>(*event_ptr);
+
+              const graphics::pixel_position position{enter.event_x,
+                                                      enter.event_y};
+              window.pointer.entered(position);
+
               break;
             }
             case XCB_LEAVE_NOTIFY:
             {
-              //auto leave = reinterpret_cast<xcb_leave_notify_event_t*>(event_ptr.get());
+              const auto& leave = reinterpret_cast<const xcb_leave_notify_event_t&>(*event_ptr);
+
+              const graphics::pixel_position position{leave.event_x,
+                                                      leave.event_y};
+              window.pointer.left(position);
+
               break;
             }
             case XCB_KEY_PRESS:
