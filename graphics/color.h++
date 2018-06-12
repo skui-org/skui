@@ -40,6 +40,9 @@ namespace skui
     class color
     {
     public:
+      color()
+        : color{0,0,0,0}
+      {}
       explicit constexpr color(std::uint8_t red,
                                std::uint8_t green,
                                std::uint8_t blue,
