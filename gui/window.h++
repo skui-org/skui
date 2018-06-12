@@ -68,7 +68,7 @@ namespace skui
       void hide();
       void close();
 
-      void repaint();
+      void repaint(bool force = false);
 
       std::unique_ptr<gui::element> element;
 

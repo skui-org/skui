@@ -121,20 +121,26 @@ namespace skui
       window::windows().erase(std::remove(windows().begin(), windows().end(), this), windows().end());
     }
 
-    void window::repaint()
+    void window::repaint(bool force)
     {
       std::unique_lock lock{mutex};
 
       if(has_been_closed)
         return;
 
+      bool size_changed = false;
+      auto size_changed_connection = size.value_changed.connect([&size_changed]() { size_changed = true; });
       std::tie(position, size) = native_window->get_current_geometry();
+      size.value_changed.disconnect(size_changed_connection);
 
-      native_window->make_current();
+      if(size_changed || force)
+      {
+        native_window->make_current();
 
-      draw();
+        draw();
 
-      native_window->swap_buffers(size);
+        native_window->swap_buffers(size);
+      }
     }
 
     native_window::base& window::get_native_window() const
