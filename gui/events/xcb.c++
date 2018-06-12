@@ -46,10 +46,10 @@ namespace skui
         xcb_window = native_xcb_window->get_window();
 
         // The magic incantation to receive and be able to check for the "window was closed" event
-        xcb_intern_atom_cookie_t cookie = xcb_intern_atom(connection, 1, 12, "WM_PROTOCOLS");
+        xcb_intern_atom_cookie_t cookie = xcb_intern_atom(connection, true, 12, "WM_PROTOCOLS");
         core::unique_free_ptr<xcb_intern_atom_reply_t> reply(xcb_intern_atom_reply(connection, cookie, nullptr));
 
-        xcb_intern_atom_cookie_t cookie2 = xcb_intern_atom(connection, 0, 16, "WM_DELETE_WINDOW");
+        xcb_intern_atom_cookie_t cookie2 = xcb_intern_atom(connection, false, 16, "WM_DELETE_WINDOW");
         wm_delete_window.reset(xcb_intern_atom_reply(connection, cookie2, nullptr));
 
         xcb_change_property(connection,
