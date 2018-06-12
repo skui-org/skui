@@ -38,6 +38,7 @@
 
 #include <limits>
 #include <cmath>
+#include <iostream>
 
 namespace skui
 {
@@ -122,6 +123,12 @@ namespace skui
     constexpr size2D<ValueType> operator/(const size2D<ValueType>& size, FactorType factor)
     {
       return {size.width/static_cast<ValueType>(factor), size.height/static_cast<ValueType>(factor)};
+    }
+
+    template<typename ValueType>
+    std::ostream& operator<<(std::ostream& os, const size2D<ValueType>& size)
+    {
+      return os << '[' << size.width << ", " << size.height << ']';
     }
 
     // pixel here means "device independent pixel" aka scaled from 72dpi
