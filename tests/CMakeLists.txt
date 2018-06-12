@@ -112,6 +112,7 @@ compile_test(core number_of_bits)
 runtime_test(graphics position)
 runtime_test(graphics size)
 runtime_test(graphics swizzle)
+compile_test(graphics color)
 
 runtime_test(gui layout)
 runtime_test(gui layout/row)

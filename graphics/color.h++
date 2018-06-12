@@ -70,6 +70,15 @@ namespace skui
       std::uint8_t blue;
     };
 
+    constexpr bool operator==(const color& left, const color& right)
+    {
+      return std::uint32_t(left) == std::uint32_t(right);
+    }
+    constexpr bool operator!=(const color& left, const color& right)
+    {
+      return std::uint32_t(left) != std::uint32_t(right);
+    }
+
     inline std::ostream& operator<<(std::ostream& os, const color& color)
     {
       core::ostream_format_keeper keeper(os);
