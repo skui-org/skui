@@ -36,22 +36,38 @@ namespace skui
 {
   namespace gui
   {
-    label::label(core::string text)
-      : graphics_label{text}
+    namespace
     {
-      graphics_label.fill.color = graphics::colors::black;
-      graphics_label.font_size = 20;
-
-      this->text.value_changed.connect([this](const core::string& text) { graphics_label.characters = text; });
-      this->text.value_changed.connect(this, &label::invalidate);
+      graphics::text make_text(const core::string& text,
+                               const graphics::style::fill& fill,
+                               const graphics::style::border& outline,
+                               const graphics::style::font& font)
+      {
+        graphics::text result(text);
+        result.fill = fill;
+        result.border = outline;
+        result.font = font;
+        return result;
+      }
     }
+
+    label::label(core::string text)
+      : text{text}
+      , fill{}
+    {}
 
     label::~label() = default;
 
     void label::draw(graphics::canvas& canvas,
                      const graphics::scalar_position& position) const
     {
-      graphics_label.draw(canvas, position);
+      graphics::rectangle rectangle{size};
+      rectangle.border = border;
+      //rectangle.fill = background;
+      auto graphics_text = make_text(text, fill, outline, font);
+      element::draw(canvas,
+                    {&rectangle, &graphics_text},
+                    {position, position + graphics::scalar_position{border.thickness, border.thickness}});
     }
 
     graphics::scalar_size label::implicit_size(const graphics::canvas& canvas) const

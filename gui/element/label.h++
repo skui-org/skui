@@ -36,7 +36,9 @@
 #include <core/property.h++>
 #include <core/string.h++>
 
+#include <graphics/style/font.h++>
 #include <graphics/shape/text.h++>
+#include <graphics/shape/rectangle.h++>
 
 namespace skui
 {
@@ -45,17 +47,19 @@ namespace skui
     class label : public element
     {
     public:
-      label(core::string text);
+      label(core::string text_);
       ~label() override;
 
       void draw(graphics::canvas& canvas,
                 const graphics::scalar_position& position) const override;
 
-
       core::property<core::string> text;
 
-    private:
-      graphics::text graphics_label;
+      graphics::style::fill fill;
+      graphics::style::border outline;
+      graphics::style::fill background;
+      graphics::style::border border;
+      graphics::style::font font;
 
       graphics::scalar_size implicit_size(const graphics::canvas& canvas) const override;
     };
