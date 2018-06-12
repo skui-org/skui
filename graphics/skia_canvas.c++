@@ -115,7 +115,7 @@ namespace skui
       {
         canvas_guard(SkCanvas* canvas,
                      const std::optional<scalar_bounding_box>& clipping_box)
-          : auto_restore(canvas, true)
+          : auto_restore(canvas, clipping_box.has_value())
         {
           if(clipping_box)
           {
@@ -152,18 +152,29 @@ namespace skui
     {
       auto canvas = surface->getCanvas();
 
-      const auto rect = SkRect::MakeXYWH(position.x, position.y,
-                                         rectangle.size.width,rectangle.size.height);
-      const auto rounded_rect = SkRRect::MakeRectXY(rect,
-                                                    rectangle.border.radius,
-                                                    rectangle.border.radius);
-      SkPath border;
-      border.addRoundRect(rect, rectangle.border.radius, rectangle.border.radius);
+      const canvas_guard guard(canvas, clipping_box);
 
-      for(const auto& paint : make_paint(rectangle, position, flags))
-      {
-          canvas->drawRRect(rounded_rect, paint);
-      }
+      const auto& border = rectangle.border;
+      const auto fill_rect = SkRRect::MakeRectXY(SkRect::MakeXYWH(position.x+border.thickness,
+                                                                  position.y+border.thickness,
+                                                                  rectangle.size.width,
+                                                                  rectangle.size.height),
+                                                 border.radius-border.thickness,
+                                                 border.radius-border.thickness);
+      const auto border_rect = SkRRect::MakeRectXY(SkRect::MakeXYWH(position.x,
+                                                                    position.y,
+                                                                    rectangle.size.width+border.thickness,
+                                                                    rectangle.size.height+border.thickness),
+                                                   rectangle.border.radius,
+                                                   rectangle.border.radius);
+
+      const auto& [fill_paint, border_paint] = make_paint(rectangle, position, flags);
+      // Another possibility here is to use drawDRRect to draw the border pixel-perfectly
+      // Unfortunately, this precludes any possibility of dashed lines etc.
+      canvas->drawRRect(fill_rect, fill_paint);
+      canvas->drawRRect(border_rect, border_paint);
+
+
     }
 
     void skia_canvas::draw(const ellipse& ellipse,
@@ -177,7 +188,7 @@ namespace skui
       for(const auto& paint : make_paint(ellipse, position, flags))
       {
           canvas->drawOval(SkRect::MakeXYWH(position.x, position.y,
-                                            ellipse.axes.height, ellipse.axes.width),
+                                            ellipse.axes.width, ellipse.axes.height),
                            paint);
       }
     }
@@ -188,13 +199,32 @@ namespace skui
     {
       auto canvas = surface->getCanvas();
 
-      for(auto& paint : make_paint(text, position, flags))
-      {
-        paint.setTextSize(text.font_size);
-        canvas->drawText(text.characters.c_str(), text.characters.size(),
-                         position.x, position.y+text.font_size,
-                         paint);
-      }
+      const canvas_guard guard(canvas, clipping_box);
+
+      auto [fill_paint, border_paint] = make_paint(text, position, flags);
+      fill_paint.setTextSize(text.font.size);
+      border_paint.setTextSize(text.font.size);
+
+      SkPaint paint = text.border.color == colors::transparent ? make_fill_paint(text, {0, 0}, flags)
+                                                               : make_border_paint(text, flags);
+      paint.setTextSize(text.font.size);
+
+      SkPaint::FontMetrics metrics;
+      paint.getFontMetrics(&metrics);
+
+      SkScalar offset = -metrics.fAscent;
+
+      canvas->drawText(text.characters.c_str(),
+                       text.characters.size(),
+                       position.x,
+                       position.y + offset,
+                       fill_paint);
+
+      canvas->drawText(text.characters.c_str(),
+                       text.characters.size(),
+                       position.x,
+                       position.y + offset,
+                       border_paint);
     }
 
     void skia_canvas::draw(const path& path,
