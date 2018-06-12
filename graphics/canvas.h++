@@ -31,8 +31,8 @@
 
 #include "canvas.h++"
 
-#include "bounding_box.h++"
-#include "shape.h++"
+#include "graphics/bounding_box.h++"
+#include "graphics/shape.h++"
 #include "graphics/style/fill.h++"
 
 #include <core/bitflag.h++>
@@ -43,10 +43,10 @@ namespace skui
 {
   namespace graphics
   {
-    class rectangle;
     class ellipse;
-    class text;
     class path;
+    class rectangle;
+    class text;
 
     enum class canvas_flag
     {
