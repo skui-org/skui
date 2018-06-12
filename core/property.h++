@@ -50,6 +50,8 @@ namespace skui
       using const_reference = std::add_lvalue_reference_t<std::add_const_t<T>>;
       using rvalue_reference = std::add_rvalue_reference_t<T>;
 
+      static_assert(!std::is_const_v<value_type>, "property<const T> makes no sense and cannot be used.");
+
       property() = default;
       template<typename... SlotTypes>
       property(value_type value, SlotTypes&&... slots)
@@ -108,11 +110,30 @@ namespace skui
       bool operator> (const_reference other) const { return value >  other; }
       bool operator>=(const_reference other) const { return value >= other; }
 
+      property& operator&=(const_reference other)
+      {
+        const bool changed = (value & other) == value;
+        value &= other;
+        if(changed)
+          value_changed.emit(value);
+
+        return *this;
+      }
+      const property& operator&=(const_reference other) const
+      {
+        const bool changed = (value & other) == value;
+        value &= other;
+        if(changed)
+          value_changed.emit(value);
+
+        return *this;
+      }
+
       signal<const_reference> value_changed;
 
     private:
-      // mutable because a property<non-const T> can be assigned a value
-      mutable value_type value;
+      // mutable because a const property<non-const T> can be assigned a value
+      mutable value_type value{};
     };
 
     template<typename ValueType>
