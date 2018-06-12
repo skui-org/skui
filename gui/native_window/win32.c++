@@ -95,12 +95,12 @@ namespace skui
 
       void win32::show()
       {
-        ShowWindow(window, SW_SHOWNORMAL);
+        ShowWindowAsync(window, SW_SHOWNORMAL);
       }
 
       void win32::hide()
       {
-        ShowWindow(window, SW_HIDE);
+        ShowWindowAsync(window, SW_HIDE);
       }
 
       void win32::close()
