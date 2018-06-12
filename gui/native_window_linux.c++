@@ -42,9 +42,9 @@ namespace skui
       {
         std::unique_ptr<base> window;
         if(flags.test(window_flag::opengl))
-          window = std::make_unique<gui::native_window::xlib>(flags);
+          window = std::make_unique<xlib>(flags);
         else
-          window = std::make_unique<gui::native_window::xcb>();
+          window = std::make_unique<xcb>();
 
         window->create(position, size);
 

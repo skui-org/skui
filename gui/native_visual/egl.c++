@@ -132,8 +132,6 @@ namespace skui
       {
         return &egl_get;
       }
-
-
     }
   }
 }

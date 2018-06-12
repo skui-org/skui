@@ -41,11 +41,11 @@ namespace skui
       {
         std::unique_ptr<native_visual::base> visual;
         if(flags.test(window_flag::opengl))
-          visual = std::make_unique<gui::native_visual::wgl>();
+          visual = std::make_unique<native_visual::wgl>();
         else
-          visual = std::make_unique<gui::native_visual::win32>();
+          visual = std::make_unique<native_visual::win32>();
 
-        auto window = std::make_unique<gui::native_window::win32>(std::move(visual));
+        auto window = std::make_unique<win32>(std::move(visual));
 
         window->create(position, size);
 

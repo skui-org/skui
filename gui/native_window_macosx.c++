@@ -45,7 +45,7 @@ namespace skui
         else
           visual = std::make_unique<native_visual::coregraphics>();
 
-        std::unique_ptr<base> window = std::make_unique<gui::native_window::appkit>(std::move(visual));
+        std::unique_ptr<base> window = std::make_unique<appkit>(std::move(visual));
 
         window->create(position, size);
 
