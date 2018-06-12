@@ -208,6 +208,12 @@ namespace skui
                                          std::forward<EmitArgTypes>(arguments)...);
         }
       }
+
+      template<typename... EmitArgTypes>
+      void operator()(EmitArgTypes&&... arguments) const
+      {
+        emit(std::forward<EmitArgTypes>(arguments)...);
+      }
     };
   }
 }
