@@ -67,8 +67,7 @@ namespace skui
 
         paint.setStrokeWidth(shape.border.thickness);
 
-        if(flags.test(canvas_flag::anti_alias))
-          paint.setAntiAlias(true);
+        paint.setAntiAlias(flags.test(canvas_flag::anti_alias));
 
         return paint;
       }
@@ -97,8 +96,7 @@ namespace skui
                      gradient);
         }
 
-        if(flags.test(canvas_flag::anti_alias))
-          paint.setAntiAlias(true);
+        paint.setAntiAlias(flags.test(canvas_flag::anti_alias));
 
         return paint;
       }
