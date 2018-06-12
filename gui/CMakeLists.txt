@@ -36,7 +36,10 @@ set(gui_src
     layout.h++ layout.c++
     main_windows.c++
     make_element.h++
-    window.h++ window.c++ window_windows.c++ window_linux.c++ window_macosx.c++
+    window.h++ window.c++
+               window_linux.c++
+               window_macosx.c++
+               window_windows.c++
     window_flags.h++
     window_state.h++
    )
