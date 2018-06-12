@@ -33,6 +33,7 @@
 
 #include "bounding_box.h++"
 #include "shape.h++"
+#include "graphics/style/fill.h++"
 
 #include <core/bitflag.h++>
 
@@ -60,7 +61,7 @@ namespace skui
       virtual ~canvas() = 0;
 
       // Primitives
-      virtual void draw(const color& background_color,
+      virtual void draw(const style::fill& background,
                         const std::optional<scalar_bounding_box>& clipping_box = {}) = 0;
       virtual void draw(const rectangle& rectangle,
                         const scalar_position& position,
@@ -74,6 +75,8 @@ namespace skui
       virtual void draw(const path& path,
                         const scalar_position& position,
                         const std::optional<scalar_bounding_box>& clipping_box = {}) = 0;
+
+     style::fill background = graphics::colors::white;
 
     protected:
       canvas(canvas_flags flags);

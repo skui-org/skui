@@ -45,7 +45,6 @@ namespace skui
                                                                canvas_flags flags) const
     {
       pixels.resize(size.width*size.height);
-      std::fill(pixels.begin(), pixels.end(), 0);
 
       return std::make_unique<skia_raster_canvas>(pixels, size, flags);
     }

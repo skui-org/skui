@@ -155,6 +155,7 @@ namespace skui
         canvas_flags |= graphics::canvas_flag::anti_alias;
 
       auto canvas = graphics_context->create_canvas(size, canvas_flags);
+      canvas->draw(canvas->background);
 
       element->draw(*canvas, {.5, .5}); // half pixel offset so line (1,1)---(1,10) lies on exactly one pixel line
     }

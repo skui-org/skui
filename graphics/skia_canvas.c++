@@ -134,14 +134,16 @@ namespace skui
       , surface{nullptr}
     {}
 
-    void skia_canvas::draw(const color& background_color,
+    void skia_canvas::draw(const style::fill& background,
                            const std::optional<scalar_bounding_box>& clipping_box)
     {
       auto canvas = surface->getCanvas();
 
       const canvas_guard guard(canvas, clipping_box);
 
-      canvas->drawColor(convert_to<SkColor>(background_color));
+      if(std::holds_alternative<color>(background))
+        canvas->drawColor(convert_to<SkColor>(std::get<color>(background)));
+      //TODO handle gradient background
     }
 
     void skia_canvas::draw(const rectangle& rectangle,

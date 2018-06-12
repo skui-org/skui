@@ -46,7 +46,7 @@ namespace skui
     public:
       ~skia_canvas() override = default;
 
-      void draw(const color& background_color,
+      void draw(const style::fill& background,
                 const std::optional<scalar_bounding_box>& clipping_box = {}) override;
       void draw(const rectangle& rectangle,
                 const scalar_position& position,
