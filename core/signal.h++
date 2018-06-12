@@ -142,7 +142,7 @@ namespace skui
         connection_type relay(const Signal& signal)
         {
           mutex_lock lock(slots_mutex);
-          slots.emplace_back(&signal, make_value<const_member_function_slot<Signal, void(Signal::*)(ArgTypes...) const, void, ArgTypes...>>(&Signal::emit));
+          slots.emplace_back(&signal, make_value<const_member_function_slot<Signal, void(Signal::*)(ArgTypes...) const, void, ArgTypes...>>(&Signal::template emit<ArgTypes...>));
           signal.track(this);
           return --slots.end();
         }
@@ -197,13 +197,15 @@ namespace skui
     public:
       signal() = default;
 
-      void emit(ArgTypes... arguments) const
+      template<typename... EmitArgTypes>
+      void emit(EmitArgTypes&&... arguments) const
       {
         std::lock_guard<decltype(this->slots_mutex)> lock(this->slots_mutex);
         for(auto&& object_slot : this->slots)
         {
           // This needs a dynamic_cast<const void*> e.g. when trackable is not the first parent class
-          object_slot.second->operator()(dynamic_cast<const void*>(object_slot.first), arguments...);
+          object_slot.second->operator()(dynamic_cast<const void*>(object_slot.first),
+                                         std::forward<EmitArgTypes>(arguments)...);
         }
       }
     };
