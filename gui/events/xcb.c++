@@ -89,8 +89,8 @@ namespace skui
           {
             case XCB_EXPOSE:
             {
-              auto expose = reinterpret_cast<xcb_expose_event_t*>(event_ptr.get());
-              if(expose->count>0)
+              const auto& expose = reinterpret_cast<const xcb_expose_event_t&>(*event_ptr);
+              if(expose.count>0)
                 continue;
 
               window.repaint();
@@ -99,7 +99,7 @@ namespace skui
             }
             case XCB_UNMAP_NOTIFY:
             {
-              //auto unmap = reinterpret_cast<xcb_unmap_notify_event_t*>(event_ptr.get());
+              //const auto& unmap = reinterpret_cast<const xcb_unmap_notify_event_t&>(*event_ptr);
               break;
             }
             case XCB_BUTTON_PRESS:
@@ -150,13 +150,13 @@ namespace skui
             }
             case XCB_KEY_PRESS:
             {
-              //auto key_press = reinterpret_cast<xcb_key_press_event_t*>(event_ptr.get());
+              //const auto& key_press = reinterpret_cast<xcb_key_press_event_t&>(*event_ptr);
               //implementation::print_modifiers(key_press->state);
               break;
             }
             case XCB_KEY_RELEASE:
             {
-              //auto key_release = reinterpret_cast<xcb_key_release_event_t*>(event_ptr.get());
+              //const auto& key_release = reinterpret_cast<xcb_key_release_event_t*>(*event_ptr);
               //implementation::print_modifiers(key_release->state);
               break;
             }
@@ -180,9 +180,9 @@ namespace skui
             }
             case XCB_CLIENT_MESSAGE:
             {
-              auto client_message = reinterpret_cast<xcb_client_message_event_t*>(event_ptr.get());
+              const auto& client_message = reinterpret_cast<const xcb_client_message_event_t&>(*event_ptr);
 
-              if(client_message->data.data32[0] == wm_delete_window->atom)
+              if(client_message.data.data32[0] == wm_delete_window->atom)
               {
                 core::debug_print("WM_DELETE_WINDOW received.\n");
                 window.close();
