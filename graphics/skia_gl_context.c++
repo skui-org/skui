@@ -28,8 +28,8 @@
 
 #include <core/debug.h++>
 
-#include <gl/GrGLInterface.h>
-#include <gl/GrGLAssembleInterface.h>
+#include <GrGLAssembleInterface.h>
+#include <GrGLInterface.h>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -50,8 +50,8 @@ namespace skui
       : context{}
       , gr_gl_interface{GrGLAssembleInterface(nullptr, get_function)}
     {
-      SkASSERT(gr_gl_interface);
       SkASSERT(get_function);
+      SkASSERT(gr_gl_interface);
     }
 
     skia_gl_context::~skia_gl_context() = default;
