@@ -102,6 +102,16 @@ namespace skui
               //const auto& unmap = reinterpret_cast<const xcb_unmap_notify_event_t&>(*event_ptr);
               break;
             }
+            case XCB_MAP_NOTIFY:
+            {
+              //const auto& map = reinterpret_cast<const xcb_map_notify_event_t&>(*event_ptr);
+              window.state = window_state::windowed;
+
+              // Force a repaint on map. This ensures a unminized window is properly displayed.
+              window.repaint(true);
+
+              break;
+            }
             case XCB_BUTTON_PRESS:
             {
               auto button_press = reinterpret_cast<xcb_button_press_event_t*>(event_ptr.get());
@@ -162,20 +172,7 @@ namespace skui
             }
             case XCB_CONFIGURE_NOTIFY:
             {
-              // We send out an event here so when maximizing or minimizing a window, it gets repainted properly
-              const auto& configure_notify = *reinterpret_cast<xcb_configure_notify_event_t*>(event_ptr.get());
-              // xcb_send_event is hardcoded to read 32 bytes regardless the event type, so give it 32 bytes.
-              core::unique_free_ptr<xcb_expose_event_t> event(reinterpret_cast<xcb_expose_event_t*>(std::calloc(1, 32)));
-              event->response_type = XCB_EXPOSE;
-              event->window = xcb_window;
-              event->x = static_cast<std::uint16_t>(configure_notify.x);
-              event->y = static_cast<std::uint16_t>(configure_notify.y);
-              event->width = configure_notify.width;
-              event->height = configure_notify.height;
-
-              xcb_send_event(connection, false, xcb_window, XCB_EVENT_MASK_EXPOSURE, reinterpret_cast<char*>(event.get()));
-              xcb_flush(connection);
-
+              //const auto& configure_notify = reinterpret_cast<const xcb_configure_notify_event_t&>(*event_ptr);
               break;
             }
             case XCB_CLIENT_MESSAGE:
