@@ -30,6 +30,17 @@
 #include <core/debug.h++>
 #include <core/utility.h++>
 
+#include <windowsx.h>
+
+namespace
+{
+  skui::graphics::pixel_position get_position(LPARAM lparam)
+  {
+    return {GET_X_LPARAM(lparam),
+            GET_Y_LPARAM(lparam)};
+  }
+}
+
 namespace skui
 {
   namespace gui
@@ -60,6 +71,44 @@ namespace skui
             BeginPaint(hwnd, &paint_struct);
             window.repaint();
             EndPaint(hwnd, &paint_struct);
+            break;
+          }
+          case WM_MOUSEMOVE:
+            window.pointer.moved(get_position(lparam));
+            break;
+          case WM_MOUSELEAVE:
+            window.pointer.left(get_position(lparam));
+            break;
+          case WM_LBUTTONDOWN:
+            window.pointer.pressed(input::button::primary, get_position(lparam));
+            break;
+          case WM_LBUTTONUP:
+            window.pointer.released(input::button::primary, get_position(lparam));
+            break;
+          case WM_MBUTTONDOWN:
+            window.pointer.pressed(input::button::middle, get_position(lparam));
+            break;
+          case WM_MBUTTONUP:
+            window.pointer.released(input::button::middle, get_position(lparam));
+            break;
+          case WM_RBUTTONDOWN:
+            window.pointer.pressed(input::button::secondary, get_position(lparam));
+            break;
+          case WM_RBUTTONUP:
+            window.pointer.released(input::button::secondary, get_position(lparam));
+            break;
+          case WM_MOUSEWHEEL:
+          {
+            auto scroll = GET_WHEEL_DELTA_WPARAM(wparam) > 0 ? input::scroll::up
+                                                             : input::scroll::down;
+            window.pointer.scroll(scroll, get_position(lparam));
+            break;
+          }
+          case WM_MOUSEHWHEEL:
+          {
+            auto scroll = GET_WHEEL_DELTA_WPARAM(wparam) > 0 ? input::scroll::right
+                                                             : input::scroll::left;
+            window.pointer.scroll(scroll, get_position(lparam));
             break;
           }
           default:
