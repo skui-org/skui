@@ -35,6 +35,7 @@
 #include "gui/window_flags.h++"
 #include "gui/window_state.h++"
 
+#include <core/bounded_property.h++>
 #include <core/proxy_property.h++>
 #include <core/string.h++>
 #include <core/trackable.h++>
@@ -73,9 +74,7 @@ namespace skui
       std::unique_ptr<gui::element> element;
 
       /// Properties
-      graphics::pixel_size size;
-      graphics::pixel_size maximum_size;
-      graphics::pixel_size minimum_size;
+      core::bounded_property<graphics::pixel_size> size;
 
       graphics::pixel_position position;
 
