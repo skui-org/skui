@@ -82,6 +82,7 @@ namespace
     int_size two{2, 4};
 
     check(two * 2 == int_size{4, 8}, "* multiplies size");
+    check(2 * two == int_size{4, 8}, "* multiplies size (reverse)");
     check(two / 2 == int_size{1, 2}, "/ divides size");
 
     two *= 2;

@@ -120,6 +120,11 @@ namespace skui
       return {size.width*static_cast<ValueType>(factor), size.height*static_cast<ValueType>(factor)};
     }
     template<typename ValueType, typename FactorType>
+    constexpr size2D<ValueType> operator*(FactorType factor, const size2D<ValueType>& size)
+    {
+      return size*factor;
+    }
+    template<typename ValueType, typename FactorType>
     constexpr size2D<ValueType> operator/(const size2D<ValueType>& size, FactorType factor)
     {
       return {size.width/static_cast<ValueType>(factor), size.height/static_cast<ValueType>(factor)};
