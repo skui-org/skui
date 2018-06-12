@@ -30,6 +30,7 @@
 #define SKUI_GUI_WINDOW_H
 
 #include "gui/icon.h++"
+#include "gui/input.h++"
 #include "gui/native_window.h++"
 #include "gui/window_flags.h++"
 #include "gui/window_state.h++"
@@ -85,6 +86,9 @@ namespace skui
       // Window manager
       core::signal<> closed;
       core::property<window_state> state;
+      // User input
+      input::keyboard keyboard;
+      input::pointer pointer;
 
       native_window::base& get_native_window() const;
 
