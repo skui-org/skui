@@ -30,7 +30,6 @@
 #define TWO_POINT_CONICAL_GRADIENT_H
 
 #include "graphics/color.h++"
-#include "graphics/gradient.h++"
 #include "graphics/position.h++"
 #include "graphics/scalar.h++"
 
@@ -40,16 +39,8 @@ namespace skui
 {
   namespace graphics
   {
-    class two_point_conical_gradient : public gradient
+    struct two_point_conical_gradient
     {
-    public:
-      two_point_conical_gradient(scalar_position start,
-                                 scalar start_radius,
-                                 scalar_position end,
-                                 scalar end_radius,
-                                 std::vector<color> colors);
-      ~two_point_conical_gradient() override;
-
       scalar_position start;
       scalar start_radius;
       scalar_position end;

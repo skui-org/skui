@@ -33,7 +33,7 @@
 #include "graphics/color.h++"
 #include "graphics/gradient.h++"
 
-#include <memory>
+#include <variant>
 
 namespace skui
 {
@@ -41,11 +41,8 @@ namespace skui
   {
     namespace style
     {
-      struct fill
-      {
-        graphics::color color = colors::transparent;
-        std::unique_ptr<graphics::gradient> gradient;
-      };
+      using fill = std::variant<color,
+                                gradient>;
     }
   }
 }

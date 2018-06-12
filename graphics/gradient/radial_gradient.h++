@@ -30,7 +30,6 @@
 #define SKUI_GRAPHICS_RADIAL_GRADIENT_H
 
 #include "graphics/color.h++"
-#include "graphics/gradient.h++"
 #include "graphics/position.h++"
 #include "graphics/scalar.h++"
 
@@ -40,15 +39,8 @@ namespace skui
 {
   namespace graphics
   {
-    class radial_gradient : public gradient
+    struct radial_gradient
     {
-    public:
-      radial_gradient(scalar_position center,
-                      scalar radius,
-                      std::vector<color> colors,
-                      std::vector<scalar> positions = {});
-      ~radial_gradient() override;
-
       scalar_position center;
       scalar radius;
       std::vector<color> colors;

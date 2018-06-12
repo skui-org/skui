@@ -30,7 +30,6 @@
 #define SKUI_GRAPHICS_LINEAR_GRADIENT_H
 
 #include "graphics/color.h++"
-#include "graphics/gradient.h++"
 #include "graphics/position.h++"
 #include "graphics/scalar.h++"
 
@@ -40,17 +39,11 @@ namespace skui
 {
   namespace graphics
   {
-    class linear_gradient : public gradient
+    struct linear_gradient
     {
-    public:
-      linear_gradient(std::vector<scalar_position> points,
-                      std::vector<color> colors,
-                      std::vector<scalar> positions = {});
-      ~linear_gradient() override;
-
-      const std::vector<scalar_position> points;
-      const std::vector<color> colors;
-      const std::vector<scalar> positions;
+      std::vector<scalar_position> points;
+      std::vector<color> colors;
+      std::vector<scalar> positions;
     };
   }
 }

@@ -30,7 +30,6 @@ set(graphics_src
     color.h++
     context.h++ context.c++
     drawable.h++ drawable.c++
-    gradient.h++ gradient.c++
     pixel.h++
     position.h++
     scalar.h++
@@ -39,6 +38,7 @@ set(graphics_src
     size.h++
     skia_canvas.h++ skia_canvas.c++
     skia_gl_context.h++ skia_gl_context.c++
+    skia_gradient.h++ skia_gradient.c++
     skia_raster_context.h++ skia_raster_context.c++
     skia_gl_canvas.h++ skia_gl_canvas.c++
     skia_raster_canvas.h++ skia_raster_canvas.c++
@@ -46,10 +46,11 @@ set(graphics_src
     swizzle.h++ swizzle.c++
    )
 set(gradient_src
-    gradient/linear_gradient.h++ gradient/linear_gradient.c++
-    gradient/radial_gradient.h++ gradient/radial_gradient.c++
-    gradient/sweep_gradient.h++ gradient/sweep_gradient.c++
-    gradient/two_point_conical_gradient.h++ gradient/two_point_conical_gradient.c++
+    gradient.h++
+    gradient/linear_gradient.h++
+    gradient/radial_gradient.h++
+    gradient/sweep_gradient.h++
+    gradient/two_point_conical_gradient.h++
    )
 set(shape_src
     shape/ellipse.h++ shape/ellipse.c++

@@ -30,7 +30,6 @@
 #define SKUI_GRAPHICS_SWEEP_GRADIENT_H
 
 #include "graphics/color.h++"
-#include "graphics/gradient.h++"
 #include "graphics/position.h++"
 #include "graphics/scalar.h++"
 
@@ -40,17 +39,11 @@ namespace skui
 {
   namespace graphics
   {
-    class sweep_gradient : public gradient
+    struct sweep_gradient
     {
-    public:
-      sweep_gradient(scalar_position center,
-                     std::vector<color> colors,
-                     std::vector<scalar> positions = {});
-      ~sweep_gradient() override;
-
       scalar_position center;
       std::vector<color> colors;
-      std::vector<scalar> positions;
+      std::vector<scalar> positions = {};
     };
   }
 }

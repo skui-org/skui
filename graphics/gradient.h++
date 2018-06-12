@@ -29,27 +29,21 @@
 #ifndef SKUI_GRAPHICS_GRADIENT_H
 #define SKUI_GRAPHICS_GRADIENT_H
 
+#include "graphics/gradient/linear_gradient.h++"
+#include "graphics/gradient/radial_gradient.h++"
+#include "graphics/gradient/sweep_gradient.h++"
+#include "graphics/gradient/two_point_conical_gradient.h++"
+
+#include <variant>
+
 namespace skui
 {
   namespace graphics
   {
-    enum class gradient_type
-    {
-      linear,
-      radial,
-      two_point_conical,
-      sweep,
-    };
-
-    class gradient
-    {
-    public:
-      virtual ~gradient() = 0;
-      const gradient_type type;
-
-    protected:
-      gradient(gradient_type type);
-    };
+    using gradient = std::variant<linear_gradient,
+                                  radial_gradient,
+                                  sweep_gradient,
+                                  two_point_conical_gradient>;
   }
 }
 

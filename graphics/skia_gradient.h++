@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright © 2017-2018 Ruben Van Boxem
+ * Copyright © 2018 Ruben Van Boxem
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,21 +22,37 @@
  * THE SOFTWARE.
  **/
 
-#include "graphics/gradient/linear_gradient.h++"
+/*
+ * graphics::skia_gradient
+ * Skia visitors for gradients.
+ */
+
+#include "graphics/gradient.h++"
+
+class SkPaint;
 
 namespace skui
 {
-    namespace graphics
-    {
-      linear_gradient::linear_gradient(std::vector<scalar_position> points,
-                                       std::vector<color> colors,
-                                       std::vector<scalar> positions)
-        : gradient{gradient_type::linear}
-        , points{points}
-        , colors{colors}
-        , positions{positions}
-      {}
+  namespace graphics
+  {
+    void set_gradient(const color&,
+                      SkPaint& paint,
+                      const scalar_position&);
 
-      linear_gradient::~linear_gradient() = default;
+    void set_gradient(const linear_gradient& linear,
+                      SkPaint& paint,
+                      const scalar_position& offset);
+
+    void set_gradient(const radial_gradient& radial,
+                      SkPaint& paint,
+                      const scalar_position& offset);
+
+    void set_gradient(const sweep_gradient& sweep,
+                      SkPaint& paint,
+                      const scalar_position& offset);
+
+    void set_gradient(const two_point_conical_gradient& conical,
+                      SkPaint& paint,
+                      const scalar_position& offset);
   }
 }

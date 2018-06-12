@@ -36,11 +36,11 @@
 #include "graphics/shape/path.h++"
 #include "graphics/shape/rectangle.h++"
 
+#include "graphics/skia_gradient.h++"
 #include "graphics/skia_utility.h++"
 
 #include <SkCanvas.h>
 #include <SkColor.h>
-#include <SkGradientShader.h>
 #include <SkPath.h>
 #include <SkRRect.h>
 #include <SkSurface.h>
@@ -53,67 +53,6 @@ namespace skui
   {
     namespace
     {
-      void set_gradient(SkPaint& paint,
-                        const gradient& gradient,
-                        const scalar_position& offset)
-      {
-        switch(gradient.type)
-        {
-          case gradient_type::linear:
-          {
-            const auto& linear = static_cast<const linear_gradient&>(gradient);
-
-            auto original_points = linear.points;
-            std::for_each(original_points.begin(), original_points.end(),
-                          [&offset](auto& point) { point += offset; });
-
-            auto points = convert_to<std::vector<SkPoint>>(linear.points);
-            auto colors = convert_to<std::vector<SkColor>>(linear.colors);
-            paint.setShader(SkGradientShader::MakeLinear(points.data(),
-                                                         colors.data(),
-                                                         nullptr,
-                                                         static_cast<int>(points.size()),
-                                                         SkShader::TileMode::kMirror_TileMode));
-            return;
-          }
-          case gradient_type::radial:
-          {
-            const auto& radial = static_cast<const radial_gradient&>(gradient);
-            paint.setShader(SkGradientShader::MakeRadial(convert_to<SkPoint>(radial.center + offset),
-                                                         radial.radius,
-                                                         convert_to<std::vector<SkColor>>(radial.colors).data(),
-                                                         nullptr,
-                                                         static_cast<int>(radial.positions.size()),
-                                                         SkShader::TileMode::kMirror_TileMode));
-            return;
-          }
-          case gradient_type::two_point_conical:
-          {
-            const auto& conical = static_cast<const two_point_conical_gradient&>(gradient);
-            paint.setShader(SkGradientShader::MakeTwoPointConical(convert_to<SkPoint>(conical.start + offset),
-                                                                  conical.start_radius,
-                                                                  convert_to<SkPoint>(conical.end + offset),
-                                                                  conical.end_radius,
-                                                                  convert_to<std::vector<SkColor>>(conical.colors).data(),
-                                                                  nullptr,
-                                                                  static_cast<int>(conical.colors.size()),
-                                                                  SkShader::TileMode::kMirror_TileMode));
-            return;
-          }
-          case gradient_type::sweep:
-          {
-            const auto& sweep = static_cast<const sweep_gradient&>(gradient);
-            const auto colors = convert_to<std::vector<SkColor>>(sweep.colors);
-            paint.setShader(SkGradientShader::MakeSweep(sweep.center.x + offset.x,
-                                                        sweep.center.y + offset.y,
-                                                        colors.data(),
-                                                        nullptr,
-                                                        static_cast<int>(colors.size())));
-            return;
-          }
-        }
-      }
-
       SkPaint make_border_paint(const shape& shape,
                                 const canvas_flags& flags)
       {
@@ -142,16 +81,20 @@ namespace skui
 
         paint.setStyle(SkPaint::Style::kFill_Style);
 
-        if(shape.fill.gradient)
+        if(std::holds_alternative<color>(shape.fill))
         {
-          set_gradient(paint, *shape.fill.gradient, offset);
+          const auto& color = std::get<graphics::color>(shape.fill);
+          paint.setARGB(color.alpha,
+                        color.red,
+                        color.green,
+                        color.blue);
         }
         else
         {
-          paint.setARGB(shape.fill.color.alpha,
-                        shape.fill.color.red,
-                        shape.fill.color.green,
-                        shape.fill.color.blue);
+          const auto& gradient = std::get<graphics::gradient>(shape.fill);
+          std::visit([&paint, &offset](auto&& specific_gradient)
+                     { set_gradient(specific_gradient, paint, offset); },
+                     gradient);
         }
 
         if(flags.test(canvas_flag::anti_alias))
