@@ -32,23 +32,23 @@ endif()
 
 # Common source files
 set(gui_src
-    element.h++ element.c++
-    events.h++ events.c++ events_linux.c++ events_windows.c++ events_macosx.c++
     icon.h++
     layout.h++ layout.c++
     main_windows.c++
     make_element.h++
-    native_window.h++ native_window.c++ native_window_windows.c++ native_window_linux.c++ native_window_macosx.c++
-    native_visual.h++ native_visual.c++
     window.h++ window.c++ window_windows.c++ window_linux.c++ window_macosx.c++
     window_flags.h++
     window_state.h++
    )
 set(element_src
+    element.h++ element.c++
     element/graphics_view.h++ element/graphics_view.c++
     element/label.h++ element/label.c++
    )
 set(events_src
+    events.h++ events.c++ events_linux.c++
+                          events_macosx.c++
+                          events_windows.c++
     events/appkit.h++ events/appkit.c++
     events/uikit.h++ events/uikit.c++
     events/win32.h++ events/win32.c++
@@ -67,6 +67,10 @@ set(layout_src
     layout/row.h++ layout/row.c++
    )
 set(native_window_src
+    native_window.h++ native_window.c++
+                      native_window_linux.c++
+                      native_window_macosx.c++
+                      native_window_windows.c++
     native_window/appkit.h++ native_window/appkit.c++
     native_window/uikit.h++ native_window/uikit.c++
     native_window/win32.h++ native_window/win32.c++
@@ -74,6 +78,7 @@ set(native_window_src
     native_window/xlib.h++ native_window/xlib.c++
    )
 set(native_visual_src
+    native_visual.h++ native_visual.c++
     native_visual/cgl.h++ native_visual/cgl.c++
     native_visual/coregraphics.h++ native_visual/coregraphics.c++
     native_visual/egl.h++ native_visual/egl.c++
