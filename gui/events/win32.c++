@@ -47,6 +47,8 @@ namespace skui
                                                WPARAM wparam,
                                                LPARAM lparam)
       {
+        auto& window = *reinterpret_cast<gui::window*>(GetWindowLongPtrW(hwnd, GWLP_USERDATA));
+
         switch(msg)
         {
           case WM_CLOSE:
@@ -56,8 +58,7 @@ namespace skui
           {
             PAINTSTRUCT paint_struct;
             BeginPaint(hwnd, &paint_struct);
-            auto window = reinterpret_cast<gui::window*>(GetWindowLongPtrW(hwnd, GWLP_USERDATA));
-            window->repaint();
+            window.repaint();
             EndPaint(hwnd, &paint_struct);
             break;
           }
