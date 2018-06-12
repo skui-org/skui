@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright © 2017-2018 Ruben Van Boxem
+ * Copyright © 2018 Ruben Van Boxem
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,16 +22,15 @@
  * THE SOFTWARE.
  **/
 
-#ifndef SKUI_GUI_INPUT_H
-#define SKUI_GUI_INPUT_H
+/*
+ * gui::input::button
+ * Mouse and pointer button enumeration.
+ */
 
-#include "gui/input/key.h++"
-#include "gui/input/button.h++"
-#include "gui/input/scroll.h++"
+#ifndef SKUI_GUI_INPUT_BUTTON_H
+#define SKUI_GUI_INPUT_BUTTON_H
 
-#include <core/signal.h++>
-
-#include <graphics/position.h++>
+#include <ostream>
 
 namespace skui
 {
@@ -39,25 +38,15 @@ namespace skui
   {
     namespace input
     {
-      struct keyboard
+      enum class button
       {
-        core::signal<key> tapped;
-        core::signal<key> pressed;
-        core::signal<key> released;
+        primary,
+        secondary,
+        middle
       };
 
-      struct pointer
-      {
-        core::signal<graphics::pixel_position> moved;
-        core::signal<graphics::pixel_position> entered;
-        core::signal<graphics::pixel_position> left;
-        core::signal<button, graphics::pixel_position> pressed;
-        core::signal<button, graphics::pixel_position> released;
-        core::signal<button, graphics::pixel_position> clicked;
-        core::signal<input::scroll, graphics::pixel_position> scroll;
-      };
+      std::ostream& operator<<(std::ostream& os, button button);
     }
   }
 }
-
 #endif

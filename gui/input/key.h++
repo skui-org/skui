@@ -28,8 +28,8 @@
  * Keys are mapped to their ASCII values where possible.
  */
 
-#ifndef SKUI_GUI_KEY_H
-#define SKUI_GUI_KEY_H
+#ifndef SKUI_GUI_INPUT_KEY_H
+#define SKUI_GUI_INPUT_KEY_H
 
 namespace skui
 {
