@@ -35,7 +35,6 @@ set(gui_src
     element.h++ element.c++
     events.h++ events.c++ events_linux.c++ events_windows.c++ events_macosx.c++
     icon.h++
-    key.h++
     layout.h++ layout.c++
     main_windows.c++
     make_element.h++
@@ -55,6 +54,12 @@ set(events_src
     events/win32.h++ events/win32.c++
     events/xcb.h++ events/xcb.c++
    )
+set(input_src
+    input.h++
+    input/key.h++
+    input/button.h++ input/button.c++
+    input/scroll.h++ input/scroll.c++
+    )
 set(layout_src
     layout/alignment.h++
     layout/column.h++ layout/column.c++
@@ -81,6 +86,7 @@ set(native_visual_src
 source_group("" FILES ${gui_src})
 source_group(element FILES ${element_src})
 source_group(events FILES ${events_src})
+source_group(input FILES ${input_src})
 source_group(layout FILES ${layout_src})
 source_group(native_visual FILES ${native_visual_src})
 source_group(native_window FILES ${native_window_src})
@@ -90,6 +96,7 @@ add_library(gui
             ${gui_src}
             ${element_src}
             ${events_src}
+            ${input_src}
             ${layout_src}
             ${native_window_src}
             ${native_visual_src}

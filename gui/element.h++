@@ -31,7 +31,6 @@
 #define SKUI_GUI_ELEMENT_H
 
 #include "gui/input.h++"
-#include "gui/key.h++"
 #include "gui/layout/alignment.h++"
 #include "gui/layout/orientation.h++"
 
