@@ -28,6 +28,7 @@
  */
 
 #include <core/application.h++>
+#include <core/debug.h++>
 
 #include <graphics/color.h++>
 
@@ -40,29 +41,44 @@
 #include <graphics/shape/text.h++>
 
 #include <gui/element/graphics_view.h++>
+#include <gui/element/label.h++>
+#include <gui/element/spacer.h++>
+#include <gui/layout/column.h++>
 #include <gui/window.h++>
 
 #include <memory>
 
-int main(int argc, char* argv[])
+class empty_element : public skui::gui::element
+                    , private skui::graphics::rectangle
 {
-  using skui::core::application;
+public:
+  using rectangle::border;
+  using rectangle::fill;
+  using element::size;
 
+  void draw(skui::graphics::canvas& canvas,
+            const skui::graphics::scalar_position& position) const override
+  {
+    element::draw(canvas, {this}, {position});
+  }
+  skui::graphics::scalar_size implicit_size(const skui::graphics::canvas&) const override
+  {
+    return rectangle::size;
+  }
+};
+
+skui::graphics::scene setup_graphics_scene()
+{
   using namespace skui::graphics;
 
-  application app(argc, argv, "Widget Gallery");
+  scene scene;
 
-  skui::graphics::scene scene;
-  scene.background_color = colors::white;
+  scene.background_color = colors::ghost_white;
 
   auto square = std::make_unique<rectangle>(scalar_size{140, 140});
-  square->fill.color = colors::red;
-  square->border.thickness = 20; // black by default
-
-  auto marker = std::make_unique<rectangle>(scalar_size{140,140});
-  marker->fill.color = colors::transparent;
-  marker->border.thickness = 1;
-  marker->border.color = colors::green;
+  square->fill = colors::transparent;
+  square->border.thickness = 1;
+  square->border.color = colors::black;
 
   auto circle = std::make_unique<ellipse>(scalar_size{140, 140});
   const scalar_position center{70, 70};
@@ -70,18 +86,63 @@ int main(int argc, char* argv[])
                                    colors::magenta,
                                    colors::yellow,
                                    colors::cyan};
-  circle->fill.gradient = std::make_unique<sweep_gradient>(center, rainbow);
+  circle->fill = sweep_gradient{center, rainbow};
 
   auto text_label = std::make_unique<text>("Hello Skui!");
-  text_label->fill.color = colors::black;
+  text_label->fill = colors::black;
 
   scene.drawables.emplace_back(scalar_position{10, 10}, std::move(square));
-  scene.drawables.emplace_back(scalar_position{10.5, 10.5}, std::move(marker));
   scene.drawables.emplace_back(scalar_position{150, 150}, std::move(circle));
   scene.drawables.emplace_back(scalar_position{300, 300}, std::move(text_label));
 
+  return scene;
+}
+
+auto make_label(const char* text)
+{
+  auto label = std::make_unique<skui::gui::label>(text);
+  label->border.thickness = 1;
+  label->border.color = skui::graphics::colors::blue;
+  label->border.radius = 5;
+  label->fill = skui::graphics::colors::red;
+  label->size = {200, 50};
+
+  return label;
+}
+
+void setup_input_debugging(skui::gui::window& window)
+{
+  using skui::core::debug_print;
+  using skui::gui::input::button;
+  using skui::gui::input::scroll;
+
+  window.pointer.pressed.connect([](button button) { debug_print("Button press: ", button, '\n'); });
+  window.pointer.released.connect([](button button) { debug_print("Button release: ", button, '\n'); });
+  window.pointer.clicked.connect([](button button) { debug_print("Button click: ", button, '\n'); });
+  window.pointer.scroll.connect([](scroll scroll) { debug_print("Scrolled: ", scroll, '\n'); });
+}
+
+int main(int argc, char* argv[])
+{
+  skui::gui::element::show_invisible = true;
+
+  using skui::core::application;
+
+  application app{argc, argv, "Widget Gallery"};
+
   skui::gui::window window;
-  window.element = std::make_unique<skui::gui::graphics_view>(scene);
+
+  auto scene = setup_graphics_scene();
+  auto view = std::make_unique<skui::gui::graphics_view>(scene);
+  view->size = skui::graphics::scalar_size{400, 320};
+
+  auto column = std::make_unique<skui::gui::column>(std::make_unique<skui::gui::spacer>(skui::graphics::scalar_size{40, 40}),//make_label("Hello SkUI!y"),
+                                                    std::make_unique<skui::gui::spacer>(skui::graphics::scalar_size{20, 20}),//make_label("This is SkUI's first layout."),
+                                                    std::move(view));
+  window.element = std::move(column);
+
+  setup_input_debugging(window);
+
   window.show();
 
   return app.execute();
