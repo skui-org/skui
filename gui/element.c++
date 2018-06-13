@@ -30,6 +30,8 @@ namespace skui
 {
   namespace gui
   {
+    bool element::show_invisible = false;
+
     element::~element() = default;
 
     void element::invalidate()

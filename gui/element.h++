@@ -58,6 +58,8 @@ namespace skui
     class element : public core::trackable
     {
     public:
+      static bool show_invisible;
+
       ~element() override;
 
       virtual void draw(graphics::canvas& canvas,
