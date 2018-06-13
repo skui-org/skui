@@ -47,6 +47,7 @@ set(element_src
     element.h++ element.c++
     element/graphics_view.h++ element/graphics_view.c++
     element/label.h++ element/label.c++
+    element/spacer.h++ element/spacer.c++
    )
 set(events_src
     events.h++ events.c++ events_linux.c++
