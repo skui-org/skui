@@ -42,10 +42,13 @@ namespace skui
     void layout::draw(graphics::canvas& canvas, const graphics::scalar_position& position) const
     {
       auto child_offsets = calculate_child_offsets(canvas);
+      const auto padded_position = position + graphics::scalar_position{padding.left, padding.right};
+      std::for_each(child_offsets.begin(), child_offsets.end(),
+                    [&padded_position](auto& offset) { offset += padded_position; });
 
       for(std::size_t i = 0; i < children.size(); ++i)
       {
-        children[i]->draw(canvas, position + child_offsets[i]);
+        children[i]->draw(canvas, child_offsets[i]);
       }
     }
   }
