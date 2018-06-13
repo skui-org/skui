@@ -22,35 +22,41 @@
  * THE SOFTWARE.
  **/
 
-#ifndef SKUI_TESTS_GUI_MOCK_ELEMENT_H
-#define SKUI_TESTS_GUI_MOCK_ELEMENT_H
+#ifndef SKUI_TEST_MOCK_CANVAS_H
+#define SKUI_TEST_MOCK_CANVAS_H
 
-#include <gui/element.h++>
+#include <graphics/canvas.h++>
 
 namespace skui
 {
   namespace test
   {
-    class mock_element : public gui::element
+    struct mock_canvas : public graphics::canvas
     {
     public:
-      mock_element(graphics::scalar size)
-      {
-        element::size = {size, size};
-      }
-      ~mock_element() override = default;
+      mock_canvas(graphics::canvas_flags flags = graphics::canvas_flag::none) : canvas(flags) {}
+      ~mock_canvas() override = default;
 
-      void draw(graphics::canvas&,
-                const graphics::scalar_position&) const override
-      {}
-      graphics::scalar_size implicit_size(const graphics::canvas&) const override
+      void draw(const graphics::style::fill&,
+                const std::optional<graphics::scalar_bounding_box>&) override {}
+      void draw(const graphics::rectangle&,
+                const graphics::scalar_position&,
+                const std::optional<graphics::scalar_bounding_box>&) override {}
+      void draw(const graphics::ellipse&,
+                const graphics::scalar_position&,
+                const std::optional<graphics::scalar_bounding_box>&) override {}
+      void draw(const graphics::text&,
+                const graphics::scalar_position&,
+                const std::optional<graphics::scalar_bounding_box>&) override {}
+      void draw(const graphics::path&,
+                const graphics::scalar_position&,
+                const std::optional<graphics::scalar_bounding_box>&) override {}
+
+      graphics::scalar_size measure_text(const graphics::text&) const override
       {
-        return size;
+        return {};
       }
     };
-
-    using mock_element_ptr = std::unique_ptr<mock_element>;
   }
 }
-
 #endif

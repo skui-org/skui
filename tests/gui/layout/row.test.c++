@@ -24,6 +24,7 @@
 
 #include "test.h++"
 
+#include "gui/mock_canvas.h++"
 #include "gui/mock_element.h++"
 
 #include <gui/layout/row.h++>
@@ -32,6 +33,7 @@ namespace
 {
   using skui::test::check_close;
   using skui::test::epsilon;
+  using skui::test::mock_canvas;
   using skui::test::mock_element;
 
   void test_implicit_size()
@@ -39,11 +41,11 @@ namespace
     skui::gui::row row(std::make_unique<mock_element>(10),
                        std::make_unique<mock_element>(0),
                        std::make_unique<mock_element>(5));
-    check_close(row.implicit_size(),
+    check_close(row.implicit_size(mock_canvas{}),
                 {15, 10},
                 epsilon<skui::graphics::scalar_size>, "implicit_size returns correct value");
     row.spacing = 3;
-    check_close(row.implicit_size(),
+    check_close(row.implicit_size(mock_canvas{}),
                 {21, 10},
                 epsilon<skui::graphics::scalar_size>, "implicit_size takes spacing into account correctly");
   }

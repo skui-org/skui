@@ -40,7 +40,7 @@ namespace
     mock_element el(1);
 
     check(el.size == skui::graphics::scalar_size{1,1}, "");
-    const auto element = skui::gui::make<mock_element>(1);
+    const auto element = std::make_unique<mock_element>(1);
 
     check(element->size == skui::graphics::scalar_size{1, 1}, "Arguments passed through make_element to actual constructor");
 }
@@ -48,8 +48,8 @@ namespace
   void test_make_element_ptrs()
   {
     {
-      auto element1 = skui::gui::make<mock_element>(1);
-      auto element2 = skui::gui::make<mock_element>(2);
+      auto element1 = std::make_unique<mock_element>(1);
+      auto element2 = std::make_unique<mock_element>(2);
 
       const auto elements = skui::gui::make_element_ptrs(std::move(element1),
                                                          std::move(element2));
@@ -59,8 +59,8 @@ namespace
       check(elements[1]->size == skui::graphics::scalar_size{2, 2}, "correct second element created");
     }
     {
-      const auto elements = skui::gui::make_element_ptrs(skui::gui::make<mock_element>(1),
-                                                         skui::gui::make<mock_element>(2));
+      const auto elements = skui::gui::make_element_ptrs(std::make_unique<mock_element>(1),
+                                                         std::make_unique<mock_element>(2));
 
       require(elements.size() == 2, "Correct number of elements in result");
       mock_element* pointer = dynamic_cast<mock_element*>(elements[0].get());

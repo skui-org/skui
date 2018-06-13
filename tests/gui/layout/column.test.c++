@@ -24,6 +24,7 @@
 
 #include "test.h++"
 
+#include "gui/mock_canvas.h++"
 #include "gui/mock_element.h++"
 
 #include <gui/layout/column.h++>
@@ -33,18 +34,19 @@ namespace
   using skui::test::check_close;
   using skui::test::epsilon;
   using skui::test::mock_element;
+  using skui::test::mock_canvas;
 
   void test_implicit_size()
   {
     skui::gui::column column(std::make_unique<mock_element>(10),
                              std::make_unique<mock_element>(0),
                              std::make_unique<mock_element>(5));
-    check_close(column.implicit_size(),
+    check_close(column.implicit_size(mock_canvas{}),
                 {10, 15},
                 epsilon<skui::graphics::scalar_size>, "implicit_size returns correct value");
 
     column.spacing = 3;
-    check_close(column.implicit_size(),
+    check_close(column.implicit_size(mock_canvas{}),
                 {10, 21},
                 epsilon<skui::graphics::scalar_size>, "implicit_size takes spacing into account correctly");
   }

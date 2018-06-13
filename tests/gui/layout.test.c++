@@ -24,6 +24,10 @@
 
 #include "test.h++"
 
+#include "gui/mock_canvas.h++"
+#include "gui/mock_element.h++"
+
+#include <graphics/bounding_box.h++>
 #include <graphics/canvas.h++>
 
 #include <gui/make_element.h++>
@@ -32,28 +36,7 @@
 namespace
 {
   using skui::test::check;
-
-  struct mock_canvas : public skui::graphics::canvas
-  {
-  public:
-    mock_canvas(skui::graphics::canvas_flags flags = skui::graphics::canvas_flag::none) : canvas(flags) {}
-    ~mock_canvas() override = default;
-
-    void draw(const skui::graphics::color&,
-              const std::optional<skui::graphics::scalar_bounding_box>&) override {}
-    void draw(const skui::graphics::rectangle&,
-              const skui::graphics::scalar_position&,
-              const std::optional<skui::graphics::scalar_bounding_box>&) override {}
-    void draw(const skui::graphics::ellipse&,
-              const skui::graphics::scalar_position&,
-              const std::optional<skui::graphics::scalar_bounding_box>&) override {}
-    void draw(const skui::graphics::text&,
-              const skui::graphics::scalar_position&,
-              const std::optional<skui::graphics::scalar_bounding_box>&) override {}
-    void draw(const skui::graphics::path&,
-              const skui::graphics::scalar_position&,
-              const std::optional<skui::graphics::scalar_bounding_box>&) override {}
-  };
+  using skui::test::mock_canvas;
 
   struct mock_element : public skui::gui::element
   {
@@ -66,7 +49,7 @@ namespace
       drawn_positions.push_back(position);
     }
 
-    skui::graphics::scalar_size implicit_size() const override
+    skui::graphics::scalar_size implicit_size(const skui::graphics::canvas&) const override
     {
       return {1, 1};
     }
@@ -85,13 +68,13 @@ namespace
     {}
     ~mock_layout() override = default;
 
-    skui::graphics::scalar_size implicit_size() const override
+    skui::graphics::scalar_size implicit_size(const skui::graphics::canvas&) const override
     {
       return {1, 2};
     }
 
   private:
-    std::vector<skui::graphics::scalar_position> calculate_child_offsets() const override
+    std::vector<skui::graphics::scalar_position> calculate_child_offsets(const skui::graphics::canvas&) const override
     {
       return {{1, 1}, {2, 2}, {3, 3}};
     }
