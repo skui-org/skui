@@ -59,7 +59,7 @@ namespace skui
           wc.lpszClassName = window_class;
           wc.hIconSm       = LoadIconW(application_instance, (LPCWSTR)IDI_WINLOGO);
 
-          return RegisterClassExW(&wc) == 0;
+          return RegisterClassExW(&wc) != 0;
         }
       }
       win32::win32(std::unique_ptr<native_visual::base> native_visual)
