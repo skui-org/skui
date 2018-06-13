@@ -45,8 +45,7 @@ namespace skui
 
     scalar_size rectangle::implicit_size(const canvas&) const
     {
-      return size;
+      return size + 2*scalar_size{border.thickness, border.thickness};
     }
   }
 }
-

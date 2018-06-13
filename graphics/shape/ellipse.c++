@@ -45,7 +45,7 @@ namespace skui
 
     scalar_size ellipse::implicit_size(const canvas&) const
     {
-      return axes;
+      return axes + 2*scalar_size{border.thickness, border.thickness};
     }
   }
 }
