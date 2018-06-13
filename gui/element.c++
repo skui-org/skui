@@ -37,6 +37,19 @@ namespace skui
       should_repaint = true;
     }
 
+    void element::draw(graphics::canvas& canvas,
+                       const std::vector<const graphics::drawable*>& drawables,
+                       const std::vector<graphics::scalar_position>& positions,
+                       const std::optional<graphics::scalar_bounding_box>& clipping_box) const
+    {
+      for(std::size_t i = 0; i < drawables.size(); ++i)
+      {
+        drawables[i]->draw(canvas,
+                           positions[i] + graphics::scalar_position{padding.left, padding.top},
+                           clipping_box);
+      }
+    }
+
     element::element() = default;
   }
 }

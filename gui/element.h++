@@ -37,9 +37,13 @@
 #include <core/bounded_property.h++>
 #include <core/trackable.h++>
 
+#include <graphics/bounding_box.h++>
 #include <graphics/size.h++>
 
+#include <graphics/style/spacing.h++>
+
 #include <memory>
+#include <optional>
 #include <vector>
 
 namespace skui
@@ -65,6 +69,8 @@ namespace skui
       /// Properties
       // This element by itself
       core::bounded_property<graphics::scalar_size> size;
+      graphics::style::spacing margins;
+      graphics::style::spacing padding;
 
       // This element inside another
       alignment vertical_alignment = alignment::center;
@@ -79,6 +85,11 @@ namespace skui
 
     protected:
       element();
+
+      void draw(graphics::canvas& canvas,
+                const std::vector<const graphics::drawable*>& drawables,
+                const std::vector<graphics::scalar_position>& positions,
+                const std::optional<graphics::scalar_bounding_box>& clipping_box = {}) const;
 
     private:
       bool should_repaint = false;
