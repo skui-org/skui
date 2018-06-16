@@ -18,24 +18,7 @@ environment:
     PACMAN_PACKAGES: "mingw-w64-x86_64-{headers,crt,gcc,boost,ninja}"
     PATH: C:\msys64\mingw64\bin;%PATH%
 
-  # Clang/C2
-  #- TOOLCHAIN: "Visual Studio 2017 Clang/C2"
-  #  APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-  #  GENERATOR: Visual Studio 15 2017 Win64
-  #  VCVARS: C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat
-  #  VCVARSARG: amd64
-  #  CMAKE_ARGS: -T"v141_clang_c2"
-
   # Clang targeting MSVC
-  - TOOLCHAIN: "Visual Studio 2015 Clang/LLVM 6.0.0"
-    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-    GENERATOR: Ninja
-    PACMAN_PACKAGES: "mingw-w64-x86_64-ninja"
-    PATH: C:\Program Files\LLVM\bin;C:\msys64\mingw64\bin;%PATH%
-    VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
-    VCVARSARG: amd64
-    CMAKE_ARGS: -DCMAKE_C_COMPILER=clang-cl.exe -DCMAKE_CXX_COMPILER=clang-cl.exe
-    CLANG_URL: http://releases.llvm.org/6.0.0/LLVM-6.0.0-win64.exe
   - TOOLCHAIN: "Visual Studio 2017 Clang/LLVM 6.0.0"
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     GENERATOR: Ninja
@@ -53,10 +36,6 @@ environment:
     PACMAN_PACKAGES: "mingw-w64-x86_64-{headers,crt,boost,clang,ninja}"
     PATH: C:\msys64\mingw64\bin;%PATH%
     CMAKE_ARGS: -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang
-
-#matrix:
-#  allow_failures:
-#    - TOOLCHAIN: "Visual Studio 2017 Clang/C2"
 
 configuration:
  - Debug

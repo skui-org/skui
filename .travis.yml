@@ -97,17 +97,8 @@ matrix:
       before_install:
         - . ./ci/setup_cmake.sh 3.8.2 Linux
         - . ./ci/setup_ninja.sh 1.8.2 linux
-        - . ./ci/setup_libcxx.sh 6.0.0
     - os: osx
-      osx_image: xcode9.3
-      env:
-        - C_COMPILER=clang
-        - CXX_COMPILER=clang++
-      before_install:
-        - . ./ci/setup_cmake.sh 3.8.2 Darwin
-        - . ./ci/setup_ninja.sh 1.8.2 mac
-    - os: osx
-      osx_image: xcode9.3
+      osx_image: xcode9.4
       env:
         - C_COMPILER=clang
         - CXX_COMPILER=clang++
