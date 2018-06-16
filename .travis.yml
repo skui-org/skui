@@ -6,6 +6,7 @@ language: c++
 script:
  - mkdir build
  - cd build
+ - export CXXFLAGS=${CI_CXX_FLAGS}
  - cmake .. -G Ninja -DCMAKE_C_COMPILER=$C_COMPILER -DCMAKE_CXX_COMPILER=$CXX_COMPILER -DCMAKE_BUILD_TYPE=Release
  - ninja
  - ctest --output-on-failure
@@ -22,7 +23,6 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - ninja
             - g++-7
             - libgl1-mesa-dev
             - libegl1-mesa-dev
@@ -42,7 +42,6 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - ninja
             - g++-8
             - libgl1-mesa-dev
             - libegl1-mesa-dev
@@ -60,7 +59,6 @@ matrix:
       addons:
         apt:
           packages:
-            - ninja
             - clang-5.0
             - libgl1-mesa-dev
             - libegl1-mesa-dev
@@ -73,7 +71,7 @@ matrix:
       before_install:
         - . ./ci/setup_cmake.sh 3.8.2 Linux
         - . ./ci/setup_ninja.sh 1.8.2 linux
-        - . ./ci/setup_libcxx.sh 5.0.2
+        - . ./ci/setup_libcxx.sh 5.0.2 /usr
 
     - os: linux
       compiler: clang-6.0
@@ -83,7 +81,6 @@ matrix:
       addons:
         apt:
           packages:
-            - ninja
             - clang-6.0
             - libgl1-mesa-dev
             - libegl1-mesa-dev
@@ -97,11 +94,15 @@ matrix:
       before_install:
         - . ./ci/setup_cmake.sh 3.8.2 Linux
         - . ./ci/setup_ninja.sh 1.8.2 linux
+        - . ./ci/setup_libcxx.sh 6.0.0 /usr
     - os: osx
       osx_image: xcode9.4
       env:
         - C_COMPILER=clang
         - CXX_COMPILER=clang++
+        - CI_CXX_FLAGS='-Wno-unused-command-line-argument -nostdinc++ -isystem /Users/travis/libc++/include/c++/v1'
       before_install:
         - . ./ci/setup_cmake.sh 3.8.2 Darwin
         - . ./ci/setup_ninja.sh 1.8.2 mac
+        - . ./ci/setup_libcxx.sh 6.0.0 /Users/travis/libc++
+
