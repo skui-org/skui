@@ -22,6 +22,7 @@
  * THE SOFTWARE.
  **/
 
+#define _WIN32_WINNT 0x0600
 #include "gui/events/win32.h++"
 
 #include "gui/native_window/win32.h++"
