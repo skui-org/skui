@@ -64,7 +64,8 @@ namespace skui
 
         for(const auto& filepath : filenames)
         {
-          void* handle = LoadLibraryW(filepath.native().c_str());
+          // this should use path::native(), but this is equivalent here and also works on MinGW-w64 Clang
+          void* handle = LoadLibraryW(filepath.wstring().c_str());
           if(handle)
             return handle;
         }
