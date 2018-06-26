@@ -30,36 +30,37 @@ namespace skui
   {
     namespace native_window
     {
-        appkit::appkit(std::unique_ptr<native_visual::base> native_visual)
-          : base{std::move(native_visual)}
-        {}
+      appkit::appkit(std::unique_ptr<native_visual::base> native_visual)
+        : base{std::move(native_visual)}
+      {}
 
-        appkit::~appkit() = default;
+      appkit::~appkit() = default;
 
-        void appkit::create(const graphics::pixel_position&,
-                            const graphics::pixel_size&)
-        {}
+      void appkit::create(const graphics::pixel_position&,
+                          const graphics::pixel_size&)
+      {}
 
-        void appkit::show()
-        {}
+      void appkit::show()
+      {}
 
-        void appkit::hide()
-        {}
+      void appkit::hide()
+      {}
 
-        void appkit::close()
-        {}
+      void appkit::close()
+      {}
 
-        core::string appkit::get_title() const
-        {
-            return {};
-        }
+      core::string appkit::get_title() const
+      {
+          return {};
+      }
 
-        void appkit::set_title(const core::string&)
-        {}
+      void appkit::set_title(const core::string&)
+      {}
 
-        void appkit::get_current_geometry(graphics::pixel_position&,
-                                          graphics::pixel_size&) const
-        {}
+      std::pair<graphics::pixel_position, graphics::pixel_size> appkit::get_current_geometry() const
+      {
+        return {};
+      }
     }
   }
 }

@@ -30,36 +30,37 @@ namespace skui
   {
     namespace native_window
     {
-        uikit::uikit(std::unique_ptr<native_visual::base> native_visual)
-          : base{std::move(native_visual)}
-        {}
+      uikit::uikit(std::unique_ptr<native_visual::base> native_visual)
+        : base{std::move(native_visual)}
+      {}
 
-        uikit::~uikit() = default;
+      uikit::~uikit() = default;
 
-        void uikit::create(const graphics::pixel_position&,
-                            const graphics::pixel_size&)
-        {}
+      void uikit::create(const graphics::pixel_position&,
+                         const graphics::pixel_size&)
+      {}
 
-        void uikit::show()
-        {}
+      void uikit::show()
+      {}
 
-        void uikit::hide()
-        {}
+      void uikit::hide()
+      {}
 
-        void uikit::close()
-        {}
+      void uikit::close()
+      {}
 
-        core::string uikit::get_title() const
-        {
-            return {};
-        }
+      core::string uikit::get_title() const
+      {
+          return {};
+      }
 
-        void uikit::set_title(const core::string&)
-        {}
+      void uikit::set_title(const core::string&)
+      {}
 
-        void uikit::get_current_geometry(graphics::pixel_position&,
-                                         graphics::pixel_size&) const
-        {}
+      std::pair<graphics::pixel_position, graphics::pixel_size> uikit::get_current_geometry() const
+      {
+        return {};
+      }
     }
   }
 }
