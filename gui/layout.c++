@@ -24,6 +24,7 @@
 
 #include "layout.h++"
 
+#include <algorithm>
 #include <utility>
 
 namespace skui
