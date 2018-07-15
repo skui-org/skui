@@ -111,7 +111,7 @@ namespace skui
 
         while(running)
         {
-          core::unique_free_ptr<xcb_generic_event_t> event_ptr(xcb_wait_for_event(connection));
+          core::unique_free_ptr<const xcb_generic_event_t> event_ptr(xcb_wait_for_event(connection));
           if(!event_ptr)
           {
             core::debug_print("Call to xcb_wait_for_event failed. Most likely an I/O error.\n");
