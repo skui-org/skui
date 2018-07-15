@@ -230,6 +230,9 @@ namespace skui
             case XCB_CONFIGURE_NOTIFY:
             {
               //const auto& configure_notify = reinterpret_cast<const xcb_configure_notify_event_t&>(*event_ptr);
+
+              window.repaint(true);
+
               break;
             }
             case XCB_CLIENT_MESSAGE:
