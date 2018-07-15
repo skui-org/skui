@@ -166,9 +166,7 @@ namespace skui
           mutex_lock lock(slots_mutex);
           object->untrack(this);
           slots.remove_if([object](const object_slot_type& object_slot)
-                          {
-                            return object == object_slot.first;
-                          });
+                          { return object == object_slot.first; });
         }
 
         // removes all connections
