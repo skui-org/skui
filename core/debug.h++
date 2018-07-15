@@ -30,11 +30,15 @@
 #ifndef SKUI_CORE_DEBUG_H
 #define SKUI_CORE_DEBUG_H
 
+#include "core/utility.h++"
+
+#include <chrono>
+#include <iomanip>
 #include <iostream>
+#include <sstream>
 
 #ifdef _WIN32
 #include "core/utility.h++"
-#include <sstream>
 #ifndef WIN32_MEAN_AND_LEAN
 #define WIN32_MEAN_AND_LEAN
 #endif
@@ -53,13 +57,25 @@ namespace skui
 #else
     inline void debug_print(ArgTypes... args)
     {
+      using namespace std::chrono;
 #ifdef _WIN32
       std::stringstream stream;
+#else
+      auto& stream = std::cerr;
+#endif
+      const auto now = system_clock::now();
+      const auto ms = duration_cast<milliseconds>(now.time_since_epoch()) % 1000;
+      const auto time = system_clock::to_time_t(now);
+      const auto utc_time = std::gmtime(&time);
+
+      core::ostream_format_keeper guard(stream);
+      stream << std::put_time(utc_time, "%FT%T.")
+             << std::setprecision(4) << std::setfill('0') << std::setw(3) << ms.count()
+             << std::put_time(utc_time, "%z: ");
       ((stream << args), ...);
 
+#ifdef _WIN32
       OutputDebugStringW(convert_to_utf16(stream.str()).c_str());
-#else
-      ((std::cerr << args), ...);
 #endif
     }
 #endif
