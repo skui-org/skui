@@ -25,6 +25,7 @@
 #include "gui/events/xcb.h++"
 
 #include "gui/native_window/xcb.h++"
+#include "gui/native_window/xlib.h++"
 #include "gui/window.h++"
 
 #include <core/debug.h++>
@@ -251,7 +252,19 @@ namespace skui
               running = false;
               break;
             }
+            case XCB_REPARENT_NOTIFY:
+            {
+              //const auto& reparent = reinterpret_cast<const xcb_reparent_notify_event_t&>(*event_ptr);
+
+              break;
+            }
             default:
+              if(const auto* xlib_window = dynamic_cast<native_window::xlib*>(&window.get_native_window());
+                 xlib_window)
+              {
+                xlib_window->handle_dri2_events(const_cast<xcb_generic_event_t&>(*event_ptr));
+                break;
+              }
               core::debug_print("Unknown event: ", (int)mask_send_event_bit(event_ptr->response_type), ".\n");
               break;
           }

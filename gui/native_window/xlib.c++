@@ -31,6 +31,7 @@
 #include <core/debug.h++>
 
 #include <X11/Xlib-xcb.h>
+#include <X11/Xlibint.h>
 
 namespace skui
 {
@@ -104,6 +105,19 @@ namespace skui
         {
           core::debug_print("native_window::xlib currently only handles native_visual::glx.");
           return nullptr;
+        }
+      }
+
+      void xlib::handle_dri2_events(xcb_generic_event_t& event) const
+      {
+        // Check if a custom XEvent constructor was registered in xlib for this event type, and call it discarding the constructed XEvent if any.
+        auto proc = XESetWireToEvent(display.get(), event.response_type, 0);
+        if(proc)
+        {
+          XESetWireToEvent(display.get(), event.response_type, proc);
+          XEvent dummy;
+          event.sequence = static_cast<std::uint16_t>(LastKnownRequestProcessed(display.get()));
+          proc(display.get(), &dummy, reinterpret_cast<xEvent*>(&event));
         }
       }
     }

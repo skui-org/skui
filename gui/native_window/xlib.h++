@@ -37,6 +37,7 @@
 #include <X11/X.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
+#include <xcb/xcb.h>
 
 namespace skui
 {
@@ -66,6 +67,7 @@ namespace skui
                     const graphics::pixel_size& initial_size) override;
 
         XVisualInfo* get_xvisualinfo() const;
+        void handle_dri2_events(xcb_generic_event_t& event) const;
       };
     }
   }
