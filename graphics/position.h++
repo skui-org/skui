@@ -38,6 +38,7 @@
 #include <tuple>
 
 #include <cstdint>
+#include <ostream>
 
 namespace skui
 {
@@ -54,6 +55,12 @@ namespace skui
       constexpr position2D& operator+=(const position2D& other);
       constexpr position2D& operator-=(const position2D& other);
     };
+
+    template<typename ValueType>
+    std::ostream& operator<<(std::ostream& os, const position2D<ValueType>& position)
+    {
+      return os << '(' << position.x << ", " << position.y << ')';
+    }
 
     template<typename ValueType>
     constexpr position2D<ValueType>& position2D<ValueType>::operator+=(const position2D<ValueType>& other)
