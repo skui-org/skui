@@ -48,25 +48,6 @@
 
 #include <memory>
 
-class empty_element : public skui::gui::element
-                    , private skui::graphics::rectangle
-{
-public:
-  using rectangle::border;
-  using rectangle::fill;
-  using element::size;
-
-  void draw(skui::graphics::canvas& canvas,
-            const skui::graphics::scalar_position& position) const override
-  {
-    element::draw(canvas, {this}, {position});
-  }
-  skui::graphics::scalar_size implicit_size(const skui::graphics::canvas&) const override
-  {
-    return rectangle::size;
-  }
-};
-
 skui::graphics::scene setup_graphics_scene()
 {
   using namespace skui::graphics;
@@ -76,8 +57,9 @@ skui::graphics::scene setup_graphics_scene()
   scene.background_color = colors::ghost_white;
 
   auto square = std::make_unique<rectangle>(scalar_size{140, 140});
-  square->fill = colors::transparent;
-  square->border.thickness = 1;
+  square->fill = colors::red;
+  square->border.thickness = 2;
+  square->border.radius = 5;
   square->border.color = colors::black;
 
   auto circle = std::make_unique<ellipse>(scalar_size{140, 140});
@@ -104,10 +86,17 @@ auto make_label(const char* text)
   label->border.thickness = 1;
   label->border.color = skui::graphics::colors::blue;
   label->border.radius = 5;
-  label->fill = skui::graphics::colors::red;
-  label->size = {200, 50};
+  label->background = skui::graphics::colors::red;
+  label->fill = skui::graphics::colors::black;
+  //label->font.size = 36;
 
   return label;
+}
+
+auto make_spacer(const skui::graphics::scalar_size& size)
+{
+  auto spacer = std::make_unique<skui::gui::spacer>(size);
+  return spacer;
 }
 
 void setup_input_debugging(skui::gui::window& window)
@@ -130,14 +119,17 @@ int main(int argc, char* argv[])
 
   application app{argc, argv, "Widget Gallery"};
 
-  skui::gui::window window;
+  skui::gui::window window{{0,0}, {200, 200}};
 
   auto scene = setup_graphics_scene();
   auto view = std::make_unique<skui::gui::graphics_view>(scene);
   view->size = skui::graphics::scalar_size{400, 320};
 
-  auto column = std::make_unique<skui::gui::column>(std::make_unique<skui::gui::spacer>(skui::graphics::scalar_size{40, 40}),//make_label("Hello SkUI!y"),
-                                                    std::make_unique<skui::gui::spacer>(skui::graphics::scalar_size{20, 20}),//make_label("This is SkUI's first layout."),
+  auto column = std::make_unique<skui::gui::column>(std::make_unique<skui::gui::spacer>(skui::graphics::scalar_size{2, 3}),
+                                                    std::make_unique<skui::gui::spacer>(skui::graphics::scalar_size{3, 2}),
+                                                    std::make_unique<skui::gui::spacer>(skui::graphics::scalar_size{2, 3}),
+                                                    make_label("mHello SkUI!y"),
+                                                    make_label("This is SkUI's first layout.w"),
                                                     std::move(view));
   window.element = std::move(column);
 
