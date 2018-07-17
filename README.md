@@ -16,14 +16,14 @@ New functionality must be accompanied by corresponding tests.
 |------------------| ------------------------|--------------------| ----- |
 | Windows          | Visual Studio 2017      | :heavy_check_mark: |       |
 | Windows          | VS 2017 Clang/LLVM 6.0+ | :heavy_check_mark: |       |
-| Windows          | MinGW-w64 GCC 8.1+      | :heavy_check_mark: | Requires Boost. |
-| Windows          | MinGW-w64 Clang 6.0+    | :heavy_check_mark: | Requires Boost. |
+| Windows          | MinGW-w64 GCC 7.3+      | :heavy_check_mark: | Requires Boost. |
+| Windows          | MinGW-w64 Clang 5.0+    | :heavy_check_mark: | Requires Boost. |
 | Windows          | Intel C++ 18+           |        :x:         | Lacks required C++17 features. |
-| Linux            | GCC 8.1+                | :heavy_check_mark: |       |
-| Linux            | Clang 6.0+              | :heavy_check_mark: |       |
+| Linux            | GCC 7.3+                | :heavy_check_mark: |       |
+| Linux            | Clang 5.0+              | :heavy_check_mark: |       |
 | Linux            | Intel C++ 18+           |        :x:         | Lacks required C++17 features. |
-| Mac OS X 10.13+  | XCode 9.4+ Clang        |      :soon:        | Missing implementation of core window/application classes. |
-| Mac OS X 10.13+  | Homebrew GCC 8.1+       |      :soon:        | Missing implementation of core window/application classes. |
+| Mac OS X 10.13+  | XCode 9.4+ Clang        |      :soon:        | Requires LLVM libc++ build. Missing implementation of core window/application classes. |
+| Mac OS X 10.13+  | Homebrew GCC 7.3+       |      :soon:        | Missing implementation of core window/application classes. |
 | Mac OS X 10.13+  | Homebrew Clang 6.0+     |      :soon:        | Missing implementation of core window/application classes. |
 
 # Components
