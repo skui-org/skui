@@ -31,7 +31,7 @@ namespace skui
   namespace gui
   {
     spacer::spacer(graphics::scalar_size size)
-        : size{size}
+        : spacer_size{size}
     {}
 
     spacer::~spacer() = default;
@@ -41,7 +41,10 @@ namespace skui
     {
       if(show_invisible)
       {
-        graphics::rectangle rectangle{size};
+        graphics::rectangle rectangle{spacer_size};
+        rectangle.border.thickness = 1;
+        rectangle.border.color = graphics::color(std::uint32_t(std::rand()));
+        rectangle.border.color.alpha = 128;
         rectangle.fill = graphics::color(std::uint32_t(std::rand()));
         std::get<graphics::color>(rectangle.fill).alpha = 255;
         element::draw(canvas,
@@ -52,7 +55,7 @@ namespace skui
 
     graphics::scalar_size spacer::implicit_size(const graphics::canvas&) const
     {
-      return size;
+      return spacer_size + graphics::scalar_size{2, 2};
     }
   }
 }

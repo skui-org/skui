@@ -47,7 +47,7 @@ namespace skui
 
       graphics::scalar_size implicit_size(const graphics::canvas& canvas) const override;
 
-      graphics::scalar_size size;
+      graphics::scalar_size spacer_size;
     };
 
     using spacer_ptr = std::unique_ptr<spacer>;
