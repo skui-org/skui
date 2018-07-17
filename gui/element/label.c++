@@ -61,10 +61,10 @@ namespace skui
     void label::draw(graphics::canvas& canvas,
                      const graphics::scalar_position& position) const
     {
-      graphics::rectangle rectangle{size};
+      auto graphics_text = make_text(text, fill, outline, font);
+      graphics::rectangle rectangle{canvas.measure_text(graphics_text)};
       rectangle.border = border;
       //rectangle.fill = background;
-      auto graphics_text = make_text(text, fill, outline, font);
       element::draw(canvas,
                     {&rectangle, &graphics_text},
                     {position, position + graphics::scalar_position{border.thickness, border.thickness}});
@@ -73,7 +73,9 @@ namespace skui
     graphics::scalar_size label::implicit_size(const graphics::canvas& canvas) const
     {
       auto graphics_text = make_text(text, fill, outline, font);
-      return canvas.measure_text(graphics_text);
+      const auto text_size = canvas.measure_text(graphics_text);
+      core::debug_print(border.thickness, '\n');
+      return text_size + 2.f*graphics::scalar_size{border.thickness, border.thickness};
     }
   }
 }

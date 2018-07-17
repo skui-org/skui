@@ -152,27 +152,29 @@ namespace skui
 
       const canvas_guard guard(canvas, clipping_box);
 
+      const auto& [fill_paint, border_paint] = make_paint(rectangle, position, flags);
+
       const auto& border = rectangle.border;
+
+      const auto fill_radius = std::max(0.f, border.radius-border.thickness);
       const auto fill_rect = SkRRect::MakeRectXY(SkRect::MakeXYWH(position.x+border.thickness,
                                                                   position.y+border.thickness,
                                                                   rectangle.size.width,
                                                                   rectangle.size.height),
-                                                 border.radius-border.thickness,
-                                                 border.radius-border.thickness);
-      const auto border_rect = SkRRect::MakeRectXY(SkRect::MakeXYWH(position.x,
-                                                                    position.y,
+                                                 fill_radius,
+                                                 fill_radius);
+      // The border is drawn by stroking, which fills half of the stroke thickness on both sides.
+      const auto border_rect = SkRRect::MakeRectXY(SkRect::MakeXYWH(position.x+.5f*border.thickness,
+                                                                    position.y+.5f*border.thickness,
                                                                     rectangle.size.width+border.thickness,
                                                                     rectangle.size.height+border.thickness),
                                                    rectangle.border.radius,
                                                    rectangle.border.radius);
 
-      const auto& [fill_paint, border_paint] = make_paint(rectangle, position, flags);
       // Another possibility here is to use drawDRRect to draw the border pixel-perfectly
       // Unfortunately, this precludes any possibility of dashed lines etc.
       canvas->drawRRect(fill_rect, fill_paint);
       canvas->drawRRect(border_rect, border_paint);
-
-
     }
 
     void skia_canvas::draw(const ellipse& ellipse,
@@ -211,17 +213,17 @@ namespace skui
       paint.getFontMetrics(&metrics);
 
       SkScalar offset = -metrics.fAscent;
-
+      // 0.5f offset is to correct an apparent offset in the size/positioning of text
       canvas->drawText(text.characters.c_str(),
                        text.characters.size(),
-                       position.x,
-                       position.y + offset,
+                       position.x - .5f,
+                       position.y + offset - .5f,
                        fill_paint);
 
       canvas->drawText(text.characters.c_str(),
                        text.characters.size(),
-                       position.x,
-                       position.y + offset,
+                       position.x - .5f,
+                       position.y + offset - .5f,
                        border_paint);
     }
 
