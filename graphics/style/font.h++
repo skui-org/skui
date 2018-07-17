@@ -43,7 +43,7 @@ namespace skui
       struct font
       {
         core::string family = serif;
-        graphics::scalar size = .75; // in em. 1 em is the currently set font size.
+        graphics::scalar size = 12; // TODO in em. 1 em is the currently set font size.
         enum class weight { normal, bold } weight;
         enum class style { normal, italic } style;
 
