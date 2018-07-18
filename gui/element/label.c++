@@ -64,7 +64,7 @@ namespace skui
       auto graphics_text = make_text(text, fill, outline, font);
       graphics::rectangle rectangle{canvas.measure_text(graphics_text)};
       rectangle.border = border;
-      //rectangle.fill = background;
+      rectangle.fill = background;
       element::draw(canvas,
                     {&rectangle, &graphics_text},
                     {position, position + graphics::scalar_position{border.thickness, border.thickness}});
@@ -74,7 +74,6 @@ namespace skui
     {
       auto graphics_text = make_text(text, fill, outline, font);
       const auto text_size = canvas.measure_text(graphics_text);
-      core::debug_print(border.thickness, '\n');
       return text_size + 2.f*graphics::scalar_size{border.thickness, border.thickness};
     }
   }
