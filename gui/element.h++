@@ -63,7 +63,7 @@ namespace skui
       ~element() override;
 
       virtual void draw(graphics::canvas& canvas,
-                        const graphics::scalar_position& position) const = 0;
+                        const graphics::scalar_position& position = {0, 0}) const = 0;
       void invalidate();
 
       virtual graphics::scalar_size implicit_size(const graphics::canvas& canvas) const = 0;
