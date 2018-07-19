@@ -128,7 +128,7 @@ namespace skui
               if(expose.count>0)
                 continue;
 
-              window.repaint();
+              window.repaint(true);
 
               break;
             }
@@ -232,7 +232,7 @@ namespace skui
             {
               //const auto& configure_notify = reinterpret_cast<const xcb_configure_notify_event_t&>(*event_ptr);
 
-              window.repaint(true);
+              window.repaint();
 
               break;
             }
