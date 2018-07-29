@@ -230,9 +230,10 @@ namespace skui
             }
             case XCB_CONFIGURE_NOTIFY:
             {
-              //const auto& configure_notify = reinterpret_cast<const xcb_configure_notify_event_t&>(*event_ptr);
+              const auto& configure_notify = reinterpret_cast<const xcb_configure_notify_event_t&>(*event_ptr);
 
-              window.repaint();
+              window.size = {configure_notify.width, configure_notify.height};
+              window.position = {configure_notify.x, configure_notify.y};
 
               break;
             }
