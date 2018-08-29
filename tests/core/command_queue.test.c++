@@ -32,65 +32,83 @@ namespace
 {
   using skui::test::check;
 
-  bool command_executed = false;
-  void f() { command_executed = true; }
-
-  void test_command_queue_push_take()
+  struct fixture
   {
-    skui::core::command_queue command_queue;
+    bool command_executed = false;
+    void f() { command_executed = true; }
 
-    command_queue.push(std::make_unique<skui::core::command>(f));
+    void test_command_queue_push_take()
+    {
+      skui::core::command_queue command_queue;
 
-    auto commands = command_queue.take_commands();
-    check(commands.size() == 1, "Commands pushed and taken correctly.");
+      command_queue.push(std::make_unique<skui::core::command>([this] { f(); }));
 
-    commands.front()->execute();
-    check(command_executed, "Taken command correctly executed.");
+      auto commands = command_queue.take_commands();
+      check(commands.size() == 1, "Commands pushed and taken correctly.");
 
-    commands = command_queue.take_commands();
-    check(commands.empty(), "Taking commands empties command_queue.");
-  }
+      commands.front()->execute();
+      check(command_executed, "Taken command correctly executed.");
 
-  void f_wait(skui::core::command_queue* queue, std::mutex* mutex, std::condition_variable* cv, bool* should_wakeup)
-  {
-    std::unique_lock lock{*mutex};
+      commands = command_queue.take_commands();
+      check(commands.empty(), "Taking commands empties command_queue.");
+    }
 
-    queue->wait();
+    void test_command_queue_push_front_take()
+    {
+      skui::core::command_queue command_queue;
 
-    check(*should_wakeup == false, "queue doesn't execute command on wait.");
+      command_queue.push(std::make_unique<skui::core::command>([this] { f(); }));
+      command_queue.push_front(std::make_unique<skui::core::command>([] {}));
 
-    auto commands = queue->take_commands();
+      auto commands = command_queue.take_commands();
 
-    check(commands.size() == 1, "Command pushed to queue.");
+      commands.front()->execute();
 
-    commands.front()->execute();
+      check(!command_executed, "push_front inserts in front of previously inserted commands.");
+    }
 
-    cv->notify_one();
-  }
+    void f_wait(skui::core::command_queue* queue, std::mutex* mutex, std::condition_variable* cv, bool* should_wakeup)
+    {
+      std::unique_lock lock{*mutex};
 
-  void test_command_queue_wait()
-  {
-    skui::core::command_queue command_queue;
-    std::mutex mutex;
-    std::condition_variable cv;
-    bool should_wakeup = false;
+      queue->wait();
 
-    std::unique_lock lock{mutex};
+      check(*should_wakeup == false, "queue doesn't execute command on wait.");
 
-    std::thread thread(&f_wait, &command_queue, &mutex, &cv, &should_wakeup);
+      auto commands = queue->take_commands();
 
-    command_queue.push(std::make_unique<skui::core::command>([&should_wakeup] { should_wakeup = true; }));
+      check(commands.size() == 1, "Command pushed to queue.");
 
-    cv.wait(lock, [&should_wakeup] { return should_wakeup; });
+      commands.front()->execute();
 
-    thread.join();
-  }
+      cv->notify_one();
+    }
+
+    void test_command_queue_wait()
+    {
+      skui::core::command_queue command_queue;
+      std::mutex mutex;
+      std::condition_variable cv;
+      bool should_wakeup = false;
+
+      std::unique_lock lock{mutex};
+
+      std::thread thread(&fixture::f_wait, this, &command_queue, &mutex, &cv, &should_wakeup);
+
+      command_queue.push(std::make_unique<skui::core::command>([&should_wakeup] { should_wakeup = true; }));
+
+      cv.wait(lock, [&should_wakeup] { return should_wakeup; });
+
+      thread.join();
+    }
+  };
 }
 
 int main()
 {
-  test_command_queue_push_take();
-  test_command_queue_wait();
+  fixture{}.test_command_queue_push_take();
+  fixture{}.test_command_queue_push_front_take();
+  fixture{}.test_command_queue_wait();
 
   return skui::test::exit_code;
 }

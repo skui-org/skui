@@ -34,7 +34,7 @@
 #include <condition_variable>
 #include <memory>
 #include <mutex>
-#include <queue>
+#include <deque>
 
 namespace skui
 {
@@ -48,15 +48,16 @@ namespace skui
       command_queue() = default;
 
       void push(command_ptr&& command);
+      void push_front(command_ptr&& command);
 
       void wait();
 
-      std::queue<command_ptr> take_commands();
+      std::deque<command_ptr> take_commands();
 
     private:
       std::mutex queue_mutex;
       std::condition_variable condition_variable;
-      std::queue<command_ptr> queue;
+      std::deque<command_ptr> queue;
     };
   }
 }
