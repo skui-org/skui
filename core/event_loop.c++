@@ -30,6 +30,10 @@ namespace skui
 {
   namespace core
   {
+    event_loop::event_loop(std::vector<command_queue::command_ptr> commands)
+      : queue{std::move(commands)}
+    {}
+
     int event_loop::execute()
     {
       while(!exit)

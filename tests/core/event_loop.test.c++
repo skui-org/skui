@@ -79,6 +79,22 @@ namespace
       check(count == 0, "Interrupt prevents further command execution.");
       check(exit_code == 1, "Interrupt returns proper exit code.");
     }
+
+    void test_construct_execute_stop()
+    {
+      std::vector<std::unique_ptr<skui::core::command>> commands;
+      commands.push_back(std::make_unique<skui::core::command>([this] { f(); }));
+      skui::core::event_loop event_loop{std::move(commands)};
+      int exit_code {0};
+
+      std::thread thread([&event_loop, &exit_code] { exit_code = event_loop.execute(); });
+      event_loop.stop(1);
+
+      thread.join();
+
+      check(count == 1, "1 commands executed.");
+      check(exit_code == 1, "proper exit code returned");
+    }
   };
 }
 
@@ -86,6 +102,7 @@ int main()
 {
   fixture{}.test_execute_stop();
   fixture{}.test_execute_interrupt();
+  fixture{}.test_construct_execute_stop();
 
   return skui::test::exit_code;
 }

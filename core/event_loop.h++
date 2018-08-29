@@ -41,6 +41,8 @@ namespace skui
     class event_loop
     {
     public:
+      event_loop(std::vector<command_queue::command_ptr> commands = {});
+
       int execute();
 
       void push(command_queue::command_ptr&& command);
