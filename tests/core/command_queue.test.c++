@@ -37,6 +37,20 @@ namespace
     bool command_executed = false;
     void f() { command_executed = true; }
 
+    void test_command_queue_construct_take()
+    {
+      std::vector<std::unique_ptr<skui::core::command>> initial_commands;
+      initial_commands.push_back(std::make_unique<skui::core::command>([this] { f(); }));
+      skui::core::command_queue command_queue{std::move(initial_commands)};
+
+      auto commands = command_queue.take_commands();
+
+      check(commands.size() == 1, "Commands given at construction time inserted correctly.");
+
+      commands.front()->execute();
+      check(command_executed, "commands from construction time correctly executed.");
+    }
+
     void test_command_queue_push_take()
     {
       skui::core::command_queue command_queue;
@@ -106,6 +120,7 @@ namespace
 
 int main()
 {
+  fixture{}.test_command_queue_construct_take();
   fixture{}.test_command_queue_push_take();
   fixture{}.test_command_queue_push_front_take();
   fixture{}.test_command_queue_wait();

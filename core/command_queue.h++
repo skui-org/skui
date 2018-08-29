@@ -32,9 +32,10 @@
 #include "core/command.h++"
 
 #include <condition_variable>
+#include <deque>
 #include <memory>
 #include <mutex>
-#include <deque>
+#include <vector>
 
 namespace skui
 {
@@ -45,11 +46,12 @@ namespace skui
     public:
       using command_ptr = std::unique_ptr<command>;
 
-      command_queue() = default;
+      command_queue(std::vector<command_ptr> commands = {});
 
       void push(command_ptr&& command);
       void push_front(command_ptr&& command);
 
+      //! \note returns immediately if there are unprocessed commands in the queue.
       void wait();
 
       std::deque<command_ptr> take_commands();

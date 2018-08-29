@@ -28,6 +28,10 @@ namespace skui
 {
   namespace core
   {
+    command_queue::command_queue(std::vector<command_queue::command_ptr> commands)
+      : queue{std::make_move_iterator(commands.begin()), std::make_move_iterator(commands.end())}
+    {}
+
     void command_queue::push(command_ptr&& command)
     {
       const std::lock_guard lock{queue_mutex};
