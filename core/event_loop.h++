@@ -32,6 +32,8 @@
 
 #include "core/command_queue.h++"
 
+#include <atomic>
+
 namespace skui
 {
   namespace core
@@ -44,11 +46,12 @@ namespace skui
       void push(command_queue::command_ptr&& command);
 
       void stop(int return_code = 0);
+      void interrupt(int return_code = 0);
 
     private:
       command_queue queue;
-      bool exit = false;
-      int exit_code = 0;
+      bool exit {false};
+      int exit_code {0};
     };
   }
 }

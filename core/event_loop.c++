@@ -42,7 +42,7 @@ namespace skui
         while(!commands.empty() && !exit)
         {
           commands.front()->execute();
-          commands.pop();
+          commands.pop_front();
         }
       }
       return exit_code;
@@ -56,7 +56,13 @@ namespace skui
     void event_loop::stop(int return_code)
     {
       exit_code = return_code;
-      queue.push(std::make_unique<command>([this] { exit=true; }));
+      queue.push(std::make_unique<command>([this] { exit = true; }));
+    }
+
+    void event_loop::interrupt(int return_code)
+    {
+      exit_code = return_code;
+      queue.push_front(std::make_unique<command>([this] { exit = true; }));
     }
   }
 }

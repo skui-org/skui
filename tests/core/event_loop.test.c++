@@ -33,29 +33,59 @@ namespace
 {
   using skui::test::check;
 
-  int count = 0;
-  void f() { ++count; }
-
-  void test_event_loop()
+  struct fixture
   {
-    skui::core::event_loop event_loop;
+    int count = 0;
+    void f() { ++count; }
 
-    std::thread thread(&skui::core::event_loop::execute, &event_loop);
+    void test_execute_stop()
+    {
+      skui::core::event_loop event_loop;
+      int exit_code {0};
 
-    event_loop.push(std::make_unique<skui::core::command>(f));
-    event_loop.push(std::make_unique<skui::core::command>(f));
-    event_loop.push(std::make_unique<skui::core::command>(f));
-    event_loop.stop();
+      std::thread thread([&event_loop, &exit_code] { exit_code = event_loop.execute(); });
 
-    thread.join();
+      event_loop.push(std::make_unique<skui::core::command>([this] { f(); }));
+      event_loop.push(std::make_unique<skui::core::command>([this] { f(); }));
+      event_loop.push(std::make_unique<skui::core::command>([this] { f(); }));
+      event_loop.stop(1);
 
-    check(count == 3, "3 commands executed.");
-  }
+      thread.join();
+
+      check(count == 3, "3 commands executed.");
+      check(exit_code == 1, "proper exit code returned");
+    }
+
+    void test_execute_interrupt()
+    {
+      skui::core::event_loop event_loop;
+      int exit_code {0};
+
+      std::thread thread([&event_loop, &exit_code] { exit_code = event_loop.execute(); });
+
+      std::mutex mutex;
+      std::unique_lock lock{mutex};
+      std::condition_variable condition;
+      bool ready = false;
+      event_loop.push(std::make_unique<skui::core::command>([&condition, &lock, &ready]
+                                                            { condition.wait(lock, [&ready] { return ready; }); }));
+      event_loop.push(std::make_unique<skui::core::command>([this] { f(); }));
+      event_loop.interrupt(1);
+      ready = true;
+      condition.notify_one();
+
+      thread.join();
+
+      check(count == 0, "Interrupt prevents further command execution.");
+      check(exit_code == 1, "Interrupt returns proper exit code.");
+    }
+  };
 }
 
 int main()
 {
-  test_event_loop();
+  fixture{}.test_execute_stop();
+  fixture{}.test_execute_interrupt();
 
   return skui::test::exit_code;
 }
