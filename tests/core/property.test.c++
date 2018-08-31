@@ -40,6 +40,47 @@ namespace
 
     check(changed, "slot passed to constructor connected");
   }
+
+  void test_bitwise_operators()
+  {
+    bool slot_called = false;
+    auto slot = [&slot_called](int) { slot_called = true; };
+
+    skui::core::property<int> property{3};
+    property.value_changed.connect(slot);
+
+    check((property | 1) == 3, "bitwise or with value");
+    check((property & 1) == 1, "bitwise and with value");
+    check((property ^ 1) == 2, "bitwise xor with value");
+    check(property == 3, "bitwise operators don't change value");
+    check(!slot_called, "bitwise operators don't emit signal");
+
+    property |= 2;
+    check(property == 3, "bitwise or assignment correctly not modifying value");
+    check(!slot_called, "bitwise or assignment correctly not emitting signal");
+
+    property |= 4;
+    check(property == 7, "bitwise or assignment correctly modifying value");
+    check(slot_called, "bitwise or assignment correctly emitting signal");
+    slot_called = false;
+
+    property &= 7;
+    check(property == 7, "bitwise and correctly not modifying value");
+    check(!slot_called, "bitwise and correctly not emitting signal");
+
+    property &= 1;
+    check(property == 1, "bitwise and correctly modifying value");
+    check(slot_called, "bitwise and correctly emitting signal");
+    slot_called = false;
+
+    property ^= 0;
+    check(property == 1, "bitwise xor correctly not modifying value");
+    check(!slot_called, "bitwise xor correctly not emitting signal");
+
+    property ^= 2;
+    check(property == 3, "bitwise xor correctly modifying value");
+    check(slot_called, "bitwise xor correctly emitting signal");
+  }
 }
 
 int main()
@@ -47,6 +88,7 @@ int main()
   skui::test::run_all_property_tests<skui::core::property<int>>();
 
   test_construct_with_slots();
+  test_bitwise_operators();
 
   return skui::test::exit_code;
 }

@@ -102,17 +102,39 @@ namespace skui
 
       property& operator&=(const_reference other)
       {
-        const bool changed = (value & other) == value;
+        return const_cast<property&>(const_cast<const property*>(this)->operator&=(other));
+      }
+      const property& operator&=(const_reference other) const
+      {
+        const bool changed = (value & other) != value;
         value &= other;
         if(changed)
           value_changed.emit(value);
 
         return *this;
       }
-      const property& operator&=(const_reference other) const
+      property& operator|=(const_reference other)
       {
-        const bool changed = (value & other) == value;
-        value &= other;
+        return const_cast<property&>(const_cast<const property*>(this)->operator|=(other));
+      }
+      const property& operator|=(const_reference other) const
+      {
+        const bool changed = (value | other) != value;
+        value |= other;
+        if(changed)
+          value_changed.emit(value);
+
+        return *this;
+      }
+
+      property& operator^=(const_reference other)
+      {
+        return const_cast<property&>(const_cast<const property*>(this)->operator^=(other));
+      }
+      const property& operator^=(const_reference other) const
+      {
+        const bool changed = (value ^ other) != value;
+        value ^= other;
         if(changed)
           value_changed.emit(value);
 
