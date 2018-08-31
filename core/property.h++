@@ -62,12 +62,7 @@ namespace skui
 
       property& operator=(const_reference other)
       {
-        const bool changed = value != other;
-        value = other;
-        if(changed)
-          value_changed.emit(value);
-
-        return *this;
+        return const_cast<property&>(const_cast<const property*>(this)->operator=(other));
       }
       const property& operator=(const_reference other) const
       {
@@ -80,12 +75,7 @@ namespace skui
       }
       property& operator=(rvalue_reference other)
       {
-        const bool changed = value != other;
-        value = std::move(other);
-        if(changed)
-          value_changed.emit(value);
-
-        return *this;
+        return const_cast<property&>(const_cast<const property*>(this)->operator=(std::move(other)));
       }
       const property& operator=(rvalue_reference other) const
       {
