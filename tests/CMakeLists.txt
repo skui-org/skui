@@ -111,6 +111,7 @@ runtime_test(core utility/bound)
 runtime_test(core utility/norm)
 runtime_test(core utility/approximate_equal_to)
 compile_test(core number_of_bits)
+runtime_test(core proxy_map)
 
 runtime_test(graphics position)
 runtime_test(graphics size)

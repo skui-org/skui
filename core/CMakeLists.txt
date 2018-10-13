@@ -34,6 +34,7 @@ set(core_src
     library.h++ library.c++ library_windows.c++ library_unix.c++
     path.h++
     property.h++
+    proxy_map.h++
     proxy_property.h++
     signal.h++
     slot.h++
