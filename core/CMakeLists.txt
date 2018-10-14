@@ -85,7 +85,8 @@ target_compile_definitions(core PUBLIC $<$<CONFIG:Debug>:SKUI_DEBUG>
                                        $<$<PLATFORM_ID:Windows>:NOMINMAX>)
 target_link_libraries(core PUBLIC $<$<PLATFORM_ID:Linux>:-pthread>
                                   $<$<AND:$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Intel>>,$<NOT:$<PLATFORM_ID:Windows>>>:-lstdc++fs>
-                                  $<$<AND:$<CXX_COMPILER_ID:Clang>,$<NOT:$<OR:$<PLATFORM_ID:Darwin>,$<PLATFORM_ID:Windows>>>>:-lc++experimental>
+                                  $<$<AND:$<AND:$<CXX_COMPILER_ID:Clang>,$<VERSION_GREATER:$<CXX_COMPILER_VERSION>,6>>,$<NOT:$<OR:$<PLATFORM_ID:Darwin>,$<PLATFORM_ID:Windows>>>>:-lc++fs>
+                                  $<$<AND:$<AND:$<CXX_COMPILER_ID:Clang>,$<VERSION_LESS:$<CXX_COMPILER_VERSION>,7>>,$<NOT:$<OR:$<PLATFORM_ID:Darwin>,$<PLATFORM_ID:Windows>>>>:-lc++experimental>
                                   $<$<NOT:$<PLATFORM_ID:Windows>>:-ldl>)
 #if(APPLE)
 #  target_link_libraries(core PUBLIC Boost::filesystem)
