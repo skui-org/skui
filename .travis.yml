@@ -66,8 +66,7 @@ matrix:
             - libxcb-util0-dev
             - libxcb-image0-dev
           sources:
-            - sourceline: 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-5.0 main'
-              key_url: 'http://apt.llvm.org/llvm-snapshot.gpg.key'
+            - llvm-toolchain-trusty-5.0
       before_install:
         - . ./ci/setup_cmake.sh 3.8.2 Linux
         - . ./ci/setup_ninja.sh 1.8.2 linux
@@ -89,8 +88,7 @@ matrix:
             - libxcb-image0-dev
           sources:
             - ubuntu-toolchain-r-test
-            - sourceline: 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-6.0 main'
-              key_url: 'http://apt.llvm.org/llvm-snapshot.gpg.key'
+            - llvm-toolchain-trusty-6.0
       before_install:
         - . ./ci/setup_cmake.sh 3.8.2 Linux
         - . ./ci/setup_ninja.sh 1.8.2 linux
@@ -103,7 +101,7 @@ matrix:
       addons:
         apt:
           packages:
-            - clang-7.0
+            - clang-7
             - libgl1-mesa-dev
             - libegl1-mesa-dev
             - libgles2-mesa-dev
@@ -111,8 +109,7 @@ matrix:
             - libxcb-image0-dev
           sources:
             - ubuntu-toolchain-r-test
-            - sourceline: 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-7 main'
-              key_url: 'http://apt.llvm.org/llvm-snapshot.gpg.key'
+            - llvm-toolchain-trusty-7
       before_install:
         - . ./ci/setup_cmake.sh 3.8.2 Linux
         - . ./ci/setup_ninja.sh 1.8.2 linux
