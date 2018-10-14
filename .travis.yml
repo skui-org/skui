@@ -127,4 +127,14 @@ matrix:
         - . ./ci/setup_cmake.sh 3.8.2 Darwin
         - . ./ci/setup_ninja.sh 1.8.2 mac
         - . ./ci/setup_libcxx.sh 6.0.0 /Users/travis/libc++
+    - os: osx
+      osx_image: xcode10
+      env:
+        - C_COMPILER=clang
+        - CXX_COMPILER=clang++
+        - CI_CXX_FLAGS='-Wno-unused-command-line-argument -nostdinc++ -isystem /Users/travis/libc++/include/c++/v1'
+      before_install:
+        - . ./ci/setup_cmake.sh 3.8.2 Darwin
+        - . ./ci/setup_ninja.sh 1.8.2 mac
+        - . ./ci/setup_libcxx.sh 7.0.0 /Users/travis/libc++
 
