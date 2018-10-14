@@ -121,3 +121,8 @@ compile_test(graphics color)
 runtime_test(gui layout)
 runtime_test(gui layout/row)
 runtime_test(gui layout/column)
+
+compile_test(system environment)
+add_test(NAME run/system/environment COMMAND system/environment)
+set_tests_properties(run/system/environment PROPERTIES DEPENDS system/environment
+                                                       ENVIRONMENT TEST_VARIABLE=skui)

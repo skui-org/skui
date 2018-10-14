@@ -68,6 +68,7 @@ add_subdirectory(core)
 add_subdirectory(graphics)
 add_subdirectory(gui)
 add_subdirectory(opengl)
+add_subdirectory(system)
 
 # skui examples
 add_subdirectory(examples)
