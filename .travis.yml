@@ -96,8 +96,8 @@ matrix:
     - os: linux
       compiler: clang-7.0
       env:
-        - C_COMPILER=clang-7.0
-        - CXX_COMPILER=clang++-7.0
+        - C_COMPILER=clang-7
+        - CXX_COMPILER=clang++-7
       addons:
         apt:
           packages:
