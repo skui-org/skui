@@ -111,7 +111,7 @@ matrix:
             - libxcb-image0-dev
           sources:
             - ubuntu-toolchain-r-test
-            - sourceline: 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-7.0 main'
+            - sourceline: 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-7 main'
               key_url: 'http://apt.llvm.org/llvm-snapshot.gpg.key'
       before_install:
         - . ./ci/setup_cmake.sh 3.8.2 Linux
