@@ -139,7 +139,7 @@ namespace skui::graphics
   using scalar_size = size2D<scalar>;
 }
 
-namespace core
+namespace skui::core
 {
   template<typename ValueType>
   struct bound<graphics::size2D<ValueType>>
