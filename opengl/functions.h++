@@ -35,29 +35,23 @@
 
 #include <vector>
 
-namespace skui
+namespace skui::graphics::opengl
 {
-  namespace graphics
+  class functions
   {
-    namespace opengl
-    {
-      class functions
-      {
-      public:
-        const opengl::version version;
-        functions(opengl::version version);
+  public:
+    const opengl::version version;
+    functions(opengl::version version);
 
-      private:
-        void initialize_gl();
-        void initialize_gl_es();
+  private:
+    void initialize_gl();
+    void initialize_gl_es();
 
-        void initialize_gl_extensions();
-        void initialize_gl_es_extensions();
+    void initialize_gl_extensions();
+    void initialize_gl_es_extensions();
 
-        std::vector<void(*)()> function_pointers;
-      };
-    }
-  }
+    std::vector<void(*)()> function_pointers;
+  };
 }
 
 #endif

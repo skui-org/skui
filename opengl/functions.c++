@@ -31,59 +31,53 @@
 #include <core/path.h++>
 #include <core/library.h++>
 
-namespace skui
+namespace skui::graphics::opengl
 {
-  namespace graphics
+  namespace
   {
-    namespace opengl
-    {
-      namespace
-      {
-        using namespace std::literals::string_literals;
+    using namespace std::literals::string_literals;
 
-        const core::string libgl_name =
-#if defined(_WIN32) || defined(__APPLE__)
-          "OpenGL"s;
+    const core::string libgl_name =
+    #if defined(_WIN32) || defined(__APPLE__)
+        "OpenGL"s;
 #else
-          "GL"s;
+        "GL"s;
 #endif
-        const core::string libegl_name = "EGL"s;
+    const core::string libegl_name = "EGL"s;
 
 
-      }
-      functions::functions(opengl::version version)
-        : version{version}
-        , function_pointers{static_cast<std::size_t>(function::last)}
+  }
+  functions::functions(opengl::version version)
+    : version{version}
+    , function_pointers{static_cast<std::size_t>(function::last)}
+  {
+    if(version >= opengl::version::gl_es_1_0)
+      initialize_gl_es();
+    else
+      initialize_gl();
+  }
+
+  void functions::initialize_gl()
+  {
+    core::library libgl(libgl_name);
+
+    if(libgl.load())
+    {
+      for(std::size_t i = 0; i<function_pointers.size(); ++i)
       {
-        if(version >= opengl::version::gl_es_1_0)
-          initialize_gl_es();
-        else
-          initialize_gl();
-      }
-
-      void functions::initialize_gl()
-      {
-        core::library libgl(libgl_name);
-
-        if(libgl.load())
+        function_pointers[i] = libgl.resolve<void>(opengl::name[i]);
+        if(function_pointers[i] != nullptr)
         {
-          for(std::size_t i = 0; i<function_pointers.size(); ++i)
-          {
-            function_pointers[i] = libgl.resolve<void>(opengl::name[i]);
-            if(function_pointers[i] != nullptr)
-            {
-              core::debug_print("succesfully loaded ", opengl::name[i]);
-            }
-          }
+          core::debug_print("succesfully loaded ", opengl::name[i]);
         }
-        else
-          core::debug_print("Failed to load OpenGL library.\n");
-      }
-
-      void functions::initialize_gl_es()
-      {
-
       }
     }
+    else
+      core::debug_print("Failed to load OpenGL library.\n");
+  }
+
+  void functions::initialize_gl_es()
+  {
+
   }
 }

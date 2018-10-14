@@ -31,48 +31,42 @@
 
 #include <core/bitflag.h++>
 
-namespace skui
+namespace skui::graphics::opengl
 {
-  namespace graphics
+  enum class version
   {
-    namespace opengl
-    {
-      enum class version
-      {
-        // Ancient versions
-        gl_1_0, gl_1_1, gl_1_2, gl_1_2_1,
-        gl_1_3, gl_1_4, gl_1_5,
-        gl_2_0, gl_2_1,
+    // Ancient versions
+    gl_1_0, gl_1_1, gl_1_2, gl_1_2_1,
+    gl_1_3, gl_1_4, gl_1_5,
+    gl_2_0, gl_2_1,
 
-        // "new" OpenGL versions
-        gl_3_0, gl_3_1,
-        gl_3_2_core,
-        gl_3_2_compatibility,
-        gl_3_3_core,
-        gl_3_3_compatiblity,
-        gl_4_0_core,
-        gl_4_0_compatibility,
-        gl_4_1_core,
-        gl_4_1_compatibility,
-        gl_4_2_core,
-        gl_4_2_compatibility,
-        gl_4_3_core,
-        gl_4_3_compatibility,
-        gl_4_4_core,
-        gl_4_4_compatibility,
-        gl_4_5_core,
-        gl_4_5_compatibility,
+    // "new" OpenGL versions
+    gl_3_0, gl_3_1,
+    gl_3_2_core,
+    gl_3_2_compatibility,
+    gl_3_3_core,
+    gl_3_3_compatiblity,
+    gl_4_0_core,
+    gl_4_0_compatibility,
+    gl_4_1_core,
+    gl_4_1_compatibility,
+    gl_4_2_core,
+    gl_4_2_compatibility,
+    gl_4_3_core,
+    gl_4_3_compatibility,
+    gl_4_4_core,
+    gl_4_4_compatibility,
+    gl_4_5_core,
+    gl_4_5_compatibility,
 
-        // OpenGL|ES versions
-        gl_es_1_0, gl_es_1_1,
-        gl_es_2_0,
-        gl_es_3_0, gl_es_3_1, gl_es_3_2
-      };
+    // OpenGL|ES versions
+    gl_es_1_0, gl_es_1_1,
+    gl_es_2_0,
+    gl_es_3_0, gl_es_3_1, gl_es_3_2
+  };
 
-      using version_flags = core::bitflag<version>;
-      using namespace core::bitflag_operators;
-    }
-  }
+  using version_flags = core::bitflag<version>;
+  using namespace core::bitflag_operators;
 }
 
 #endif
