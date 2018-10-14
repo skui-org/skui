@@ -26,10 +26,7 @@
 
 #include "graphics/drawable.h++"
 
-namespace skui
+namespace skui::graphics
 {
-  namespace graphics
-  {
-    scene::scene() = default;
-  }
+  scene::scene() = default;
 }

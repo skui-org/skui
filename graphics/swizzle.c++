@@ -26,13 +26,10 @@
 
 #include <SkSwizzle.h>
 
-namespace skui
+namespace skui::graphics
 {
-  namespace graphics
+  void swizzle(std::vector<std::uint32_t>& values)
   {
-    void swizzle(std::vector<std::uint32_t>& values)
-    {
-      SkSwapRB(values.data(), values.data(), static_cast<int>(values.size()));
-    }
+    SkSwapRB(values.data(), values.data(), static_cast<int>(values.size()));
   }
 }

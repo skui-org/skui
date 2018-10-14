@@ -30,23 +30,20 @@
 
 #include <thread>
 
-namespace skui
+namespace skui::graphics
 {
-  namespace graphics
+  skui::graphics::skia_raster_context::skia_raster_context(std::vector<std::uint32_t>& pixels)
+    : context{}
+    , pixels{pixels}
+  {}
+
+  skia_raster_context::~skia_raster_context() = default;
+
+  std::unique_ptr<canvas> skia_raster_context::create_canvas(const pixel_size& size,
+                                                             canvas_flags flags) const
   {
-    skui::graphics::skia_raster_context::skia_raster_context(std::vector<std::uint32_t>& pixels)
-      : context{}
-      , pixels{pixels}
-    {}
+    pixels.resize(size.width*size.height);
 
-    skia_raster_context::~skia_raster_context() = default;
-
-    std::unique_ptr<canvas> skia_raster_context::create_canvas(const pixel_size& size,
-                                                               canvas_flags flags) const
-    {
-      pixels.resize(size.width*size.height);
-
-      return std::make_unique<skia_raster_canvas>(pixels, size, flags);
-    }
+    return std::make_unique<skia_raster_canvas>(pixels, size, flags);
   }
 }

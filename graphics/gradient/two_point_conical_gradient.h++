@@ -35,19 +35,16 @@
 
 #include <vector>
 
-namespace skui
+namespace skui::graphics
 {
-  namespace graphics
+  struct two_point_conical_gradient
   {
-    struct two_point_conical_gradient
-    {
-      scalar_position start;
-      scalar start_radius;
-      scalar_position end;
-      scalar end_radius;
-      std::vector<color> colors;
-    };
-  }
+    scalar_position start;
+    scalar start_radius;
+    scalar_position end;
+    scalar end_radius;
+    std::vector<color> colors;
+  };
 }
 
 #endif

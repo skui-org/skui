@@ -31,12 +31,9 @@
 
 #include <cstddef>
 
-namespace skui
+namespace skui::graphics
 {
-  namespace graphics
-  {
-    using pixel = std::size_t;
-  }
+  using pixel = std::size_t;
 }
 
 #endif

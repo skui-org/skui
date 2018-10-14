@@ -24,20 +24,17 @@
 
 #include "graphics/skia_utility.h++"
 
-namespace skui
+namespace skui::graphics
 {
-    namespace graphics
-    {
-      template<>
-      SkPoint convert_to<SkPoint, scalar_position>(const scalar_position& position)
-      {
-        return SkPoint::Make(position.x, position.y);
-      }
+  template<>
+  SkPoint convert_to<SkPoint, scalar_position>(const scalar_position& position)
+  {
+    return SkPoint::Make(position.x, position.y);
+  }
 
-      template<>
-      SkColor convert_to<SkColor, color>(const color& color)
-      {
-        return SkColorSetARGB(color.alpha, color.red, color.green, color.blue);
-      }
+  template<>
+  SkColor convert_to<SkColor, color>(const color& color)
+  {
+    return SkColorSetARGB(color.alpha, color.red, color.green, color.blue);
   }
 }

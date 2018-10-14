@@ -34,28 +34,25 @@
 
 #include <core/string.h++>
 
-namespace skui
+namespace skui::graphics
 {
-  namespace graphics
+  class text : public shape
   {
-    class text : public shape
-    {
-    public:
-      text(core::string text,
-           style::font font = {});
-      ~text() override;
+  public:
+    text(core::string text,
+         style::font font = {});
+    ~text() override;
 
-      void draw(canvas& canvas,
-                const scalar_position& position,
-                const std::optional<scalar_bounding_box>& clipping_box = {}) const override;
+    void draw(canvas& canvas,
+              const scalar_position& position,
+              const std::optional<scalar_bounding_box>& clipping_box = {}) const override;
 
-      scalar_size implicit_size(const canvas& canvas) const override;
+    scalar_size implicit_size(const canvas& canvas) const override;
 
-      core::string characters;
-      style::font font;
-      style::border& outline = shape::border;
-    };
-  }
+    core::string characters;
+    style::font font;
+    style::border& outline = shape::border;
+  };
 }
 
 #endif

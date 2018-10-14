@@ -34,19 +34,16 @@
 
 #include <memory>
 
-namespace skui
+namespace skui::graphics
 {
-  namespace graphics
+  class context
   {
-    class context
-    {
-    public:
-      virtual ~context() = 0;
+  public:
+    virtual ~context() = 0;
 
-      virtual std::unique_ptr<canvas> create_canvas(const pixel_size& size,
-                                                    canvas_flags flags) const = 0;
-    };
-  }
+    virtual std::unique_ptr<canvas> create_canvas(const pixel_size& size,
+                                                  canvas_flags flags) const = 0;
+  };
 }
 
 #endif

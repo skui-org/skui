@@ -24,12 +24,9 @@
 
 #include "shape.h++"
 
-namespace skui
+namespace skui::graphics
 {
-  namespace graphics
-  {
-    shape::shape() = default;
+  shape::shape() = default;
 
-    shape::~shape() = default;
-  }
+  shape::~shape() = default;
 }

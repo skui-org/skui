@@ -39,54 +39,51 @@
 
 #include <optional>
 
-namespace skui
+namespace skui::graphics
 {
-  namespace graphics
+  class ellipse;
+  class path;
+  class rectangle;
+  class text;
+
+  enum class canvas_flag
   {
-    class ellipse;
-    class path;
-    class rectangle;
-    class text;
+    none,
+    anti_alias
+  };
+  using canvas_flags = core::bitflag<canvas_flag>;
 
-    enum class canvas_flag
-    {
-      none,
-      anti_alias
-    };
-    using canvas_flags = core::bitflag<canvas_flag>;
+  class canvas
+  {
+  public:
+    virtual ~canvas() = 0;
 
-    class canvas
-    {
-    public:
-      virtual ~canvas() = 0;
+    // Primitives
+    virtual void draw(const style::fill& background,
+                      const std::optional<scalar_bounding_box>& clipping_box = {}) = 0;
+    virtual void draw(const rectangle& rectangle,
+                      const scalar_position& position,
+                      const std::optional<scalar_bounding_box>& clipping_box = {}) = 0;
+    virtual void draw(const ellipse& ellipse,
+                      const scalar_position& position,
+                      const std::optional<scalar_bounding_box>& clipping_box = {}) = 0;
+    virtual void draw(const text& text,
+                      const scalar_position& position,
+                      const std::optional<scalar_bounding_box>& clipping_box = {}) = 0;
+    virtual void draw(const path& path,
+                      const scalar_position& position,
+                      const std::optional<scalar_bounding_box>& clipping_box = {}) = 0;
 
-      // Primitives
-      virtual void draw(const style::fill& background,
-                        const std::optional<scalar_bounding_box>& clipping_box = {}) = 0;
-      virtual void draw(const rectangle& rectangle,
-                        const scalar_position& position,
-                        const std::optional<scalar_bounding_box>& clipping_box = {}) = 0;
-      virtual void draw(const ellipse& ellipse,
-                        const scalar_position& position,
-                        const std::optional<scalar_bounding_box>& clipping_box = {}) = 0;
-      virtual void draw(const text& text,
-                        const scalar_position& position,
-                        const std::optional<scalar_bounding_box>& clipping_box = {}) = 0;
-      virtual void draw(const path& path,
-                        const scalar_position& position,
-                        const std::optional<scalar_bounding_box>& clipping_box = {}) = 0;
+    // text size needs knowledge of underlying graphics system exposed through canvas
+    virtual scalar_size measure_text(const text& text) const = 0;
 
-      // text size needs knowledge of underlying graphics system exposed through canvas
-      virtual scalar_size measure_text(const text& text) const = 0;
+    style::fill background = graphics::colors::white;
 
-     style::fill background = graphics::colors::white;
+  protected:
+    canvas(canvas_flags flags);
 
-    protected:
-      canvas(canvas_flags flags);
-
-      canvas_flags flags;
-    };
-  }
+    canvas_flags flags;
+  };
 }
 
 #endif

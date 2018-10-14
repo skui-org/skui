@@ -40,20 +40,17 @@
 
 #include <core/utility.h++>
 
-namespace skui
+namespace skui::graphics
 {
-  namespace graphics
+  class shape : public drawable
   {
-    class shape : public drawable
-    {
-    public:
-      shape();
-      ~shape() override;
+  public:
+    shape();
+    ~shape() override;
 
-      style::border border;
-      style::fill fill;
-    };
-  }
+    style::border border;
+    style::fill fill;
+  };
 }
 
 #endif

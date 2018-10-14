@@ -36,22 +36,19 @@
 #include <memory>
 #include <vector>
 
-namespace skui
+namespace skui::graphics
 {
-  namespace graphics
+  class drawable;
+
+  class scene
   {
-    class drawable;
+  public:
+    scene();
 
-    class scene
-    {
-    public:
-      scene();
+    color background_color{colors::white};
 
-      color background_color{colors::white};
-
-      std::vector<std::pair<scalar_position, std::unique_ptr<drawable>>> drawables;
-    };
-  }
+    std::vector<std::pair<scalar_position, std::unique_ptr<drawable>>> drawables;
+  };
 }
 
 #endif

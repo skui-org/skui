@@ -26,26 +26,23 @@
 
 #include "graphics/canvas.h++"
 
-namespace skui
+namespace skui::graphics
 {
-  namespace graphics
+  ellipse::ellipse(scalar_size axes)
+    : axes{axes}
+  {}
+
+  ellipse::~ellipse() = default;
+
+  void ellipse::draw(skui::graphics::canvas& canvas,
+                     const scalar_position& position,
+                     const std::optional<scalar_bounding_box>& clipping_box) const
   {
-    ellipse::ellipse(scalar_size axes)
-      : axes{axes}
-    {}
+    canvas.draw(*this, position, clipping_box);
+  }
 
-    ellipse::~ellipse() = default;
-
-    void ellipse::draw(skui::graphics::canvas& canvas,
-                       const scalar_position& position,
-                       const std::optional<scalar_bounding_box>& clipping_box) const
-    {
-      canvas.draw(*this, position, clipping_box);
-    }
-
-    scalar_size ellipse::implicit_size(const canvas&) const
-    {
-      return axes + 2*scalar_size{border.thickness, border.thickness};
-    }
+  scalar_size ellipse::implicit_size(const canvas&) const
+  {
+    return axes + 2*scalar_size{border.thickness, border.thickness};
   }
 }

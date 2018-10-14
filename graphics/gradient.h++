@@ -36,15 +36,12 @@
 
 #include <variant>
 
-namespace skui
+namespace skui::graphics
 {
-  namespace graphics
-  {
-    using gradient = std::variant<linear_gradient,
-                                  radial_gradient,
-                                  sweep_gradient,
-                                  two_point_conical_gradient>;
-  }
+  using gradient = std::variant<linear_gradient,
+  radial_gradient,
+  sweep_gradient,
+  two_point_conical_gradient>;
 }
 
 #endif

@@ -24,12 +24,9 @@
 
 #include "graphics/drawable.h++"
 
-namespace skui
+namespace skui::graphics
 {
-  namespace graphics
-  {
-    drawable::drawable() = default;
+  drawable::drawable() = default;
 
-    drawable::~drawable() = default;
-  }
+  drawable::~drawable() = default;
 }

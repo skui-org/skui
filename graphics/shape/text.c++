@@ -29,28 +29,25 @@
 #include <SkPaint.h>
 #include <SkRect.h>
 
-namespace skui
+namespace skui::graphics
 {
-  namespace graphics
+  text::text(core::string characters,
+             style::font font)
+    : characters{std::move(characters)}
+    , font{std::move(font)}
+  {}
+
+  text::~text() = default;
+
+  void text::draw(canvas& canvas,
+                  const scalar_position& position,
+                  const std::optional<scalar_bounding_box>& clipping_box) const
   {
-    text::text(core::string characters,
-               style::font font)
-      : characters{std::move(characters)}
-      , font{std::move(font)}
-    {}
+    canvas.draw(*this, position, clipping_box);
+  }
 
-    text::~text() = default;
-
-    void text::draw(canvas& canvas,
-                    const scalar_position& position,
-                    const std::optional<scalar_bounding_box>& clipping_box) const
-    {
-      canvas.draw(*this, position, clipping_box);
-    }
-
-    scalar_size text::implicit_size(const canvas& canvas) const
-    {
-      return canvas.measure_text(*this);
-    }
+  scalar_size text::implicit_size(const canvas& canvas) const
+  {
+    return canvas.measure_text(*this);
   }
 }

@@ -35,17 +35,14 @@
 
 #include <vector>
 
-namespace skui
+namespace skui::graphics
 {
-  namespace graphics
+  struct linear_gradient
   {
-    struct linear_gradient
-    {
-      std::vector<scalar_position> points;
-      std::vector<color> colors;
-      std::vector<scalar> positions;
-    };
-  }
+    std::vector<scalar_position> points;
+    std::vector<color> colors;
+    std::vector<scalar> positions;
+  };
 }
 
 #endif

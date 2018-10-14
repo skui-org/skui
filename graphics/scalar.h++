@@ -29,12 +29,9 @@
 #ifndef SKUI_GRAPHICS_SCALAR_H
 #define SKUI_GRAPHICS_SCALAR_H
 
-namespace skui
+namespace skui::graphics
 {
-  namespace graphics
-  {
-    using scalar = float;
-  }
+  using scalar = float;
 }
 
 #endif

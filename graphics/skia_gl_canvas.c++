@@ -44,58 +44,55 @@
 #endif
 #include <GL/glext.h>
 
-namespace skui
+namespace skui::graphics
 {
-  namespace graphics
+  namespace
   {
-    namespace
+    std::unique_ptr<SkSurface> create_gl_surface(const pixel_size& size,
+                                                 const GrGLInterface& gl_interface,
+                                                 GrContext& gr_context)
     {
-      std::unique_ptr<SkSurface> create_gl_surface(const pixel_size& size,
-                                                   const GrGLInterface& gl_interface,
-                                                   GrContext& gr_context)
-      {
-        // Wrap the frame buffer object attached to the screen in a Skia render target so Skia can
-        // render to it
-        GrGLFramebufferInfo framebuffer_info;
-        GrGLint buffer;
-        gl_interface.fFunctions.fGetIntegerv(GL_FRAMEBUFFER_BINDING, &buffer);
-        framebuffer_info.fFBOID = static_cast<GrGLuint>(buffer);
-        framebuffer_info.fFormat = GL_RGBA8;
+      // Wrap the frame buffer object attached to the screen in a Skia render target so Skia can
+      // render to it
+      GrGLFramebufferInfo framebuffer_info;
+      GrGLint buffer;
+      gl_interface.fFunctions.fGetIntegerv(GL_FRAMEBUFFER_BINDING, &buffer);
+      framebuffer_info.fFBOID = static_cast<GrGLuint>(buffer);
+      framebuffer_info.fFormat = GL_RGBA8;
 
-        GrBackendRenderTarget render_target(static_cast<int>(size.width),
-                                            static_cast<int>(size.height),
-                                            0,
-                                            8,
-                                            framebuffer_info);
+      GrBackendRenderTarget render_target(static_cast<int>(size.width),
+                                          static_cast<int>(size.height),
+                                          0,
+                                          8,
+                                          framebuffer_info);
 
-        // setup SkSurface
-        SkSurfaceProps props(SkSurfaceProps::kUseDeviceIndependentFonts_Flag, // distance field text
-                              SkSurfaceProps::kLegacyFontHost_InitType);
+      // setup SkSurface
+      SkSurfaceProps props(SkSurfaceProps::kUseDeviceIndependentFonts_Flag, // distance field text
+                           SkSurfaceProps::kLegacyFontHost_InitType);
 
-        return std::unique_ptr<SkSurface>(SkSurface::MakeFromBackendRenderTarget(&gr_context,
-                                                                                 render_target,
-                                                                                 kBottomLeft_GrSurfaceOrigin,
-                                                                                 kRGBA_8888_SkColorType,
-                                                                                 nullptr,
-                                                                                 &props).release());
-      }
+      return std::unique_ptr<SkSurface>(SkSurface::MakeFromBackendRenderTarget(&gr_context,
+                                                                               render_target,
+                                                                               kBottomLeft_GrSurfaceOrigin,
+                                                                               kRGBA_8888_SkColorType,
+                                                                               nullptr,
+                                                                               &props).release());
     }
+  }
 
-    skia_gl_canvas::skia_gl_canvas(const pixel_size& size,
-                                   const GrGLInterface* gr_gl_interface,
-                                   canvas_flags flags)
-      : skia_canvas{flags}
-      , gr_context{GrContext::MakeGL(sk_sp{gr_gl_interface}).release()}
-    {
-      SkASSERT(gr_context);
+  skia_gl_canvas::skia_gl_canvas(const pixel_size& size,
+                                 const GrGLInterface* gr_gl_interface,
+                                 canvas_flags flags)
+    : skia_canvas{flags}
+    , gr_context{GrContext::MakeGL(sk_sp{gr_gl_interface}).release()}
+  {
+    SkASSERT(gr_context);
 
-      gr_gl_interface->ref();
-      surface = create_gl_surface(size, *gr_gl_interface, *gr_context);
-    }
+    gr_gl_interface->ref();
+    surface = create_gl_surface(size, *gr_gl_interface, *gr_context);
+  }
 
-    skia_gl_canvas::~skia_gl_canvas()
-    {
-      surface.reset();
-    }
+  skia_gl_canvas::~skia_gl_canvas()
+  {
+    surface.reset();
   }
 }

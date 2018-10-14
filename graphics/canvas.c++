@@ -31,14 +31,11 @@
 #include "graphics/shape/text.h++"
 #include "graphics/shape/rectangle.h++"
 
-namespace skui
+namespace skui::graphics
 {
-  namespace graphics
-  {
-    canvas::~canvas() = default;
+  canvas::~canvas() = default;
 
-    canvas::canvas(canvas_flags flags)
-      : flags{flags}
-    {}
-  }
+  canvas::canvas(canvas_flags flags)
+    : flags{flags}
+  {}
 }

@@ -24,12 +24,9 @@
 
 #include "graphics/shape/path.h++"
 
-namespace skui
+namespace skui::graphics
 {
-  namespace graphics
-  {
-    path::path() = default;
+  path::path() = default;
 
-    path::~path() = default;
-  }
+  path::~path() = default;
 }

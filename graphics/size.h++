@@ -40,129 +40,126 @@
 #include <cmath>
 #include <iostream>
 
-namespace skui
+namespace skui::graphics
 {
-  namespace graphics
+  template<typename ValueType>
+  struct size2D
   {
-    template<typename ValueType>
-    struct size2D
-    {
-      using value_type = ValueType;
+    using value_type = ValueType;
 
-      value_type width;
-      value_type height;
+    value_type width;
+    value_type height;
 
-      constexpr size2D& operator+=(const size2D& other);
-      constexpr size2D& operator-=(const size2D& other);
-      template<typename FactorType>
-      constexpr size2D& operator*=(const FactorType& factor);
-      template<typename FactorType>
-      constexpr size2D& operator/=(const FactorType& factor);
-    };
-
-    template<typename ValueType>
-    constexpr bool operator==(const size2D<ValueType>& left, const size2D<ValueType>& right)
-    {
-      return left.width == right.width && left.height == right.height;
-    }
-    template<typename ValueType>
-    constexpr bool operator!=(const size2D<ValueType>& left, const size2D<ValueType>& right)
-    {
-      return left.width != right.width || left.height != right.height;
-    }
-    template<typename ValueType>
-    constexpr size2D<ValueType>& size2D<ValueType>::operator+=(const size2D<ValueType>& other)
-    {
-      width += other.width;
-      height += other.height;
-
-      return *this;
-    }
-    template<typename ValueType>
-    constexpr size2D<ValueType>& size2D<ValueType>::operator-=(const size2D<ValueType>& other)
-    {
-      width -= other.width;
-      height -= other.height;
-
-      return *this;
-    }
-    template<typename ValueType>
+    constexpr size2D& operator+=(const size2D& other);
+    constexpr size2D& operator-=(const size2D& other);
     template<typename FactorType>
-    constexpr size2D<ValueType>& size2D<ValueType>::operator*=(const FactorType& factor)
-    {
-      width *= factor;
-      height *= factor;
-
-      return *this;
-    }
-    template<typename ValueType>
+    constexpr size2D& operator*=(const FactorType& factor);
     template<typename FactorType>
-    constexpr size2D<ValueType>& size2D<ValueType>::operator/=(const FactorType& factor)
-    {
-      width /= factor;
-      height /= factor;
+    constexpr size2D& operator/=(const FactorType& factor);
+  };
 
-      return *this;
-    }
-    template<typename ValueType>
-    constexpr size2D<ValueType> operator+(const size2D<ValueType>& left, const size2D<ValueType>& right)
-    {
-      return {left.width + right.width, left.height + right.height};
-    }
-    template<typename ValueType>
-    constexpr size2D<ValueType> operator-(const size2D<ValueType>& left, const size2D<ValueType>& right)
-    {
-      return {left.width - right.width, left.height - right.height};
-    }
-    template<typename ValueType, typename FactorType>
-    constexpr size2D<ValueType> operator*(const size2D<ValueType>& size, FactorType factor)
-    {
-      return {size.width*static_cast<ValueType>(factor), size.height*static_cast<ValueType>(factor)};
-    }
-    template<typename ValueType, typename FactorType>
-    constexpr size2D<ValueType> operator*(FactorType factor, const size2D<ValueType>& size)
-    {
-      return size*factor;
-    }
-    template<typename ValueType, typename FactorType>
-    constexpr size2D<ValueType> operator/(const size2D<ValueType>& size, FactorType factor)
-    {
-      return {size.width/static_cast<ValueType>(factor), size.height/static_cast<ValueType>(factor)};
-    }
+  template<typename ValueType>
+  constexpr bool operator==(const size2D<ValueType>& left, const size2D<ValueType>& right)
+  {
+    return left.width == right.width && left.height == right.height;
+  }
+  template<typename ValueType>
+  constexpr bool operator!=(const size2D<ValueType>& left, const size2D<ValueType>& right)
+  {
+    return left.width != right.width || left.height != right.height;
+  }
+  template<typename ValueType>
+  constexpr size2D<ValueType>& size2D<ValueType>::operator+=(const size2D<ValueType>& other)
+  {
+    width += other.width;
+    height += other.height;
 
-    template<typename ValueType>
-    std::ostream& operator<<(std::ostream& os, const size2D<ValueType>& size)
-    {
-      return os << '[' << size.width << ", " << size.height << ']';
-    }
+    return *this;
+  }
+  template<typename ValueType>
+  constexpr size2D<ValueType>& size2D<ValueType>::operator-=(const size2D<ValueType>& other)
+  {
+    width -= other.width;
+    height -= other.height;
 
-    // pixel here means "device independent pixel" aka scaled from 72dpi
-    using pixel_size = size2D<pixel>;
-    using scalar_size = size2D<scalar>;
+    return *this;
+  }
+  template<typename ValueType>
+  template<typename FactorType>
+  constexpr size2D<ValueType>& size2D<ValueType>::operator*=(const FactorType& factor)
+  {
+    width *= factor;
+    height *= factor;
+
+    return *this;
+  }
+  template<typename ValueType>
+  template<typename FactorType>
+  constexpr size2D<ValueType>& size2D<ValueType>::operator/=(const FactorType& factor)
+  {
+    width /= factor;
+    height /= factor;
+
+    return *this;
+  }
+  template<typename ValueType>
+  constexpr size2D<ValueType> operator+(const size2D<ValueType>& left, const size2D<ValueType>& right)
+  {
+    return {left.width + right.width, left.height + right.height};
+  }
+  template<typename ValueType>
+  constexpr size2D<ValueType> operator-(const size2D<ValueType>& left, const size2D<ValueType>& right)
+  {
+    return {left.width - right.width, left.height - right.height};
+  }
+  template<typename ValueType, typename FactorType>
+  constexpr size2D<ValueType> operator*(const size2D<ValueType>& size, FactorType factor)
+  {
+    return {size.width*static_cast<ValueType>(factor), size.height*static_cast<ValueType>(factor)};
+  }
+  template<typename ValueType, typename FactorType>
+  constexpr size2D<ValueType> operator*(FactorType factor, const size2D<ValueType>& size)
+  {
+    return size*factor;
+  }
+  template<typename ValueType, typename FactorType>
+  constexpr size2D<ValueType> operator/(const size2D<ValueType>& size, FactorType factor)
+  {
+    return {size.width/static_cast<ValueType>(factor), size.height/static_cast<ValueType>(factor)};
   }
 
-  namespace core
+  template<typename ValueType>
+  std::ostream& operator<<(std::ostream& os, const size2D<ValueType>& size)
   {
-    template<typename ValueType>
-    struct bound<graphics::size2D<ValueType>>
-    {
-      constexpr graphics::size2D<ValueType> operator()(const graphics::size2D<ValueType>& value,
-                                                       const graphics::size2D<ValueType>& lower_bound,
-                                                       const graphics::size2D<ValueType>& upper_bound) const
-      {
-        return {bound<ValueType>{}(value.width, lower_bound.width, upper_bound.width),
-                bound<ValueType>{}(value.height, lower_bound.height, upper_bound.height)};
-      }
-    };
-    template<typename ValueType>
-    struct norm<graphics::size2D<ValueType>>
-    {
-      constexpr ValueType operator()(const graphics::size2D<ValueType>& value) const
-      {
-        return std::abs(value.width)+std::abs(value.height);
-      }
-    };
+    return os << '[' << size.width << ", " << size.height << ']';
   }
+
+  // pixel here means "device independent pixel" aka scaled from 72dpi
+  using pixel_size = size2D<pixel>;
+  using scalar_size = size2D<scalar>;
+}
+
+namespace core
+{
+  template<typename ValueType>
+  struct bound<graphics::size2D<ValueType>>
+  {
+    constexpr graphics::size2D<ValueType> operator()(const graphics::size2D<ValueType>& value,
+                                                     const graphics::size2D<ValueType>& lower_bound,
+                                                     const graphics::size2D<ValueType>& upper_bound) const
+    {
+      return {bound<ValueType>{}(value.width, lower_bound.width, upper_bound.width),
+            bound<ValueType>{}(value.height, lower_bound.height, upper_bound.height)};
+    }
+  };
+  template<typename ValueType>
+  struct norm<graphics::size2D<ValueType>>
+  {
+    constexpr ValueType operator()(const graphics::size2D<ValueType>& value) const
+    {
+      return std::abs(value.width)+std::abs(value.height);
+    }
+  };
 }
 
 namespace std

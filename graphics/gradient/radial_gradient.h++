@@ -35,18 +35,15 @@
 
 #include <vector>
 
-namespace skui
+namespace skui::graphics
 {
-  namespace graphics
+  struct radial_gradient
   {
-    struct radial_gradient
-    {
-      scalar_position center;
-      scalar radius;
-      std::vector<color> colors;
-      std::vector<scalar> positions;
-    };
-  }
+    scalar_position center;
+    scalar radius;
+    std::vector<color> colors;
+    std::vector<scalar> positions;
+  };
 }
 
 #endif

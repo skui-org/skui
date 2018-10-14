@@ -32,21 +32,15 @@
 
 #include "graphics/scalar.h++"
 
-namespace skui
+namespace skui::graphics::style
 {
-  namespace graphics
+  struct spacing
   {
-    namespace style
-    {
-      struct spacing
-      {
-        graphics::scalar top{};
-        graphics::scalar bottom{};
-        graphics::scalar left{};
-        graphics::scalar right{};
-      };
-    }
-  }
+    graphics::scalar top{};
+    graphics::scalar bottom{};
+    graphics::scalar left{};
+    graphics::scalar right{};
+  };
 }
 
 #endif

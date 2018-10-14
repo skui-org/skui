@@ -33,12 +33,9 @@
 #include <cstdint>
 #include <vector>
 
-namespace skui
+namespace skui::graphics
 {
-  namespace graphics
-  {
-    void swizzle(std::vector<std::uint32_t>& values);
-  }
+  void swizzle(std::vector<std::uint32_t>& values);
 }
 
 #endif

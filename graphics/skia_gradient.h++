@@ -31,28 +31,25 @@
 
 class SkPaint;
 
-namespace skui
+namespace skui::graphics
 {
-  namespace graphics
-  {
-    void set_gradient(const color&,
-                      SkPaint& paint,
-                      const scalar_position&);
+  void set_gradient(const color&,
+                    SkPaint& paint,
+                    const scalar_position&);
 
-    void set_gradient(const linear_gradient& linear,
-                      SkPaint& paint,
-                      const scalar_position& offset);
+  void set_gradient(const linear_gradient& linear,
+                    SkPaint& paint,
+                    const scalar_position& offset);
 
-    void set_gradient(const radial_gradient& radial,
-                      SkPaint& paint,
-                      const scalar_position& offset);
+  void set_gradient(const radial_gradient& radial,
+                    SkPaint& paint,
+                    const scalar_position& offset);
 
-    void set_gradient(const sweep_gradient& sweep,
-                      SkPaint& paint,
-                      const scalar_position& offset);
+  void set_gradient(const sweep_gradient& sweep,
+                    SkPaint& paint,
+                    const scalar_position& offset);
 
-    void set_gradient(const two_point_conical_gradient& conical,
-                      SkPaint& paint,
-                      const scalar_position& offset);
-  }
+  void set_gradient(const two_point_conical_gradient& conical,
+                    SkPaint& paint,
+                    const scalar_position& offset);
 }

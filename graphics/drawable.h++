@@ -35,25 +35,22 @@
 
 #include <optional>
 
-namespace skui
+namespace skui::graphics
 {
-  namespace graphics
+  class canvas;
+
+  class drawable
   {
-    class canvas;
+  public:
+    drawable();
+    virtual ~drawable() = 0;
 
-    class drawable
-    {
-    public:
-      drawable();
-      virtual ~drawable() = 0;
+    virtual void draw(canvas& canvas,
+                      const scalar_position& position,
+                      const std::optional<scalar_bounding_box>& clipping_box) const = 0;
 
-      virtual void draw(canvas& canvas,
-                        const scalar_position& position,
-                        const std::optional<scalar_bounding_box>& clipping_box) const = 0;
-
-      virtual graphics::scalar_size implicit_size(const canvas& canvas) const = 0;
-    };
-  }
+    virtual graphics::scalar_size implicit_size(const canvas& canvas) const = 0;
+  };
 }
 
 #endif

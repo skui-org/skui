@@ -37,38 +37,35 @@
 
 class SkSurface;
 
-namespace skui
+namespace skui::graphics
 {
-  namespace graphics
+  class skia_canvas : public canvas
   {
-    class skia_canvas : public canvas
-    {
-    public:
-      ~skia_canvas() override = default;
+  public:
+    ~skia_canvas() override = default;
 
-      void draw(const style::fill& background,
-                const std::optional<scalar_bounding_box>& clipping_box = {}) override;
-      void draw(const rectangle& rectangle,
-                const scalar_position& position,
-                const std::optional<scalar_bounding_box>& clipping_box = {}) override;
-      void draw(const ellipse& ellipse,
-                const scalar_position& position,
-                const std::optional<scalar_bounding_box>& clipping_box = {}) override;
-      void draw(const text& text,
-                const scalar_position& position,
-                const std::optional<scalar_bounding_box>& clipping_box = {}) override;
-      void draw(const path& path,
-                const scalar_position& position,
-                const std::optional<scalar_bounding_box>& clipping_box = {}) override;
+    void draw(const style::fill& background,
+              const std::optional<scalar_bounding_box>& clipping_box = {}) override;
+    void draw(const rectangle& rectangle,
+              const scalar_position& position,
+              const std::optional<scalar_bounding_box>& clipping_box = {}) override;
+    void draw(const ellipse& ellipse,
+              const scalar_position& position,
+              const std::optional<scalar_bounding_box>& clipping_box = {}) override;
+    void draw(const text& text,
+              const scalar_position& position,
+              const std::optional<scalar_bounding_box>& clipping_box = {}) override;
+    void draw(const path& path,
+              const scalar_position& position,
+              const std::optional<scalar_bounding_box>& clipping_box = {}) override;
 
-      scalar_size measure_text(const text& text) const override;
+    scalar_size measure_text(const text& text) const override;
 
-    protected:
-      skia_canvas(canvas_flags flags);
+  protected:
+    skia_canvas(canvas_flags flags);
 
-      std::unique_ptr<SkSurface> surface;
-    };
-  }
+    std::unique_ptr<SkSurface> surface;
+  };
 }
 
 #endif

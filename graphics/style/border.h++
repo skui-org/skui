@@ -32,18 +32,12 @@
 
 #include "graphics/style/line.h++"
 
-namespace skui
+namespace skui::graphics::style
 {
-  namespace graphics
+  struct border : line
   {
-    namespace style
-    {
-      struct border : line
-      {
-        scalar radius = 0;
-      };
-    }
-  }
+    scalar radius = 0;
+  };
 }
 
 #endif

@@ -33,19 +33,14 @@
 #include "graphics/color.h++"
 #include "graphics/scalar.h++"
 
-namespace skui
+namespace skui::graphics::style
 {
-  namespace graphics
+  struct line
   {
-    namespace style
-    {
-      struct line
-      {
-        scalar thickness = 0;
-        graphics::color color = graphics::colors::transparent;
+    scalar thickness = 0;
+    graphics::color color = graphics::colors::transparent;
 
-      };
-    }
-  }
+  };
 }
+
 #endif

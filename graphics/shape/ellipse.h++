@@ -35,25 +35,22 @@
 
 #include <utility>
 
-namespace skui
+namespace skui::graphics
 {
-  namespace graphics
+  class ellipse : public shape
   {
-    class ellipse : public shape
-    {
-    public:
-      ellipse(scalar_size axes);
-      ~ellipse() override;
+  public:
+    ellipse(scalar_size axes);
+    ~ellipse() override;
 
-      void draw(canvas& canvas,
-                const scalar_position& position,
-                const std::optional<scalar_bounding_box>& clipping_box = {}) const override;
+    void draw(canvas& canvas,
+              const scalar_position& position,
+              const std::optional<scalar_bounding_box>& clipping_box = {}) const override;
 
-      scalar_size implicit_size(const canvas& canvas) const override;
+    scalar_size implicit_size(const canvas& canvas) const override;
 
-      scalar_size axes;
-    };
-  }
+    scalar_size axes;
+  };
 }
 
 #endif

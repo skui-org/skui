@@ -26,27 +26,24 @@
 
 #include <SkSurface.h>
 
-namespace skui
+namespace skui::graphics
 {
-  namespace graphics
+  skia_raster_canvas::skia_raster_canvas(std::vector<std::uint32_t>& pixels,
+                                         const pixel_size& size,
+                                         canvas_flags flags)
+    : skia_canvas{flags}
   {
-    skia_raster_canvas::skia_raster_canvas(std::vector<std::uint32_t>& pixels,
-                                           const pixel_size& size,
-                                           canvas_flags flags)
-      : skia_canvas{flags}
-    {
-      SkImageInfo info = SkImageInfo::MakeN32(static_cast<int>(size.width),
-                                              static_cast<int>(size.height),
-                                              SkAlphaType::kPremul_SkAlphaType);
+    SkImageInfo info = SkImageInfo::MakeN32(static_cast<int>(size.width),
+                                            static_cast<int>(size.height),
+                                            SkAlphaType::kPremul_SkAlphaType);
 
-      size_t rowBytes = info.minRowBytes();
-      surface.reset(SkSurface::MakeRasterDirect(info, pixels.data(), rowBytes).release());
-      SkASSERT(surface);
-    }
+    size_t rowBytes = info.minRowBytes();
+    surface.reset(SkSurface::MakeRasterDirect(info, pixels.data(), rowBytes).release());
+    SkASSERT(surface);
+  }
 
-    skia_raster_canvas::~skia_raster_canvas()
-    {
-      surface.reset();
-    }
+  skia_raster_canvas::~skia_raster_canvas()
+  {
+    surface.reset();
   }
 }

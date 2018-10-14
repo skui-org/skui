@@ -26,26 +26,23 @@
 
 #include "graphics/canvas.h++"
 
-namespace skui
+namespace skui::graphics
 {
-  namespace graphics
+  rectangle::rectangle(scalar_size size)
+    : size{size}
+  {}
+
+  rectangle::~rectangle() = default;
+
+  void rectangle::draw(canvas& canvas,
+                       const scalar_position& position,
+                       const std::optional<scalar_bounding_box>& clipping_box) const
   {
-    rectangle::rectangle(scalar_size size)
-      : size{size}
-    {}
+    canvas.draw(*this, position, clipping_box);
+  }
 
-    rectangle::~rectangle() = default;
-
-    void rectangle::draw(canvas& canvas,
-                         const scalar_position& position,
-                         const std::optional<scalar_bounding_box>& clipping_box) const
-    {
-      canvas.draw(*this, position, clipping_box);
-    }
-
-    scalar_size rectangle::implicit_size(const canvas&) const
-    {
-      return size + 2*scalar_size{border.thickness, border.thickness};
-    }
+  scalar_size rectangle::implicit_size(const canvas&) const
+  {
+    return size + 2*scalar_size{border.thickness, border.thickness};
   }
 }

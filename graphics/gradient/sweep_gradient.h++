@@ -35,17 +35,14 @@
 
 #include <vector>
 
-namespace skui
+namespace skui::graphics
 {
-  namespace graphics
+  struct sweep_gradient
   {
-    struct sweep_gradient
-    {
-      scalar_position center;
-      std::vector<color> colors;
-      std::vector<scalar> positions = {};
-    };
-  }
+    scalar_position center;
+    std::vector<color> colors;
+    std::vector<scalar> positions = {};
+  };
 }
 
 #endif

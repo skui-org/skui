@@ -36,22 +36,19 @@
 struct GrGLInterface;
 class GrContext;
 
-namespace skui
+namespace skui::graphics
 {
-  namespace graphics
+  class skia_gl_canvas : public skia_canvas
   {
-    class skia_gl_canvas : public skia_canvas
-    {
-    public:
-      skia_gl_canvas(const pixel_size& size,
-                     const GrGLInterface* gr_gl_interface,
-                     canvas_flags flags);
-      ~skia_gl_canvas() override;
+  public:
+    skia_gl_canvas(const pixel_size& size,
+                   const GrGLInterface* gr_gl_interface,
+                   canvas_flags flags);
+    ~skia_gl_canvas() override;
 
-    private:
-      std::unique_ptr<GrContext> gr_context;
-    };
-  }
+  private:
+    std::unique_ptr<GrContext> gr_context;
+  };
 }
 
 #endif

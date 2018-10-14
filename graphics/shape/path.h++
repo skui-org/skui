@@ -31,17 +31,14 @@
 
 #include "graphics/shape.h++"
 
-namespace skui
+namespace skui::graphics
 {
-  namespace graphics
+  class path : public shape
   {
-    class path : public shape
-    {
-    public:
-      path();
-      ~path() override;
-    };
-  }
+  public:
+    path();
+    ~path() override;
+  };
 }
 
 #endif

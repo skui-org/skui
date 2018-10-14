@@ -40,102 +40,99 @@
 #include <cstdint>
 #include <ostream>
 
-namespace skui
+namespace skui::graphics
 {
-  namespace graphics
+  template<typename ValueType>
+  struct position2D
   {
-    template<typename ValueType>
-    struct position2D
-    {
-      using value_type = ValueType;
+    using value_type = ValueType;
 
-      value_type x;
-      value_type y;
+    value_type x;
+    value_type y;
 
-      constexpr position2D& operator+=(const position2D& other);
-      constexpr position2D& operator-=(const position2D& other);
-    };
+    constexpr position2D& operator+=(const position2D& other);
+    constexpr position2D& operator-=(const position2D& other);
+  };
 
-    template<typename ValueType>
-    std::ostream& operator<<(std::ostream& os, const position2D<ValueType>& position)
-    {
-      return os << '(' << position.x << ", " << position.y << ')';
-    }
-
-    template<typename ValueType>
-    constexpr position2D<ValueType>& position2D<ValueType>::operator+=(const position2D<ValueType>& other)
-    {
-      x += other.x;
-      y += other.y;
-
-      return *this;
-    }
-
-    template<typename ValueType>
-    constexpr position2D<ValueType>& position2D<ValueType>::operator-=(const position2D<ValueType>& other)
-    {
-      x -= other.x;
-      y -= other.y;
-
-      return *this;
-    }
-
-    template<typename ValueType>
-    constexpr position2D<ValueType> operator+(const position2D<ValueType>& left,
-                                              const position2D<ValueType>& right)
-    {
-      auto result = left;
-      result += right;
-      return result;
-    }
-
-    template<typename ValueType>
-    constexpr position2D<ValueType> operator-(const position2D<ValueType>& left,
-                                              const position2D<ValueType>& right)
-    {
-      auto result = left;
-      result -= right;
-      return result;
-    }
-
-    template<typename ValueType>
-    constexpr bool operator==(const position2D<ValueType>& left,
-                              const position2D<ValueType>& right)
-    {
-      return std::tie(left.x, left.y) == std::tie(right.x, right.y);
-    }
-
-    template<typename ValueType>
-    constexpr bool operator!=(const position2D<ValueType>& left,
-                              const position2D<ValueType>& right)
-    {
-      return !(left == right);
-    }
-
-    // pixel here means device independent pixel
-    using pixel_position = position2D<std::int32_t>;
-    using scalar_position = position2D<scalar>;
+  template<typename ValueType>
+  std::ostream& operator<<(std::ostream& os, const position2D<ValueType>& position)
+  {
+    return os << '(' << position.x << ", " << position.y << ')';
   }
 
-  namespace core
+  template<typename ValueType>
+  constexpr position2D<ValueType>& position2D<ValueType>::operator+=(const position2D<ValueType>& other)
   {
-    template<typename ValueType>
-    struct bound<graphics::position2D<ValueType>>
-    {
-    private:
-      using position = graphics::position2D<ValueType>;
-      using value_type = typename position::value_type;
+    x += other.x;
+    y += other.y;
 
-    public:
-      constexpr position operator()(const position& value,
-                                    const position& min,
-                                    const position& max) const
-      {
-        return {bound<value_type>{}(value.x, min.x, max.x),
-                bound<value_type>{}(value.y, min.y, max.y)};
-      }
-    };
+    return *this;
   }
+
+  template<typename ValueType>
+  constexpr position2D<ValueType>& position2D<ValueType>::operator-=(const position2D<ValueType>& other)
+  {
+    x -= other.x;
+    y -= other.y;
+
+    return *this;
+  }
+
+  template<typename ValueType>
+  constexpr position2D<ValueType> operator+(const position2D<ValueType>& left,
+                                            const position2D<ValueType>& right)
+  {
+    auto result = left;
+    result += right;
+    return result;
+  }
+
+  template<typename ValueType>
+  constexpr position2D<ValueType> operator-(const position2D<ValueType>& left,
+                                            const position2D<ValueType>& right)
+  {
+    auto result = left;
+    result -= right;
+    return result;
+  }
+
+  template<typename ValueType>
+  constexpr bool operator==(const position2D<ValueType>& left,
+                            const position2D<ValueType>& right)
+  {
+    return std::tie(left.x, left.y) == std::tie(right.x, right.y);
+  }
+
+  template<typename ValueType>
+  constexpr bool operator!=(const position2D<ValueType>& left,
+                            const position2D<ValueType>& right)
+  {
+    return !(left == right);
+  }
+
+  // pixel here means device independent pixel
+  using pixel_position = position2D<std::int32_t>;
+  using scalar_position = position2D<scalar>;
+}
+
+namespace skui::core
+{
+  template<typename ValueType>
+  struct bound<graphics::position2D<ValueType>>
+  {
+  private:
+    using position = graphics::position2D<ValueType>;
+    using value_type = typename position::value_type;
+
+  public:
+    constexpr position operator()(const position& value,
+                                  const position& min,
+                                  const position& max) const
+    {
+      return {bound<value_type>{}(value.x, min.x, max.x),
+            bound<value_type>{}(value.y, min.y, max.y)};
+    }
+  };
 }
 
 namespace std

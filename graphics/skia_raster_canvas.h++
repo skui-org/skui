@@ -35,19 +35,16 @@
 
 #include <vector>
 
-namespace skui
+namespace skui::graphics
 {
-  namespace graphics
+  class skia_raster_canvas : public skia_canvas
   {
-    class skia_raster_canvas : public skia_canvas
-    {
-    public:
-      skia_raster_canvas(std::vector<uint32_t>& pixels,
-                         const pixel_size& size,
-                         canvas_flags flags);
-      ~skia_raster_canvas() override;
-    };
-  }
+  public:
+    skia_raster_canvas(std::vector<uint32_t>& pixels,
+                       const pixel_size& size,
+                       canvas_flags flags);
+    ~skia_raster_canvas() override;
+  };
 }
 
 #endif

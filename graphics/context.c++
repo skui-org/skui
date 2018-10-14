@@ -24,10 +24,7 @@
 
 #include "graphics/context.h++"
 
-namespace skui
+namespace skui::graphics
 {
-  namespace graphics
-  {
-    context::~context() = default;
-  }
+  context::~context() = default;
 }

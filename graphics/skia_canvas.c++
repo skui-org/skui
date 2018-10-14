@@ -47,223 +47,220 @@
 
 #include <array>
 
-namespace skui
+namespace skui::graphics
 {
-  namespace graphics
+  namespace
   {
-    namespace
-    {
-      SkPaint make_border_paint(const shape& shape,
-                                const canvas_flags& flags)
-      {
-        SkPaint paint;
-
-        paint.setStyle(SkPaint::Style::kStroke_Style);
-
-        paint.setARGB(shape.border.color.alpha,
-                      shape.border.color.red,
-                      shape.border.color.green,
-                      shape.border.color.blue);
-
-        paint.setStrokeWidth(shape.border.thickness);
-
-        paint.setAntiAlias(flags.test(canvas_flag::anti_alias));
-
-        return paint;
-      }
-
-      SkPaint make_fill_paint(const shape& shape,
-                              const scalar_position& offset,
+    SkPaint make_border_paint(const shape& shape,
                               const canvas_flags& flags)
+    {
+      SkPaint paint;
+
+      paint.setStyle(SkPaint::Style::kStroke_Style);
+
+      paint.setARGB(shape.border.color.alpha,
+                    shape.border.color.red,
+                    shape.border.color.green,
+                    shape.border.color.blue);
+
+      paint.setStrokeWidth(shape.border.thickness);
+
+      paint.setAntiAlias(flags.test(canvas_flag::anti_alias));
+
+      return paint;
+    }
+
+    SkPaint make_fill_paint(const shape& shape,
+                            const scalar_position& offset,
+                            const canvas_flags& flags)
+    {
+      SkPaint paint;
+
+      paint.setStyle(SkPaint::Style::kFill_Style);
+
+      if(std::holds_alternative<color>(shape.fill))
       {
-        SkPaint paint;
+        const auto& color = std::get<graphics::color>(shape.fill);
+        paint.setARGB(color.alpha,
+                      color.red,
+                      color.green,
+                      color.blue);
+      }
+      else
+      {
+        const auto& gradient = std::get<graphics::gradient>(shape.fill);
+        std::visit([&paint, &offset](auto&& specific_gradient)
+        { set_gradient(specific_gradient, paint, offset); },
+        gradient);
+      }
 
-        paint.setStyle(SkPaint::Style::kFill_Style);
+      paint.setAntiAlias(flags.test(canvas_flag::anti_alias));
 
-        if(std::holds_alternative<color>(shape.fill))
+      return paint;
+    }
+
+    std::array<SkPaint, 2> make_paint(const shape& shape,
+                                      const scalar_position& offset,
+                                      const canvas_flags& flags)
+    {
+      return {{make_fill_paint(shape, offset, flags),
+              make_border_paint(shape, flags)}};
+    }
+
+    struct canvas_guard
+    {
+      canvas_guard(SkCanvas* canvas,
+                   const std::optional<scalar_bounding_box>& clipping_box)
+        : auto_restore(canvas, clipping_box.has_value())
+      {
+        if(clipping_box)
         {
-          const auto& color = std::get<graphics::color>(shape.fill);
-          paint.setARGB(color.alpha,
-                        color.red,
-                        color.green,
-                        color.blue);
+          canvas->clipRect(SkRect::MakeXYWH(clipping_box->top_left.x,
+                                            clipping_box->top_left.y,
+                                            clipping_box->size.width,
+                                            clipping_box->size.height));
         }
-        else
-        {
-          const auto& gradient = std::get<graphics::gradient>(shape.fill);
-          std::visit([&paint, &offset](auto&& specific_gradient)
-                     { set_gradient(specific_gradient, paint, offset); },
-                     gradient);
-        }
-
-        paint.setAntiAlias(flags.test(canvas_flag::anti_alias));
-
-        return paint;
       }
+      SkAutoCanvasRestore auto_restore;
+    };
+  }
 
-      std::array<SkPaint, 2> make_paint(const shape& shape,
-                                        const scalar_position& offset,
-                                        const canvas_flags& flags)
-      {
-        return {{make_fill_paint(shape, offset, flags),
-                 make_border_paint(shape, flags)}};
-      }
+  skia_canvas::skia_canvas(canvas_flags flags)
+    : canvas{flags}
+    , surface{nullptr}
+  {}
 
-      struct canvas_guard
-      {
-        canvas_guard(SkCanvas* canvas,
-                     const std::optional<scalar_bounding_box>& clipping_box)
-          : auto_restore(canvas, clipping_box.has_value())
-        {
-          if(clipping_box)
-          {
-            canvas->clipRect(SkRect::MakeXYWH(clipping_box->top_left.x,
-                                              clipping_box->top_left.y,
-                                              clipping_box->size.width,
-                                              clipping_box->size.height));
-          }
-        }
-        SkAutoCanvasRestore auto_restore;
-      };
-    }
+  void skia_canvas::draw(const style::fill& background,
+                         const std::optional<scalar_bounding_box>& clipping_box)
+  {
+    auto canvas = surface->getCanvas();
 
-    skia_canvas::skia_canvas(canvas_flags flags)
-      : canvas{flags}
-      , surface{nullptr}
-    {}
+    const canvas_guard guard(canvas, clipping_box);
 
-    void skia_canvas::draw(const style::fill& background,
-                           const std::optional<scalar_bounding_box>& clipping_box)
+    if(std::holds_alternative<color>(background))
+      canvas->drawColor(convert_to<SkColor>(std::get<color>(background)));
+    //TODO handle gradient background
+  }
+
+  void skia_canvas::draw(const rectangle& rectangle,
+                         const scalar_position& position,
+                         const std::optional<scalar_bounding_box>& clipping_box)
+  {
+    auto canvas = surface->getCanvas();
+
+    const canvas_guard guard(canvas, clipping_box);
+
+    const auto& [fill_paint, border_paint] = make_paint(rectangle, position, flags);
+
+    const auto& border = rectangle.border;
+
+    const auto fill_radius = std::max(0.f, border.radius-border.thickness);
+    const auto fill_rect = SkRRect::MakeRectXY(SkRect::MakeXYWH(position.x+border.thickness,
+                                                                position.y+border.thickness,
+                                                                rectangle.size.width,
+                                                                rectangle.size.height),
+                                               fill_radius,
+                                               fill_radius);
+    // The border is drawn by stroking, which fills half of the stroke thickness on both sides.
+    const auto border_rect = SkRRect::MakeRectXY(SkRect::MakeXYWH(position.x+.5f*border.thickness,
+                                                                  position.y+.5f*border.thickness,
+                                                                  rectangle.size.width+border.thickness,
+                                                                  rectangle.size.height+border.thickness),
+                                                 rectangle.border.radius,
+                                                 rectangle.border.radius);
+
+    // Another possibility here is to use drawDRRect to draw the border pixel-perfectly
+    // Unfortunately, this precludes any possibility of dashed lines etc.
+    canvas->drawRRect(fill_rect, fill_paint);
+    canvas->drawRRect(border_rect, border_paint);
+  }
+
+  void skia_canvas::draw(const ellipse& ellipse,
+                         const scalar_position& position,
+                         const std::optional<scalar_bounding_box>& clipping_box)
+  {
+    auto canvas = surface->getCanvas();
+
+    const canvas_guard guard(canvas, clipping_box);
+
+    for(const auto& paint : make_paint(ellipse, position, flags))
     {
-      auto canvas = surface->getCanvas();
-
-      const canvas_guard guard(canvas, clipping_box);
-
-      if(std::holds_alternative<color>(background))
-        canvas->drawColor(convert_to<SkColor>(std::get<color>(background)));
-      //TODO handle gradient background
+      canvas->drawOval(SkRect::MakeXYWH(position.x, position.y,
+                                        ellipse.axes.width, ellipse.axes.height),
+                       paint);
     }
+  }
 
-    void skia_canvas::draw(const rectangle& rectangle,
-                           const scalar_position& position,
-                           const std::optional<scalar_bounding_box>& clipping_box)
+  void skia_canvas::draw(const text& text,
+                         const scalar_position& position,
+                         const std::optional<scalar_bounding_box>& clipping_box)
+  {
+    auto canvas = surface->getCanvas();
+
+    const canvas_guard guard(canvas, clipping_box);
+
+    auto [fill_paint, border_paint] = make_paint(text, position, flags);
+    fill_paint.setTextSize(text.font.size);
+    border_paint.setTextSize(text.font.size);
+
+    SkPaint paint = text.border.color == colors::transparent ? make_fill_paint(text, {0, 0}, flags)
+                                                             : make_border_paint(text, flags);
+    paint.setTextSize(text.font.size);
+
+    SkPaint::FontMetrics metrics;
+    paint.getFontMetrics(&metrics);
+
+    SkScalar offset = -metrics.fAscent;
+    // 0.5f offset is to correct an apparent offset in the size/positioning of text
+    canvas->drawText(text.characters.c_str(),
+                     text.characters.size(),
+                     position.x - .5f,
+                     position.y + offset - .5f,
+                     fill_paint);
+
+    canvas->drawText(text.characters.c_str(),
+                     text.characters.size(),
+                     position.x - .5f,
+                     position.y + offset - .5f,
+                     border_paint);
+  }
+
+  void skia_canvas::draw(const path& path,
+                         const scalar_position& position,
+                         const std::optional<scalar_bounding_box>& clipping_box)
+  {
+    auto canvas = surface->getCanvas();
+
+    const canvas_guard guard(canvas, clipping_box);
+
+    SkPath skia_path;
+
+    for(const auto& paint : make_paint(path, position, flags))
     {
-      auto canvas = surface->getCanvas();
-
-      const canvas_guard guard(canvas, clipping_box);
-
-      const auto& [fill_paint, border_paint] = make_paint(rectangle, position, flags);
-
-      const auto& border = rectangle.border;
-
-      const auto fill_radius = std::max(0.f, border.radius-border.thickness);
-      const auto fill_rect = SkRRect::MakeRectXY(SkRect::MakeXYWH(position.x+border.thickness,
-                                                                  position.y+border.thickness,
-                                                                  rectangle.size.width,
-                                                                  rectangle.size.height),
-                                                 fill_radius,
-                                                 fill_radius);
-      // The border is drawn by stroking, which fills half of the stroke thickness on both sides.
-      const auto border_rect = SkRRect::MakeRectXY(SkRect::MakeXYWH(position.x+.5f*border.thickness,
-                                                                    position.y+.5f*border.thickness,
-                                                                    rectangle.size.width+border.thickness,
-                                                                    rectangle.size.height+border.thickness),
-                                                   rectangle.border.radius,
-                                                   rectangle.border.radius);
-
-      // Another possibility here is to use drawDRRect to draw the border pixel-perfectly
-      // Unfortunately, this precludes any possibility of dashed lines etc.
-      canvas->drawRRect(fill_rect, fill_paint);
-      canvas->drawRRect(border_rect, border_paint);
+      canvas->drawPath(skia_path,
+                       paint);
     }
+  }
 
-    void skia_canvas::draw(const ellipse& ellipse,
-                           const scalar_position& position,
-                           const std::optional<scalar_bounding_box>& clipping_box)
-    {
-      auto canvas = surface->getCanvas();
+  scalar_size skia_canvas::measure_text(const text& text) const
+  {
+    SkPaint paint = text.border.color == colors::transparent ? make_fill_paint(text, {0, 0}, flags)
+                                                             : make_border_paint(text, flags);
+    paint.setTextSize(text.font.size);
 
-      const canvas_guard guard(canvas, clipping_box);
+    SkPaint::FontMetrics metrics;
+    paint.getFontMetrics(&metrics);
 
-      for(const auto& paint : make_paint(ellipse, position, flags))
-      {
-          canvas->drawOval(SkRect::MakeXYWH(position.x, position.y,
-                                            ellipse.axes.width, ellipse.axes.height),
-                           paint);
-      }
-    }
+    SkRect bounds;
+    const SkScalar width = paint.measureText(text.characters.c_str(), text.characters.size(), &bounds);
+    const SkScalar height = std::abs(metrics.fAscent - metrics.fDescent);
 
-    void skia_canvas::draw(const text& text,
-                           const scalar_position& position,
-                           const std::optional<scalar_bounding_box>& clipping_box)
-    {
-      auto canvas = surface->getCanvas();
+    core::debug_print("printing text: \'", text.characters, "\'\n",
+                      "bounding rect top: (", bounds.left(), ", ", bounds.top(), ")\n",
+                      "bounding rect size: ", bounds.width(), "x", bounds.height(), "\n",
+                      "font height: ", height, "\n",
+                      "text width: ", width, "\n");
 
-      const canvas_guard guard(canvas, clipping_box);
-
-      auto [fill_paint, border_paint] = make_paint(text, position, flags);
-      fill_paint.setTextSize(text.font.size);
-      border_paint.setTextSize(text.font.size);
-
-      SkPaint paint = text.border.color == colors::transparent ? make_fill_paint(text, {0, 0}, flags)
-                                                               : make_border_paint(text, flags);
-      paint.setTextSize(text.font.size);
-
-      SkPaint::FontMetrics metrics;
-      paint.getFontMetrics(&metrics);
-
-      SkScalar offset = -metrics.fAscent;
-      // 0.5f offset is to correct an apparent offset in the size/positioning of text
-      canvas->drawText(text.characters.c_str(),
-                       text.characters.size(),
-                       position.x - .5f,
-                       position.y + offset - .5f,
-                       fill_paint);
-
-      canvas->drawText(text.characters.c_str(),
-                       text.characters.size(),
-                       position.x - .5f,
-                       position.y + offset - .5f,
-                       border_paint);
-    }
-
-    void skia_canvas::draw(const path& path,
-                           const scalar_position& position,
-                           const std::optional<scalar_bounding_box>& clipping_box)
-    {
-      auto canvas = surface->getCanvas();
-
-      const canvas_guard guard(canvas, clipping_box);
-
-      SkPath skia_path;
-
-      for(const auto& paint : make_paint(path, position, flags))
-      {
-          canvas->drawPath(skia_path,
-                           paint);
-      }
-    }
-
-    scalar_size skia_canvas::measure_text(const text& text) const
-    {
-      SkPaint paint = text.border.color == colors::transparent ? make_fill_paint(text, {0, 0}, flags)
-                                                           : make_border_paint(text, flags);
-      paint.setTextSize(text.font.size);
-
-      SkPaint::FontMetrics metrics;
-      paint.getFontMetrics(&metrics);
-
-      SkRect bounds;
-      const SkScalar width = paint.measureText(text.characters.c_str(), text.characters.size(), &bounds);
-      const SkScalar height = std::abs(metrics.fAscent - metrics.fDescent);
-
-      core::debug_print("printing text: \'", text.characters, "\'\n",
-                        "bounding rect top: (", bounds.left(), ", ", bounds.top(), ")\n",
-                        "bounding rect size: ", bounds.width(), "x", bounds.height(), "\n",
-                        "font height: ", height, "\n",
-                        "text width: ", width, "\n");
-
-      return {width, height};
-    }
+    return {width, height};
   }
 }

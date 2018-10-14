@@ -35,16 +35,10 @@
 
 #include <variant>
 
-namespace skui
+namespace skui::graphics::style
 {
-  namespace graphics
-  {
-    namespace style
-    {
-      using fill = std::variant<color,
-                                gradient>;
-    }
-  }
+  using fill = std::variant<color,
+  gradient>;
 }
 
-#endif // FILL_H
+#endif

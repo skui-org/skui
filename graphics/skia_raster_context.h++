@@ -32,25 +32,22 @@
 #include <memory>
 #include <vector>
 
-namespace skui
+namespace skui::graphics
 {
-  namespace graphics
+  class canvas;
+
+  class skia_raster_context : public context
   {
-    class canvas;
+  public:
+    skia_raster_context(std::vector<std::uint32_t>& pixels);
+    ~skia_raster_context() override;
 
-    class skia_raster_context : public context
-    {
-    public:
-      skia_raster_context(std::vector<std::uint32_t>& pixels);
-      ~skia_raster_context() override;
+    std::unique_ptr<canvas> create_canvas(const pixel_size& size,
+                                          canvas_flags flags) const override;
 
-      std::unique_ptr<canvas> create_canvas(const pixel_size& size,
-                                            canvas_flags flags) const override;
-
-    private:
-      std::vector<std::uint32_t>& pixels;
-    };
-  }
+  private:
+    std::vector<std::uint32_t>& pixels;
+  };
 }
 
 #endif
