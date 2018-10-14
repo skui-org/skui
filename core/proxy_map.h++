@@ -29,49 +29,68 @@
  * It return a proxy_value object that can be assigned to and converts to the underlying value for its key.
  */
 
+#ifndef SKUI_CORE_PROXY_MAP_H
+#define SKUI_CORE_PROXY_MAP_H
+
 #include <functional>
 #include <type_traits>
 
 namespace skui::core
 {
   template<typename KeyType, typename ValueType>
-  class proxy_map
+  class proxy_map;
+
+  template<typename KeyType, typename ValueType>
+  class proxy_value
   {
-    class proxy_value
-    {
-    public:
-      using setter_type = std::function<void(const KeyType&, ValueType)>;
-      using getter_type = std::function<ValueType(const KeyType&)>;
-
-      proxy_value(KeyType key,
-                  const getter_type& getter,
-                  const setter_type& setter)
-        : key{std::move(key)}
-        , get{getter}
-        , set{setter}
-      {}
-
-      proxy_value& operator=(const ValueType& new_value)
-      {
-        set(key, new_value);
-        return *this;
-      }
-
-      operator ValueType() const
-      {
-        return get(key);
-      }
-
-      const KeyType key;
-      const getter_type& get;
-      const setter_type& set;
-    };
-
   public:
     using key_type = std::add_const_t<KeyType>;
     using value_type = ValueType;
-    using getter_type = typename proxy_value::getter_type;
-    using setter_type = typename proxy_value::setter_type;
+    using setter_type = std::function<void(const KeyType&, ValueType)>;
+    using getter_type = std::function<ValueType(const KeyType&)>;
+
+    proxy_value& operator=(const value_type& new_value)
+    {
+      set(key, new_value);
+      return *this;
+    }
+
+    operator value_type() const
+    {
+      return get(key);
+    }
+
+    bool operator==(const value_type& value) const { return static_cast<const value_type&>(*this) == value; }
+    bool operator!=(const value_type& value) const { return static_cast<const value_type&>(*this) != value; }
+    bool operator< (const value_type& value) const { return static_cast<const value_type&>(*this) <  value; }
+    bool operator<=(const value_type& value) const { return static_cast<const value_type&>(*this) <= value; }
+    bool operator> (const value_type& value) const { return static_cast<const value_type&>(*this) >  value; }
+    bool operator>=(const value_type& value) const { return static_cast<const value_type&>(*this) >= value; }
+
+  private:
+    friend class proxy_map<KeyType, ValueType>;
+    proxy_value(key_type key,
+                const getter_type& getter,
+                const setter_type& setter)
+      : key{std::move(key)}
+      , get{getter}
+      , set{setter}
+    {}
+
+    const key_type key;
+    const getter_type& get;
+    const setter_type& set;
+  };
+
+  template<typename KeyType, typename ValueType>
+  class proxy_map
+  {
+  public:
+    using proxy_value_type = proxy_value<KeyType, ValueType>;
+    using key_type = typename proxy_value_type::key_type;
+    using value_type = typename proxy_value_type::value_type;
+    using getter_type = typename proxy_value_type::getter_type;
+    using setter_type = typename proxy_value_type::setter_type;
 
     template<typename Getter, typename Setter>
     proxy_map(Getter getter, Setter setter)
@@ -79,7 +98,7 @@ namespace skui::core
       , set{std::move(setter)}
     {}
 
-    proxy_value operator[](const key_type& key) const
+    proxy_value_type operator[](const key_type& key) const
     {
       return {key, get, set};
     }
@@ -93,5 +112,12 @@ namespace skui::core
     const getter_type get;
     const setter_type set;
   };
+
+  template<typename KeyType, typename ValueType>
+  std::ostream& operator<<(std::ostream& os, const proxy_value<KeyType, ValueType>& value)
+  {
+    return os << static_cast<const ValueType&>(value);
+  }
 }
 
+#endif
