@@ -29,19 +29,16 @@
 #ifndef SKUI_GUI_WINDOW_STATE_H
 #define SKUI_GUI_WINDOW_STATE_H
 
-namespace skui
+namespace skui::gui
 {
-  namespace gui
+  enum class window_state
   {
-    enum class window_state
-    {
-      hidden,
-      windowed,
-      maximized,
-      fullscreen_maximized,
-      minimized
-    };
-  }
+    hidden,
+    windowed,
+    maximized,
+    fullscreen_maximized,
+    minimized
+  };
 }
 
 #endif

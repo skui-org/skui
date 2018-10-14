@@ -37,17 +37,14 @@
 #include <memory>
 #include <utility>
 
-namespace skui
+namespace skui::gui
 {
-  namespace gui
+  template<typename... ElementTypes>
+  element_ptrs make_element_ptrs(std::unique_ptr<ElementTypes>&&... elements)
   {
-    template<typename... ElementTypes>
-    element_ptrs make_element_ptrs(std::unique_ptr<ElementTypes>&&... elements)
-    {
-      element_ptrs result;
-      (result.emplace_back(std::move(elements)), ...);
-      return result;
-    }
+    element_ptrs result;
+    (result.emplace_back(std::move(elements)), ...);
+    return result;
   }
 }
 

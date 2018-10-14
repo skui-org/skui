@@ -29,44 +29,40 @@
 #include <algorithm>
 #include <numeric>
 
-namespace skui
+namespace skui::gui
 {
-  namespace gui
+  row::row(element_ptrs children)
+    : layout{std::move(children)}
+  {}
+
+  row::~row() = default;
+
+  graphics::scalar_size row::implicit_size(const graphics::canvas& canvas) const
   {
-    row::row(element_ptrs children)
-      : layout{std::move(children)}
-    {}
+    return std::accumulate(children.begin(), children.end(),
+                           graphics::scalar_size{spacing, spacing}*(children.size()-1),
+                           [&canvas](const auto value, const auto& child)
+                           -> graphics::scalar_size
+                           {
+                             const auto child_size = child->implicit_size(canvas);
+                             return {value.width + child_size.width,
+                                     std::max(value.height, child_size.height)};
+                           });
+  }
 
-    row::~row() = default;
+  std::vector<graphics::scalar_position> row::calculate_child_offsets(const graphics::canvas& canvas) const
+  {
+    std::vector<graphics::scalar_position> offsets;
+    offsets.reserve(children.size());
+    graphics::scalar_position offset{0, 0};
 
-    graphics::scalar_size row::implicit_size(const graphics::canvas& canvas) const
+    for(const auto& child : children)
     {
-      return std::accumulate(children.begin(), children.end(),
-                             graphics::scalar_size{spacing, spacing}*(children.size()-1),
-                             [&canvas](const auto value, const auto& child)
-                             -> graphics::scalar_size
-                             {
-                               const auto child_size = child->implicit_size(canvas);
-                               return {value.width + child_size.width,
-                                       std::max(value.height, child_size.height)};
-                             });
+      offsets.emplace_back(offset);
+
+      offset.x += child->implicit_size(canvas).width + spacing;
     }
 
-    std::vector<graphics::scalar_position> row::calculate_child_offsets(const graphics::canvas& canvas) const
-    {
-      std::vector<graphics::scalar_position> offsets;
-      offsets.reserve(children.size());
-      graphics::scalar_position offset{0, 0};
-
-      for(const auto& child : children)
-      {
-        offsets.emplace_back(offset);
-
-        offset.x += child->implicit_size(canvas).width + spacing;
-      }
-
-      return offsets;
-    }
+    return offsets;
   }
 }
-

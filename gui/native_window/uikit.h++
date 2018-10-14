@@ -32,29 +32,23 @@
 
 #include "gui/native_window.h++"
 
-namespace skui
+namespace skui::gui::native_window
 {
-  namespace gui
+  class uikit : public base
   {
-    namespace native_window
-    {
-      class uikit : public base
-      {
-      public:
-        uikit(std::unique_ptr<native_visual::base> native_visual);
-        ~uikit() override;
+  public:
+    uikit(std::unique_ptr<native_visual::base> native_visual);
+    ~uikit() override;
 
-        void create(const graphics::pixel_position& initial_position,
-                    const graphics::pixel_size& initial_size) override;
-        void show() override;
-        void hide() override;
-        void close() override;
-        core::string get_title() const override;
-        void set_title(const core::string& title) override;
-        std::pair<graphics::pixel_position, graphics::pixel_size> get_current_geometry() const override;
-      };
-    }
-  }
+    void create(const graphics::pixel_position& initial_position,
+                const graphics::pixel_size& initial_size) override;
+    void show() override;
+    void hide() override;
+    void close() override;
+    core::string get_title() const override;
+    void set_title(const core::string& title) override;
+    std::pair<graphics::pixel_position, graphics::pixel_size> get_current_geometry() const override;
+  };
 }
 
 #endif

@@ -38,29 +38,23 @@
 
 #include <xcb/xcb.h>
 
-namespace skui
+namespace skui::gui::events
 {
-  namespace gui
+  class xcb : public base
   {
-    namespace events
-    {
-      class xcb : public base
-      {
-      public:
-        xcb(gui::window& window);
-        ~xcb() override;
+  public:
+    xcb(gui::window& window);
+    ~xcb() override;
 
-        void exec() override;
+    void exec() override;
 
-      private:
-        xcb_connection_t* connection;
-        xcb_window_t xcb_window;
+  private:
+    xcb_connection_t* connection;
+    xcb_window_t xcb_window;
 
-        core::unique_free_ptr<xcb_intern_atom_reply_t> wm_delete_window;
-        core::bitflag<input::button> pressed_buttons;
-      };
-    }
-  }
+    core::unique_free_ptr<xcb_intern_atom_reply_t> wm_delete_window;
+    core::bitflag<input::button> pressed_buttons;
+  };
 }
 
 #endif

@@ -32,49 +32,46 @@
 #include "graphics/shape/rectangle.h++"
 #include "graphics/gradient/sweep_gradient.h++"
 
-namespace skui
+namespace skui::gui
 {
-  namespace gui
+  namespace
   {
-    namespace
+    graphics::text make_text(const core::string& text,
+                             const graphics::style::fill& fill,
+                             const graphics::style::border& outline,
+                             const graphics::style::font& font)
     {
-      graphics::text make_text(const core::string& text,
-                               const graphics::style::fill& fill,
-                               const graphics::style::border& outline,
-                               const graphics::style::font& font)
-      {
-        graphics::text result(text);
-        result.fill = fill;
-        result.border = outline;
-        result.font = font;
-        return result;
-      }
+      graphics::text result(text);
+      result.fill = fill;
+      result.border = outline;
+      result.font = font;
+      return result;
     }
+  }
 
-    label::label(core::string text)
-      : text{text}
-      , fill{}
-    {}
+  label::label(core::string text)
+    : text{text}
+    , fill{}
+  {}
 
-    label::~label() = default;
+  label::~label() = default;
 
-    void label::draw(graphics::canvas& canvas,
-                     const graphics::scalar_position& position) const
-    {
-      auto graphics_text = make_text(text, fill, outline, font);
-      graphics::rectangle rectangle{canvas.measure_text(graphics_text)};
-      rectangle.border = border;
-      rectangle.fill = background;
-      element::draw(canvas,
-                    {&rectangle, &graphics_text},
-                    {position, position + graphics::scalar_position{border.thickness, border.thickness}});
-    }
+  void label::draw(graphics::canvas& canvas,
+                   const graphics::scalar_position& position) const
+  {
+    auto graphics_text = make_text(text, fill, outline, font);
+    graphics::rectangle rectangle{canvas.measure_text(graphics_text)};
+    rectangle.border = border;
+    rectangle.fill = background;
+    element::draw(canvas,
+    {&rectangle, &graphics_text},
+    {position, position + graphics::scalar_position{border.thickness, border.thickness}});
+  }
 
-    graphics::scalar_size label::implicit_size(const graphics::canvas& canvas) const
-    {
-      auto graphics_text = make_text(text, fill, outline, font);
-      const auto text_size = canvas.measure_text(graphics_text);
-      return text_size + 2.f*graphics::scalar_size{border.thickness, border.thickness};
-    }
+  graphics::scalar_size label::implicit_size(const graphics::canvas& canvas) const
+  {
+    auto graphics_text = make_text(text, fill, outline, font);
+    const auto text_size = canvas.measure_text(graphics_text);
+    return text_size + 2.f*graphics::scalar_size{border.thickness, border.thickness};
   }
 }

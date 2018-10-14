@@ -37,27 +37,24 @@
 
 #include <memory>
 
-namespace skui
+namespace skui::gui
 {
-  namespace gui
+  class graphics_view : public element
   {
-    class graphics_view : public element
-    {
-    public:
-      graphics_view(const graphics::scene& scene);
-      ~graphics_view() override;
+  public:
+    graphics_view(const graphics::scene& scene);
+    ~graphics_view() override;
 
-      void draw(graphics::canvas& canvas,
-                const graphics::scalar_position& position) const override;
+    void draw(graphics::canvas& canvas,
+              const graphics::scalar_position& position) const override;
 
-      graphics::scalar_size implicit_size(const graphics::canvas& canvas) const override;
+    graphics::scalar_size implicit_size(const graphics::canvas& canvas) const override;
 
-    private:
-      const graphics::scene& scene;
-    };
+  private:
+    const graphics::scene& scene;
+  };
 
-    using graphics_view_ptr = std::unique_ptr<graphics_view>;
-  }
+  using graphics_view_ptr = std::unique_ptr<graphics_view>;
 }
 
 #endif

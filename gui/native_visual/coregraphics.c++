@@ -24,24 +24,18 @@
 
 #include "gui/native_visual/coregraphics.h++"
 
-namespace skui
+namespace skui::gui::native_visual
 {
-  namespace gui
-  {
-    namespace native_visual
-    {
-      coregraphics::coregraphics() = default;
+  coregraphics::coregraphics() = default;
 
-      coregraphics::~coregraphics() = default;
+  coregraphics::~coregraphics() = default;
 
-      void coregraphics::create_surface(std::uintptr_t)
-      {}
+  void coregraphics::create_surface(std::uintptr_t)
+  {}
 
-      void coregraphics::make_current() const
-      {}
+  void coregraphics::make_current() const
+  {}
 
-      void coregraphics::swap_buffers(const graphics::pixel_size&) const
-      {}
-    }
-  }
+  void coregraphics::swap_buffers(const graphics::pixel_size&) const
+  {}
 }

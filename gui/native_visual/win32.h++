@@ -42,27 +42,21 @@
 #include <windows.h>
 #undef WIN32_MEAN_AND_LEAN
 
-namespace skui
+namespace skui::gui::native_visual
 {
-  namespace gui
+  class win32 : public raster
   {
-    namespace native_visual
-    {
-      class win32 : public raster
-      {
-      public:
-        win32();
-        ~win32() override;
+  public:
+    win32();
+    ~win32() override;
 
-        void create_surface(std::uintptr_t window) override;
-        void make_current() const override;
-        void swap_buffers(const graphics::pixel_size& size) const override;
+    void create_surface(std::uintptr_t window) override;
+    void make_current() const override;
+    void swap_buffers(const graphics::pixel_size& size) const override;
 
-      private:
-        HDC device_context;
-      };
-    }
-  }
+  private:
+    HDC device_context;
+  };
 }
 
 #endif

@@ -32,32 +32,29 @@
 
 #include <memory>
 
-namespace skui
+namespace skui::gui
 {
-  namespace gui
+  class window;
+}
+
+namespace skui::gui::events
+{
+  class base;
+
+  std::unique_ptr<base> create(gui::window& window);
+
+  class base
   {
-    class window;
+  public:
+    virtual ~base() = 0;
 
-    namespace events
-    {
-      class base;
+    virtual void exec() = 0;
 
-      std::unique_ptr<base> create(gui::window& window);
+  protected:
+    base(gui::window& window);
 
-      class base
-      {
-      public:
-        virtual ~base() = 0;
-
-        virtual void exec() = 0;
-
-      protected:
-        base(gui::window& window);
-
-        gui::window& window;
-      };
-    }
-  }
+    gui::window& window;
+  };
 }
 
 #endif

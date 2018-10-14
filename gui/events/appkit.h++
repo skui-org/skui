@@ -33,22 +33,16 @@
 #include "gui/events.h++"
 #include "gui/window.h++"
 
-namespace skui
+namespace skui::gui::events
 {
-  namespace gui
+  class appkit : public base
   {
-    namespace events
-    {
-      class appkit : public base
-      {
-      public:
-        appkit(gui::window& window);
-        ~appkit() override;
+  public:
+    appkit(gui::window& window);
+    ~appkit() override;
 
-        void exec() override;
-      };
-    }
-  }
+    void exec() override;
+  };
 }
 
 #endif

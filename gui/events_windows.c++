@@ -26,17 +26,10 @@
 
 #include "gui/events/win32.h++"
 
-namespace skui
+namespace skui::gui::events
 {
-  namespace gui
+  std::unique_ptr<base> create(gui::window& window)
   {
-    namespace events
-    {
-      std::unique_ptr<base> create(gui::window& window)
-      {
-        return std::make_unique<events::win32>(window);
-      }
-    }
+    return std::make_unique<events::win32>(window);
   }
 }
-

@@ -32,31 +32,27 @@
 
 #include <core/bitflag.h++>
 
-namespace skui
+namespace skui::gui
 {
-  namespace gui
+  enum class orientation : std::uint8_t
   {
-    enum class orientation : std::uint8_t
-    {
-      horizontal = 1,
-      vertical = 2,
+    horizontal = 1,
+    vertical = 2,
 
-      left_to_right = horizontal,
-      right_to_left = 4 | horizontal,
-      top_to_bottom = vertical,
-      bottom_to_top = 8 | vertical,
-    };
-  }
-  namespace core
-  {
-    template<>
-    struct enum_is_bitflag<gui::orientation> : std::true_type {};
-  }
-  namespace gui
-  {
-    using orientation_flags = core::bitflag<orientation>;
-    using namespace core::bitflag_operators;
-  }
+    left_to_right = horizontal,
+    right_to_left = 4 | horizontal,
+    top_to_bottom = vertical,
+    bottom_to_top = 8 | vertical,
+  };
+
+  using orientation_flags = core::bitflag<orientation>;
+  using namespace core::bitflag_operators;
+}
+
+namespace skui::core
+{
+  template<>
+  struct enum_is_bitflag<gui::orientation> : std::true_type {};
 }
 
 #endif

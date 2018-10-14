@@ -30,79 +30,73 @@
 
 #include <cstring>
 
-namespace skui
+namespace skui::gui::native_visual
 {
-  namespace gui
+  void xfree_deleter::operator()(void* x_resource)
   {
-    namespace native_visual
+    XFree(x_resource);
+  }
+
+  namespace
+  {
+    base::gl_function_type glx_get(void*, const char name[])
     {
-      void xfree_deleter::operator()(void* x_resource)
-      {
-        XFree(x_resource);
+      // Avoid calling glXGetProcAddress() for EGL procs.
+      // We don't expect it to ever succeed, but somtimes it returns non-null anyway.
+      if (0 == std::strncmp(name, "egl", 3)) {
+        return nullptr;
       }
 
-      namespace
-      {
-        base::gl_function_type glx_get(void*, const char name[])
-        {
-          // Avoid calling glXGetProcAddress() for EGL procs.
-          // We don't expect it to ever succeed, but somtimes it returns non-null anyway.
-          if (0 == std::strncmp(name, "egl", 3)) {
-              return nullptr;
-          }
+      return glXGetProcAddress(reinterpret_cast<const GLubyte*>(name));
+    }
+  }
 
-          return glXGetProcAddress(reinterpret_cast<const GLubyte*>(name));
-        }
-      }
+  glx::glx(Display* display)
+    : display{display}
+    , xvisualinfo{create_xvisualinfo()}
+    , context{glXCreateContext(display, xvisualinfo.get(), nullptr, True)}
+    , drawable{0}
+  {}
 
-      glx::glx(Display* display)
-        : display{display}
-        , xvisualinfo{create_xvisualinfo()}
-        , context{glXCreateContext(display, xvisualinfo.get(), nullptr, True)}
-        , drawable{0}
-      {}
+  void glx::create_surface(std::uintptr_t drawable)
+  {
+    // The surface is the window itself
+    this->drawable = static_cast<Window>(drawable);
+  }
 
-      void glx::create_surface(std::uintptr_t drawable)
-      {
-        // The surface is the window itself
-        this->drawable = static_cast<Window>(drawable);
-      }
+  glx::~glx() = default;
 
-      glx::~glx() = default;
+  void glx::make_current() const
+  {
+    if(glXMakeCurrent(display, drawable, context) == False)
+      core::debug_print("Call to glXMakeCurrent failed.\n");
+  }
 
-      void glx::make_current() const
-      {
-        if(glXMakeCurrent(display, drawable, context) == False)
-          core::debug_print("Call to glXMakeCurrent failed.\n");
-      }
+  void glx::swap_buffers(const graphics::pixel_size&) const
+  {
+    glXSwapBuffers(display, drawable);
+  }
 
-      void glx::swap_buffers(const graphics::pixel_size&) const
-      {
-        glXSwapBuffers(display, drawable);
-      }
+  base::gl_get_function_type glx::get_gl_function() const
+  {
+    return &glx_get;
+  }
 
-      base::gl_get_function_type glx::get_gl_function() const
-      {
-        return &glx_get;
-      }
+  XVisualInfo* glx::get_xvisualinfo() const
+  {
+    return xvisualinfo.get();
+  }
 
-      XVisualInfo* glx::get_xvisualinfo() const
-      {
-        return xvisualinfo.get();
-      }
-
-      std::unique_ptr<XVisualInfo, xfree_deleter> glx::create_xvisualinfo()
-      {
-        static int attributes[]
-        {
-          GLX_RGBA,
+  std::unique_ptr<XVisualInfo, xfree_deleter> glx::create_xvisualinfo()
+  {
+    static int attributes[]
+    {
+      GLX_RGBA,
           GLX_DEPTH_SIZE, 24,
           GLX_DOUBLEBUFFER,
           None
-        };
-        const int default_screen = DefaultScreen(display);
-        return std::unique_ptr<XVisualInfo, xfree_deleter>(glXChooseVisual(display, default_screen, attributes));
-      }
-    }
+    };
+    const int default_screen = DefaultScreen(display);
+    return std::unique_ptr<XVisualInfo, xfree_deleter>(glXChooseVisual(display, default_screen, attributes));
   }
 }

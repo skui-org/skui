@@ -38,30 +38,24 @@
 #include <windows.h>
 #undef WIN32_MEAN_AND_LEAN
 
-namespace skui
+namespace skui::gui::native_visual
 {
-  namespace gui
+  class wgl : public base
   {
-    namespace native_visual
-    {
-      class wgl : public base
-      {
-      public:
-        wgl();
-        ~wgl() override;
+  public:
+    wgl();
+    ~wgl() override;
 
-        void create_surface(std::uintptr_t window) override;
-        void swap_buffers(const graphics::pixel_size&) const override;
-        void make_current() const override;
+    void create_surface(std::uintptr_t window) override;
+    void swap_buffers(const graphics::pixel_size&) const override;
+    void make_current() const override;
 
-        gl_get_function_type get_gl_function() const override;
+    gl_get_function_type get_gl_function() const override;
 
-      private:
-        HDC device_context;
-        HGLRC gl_context;
-      };
-    }
-  }
+  private:
+    HDC device_context;
+    HGLRC gl_context;
+  };
 }
 
 #endif

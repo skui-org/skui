@@ -32,21 +32,16 @@
 
 #include <ostream>
 
-namespace skui
+namespace skui::gui::input
 {
-  namespace gui
+  enum class button
   {
-    namespace input
-    {
-      enum class button
-      {
-        primary,
-        secondary,
-        middle
-      };
+    primary,
+    secondary,
+    middle
+  };
 
-      std::ostream& operator<<(std::ostream& os, button button);
-    }
-  }
+  std::ostream& operator<<(std::ostream& os, button button);
 }
+
 #endif

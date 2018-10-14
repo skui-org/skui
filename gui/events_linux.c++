@@ -26,17 +26,11 @@
 
 #include "gui/events/xcb.h++"
 
-namespace skui
+namespace skui::gui::events
 {
-  namespace gui
+  std::unique_ptr<base> create(window& window)
   {
-    namespace events
-    {
-      std::unique_ptr<base> create(window& window)
-      {
-        return std::make_unique<events::xcb>(window);
-      }
-    }
+    return std::make_unique<events::xcb>(window);
   }
 }
 

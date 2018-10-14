@@ -31,20 +31,17 @@
 
 #include <core/bitflag.h++>
 
-namespace skui
+namespace skui::gui
 {
-  namespace gui
+  enum class window_flag
   {
-    enum class window_flag
-    {
-      none,
-      opengl, // use OpenGL to render window content
-      anti_alias, // enable anti-aliased rendering for window content
-      exit_on_close, // Quit application when last window with this flag set closes
-    };
-    using window_flags = core::bitflag<window_flag>;
-    using namespace core::bitflag_operators;
-  }
+    none,
+    opengl, // use OpenGL to render window content
+    anti_alias, // enable anti-aliased rendering for window content
+    exit_on_close, // Quit application when last window with this flag set closes
+  };
+  using window_flags = core::bitflag<window_flag>;
+  using namespace core::bitflag_operators;
 }
 
 #endif // WINDOW_FLAGS_H

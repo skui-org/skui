@@ -36,35 +36,29 @@
 
 #include <xcb/xcb.h>
 
-namespace skui
+namespace skui::gui::native_visual
 {
-  namespace gui
+  class xcb : public raster
   {
-    namespace native_visual
-    {
-      class xcb : public raster
-      {
-      public:
-        xcb(xcb_connection_t* connection,
-            xcb_screen_t* screen);
-        ~xcb() override;
+  public:
+    xcb(xcb_connection_t* connection,
+        xcb_screen_t* screen);
+    ~xcb() override;
 
-        void create_surface(std::uintptr_t window) override;
-        void make_current() const override;
-        void swap_buffers(const graphics::pixel_size& size) const override;
+    void create_surface(std::uintptr_t window) override;
+    void make_current() const override;
+    void swap_buffers(const graphics::pixel_size& size) const override;
 
-        xcb_visualid_t visualid() const;
+    xcb_visualid_t visualid() const;
 
-      private:
-        xcb_connection_t* connection;
-        xcb_screen_t* screen;
-        xcb_visualtype_t* visualtype;
+  private:
+    xcb_connection_t* connection;
+    xcb_screen_t* screen;
+    xcb_visualtype_t* visualtype;
 
-        xcb_window_t window;
-        xcb_gcontext_t gcontext;
-      };
-    }
-  }
+    xcb_window_t window;
+    xcb_gcontext_t gcontext;
+  };
 }
 
 #endif

@@ -24,20 +24,14 @@
 
 #include "gui/events/uikit.h++"
 
-namespace skui
+namespace skui::gui::events
 {
-  namespace gui
-  {
-    namespace events
-    {
-      uikit::uikit(gui::window& window)
-        : base{window}
-      {}
+  uikit::uikit(gui::window& window)
+    : base{window}
+  {}
 
-      uikit::~uikit() = default;
+  uikit::~uikit() = default;
 
-      void uikit::exec()
-      {}
-    }
-  }
+  void uikit::exec()
+  {}
 }

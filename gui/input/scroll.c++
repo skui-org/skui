@@ -24,28 +24,22 @@
 
 #include "gui/input/scroll.h++"
 
-namespace skui
+namespace skui::gui::input
 {
-  namespace gui
+  std::ostream& operator<<(std::ostream& os, scroll scroll)
   {
-    namespace input
+    switch(scroll)
     {
-      std::ostream& operator<<(std::ostream& os, scroll scroll)
-      {
-        switch(scroll)
-        {
-          case input::scroll::down:
-            return os << "down";
-          case input::scroll::up:
-            return os << "up";
-          case input::scroll::left:
-            return os << "left";
-          case input::scroll::right:
-            return os << "right";
-          default:
-            throw 42;
-        }
-      }
+      case input::scroll::down:
+        return os << "down";
+      case input::scroll::up:
+        return os << "up";
+      case input::scroll::left:
+        return os << "left";
+      case input::scroll::right:
+        return os << "right";
+      default:
+        throw 42;
     }
   }
 }

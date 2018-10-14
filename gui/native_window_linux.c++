@@ -30,26 +30,20 @@
 #include "gui/native_visual/glx.h++"
 #include "gui/native_visual/xcb.h++"
 
-namespace skui
+namespace skui::gui::native_window
 {
-  namespace gui
+  std::unique_ptr<base> create(const graphics::pixel_position& position,
+                               const graphics::pixel_size& size,
+                               const window_flags& flags)
   {
-    namespace native_window
-    {
-      std::unique_ptr<base> create(const graphics::pixel_position& position,
-                                   const graphics::pixel_size& size,
-                                   const window_flags& flags)
-      {
-        std::unique_ptr<base> window;
-        if(flags.test(window_flag::opengl))
-          window = std::make_unique<xlib>(flags);
-        else
-          window = std::make_unique<xcb>();
+    std::unique_ptr<base> window;
+    if(flags.test(window_flag::opengl))
+      window = std::make_unique<xlib>(flags);
+    else
+      window = std::make_unique<xcb>();
 
-        window->create(position, size);
+    window->create(position, size);
 
-        return window;
-      }
-    }
+    return window;
   }
 }

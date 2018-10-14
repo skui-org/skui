@@ -33,28 +33,25 @@
 #include "gui/layout.h++"
 #include "gui/make_element.h++"
 
-namespace skui
-{
-  namespace gui
+namespace skui::gui
   {
-    class row : public layout
-    {
-    public:
-      template<typename... ElementPointerTypes>
-      row(ElementPointerTypes&&... element_pointers)
-        : row(make_element_ptrs(std::forward<ElementPointerTypes>(element_pointers)...))
-      {}
-      row(element_ptrs children = {});
-      ~row() override;
+  class row : public layout
+  {
+  public:
+    template<typename... ElementPointerTypes>
+    row(ElementPointerTypes&&... element_pointers)
+      : row{make_element_ptrs(std::forward<ElementPointerTypes>(element_pointers)...)}
+    {}
+    row(element_ptrs children = {});
+    ~row() override;
 
-      graphics::scalar_size implicit_size(const graphics::canvas& canvas) const override;
+    graphics::scalar_size implicit_size(const graphics::canvas& canvas) const override;
 
-    private:
-      std::vector<graphics::scalar_position> calculate_child_offsets(const graphics::canvas& canvas) const override;
-    };
+  private:
+    std::vector<graphics::scalar_position> calculate_child_offsets(const graphics::canvas& canvas) const override;
+  };
 
-    using row_ptr = std::unique_ptr<row>;
-  }
+  using row_ptr = std::unique_ptr<row>;
 }
 
 #endif

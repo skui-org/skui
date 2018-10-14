@@ -24,10 +24,7 @@
 
 #include "gui/window.h++"
 
-namespace skui
+namespace skui::gui
 {
-  namespace gui
-  {
-    const window_flags window::default_flags = window_flag::exit_on_close | window_flag::anti_alias;
-  }
+  const window_flags window::default_flags = window_flag::exit_on_close | window_flag::anti_alias;
 }

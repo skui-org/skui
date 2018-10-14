@@ -24,43 +24,37 @@
 
 #include "gui/native_window/uikit.h++"
 
-namespace skui
+namespace skui::gui::native_window
 {
-  namespace gui
+  uikit::uikit(std::unique_ptr<native_visual::base> native_visual)
+    : base{std::move(native_visual)}
+  {}
+
+  uikit::~uikit() = default;
+
+  void uikit::create(const graphics::pixel_position&,
+                     const graphics::pixel_size&)
+  {}
+
+  void uikit::show()
+  {}
+
+  void uikit::hide()
+  {}
+
+  void uikit::close()
+  {}
+
+  core::string uikit::get_title() const
   {
-    namespace native_window
-    {
-      uikit::uikit(std::unique_ptr<native_visual::base> native_visual)
-        : base{std::move(native_visual)}
-      {}
+    return {};
+  }
 
-      uikit::~uikit() = default;
+  void uikit::set_title(const core::string&)
+  {}
 
-      void uikit::create(const graphics::pixel_position&,
-                         const graphics::pixel_size&)
-      {}
-
-      void uikit::show()
-      {}
-
-      void uikit::hide()
-      {}
-
-      void uikit::close()
-      {}
-
-      core::string uikit::get_title() const
-      {
-          return {};
-      }
-
-      void uikit::set_title(const core::string&)
-      {}
-
-      std::pair<graphics::pixel_position, graphics::pixel_size> uikit::get_current_geometry() const
-      {
-        return {};
-      }
-    }
+  std::pair<graphics::pixel_position, graphics::pixel_size> uikit::get_current_geometry() const
+  {
+    return {};
   }
 }

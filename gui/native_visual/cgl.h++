@@ -32,26 +32,20 @@
 
 #include "gui/native_visual.h++"
 
-namespace skui
+namespace skui::gui::native_visual
 {
-  namespace gui
+  class cgl : public base
   {
-    namespace native_visual
-    {
-      class cgl : public base
-      {
-      public:
-        cgl();
-        ~cgl() override;
+  public:
+    cgl();
+    ~cgl() override;
 
-        void create_surface(std::uintptr_t window) override;
-        void make_current() const override;
-        void swap_buffers(const graphics::pixel_size&) const override;
+    void create_surface(std::uintptr_t window) override;
+    void make_current() const override;
+    void swap_buffers(const graphics::pixel_size&) const override;
 
-        gl_get_function_type get_gl_function() const override;
-      };
-    }
-  }
+    gl_get_function_type get_gl_function() const override;
+  };
 }
 
 #endif

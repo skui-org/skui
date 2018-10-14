@@ -32,22 +32,17 @@
 
 #include <ostream>
 
-namespace skui
+namespace skui::gui::input
 {
-  namespace gui
+  enum class scroll
   {
-    namespace input
-    {
-      enum class scroll
-      {
-        up,
-        down,
-        left,
-        right
-      };
+    up,
+    down,
+    left,
+    right
+  };
 
-      std::ostream& operator<<(std::ostream& os, scroll scroll);
-    }
-  }
+  std::ostream& operator<<(std::ostream& os, scroll scroll);
 }
+
 #endif

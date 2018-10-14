@@ -38,34 +38,28 @@
 #include <windows.h>
 #undef WIN32_MEAN_AND_LEAN
 
-namespace skui
+namespace skui::gui::native_window
 {
-  namespace gui
+  class win32 : public base
   {
-    namespace native_window
-    {
-      class win32 : public base
-      {
-      public:
-        win32(std::unique_ptr<native_visual::base> native_visual);
-        ~win32() override;
+  public:
+    win32(std::unique_ptr<native_visual::base> native_visual);
+    ~win32() override;
 
-        void create(const graphics::pixel_position& initial_position,
-                    const graphics::pixel_size& initial_size) override;
-        void show() override;
-        void hide() override;
-        void close() override;
-        core::string get_title() const override;
-        void set_title(const core::string& title) override;
-        std::pair<graphics::pixel_position, graphics::pixel_size> get_current_geometry() const override;
+    void create(const graphics::pixel_position& initial_position,
+                const graphics::pixel_size& initial_size) override;
+    void show() override;
+    void hide() override;
+    void close() override;
+    core::string get_title() const override;
+    void set_title(const core::string& title) override;
+    std::pair<graphics::pixel_position, graphics::pixel_size> get_current_geometry() const override;
 
-        HWND get_hwnd() const;
+    HWND get_hwnd() const;
 
-      private:
-        HWND window;
-      };
-    }
-  }
+  private:
+    HWND window;
+  };
 }
 
 #endif

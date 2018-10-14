@@ -33,32 +33,29 @@
 #include <memory>
 #include <vector>
 
-namespace skui
+namespace skui::gui
 {
-  namespace gui
+  class layout : public element
   {
-    class layout : public element
-    {
-    public:
-      ~layout() override;
+  public:
+    ~layout() override;
 
-      void draw(graphics::canvas& canvas,
-                const graphics::scalar_position& position) const final;
+    void draw(graphics::canvas& canvas,
+              const graphics::scalar_position& position) const final;
 
-      std::vector<std::unique_ptr<element>> children;
+    std::vector<std::unique_ptr<element>> children;
 
-      core::property<graphics::scalar> spacing;
+    core::property<graphics::scalar> spacing;
 
-      orientation_flags orientation = orientation::left_to_right;
-      alignment child_alignment = alignment::center;
+    orientation_flags orientation = orientation::left_to_right;
+    alignment child_alignment = alignment::center;
 
-    protected:
-      layout(element_ptrs children);
+  protected:
+    layout(element_ptrs children);
 
-    private:
-      virtual std::vector<graphics::scalar_position> calculate_child_offsets(const graphics::canvas& canvas) const = 0;
-    };
-  }
+  private:
+    virtual std::vector<graphics::scalar_position> calculate_child_offsets(const graphics::canvas& canvas) const = 0;
+  };
 }
 
 #endif

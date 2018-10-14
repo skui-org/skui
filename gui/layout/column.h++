@@ -28,28 +28,25 @@
 #include "gui/layout.h++"
 #include "gui/make_element.h++"
 
-namespace skui
+namespace skui::gui
 {
-  namespace gui
+  class column : public layout
   {
-    class column : public layout
-    {
-    public:
-      template<typename... ElementPointerTypes>
-      column(ElementPointerTypes&&... element_pointers)
-        : column(make_element_ptrs(std::forward<ElementPointerTypes>(element_pointers)...))
-      {}
-      column(element_ptrs elements);
-      ~column() override;
+  public:
+    template<typename... ElementPointerTypes>
+    column(ElementPointerTypes&&... element_pointers)
+      : column{make_element_ptrs(std::forward<ElementPointerTypes>(element_pointers)...)}
+    {}
+    column(element_ptrs elements);
+    ~column() override;
 
-      graphics::scalar_size implicit_size(const graphics::canvas& canvas) const override;
+    graphics::scalar_size implicit_size(const graphics::canvas& canvas) const override;
 
-    private:
-      std::vector<graphics::scalar_position> calculate_child_offsets(const graphics::canvas& canvas) const override;
-    };
+  private:
+    std::vector<graphics::scalar_position> calculate_child_offsets(const graphics::canvas& canvas) const override;
+  };
 
-    using column_ptr = std::unique_ptr<column>;
-  }
+  using column_ptr = std::unique_ptr<column>;
 }
 
 #endif

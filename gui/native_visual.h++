@@ -35,28 +35,22 @@
 
 #include <cstdint>
 
-namespace skui
+namespace skui::gui::native_visual
 {
-  namespace gui
+  class base
   {
-    namespace native_visual
-    {
-      class base
-      {
-      public:
-        base();
-        virtual ~base() = 0;
+  public:
+    base();
+    virtual ~base() = 0;
 
-        virtual void create_surface(std::uintptr_t window) = 0;
-        virtual void make_current() const = 0;
-        virtual void swap_buffers(const graphics::pixel_size& size) const = 0;
+    virtual void create_surface(std::uintptr_t window) = 0;
+    virtual void make_current() const = 0;
+    virtual void swap_buffers(const graphics::pixel_size& size) const = 0;
 
-        using gl_function_type = void(*)();
-        using gl_get_function_type = gl_function_type (*)(void* ctx, const char name[]);
-        virtual gl_get_function_type get_gl_function() const;
-      };
-    }
-  }
+    using gl_function_type = void(*)();
+    using gl_get_function_type = gl_function_type (*)(void* ctx, const char name[]);
+    virtual gl_get_function_type get_gl_function() const;
+  };
 }
 
 #endif

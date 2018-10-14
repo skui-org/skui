@@ -24,43 +24,37 @@
 
 #include "gui/native_window/appkit.h++"
 
-namespace skui
+namespace skui::gui::native_window
 {
-  namespace gui
+  appkit::appkit(std::unique_ptr<native_visual::base> native_visual)
+    : base{std::move(native_visual)}
+  {}
+
+  appkit::~appkit() = default;
+
+  void appkit::create(const graphics::pixel_position&,
+                      const graphics::pixel_size&)
+  {}
+
+  void appkit::show()
+  {}
+
+  void appkit::hide()
+  {}
+
+  void appkit::close()
+  {}
+
+  core::string appkit::get_title() const
   {
-    namespace native_window
-    {
-      appkit::appkit(std::unique_ptr<native_visual::base> native_visual)
-        : base{std::move(native_visual)}
-      {}
+    return {};
+  }
 
-      appkit::~appkit() = default;
+  void appkit::set_title(const core::string&)
+  {}
 
-      void appkit::create(const graphics::pixel_position&,
-                          const graphics::pixel_size&)
-      {}
-
-      void appkit::show()
-      {}
-
-      void appkit::hide()
-      {}
-
-      void appkit::close()
-      {}
-
-      core::string appkit::get_title() const
-      {
-          return {};
-      }
-
-      void appkit::set_title(const core::string&)
-      {}
-
-      std::pair<graphics::pixel_position, graphics::pixel_size> appkit::get_current_geometry() const
-      {
-        return {};
-      }
-    }
+  std::pair<graphics::pixel_position, graphics::pixel_size> appkit::get_current_geometry() const
+  {
+    return {};
   }
 }

@@ -32,26 +32,23 @@
 
 #include "gui/element.h++"
 
-namespace skui
+namespace skui::gui
 {
-  namespace gui
+  class spacer : public element
   {
-    class spacer : public element
-    {
-    public:
-      spacer(graphics::scalar_size size);
-      ~spacer() override;
+  public:
+    spacer(graphics::scalar_size size);
+    ~spacer() override;
 
-      void draw(graphics::canvas& canvas,
-                const graphics::scalar_position& position) const override;
+    void draw(graphics::canvas& canvas,
+              const graphics::scalar_position& position) const override;
 
-      graphics::scalar_size implicit_size(const graphics::canvas& canvas) const override;
+    graphics::scalar_size implicit_size(const graphics::canvas& canvas) const override;
 
-      graphics::scalar_size spacer_size;
-    };
+    graphics::scalar_size spacer_size;
+  };
 
-    using spacer_ptr = std::unique_ptr<spacer>;
-  }
+  using spacer_ptr = std::unique_ptr<spacer>;
 }
 
 #endif

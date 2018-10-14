@@ -26,40 +26,34 @@
 
 #include <core/library.h++>
 
-namespace skui
+namespace skui::gui::native_visual
 {
-  namespace gui
+  namespace
   {
-    namespace native_visual
+    base::gl_function_type cgl_get(void*, const char name[])
     {
-      namespace
-      {
-        base::gl_function_type cgl_get(void*, const char name[])
-        {
-          static core::library libgl("/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib");
+      static core::library libgl("/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib");
 
-          libgl.load();
+      libgl.load();
 
-          return libgl.resolve<void>(name);
-        }
-      }
-      cgl::cgl() = default;
-
-      cgl::~cgl() = default;
-
-      void cgl::create_surface(std::uintptr_t)
-      {}
-
-      void cgl::make_current() const
-      {}
-
-      void cgl::swap_buffers(const graphics::pixel_size&) const
-      {}
-
-      base::gl_get_function_type cgl::get_gl_function() const
-      {
-          return &cgl_get;
-      }
+      return libgl.resolve<void>(name);
     }
+  }
+  cgl::cgl() = default;
+
+  cgl::~cgl() = default;
+
+  void cgl::create_surface(std::uintptr_t)
+  {}
+
+  void cgl::make_current() const
+  {}
+
+  void cgl::swap_buffers(const graphics::pixel_size&) const
+  {}
+
+  base::gl_get_function_type cgl::get_gl_function() const
+  {
+    return &cgl_get;
   }
 }

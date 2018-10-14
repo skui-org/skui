@@ -24,18 +24,11 @@
 
 #include "gui/events.h++"
 
-namespace skui
+namespace skui::gui::events
 {
-  namespace gui
-  {
-    namespace events
-    {
-      base::base(gui::window& window)
-        : window{window}
-      {}
+  base::base(gui::window& window)
+    : window{window}
+  {}
 
-      base::~base() = default;
-    }
-  }
+  base::~base() = default;
 }
-

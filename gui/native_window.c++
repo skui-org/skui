@@ -24,37 +24,31 @@
 
 #include "gui/native_window.h++"
 
-namespace skui
+namespace skui::gui::native_window
 {
-  namespace gui
+  base::base(std::unique_ptr<native_visual::base> native_visual)
+    : native_visual{std::move(native_visual)}
+  {}
+
+  base::~base() = default;
+
+  void base::make_current() const
   {
-    namespace native_window
-    {
-      base::base(std::unique_ptr<native_visual::base> native_visual)
-        : native_visual{std::move(native_visual)}
-      {}
+    native_visual->make_current();
+  }
 
-      base::~base() = default;
+  void base::swap_buffers(const graphics::pixel_size& size)
+  {
+    native_visual->swap_buffers(size);
+  }
 
-      void base::make_current() const
-      {
-        native_visual->make_current();
-      }
+  native_visual::base& base::get_native_visual()
+  {
+    return *native_visual;
+  }
 
-      void base::swap_buffers(const graphics::pixel_size& size)
-      {
-        native_visual->swap_buffers(size);
-      }
-
-      native_visual::base& base::get_native_visual()
-      {
-        return *native_visual;
-      }
-
-      const native_visual::base& base::get_native_visual() const
-      {
-        return *native_visual;
-      }
-    }
+  const native_visual::base& base::get_native_visual() const
+  {
+    return *native_visual;
   }
 }

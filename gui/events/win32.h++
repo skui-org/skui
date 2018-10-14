@@ -41,27 +41,21 @@
 #include <windows.h>
 #undef WIN32_MEAN_AND_LEAN
 
-namespace skui
+namespace skui::gui::events
 {
-  namespace gui
+  class win32 : public base
   {
-    namespace events
-    {
-      class win32 : public base
-      {
-      public:
-        win32(gui::window& window);
-        ~win32() override;
+  public:
+    win32(gui::window& window);
+    ~win32() override;
 
-        void exec() override;
+    void exec() override;
 
-        static LRESULT CALLBACK window_procedure(HWND hwnd,
-                                                 UINT msg,
-                                                 WPARAM wparam,
-                                                 LPARAM lparam);
-      };
-    }
-  }
+    static LRESULT CALLBACK window_procedure(HWND hwnd,
+                                             UINT msg,
+                                             WPARAM wparam,
+                                             LPARAM lparam);
+  };
 }
 
 #endif

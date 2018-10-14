@@ -39,46 +39,40 @@
 
 #include <memory>
 
-namespace skui
+namespace skui::gui::native_window
 {
-  namespace gui
+  class base;
+
+  std::unique_ptr<base> create(const graphics::pixel_position& position,
+                               const graphics::pixel_size& size,
+                               const window_flags& flags);
+
+  class base
   {
-    namespace native_window
-    {
-      class base;
+  public:
+    base(std::unique_ptr<native_visual::base> native_visual);
+    virtual ~base() = 0;
 
-      std::unique_ptr<base> create(const graphics::pixel_position& position,
-                                   const graphics::pixel_size& size,
-                                   const window_flags& flags);
+    virtual void create(const graphics::pixel_position& initial_position,
+                        const graphics::pixel_size& initial_size) = 0;
 
-      class base
-      {
-      public:
-        base(std::unique_ptr<native_visual::base> native_visual);
-        virtual ~base() = 0;
+    virtual void show() = 0;
+    virtual void hide() = 0;
+    virtual void close() = 0;
 
-        virtual void create(const graphics::pixel_position& initial_position,
-                            const graphics::pixel_size& initial_size) = 0;
+    virtual core::string get_title() const = 0;
+    virtual void set_title(const core::string& title) = 0;
+    virtual std::pair<graphics::pixel_position, graphics::pixel_size> get_current_geometry() const = 0;
 
-        virtual void show() = 0;
-        virtual void hide() = 0;
-        virtual void close() = 0;
+    void make_current() const;
+    void swap_buffers(const graphics::pixel_size& size);
 
-        virtual core::string get_title() const = 0;
-        virtual void set_title(const core::string& title) = 0;
-        virtual std::pair<graphics::pixel_position, graphics::pixel_size> get_current_geometry() const = 0;
+    native_visual::base& get_native_visual();
+    const native_visual::base& get_native_visual() const;
 
-        void make_current() const;
-        void swap_buffers(const graphics::pixel_size& size);
-
-        native_visual::base& get_native_visual();
-        const native_visual::base& get_native_visual() const;
-
-      protected:
-        std::unique_ptr<native_visual::base> native_visual;
-      };
-    }
-  }
+  protected:
+    std::unique_ptr<native_visual::base> native_visual;
+  };
 }
 
 #endif

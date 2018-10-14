@@ -24,20 +24,14 @@
 
 #include "gui/native_visual.h++"
 
-namespace skui
+namespace skui::gui::native_visual
 {
-  namespace gui
+  base::base() = default;
+
+  base::~base() = default;
+
+  base::gl_get_function_type base::get_gl_function() const
   {
-    namespace native_visual
-    {
-      base::base() = default;
-
-      base::~base() = default;
-
-      base::gl_get_function_type base::get_gl_function() const
-      {
-        return nullptr;
-      }
-    }
+    return nullptr;
   }
 }

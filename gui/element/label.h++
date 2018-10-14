@@ -40,32 +40,29 @@
 #include <graphics/shape/text.h++>
 #include <graphics/shape/rectangle.h++>
 
-namespace skui
+namespace skui::gui
 {
-  namespace gui
+  class label : public element
   {
-    class label : public element
-    {
-    public:
-      label(core::string text_);
-      ~label() override;
+  public:
+    label(core::string text_);
+    ~label() override;
 
-      void draw(graphics::canvas& canvas,
-                const graphics::scalar_position& position) const override;
+    void draw(graphics::canvas& canvas,
+              const graphics::scalar_position& position) const override;
 
-      core::property<core::string> text;
+    core::property<core::string> text;
 
-      graphics::style::fill fill;
-      graphics::style::border outline;
-      graphics::style::fill background;
-      graphics::style::border border;
-      graphics::style::font font;
+    graphics::style::fill fill;
+    graphics::style::border outline;
+    graphics::style::fill background;
+    graphics::style::border border;
+    graphics::style::font font;
 
-      graphics::scalar_size implicit_size(const graphics::canvas& canvas) const override;
-    };
+    graphics::scalar_size implicit_size(const graphics::canvas& canvas) const override;
+  };
 
-    using label_ptr = std::unique_ptr<label>;
-  }
+  using label_ptr = std::unique_ptr<label>;
 }
 
 #endif

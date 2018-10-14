@@ -32,14 +32,11 @@
 
 #include <core/property.h++>
 
-namespace skui
+namespace skui::gui
 {
-  namespace gui
+  class icon
   {
-    class icon
-    {
-    };
-  }
+  };
 }
 
 #endif

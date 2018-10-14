@@ -39,38 +39,32 @@
 #include <X11/Xutil.h>
 #include <xcb/xcb.h>
 
-namespace skui
+namespace skui::gui::native_window
 {
-  namespace gui
+  // helper struct to ensure correct base class constructor can be called
+  struct xlib_data
   {
-    namespace native_window
+    xlib_data(Display* display) : display{display} {}
+    struct display_deleter
     {
-      // helper struct to ensure correct base class constructor can be called
-      struct xlib_data
-      {
-        xlib_data(Display* display) : display{display} {}
-        struct display_deleter
-        {
-          void operator()(Display* display) const { XCloseDisplay(display); }
-        };
-        std::unique_ptr<Display, display_deleter> display;
-      };
+      void operator()(Display* display) const { XCloseDisplay(display); }
+    };
+    std::unique_ptr<Display, display_deleter> display;
+  };
 
-      class xlib : public xlib_data
-                 , public xcb
-      {
-      public:
-        xlib(const window_flags& flags);
-        ~xlib() override;
+  class xlib : public xlib_data
+      , public xcb
+  {
+  public:
+    xlib(const window_flags& flags);
+    ~xlib() override;
 
-        void create(const graphics::pixel_position& initial_position,
-                    const graphics::pixel_size& initial_size) override;
+    void create(const graphics::pixel_position& initial_position,
+                const graphics::pixel_size& initial_size) override;
 
-        XVisualInfo* get_xvisualinfo() const;
-        void handle_dri2_events(xcb_generic_event_t& event) const;
-      };
-    }
-  }
+    XVisualInfo* get_xvisualinfo() const;
+    void handle_dri2_events(xcb_generic_event_t& event) const;
+  };
 }
 
 #endif

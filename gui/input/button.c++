@@ -24,24 +24,21 @@
 
 #include "gui/input/button.h++"
 
-namespace skui::gui
+namespace skui::gui::input
+{
+  std::ostream& operator<<(std::ostream& os, button button)
   {
-    namespace input
+    switch(button)
     {
-      std::ostream& operator<<(std::ostream& os, button button)
-      {
-        switch(button)
-        {
-          case input::button::primary:
-            return os << "primary";
-          case input::button::secondary:
-            return os << "secondary";
-          case input::button::middle:
-            return os << "middle";
-          default:
-            throw 42;
-        }
-      }
+      case input::button::primary:
+        return os << "primary";
+      case input::button::secondary:
+        return os << "secondary";
+      case input::button::middle:
+        return os << "middle";
+      default:
+        throw 42;
     }
   }
+}
 

@@ -42,103 +42,97 @@ namespace
   }
 }
 
-namespace skui
+namespace skui::gui::events
 {
-  namespace gui
+  win32::win32(gui::window& window)
+    : base{window}
+  {}
+
+  win32::~win32() = default;
+
+  LRESULT CALLBACK win32::window_procedure(HWND hwnd,
+                                           UINT msg,
+                                           WPARAM wparam,
+                                           LPARAM lparam)
   {
-    namespace events
+    auto& window = *reinterpret_cast<gui::window*>(GetWindowLongPtrW(hwnd, GWLP_USERDATA));
+
+    switch(msg)
     {
-      win32::win32(gui::window& window)
-        : base{window}
-      {}
-
-      win32::~win32() = default;
-
-      LRESULT CALLBACK win32::window_procedure(HWND hwnd,
-                                               UINT msg,
-                                               WPARAM wparam,
-                                               LPARAM lparam)
+      case WM_CLOSE:
+        DestroyWindow(hwnd);
+        break;
+      case WM_PAINT:
       {
-        auto& window = *reinterpret_cast<gui::window*>(GetWindowLongPtrW(hwnd, GWLP_USERDATA));
-
-        switch(msg)
-        {
-          case WM_CLOSE:
-            DestroyWindow(hwnd);
-            break;
-          case WM_PAINT:
-          {
-            PAINTSTRUCT paint_struct;
-            BeginPaint(hwnd, &paint_struct);
-            window.repaint();
-            EndPaint(hwnd, &paint_struct);
-            break;
-          }
-          case WM_MOUSEMOVE:
-            window.pointer.moved(get_position(lparam));
-            break;
-          case WM_MOUSELEAVE:
-            window.pointer.left(get_position(lparam));
-            break;
-          case WM_LBUTTONDOWN:
-            window.pointer.pressed(input::button::primary, get_position(lparam));
-            break;
-          case WM_LBUTTONUP:
-            window.pointer.released(input::button::primary, get_position(lparam));
-            break;
-          case WM_MBUTTONDOWN:
-            window.pointer.pressed(input::button::middle, get_position(lparam));
-            break;
-          case WM_MBUTTONUP:
-            window.pointer.released(input::button::middle, get_position(lparam));
-            break;
-          case WM_RBUTTONDOWN:
-            window.pointer.pressed(input::button::secondary, get_position(lparam));
-            break;
-          case WM_RBUTTONUP:
-            window.pointer.released(input::button::secondary, get_position(lparam));
-            break;
-          case WM_MOUSEWHEEL:
-          {
-            auto scroll = GET_WHEEL_DELTA_WPARAM(wparam) > 0 ? input::scroll::up
-                                                             : input::scroll::down;
-            window.pointer.scroll(scroll, get_position(lparam));
-            break;
-          }
-          case WM_MOUSEHWHEEL:
-          {
-            auto scroll = GET_WHEEL_DELTA_WPARAM(wparam) > 0 ? input::scroll::right
-                                                             : input::scroll::left;
-            window.pointer.scroll(scroll, get_position(lparam));
-            break;
-          }
-          default:
-            return DefWindowProcW(hwnd, msg, wparam, lparam);
-        }
-        return 0;
+        PAINTSTRUCT paint_struct;
+        BeginPaint(hwnd, &paint_struct);
+        window.repaint();
+        EndPaint(hwnd, &paint_struct);
+        break;
       }
-
-      void skui::gui::events::win32::exec()
+      case WM_MOUSEMOVE:
+        window.pointer.moved(get_position(lparam));
+        break;
+      case WM_MOUSELEAVE:
+        window.pointer.left(get_position(lparam));
+        break;
+      case WM_LBUTTONDOWN:
+        window.pointer.pressed(input::button::primary, get_position(lparam));
+        break;
+      case WM_LBUTTONUP:
+        window.pointer.released(input::button::primary, get_position(lparam));
+        break;
+      case WM_MBUTTONDOWN:
+        window.pointer.pressed(input::button::middle, get_position(lparam));
+        break;
+      case WM_MBUTTONUP:
+        window.pointer.released(input::button::middle, get_position(lparam));
+        break;
+      case WM_RBUTTONDOWN:
+        window.pointer.pressed(input::button::secondary, get_position(lparam));
+        break;
+      case WM_RBUTTONUP:
+        window.pointer.released(input::button::secondary, get_position(lparam));
+        break;
+      case WM_MOUSEWHEEL:
       {
-        auto win32_window = dynamic_cast<native_window::win32*>(&window.get_native_window());
-        if(!win32_window)
-          core::debug_print("events::win32 only functions with native_window::win32.\n");
-
-        HWND hwnd = win32_window->get_hwnd();
-
-        // embed a pointer to this so we can e.g. repaint ourselves
-        SetWindowLongPtrW(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(&window));
-
-        MSG message;
-        BOOL result;
-        while((result = GetMessageW(&message, hwnd, 0, 0)) >= 0)
-        {
-          TranslateMessage(&message);
-          DispatchMessage(&message);
-        }
-
-        core::debug_print("exited event loop.\n");
+        auto scroll = GET_WHEEL_DELTA_WPARAM(wparam) > 0 ? input::scroll::up
+                                                         : input::scroll::down;
+        window.pointer.scroll(scroll, get_position(lparam));
+        break;
       }
+      case WM_MOUSEHWHEEL:
+      {
+        auto scroll = GET_WHEEL_DELTA_WPARAM(wparam) > 0 ? input::scroll::right
+                                                         : input::scroll::left;
+        window.pointer.scroll(scroll, get_position(lparam));
+        break;
+      }
+      default:
+        return DefWindowProcW(hwnd, msg, wparam, lparam);
     }
+    return 0;
+  }
+
+  void skui::gui::events::win32::exec()
+  {
+    auto win32_window = dynamic_cast<native_window::win32*>(&window.get_native_window());
+    if(!win32_window)
+      core::debug_print("events::win32 only functions with native_window::win32.\n");
+
+    HWND hwnd = win32_window->get_hwnd();
+
+    // embed a pointer to this so we can e.g. repaint ourselves
+    SetWindowLongPtrW(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(&window));
+
+    MSG message;
+    BOOL result;
+    while((result = GetMessageW(&message, hwnd, 0, 0)) >= 0)
+    {
+      TranslateMessage(&message);
+      DispatchMessage(&message);
+    }
+
+    core::debug_print("exited event loop.\n");
   }
 }

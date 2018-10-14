@@ -27,31 +27,28 @@
 #include <graphics/canvas.h++>
 #include <graphics/drawable.h++>
 
-namespace skui
+namespace skui::gui
 {
-  namespace gui
+  graphics_view::graphics_view(const graphics::scene& scene)
+    : scene{scene}
+  {}
+
+  graphics_view::~graphics_view() = default;
+
+  void graphics_view::draw(graphics::canvas& canvas,
+                           const graphics::scalar_position& position) const
   {
-    graphics_view::graphics_view(const graphics::scene& scene)
-      : scene{scene}
-    {}
+    canvas.draw(scene.background_color, {{position, size}});
 
-    graphics_view::~graphics_view() = default;
-
-    void graphics_view::draw(graphics::canvas& canvas,
-                             const graphics::scalar_position& position) const
+    for(const auto& [offset, drawable] : scene.drawables)
     {
-      canvas.draw(scene.background_color, {{position, size}});
-
-      for(const auto& [offset, drawable] : scene.drawables)
-      {
-        const auto top_left = position+offset;
-        drawable->draw(canvas, top_left, {{top_left, size}});
-      }
+      const auto top_left = position+offset;
+      drawable->draw(canvas, top_left, {{top_left, size}});
     }
+  }
 
-    graphics::scalar_size graphics_view::implicit_size(const graphics::canvas&) const
-    {
-      return size;
-    }
+  graphics::scalar_size graphics_view::implicit_size(const graphics::canvas&) const
+  {
+    return size;
   }
 }

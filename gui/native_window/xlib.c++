@@ -33,94 +33,87 @@
 #include <X11/Xlib-xcb.h>
 #include <X11/Xlibint.h>
 
-namespace skui
+namespace skui::gui::native_window
 {
-  namespace gui
+  namespace
   {
-    namespace native_window
+    std::unique_ptr<native_visual::base> create_native_visual(Display* display,
+                                                              const window_flags& flags)
     {
-      namespace
+      if(flags.test(window_flag::opengl))
+        return std::make_unique<native_visual::glx>(display);
+      else
       {
-        std::unique_ptr<native_visual::base> create_native_visual(Display* display,
-                                                                  const window_flags& flags)
-        {
-          if(flags.test(window_flag::opengl))
-            return std::make_unique<native_visual::glx>(display);
-          else
-          {
-            xcb_connection_t* connection = XGetXCBConnection(display);
-            core::debug_print("XCB connection: ", connection, '\n');
+        xcb_connection_t* connection = XGetXCBConnection(display);
+        core::debug_print("XCB connection: ", connection, '\n');
 
-            xcb_screen_t* screen = (xcb_setup_roots_iterator(xcb_get_setup(connection))).data;
+        xcb_screen_t* screen = (xcb_setup_roots_iterator(xcb_get_setup(connection))).data;
 
-            return std::make_unique<native_visual::xcb>(connection, screen);
-          }
-        }
-      }
-      xlib::xlib(const window_flags& flags)
-        : xlib_data{XOpenDisplay(nullptr)}
-        , xcb{create_native_visual(display.get(), flags),
-              XGetXCBConnection(display.get())}
-      {
-        XSetEventQueueOwner(display.get(), XCBOwnsEventQueue);
-      }
-
-      xlib::~xlib() = default;
-
-      void xlib::create(const graphics::pixel_position& initial_position,
-                        const graphics::pixel_size& initial_size)
-      {
-        Window root = DefaultRootWindow(display.get());
-
-        XVisualInfo* xvisualinfo = get_xvisualinfo();
-
-        XSetWindowAttributes window_attributes;
-        window_attributes.colormap = XCreateColormap(display.get(), root, xvisualinfo->visual, AllocNone);
-        window_attributes.event_mask =   ExposureMask      | StructureNotifyMask | PointerMotionMask
-                                       | ButtonPressMask   | ButtonReleaseMask
-                                       | EnterWindowMask   | LeaveWindowMask
-                                       | KeyPressMask      | KeyReleaseMask;
-
-        window = static_cast<xcb_window_t>(
-                   XCreateWindow(display.get(),
-                                 root,
-                                 static_cast<int>(initial_position.x), static_cast<int>(initial_position.y),
-                                 static_cast<unsigned int>(initial_size.width), static_cast<unsigned int>(initial_size.width),
-                                 0, // border width
-                                 xvisualinfo->depth,
-                                 InputOutput,
-                                 xvisualinfo->visual,
-                                 CWColormap | CWEventMask,
-                                 &window_attributes));
-
-        native_visual->create_surface(window);
-      }
-
-      XVisualInfo* xlib::get_xvisualinfo() const
-      {
-        auto glx_native_visual = dynamic_cast<native_visual::glx*>(native_visual.get());
-        if(glx_native_visual)
-          return glx_native_visual->get_xvisualinfo();
-        else
-        {
-          core::debug_print("native_window::xlib currently only handles native_visual::glx.");
-          return nullptr;
-        }
-      }
-
-      void xlib::handle_dri2_events(xcb_generic_event_t& event) const
-      {
-        // Check if a custom XEvent constructor was registered in xlib for this event type, and call it discarding the constructed XEvent if any.
-        auto proc = XESetWireToEvent(display.get(), event.response_type, 0);
-        if(proc)
-        {
-          XESetWireToEvent(display.get(), event.response_type, proc);
-          XEvent dummy;
-          event.sequence = static_cast<std::uint16_t>(LastKnownRequestProcessed(display.get()));
-          proc(display.get(), &dummy, reinterpret_cast<xEvent*>(&event));
-        }
+        return std::make_unique<native_visual::xcb>(connection, screen);
       }
     }
   }
-}
+  xlib::xlib(const window_flags& flags)
+    : xlib_data{XOpenDisplay(nullptr)}
+    , xcb{create_native_visual(display.get(), flags),
+          XGetXCBConnection(display.get())}
+  {
+    XSetEventQueueOwner(display.get(), XCBOwnsEventQueue);
+  }
 
+  xlib::~xlib() = default;
+
+  void xlib::create(const graphics::pixel_position& initial_position,
+                    const graphics::pixel_size& initial_size)
+  {
+    Window root = DefaultRootWindow(display.get());
+
+    XVisualInfo* xvisualinfo = get_xvisualinfo();
+
+    XSetWindowAttributes window_attributes;
+    window_attributes.colormap = XCreateColormap(display.get(), root, xvisualinfo->visual, AllocNone);
+    window_attributes.event_mask =   ExposureMask      | StructureNotifyMask | PointerMotionMask
+                                     | ButtonPressMask   | ButtonReleaseMask
+                                     | EnterWindowMask   | LeaveWindowMask
+                                     | KeyPressMask      | KeyReleaseMask;
+
+    window = static_cast<xcb_window_t>(
+               XCreateWindow(display.get(),
+                             root,
+                             static_cast<int>(initial_position.x), static_cast<int>(initial_position.y),
+                             static_cast<unsigned int>(initial_size.width), static_cast<unsigned int>(initial_size.width),
+                             0, // border width
+                             xvisualinfo->depth,
+                             InputOutput,
+                             xvisualinfo->visual,
+                             CWColormap | CWEventMask,
+                             &window_attributes));
+
+    native_visual->create_surface(window);
+  }
+
+  XVisualInfo* xlib::get_xvisualinfo() const
+  {
+    auto glx_native_visual = dynamic_cast<native_visual::glx*>(native_visual.get());
+    if(glx_native_visual)
+      return glx_native_visual->get_xvisualinfo();
+    else
+    {
+      core::debug_print("native_window::xlib currently only handles native_visual::glx.");
+      return nullptr;
+    }
+  }
+
+  void xlib::handle_dri2_events(xcb_generic_event_t& event) const
+  {
+    // Check if a custom XEvent constructor was registered in xlib for this event type, and call it discarding the constructed XEvent if any.
+    auto proc = XESetWireToEvent(display.get(), event.response_type, 0);
+    if(proc)
+    {
+      XESetWireToEvent(display.get(), event.response_type, proc);
+      XEvent dummy;
+      event.sequence = static_cast<std::uint16_t>(LastKnownRequestProcessed(display.get()));
+      proc(display.get(), &dummy, reinterpret_cast<xEvent*>(&event));
+    }
+  }
+}

@@ -46,60 +46,58 @@
 #include <optional>
 #include <vector>
 
-namespace skui
+namespace skui::graphics
 {
-  namespace graphics
+  class canvas;
+  class drawable;
+}
+
+namespace skui::gui
+{
+  class element : public core::trackable
   {
-    class canvas;
-    class drawable;
-  }
-  namespace gui
-  {
-    class element : public core::trackable
-    {
-    public:
-      static bool show_invisible;
+  public:
+    static bool show_invisible;
 
-      ~element() override;
+    ~element() override;
 
-      virtual void draw(graphics::canvas& canvas,
-                        const graphics::scalar_position& position = {0, 0}) const = 0;
-      void invalidate();
+    virtual void draw(graphics::canvas& canvas,
+                      const graphics::scalar_position& position = {0, 0}) const = 0;
+    void invalidate();
 
-      virtual graphics::scalar_size implicit_size(const graphics::canvas& canvas) const = 0;
+    virtual graphics::scalar_size implicit_size(const graphics::canvas& canvas) const = 0;
 
-      /// Properties
-      // This element by itself
-      core::bounded_property<graphics::scalar_size> size;
-      graphics::style::spacing margins;
-      graphics::style::spacing padding;
+    /// Properties
+    // This element by itself
+    core::bounded_property<graphics::scalar_size> size;
+    graphics::style::spacing margins;
+    graphics::style::spacing padding;
 
-      // This element inside another
-      alignment vertical_alignment = alignment::center;
-      alignment horizontal_alignment = alignment::center;
+    // This element inside another
+    alignment vertical_alignment = alignment::center;
+    alignment horizontal_alignment = alignment::center;
 
-      orientation_flags stretch = orientation::horizontal | orientation::vertical;
+    orientation_flags stretch = orientation::horizontal | orientation::vertical;
 
-      /// Signals
-      // Input
-      input::keyboard key;
-      input::pointer pointer;
+    /// Signals
+    // Input
+    input::keyboard key;
+    input::pointer pointer;
 
-    protected:
-      element();
+  protected:
+    element();
 
-      void draw(graphics::canvas& canvas,
-                const std::vector<const graphics::drawable*>& drawables,
-                const std::vector<graphics::scalar_position>& positions,
-                const std::optional<graphics::scalar_bounding_box>& clipping_box = {}) const;
+    void draw(graphics::canvas& canvas,
+              const std::vector<const graphics::drawable*>& drawables,
+              const std::vector<graphics::scalar_position>& positions,
+              const std::optional<graphics::scalar_bounding_box>& clipping_box = {}) const;
 
-    private:
-      bool should_repaint = false;
-    };
+  private:
+    bool should_repaint = false;
+  };
 
-    using element_ptr = std::unique_ptr<element>;
-    using element_ptrs = std::vector<element_ptr>;
-  }
+  using element_ptr = std::unique_ptr<element>;
+  using element_ptrs = std::vector<element_ptr>;
 }
 
 #endif

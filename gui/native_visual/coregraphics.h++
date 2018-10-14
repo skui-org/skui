@@ -32,24 +32,18 @@
 
 #include "gui/native_visual.h++"
 
-namespace skui
+namespace skui::gui::native_visual
 {
-  namespace gui
+  class coregraphics : public base
   {
-    namespace native_visual
-    {
-      class coregraphics : public base
-      {
-      public:
-        coregraphics();
-        ~coregraphics() override;
+  public:
+    coregraphics();
+    ~coregraphics() override;
 
-        void create_surface(std::uintptr_t window) override;
-        void make_current() const override;
-        void swap_buffers(const graphics::pixel_size&) const override;
-      };
-    }
-  }
+    void create_surface(std::uintptr_t window) override;
+    void make_current() const override;
+    void swap_buffers(const graphics::pixel_size&) const override;
+  };
 }
 
 #endif

@@ -36,26 +36,20 @@
 
 #include <vector>
 
-namespace skui
+namespace skui::gui::native_visual
 {
-  namespace gui
+  class raster : public base
   {
-    namespace native_visual
-    {
-      class raster : public base
-      {
-      public:
-        raster();
-        ~raster() override;
+  public:
+    raster();
+    ~raster() override;
 
-        std::vector<std::uint32_t>& pixels();
-        const std::vector<std::uint32_t>& pixels() const;
+    std::vector<std::uint32_t>& pixels();
+    const std::vector<std::uint32_t>& pixels() const;
 
-      protected:
-        mutable std::vector<std::uint32_t> pixel_data;
-      };
-    }
-  }
+  protected:
+    mutable std::vector<std::uint32_t> pixel_data;
+  };
 }
 
 #endif

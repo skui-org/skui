@@ -38,52 +38,46 @@
 
 #include <xcb/xcb.h>
 
-namespace skui
+namespace skui::gui::native_window
 {
-  namespace gui
+  class xcb_data
   {
-    namespace native_window
-    {
-      class xcb_data
-      {
-      protected:
-        xcb_data();
-        virtual ~xcb_data();
-        xcb_data(xcb_connection_t* connection);
+  protected:
+    xcb_data();
+    virtual ~xcb_data();
+    xcb_data(xcb_connection_t* connection);
 
-        int preferred_screen_index;
-        xcb_connection_t* connection;
-        xcb_screen_t* preferred_screen;
-      };
+    int preferred_screen_index;
+    xcb_connection_t* connection;
+    xcb_screen_t* preferred_screen;
+  };
 
-      class xcb : public xcb_data
-                , public base
-      {
-      public:
-        xcb();
-        ~xcb() override;
+  class xcb : public xcb_data
+      , public base
+  {
+  public:
+    xcb();
+    ~xcb() override;
 
-        void create(const graphics::pixel_position& position,
-                    const graphics::pixel_size& size) override;
-        void show() final;
-        void hide() final;
-        void close() final;
+    void create(const graphics::pixel_position& position,
+                const graphics::pixel_size& size) override;
+    void show() final;
+    void hide() final;
+    void close() final;
 
-        core::string get_title() const final;
-        void set_title(const core::string& title) final;
-        std::pair<graphics::pixel_position, graphics::pixel_size> get_current_geometry() const override;
+    core::string get_title() const final;
+    void set_title(const core::string& title) final;
+    std::pair<graphics::pixel_position, graphics::pixel_size> get_current_geometry() const override;
 
-        xcb_connection_t* get_connection() const;
-        xcb_window_t get_window() const;
+    xcb_connection_t* get_connection() const;
+    xcb_window_t get_window() const;
 
-      protected:
-        xcb(std::unique_ptr<native_visual::base>&& native_visual,
-            xcb_connection_t* connection);
+  protected:
+    xcb(std::unique_ptr<native_visual::base>&& native_visual,
+        xcb_connection_t* connection);
 
-        xcb_window_t window;
-      };
-    }
-  }
+    xcb_window_t window;
+  };
 }
 
 #endif

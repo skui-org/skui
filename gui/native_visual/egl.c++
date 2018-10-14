@@ -28,110 +28,104 @@
 
 #include <cstring>
 
-namespace skui
+namespace skui::gui::native_visual
 {
-  namespace gui
+  namespace
   {
-    namespace native_visual
+    base::gl_function_type egl_get(void*, const char name[])
     {
-      namespace
+      base::gl_function_type ptr = eglGetProcAddress(name);
+      if(!ptr)
       {
-        base::gl_function_type egl_get(void*, const char name[])
-        {
-          base::gl_function_type ptr = eglGetProcAddress(name);
-          if(!ptr)
-          {
-            if(0 == std::strcmp("eglQueryString", name))
-              return reinterpret_cast<base::gl_function_type>(eglQueryString);
-            else if(0 == std::strcmp("eglGetCurrentDisplay", name))
-              return reinterpret_cast<base::gl_function_type>(eglGetCurrentDisplay);
-          }
-          return ptr;
-        }
+        if(0 == std::strcmp("eglQueryString", name))
+          return reinterpret_cast<base::gl_function_type>(eglQueryString);
+        else if(0 == std::strcmp("eglGetCurrentDisplay", name))
+          return reinterpret_cast<base::gl_function_type>(eglGetCurrentDisplay);
       }
+      return ptr;
+    }
+  }
 
-      egl::egl()
-        : egl_display{eglGetDisplay(EGL_DEFAULT_DISPLAY)}
-      {
-        if(egl_display == EGL_NO_DISPLAY)
-          core::debug_print("Call to eglGetDisplay failed.\n");
+  egl::egl()
+    : egl_display{eglGetDisplay(EGL_DEFAULT_DISPLAY)}
+  {
+    if(egl_display == EGL_NO_DISPLAY)
+      core::debug_print("Call to eglGetDisplay failed.\n");
 
-        if(EGL_FALSE == eglInitialize(egl_display, nullptr, nullptr))
-          core::debug_print("Call to eglInitialize failed.\n");
-      }
+    if(EGL_FALSE == eglInitialize(egl_display, nullptr, nullptr))
+      core::debug_print("Call to eglInitialize failed.\n");
+  }
 
-      egl::~egl()
-      {
-        if(egl_context)
-        {
-          eglMakeCurrent(egl_display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
-          eglDestroyContext(egl_display, egl_context);
-        }
-        if(egl_surface)
-          eglDestroySurface(egl_display, egl_surface);
-        if(egl_display)
-          eglTerminate(egl_display);
-      }
+  egl::~egl()
+  {
+    if(egl_context)
+    {
+      eglMakeCurrent(egl_display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+      eglDestroyContext(egl_display, egl_context);
+    }
+    if(egl_surface)
+      eglDestroySurface(egl_display, egl_surface);
+    if(egl_display)
+      eglTerminate(egl_display);
+  }
 
-      void egl::create_surface(std::uintptr_t window)
-      {
-        egl_surface = eglCreateWindowSurface(egl_display,
-                                             egl_config,
-                                             reinterpret_cast<EGLNativeWindowType>(window),
-                                             nullptr);
+  void egl::create_surface(std::uintptr_t window)
+  {
+    egl_surface = eglCreateWindowSurface(egl_display,
+                                         egl_config,
+                                         reinterpret_cast<EGLNativeWindowType>(window),
+                                         nullptr);
 
-        eglMakeCurrent(egl_display, egl_surface, egl_surface, egl_context);
-      }
+    eglMakeCurrent(egl_display, egl_surface, egl_surface, egl_context);
+  }
 
-      void egl::make_current() const
-      {
-        eglMakeCurrent(egl_display, egl_surface, egl_surface, egl_context);
-      }
+  void egl::make_current() const
+  {
+    eglMakeCurrent(egl_display, egl_surface, egl_surface, egl_context);
+  }
 
-      void egl::swap_buffers(const graphics::pixel_size&) const
-      {
-        eglSwapBuffers(egl_display, egl_surface);
-      }
+  void egl::swap_buffers(const graphics::pixel_size&) const
+  {
+    eglSwapBuffers(egl_display, egl_surface);
+  }
 
-      EGLint egl::get_egl_visual()
-      {
-        if(EGL_FALSE == eglBindAPI(EGL_OPENGL_API))
-          core::debug_print("Call to eglBindAPI failed.\n");
+  EGLint egl::get_egl_visual()
+  {
+    if(EGL_FALSE == eglBindAPI(EGL_OPENGL_API))
+      core::debug_print("Call to eglBindAPI failed.\n");
 
-        static const EGLint attribute_list[]
-        {
-          EGL_RED_SIZE, 8,
+    static const EGLint attribute_list[]
+    {
+      EGL_RED_SIZE, 8,
           EGL_GREEN_SIZE, 8,
           EGL_BLUE_SIZE, 8,
           EGL_ALPHA_SIZE, 8,
           EGL_NONE
-        };
+    };
 
-        EGLint num_config;
-        if(EGL_FALSE == eglChooseConfig(egl_display, attribute_list, &egl_config, 1, &num_config))
-          core::debug_print("Call to eglChooseConfig failed.\n");
+    EGLint num_config;
+    if(EGL_FALSE == eglChooseConfig(egl_display, attribute_list, &egl_config, 1, &num_config))
+      core::debug_print("Call to eglChooseConfig failed.\n");
 
-        static const EGLint context_attributes[]
-        {
-          EGL_NONE
-        };
+    static const EGLint context_attributes[]
+    {
+      EGL_NONE
+    };
 
-        egl_context = eglCreateContext(egl_display, egl_config, EGL_NO_CONTEXT, context_attributes);
-        if(egl_context == EGL_NO_CONTEXT)
-          core::debug_print("Call to eglCreateContext failed.\n");
+    egl_context = eglCreateContext(egl_display, egl_config, EGL_NO_CONTEXT, context_attributes);
+    if(egl_context == EGL_NO_CONTEXT)
+      core::debug_print("Call to eglCreateContext failed.\n");
 
-        //Request eglVisualID for native window
-        EGLint egl_native_visualid;
-        if(EGL_FALSE == eglGetConfigAttrib(egl_display, egl_config, EGL_NATIVE_VISUAL_ID, &egl_native_visualid))
-          core::debug_print("Call to eglGetConfigAttrib failed\n");
+    //Request eglVisualID for native window
+    EGLint egl_native_visualid;
+    if(EGL_FALSE == eglGetConfigAttrib(egl_display, egl_config, EGL_NATIVE_VISUAL_ID, &egl_native_visualid))
+      core::debug_print("Call to eglGetConfigAttrib failed\n");
 
-        return egl_native_visualid;
-      }
+    return egl_native_visualid;
+  }
 
-      base::gl_get_function_type egl::get_gl_function() const
-      {
-        return &egl_get;
-      }
-    }
+  base::gl_get_function_type egl::get_gl_function() const
+  {
+    return &egl_get;
   }
 }

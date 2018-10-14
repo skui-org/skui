@@ -26,25 +26,19 @@
 
 #include <core/debug.h++>
 
-namespace skui
+namespace skui::gui::native_visual
 {
-  namespace gui
+  raster::raster() = default;
+
+  raster::~raster() = default;
+
+  std::vector<std::uint32_t>& raster::pixels()
   {
-    namespace native_visual
-    {
-      raster::raster() = default;
+    return pixel_data;
+  }
 
-      raster::~raster() = default;
-
-      std::vector<std::uint32_t>& raster::pixels()
-      {
-        return pixel_data;
-      }
-
-      const std::vector<std::uint32_t>& raster::pixels() const
-      {
-        return pixel_data;
-      }
-    }
+  const std::vector<std::uint32_t>& raster::pixels() const
+  {
+    return pixel_data;
   }
 }

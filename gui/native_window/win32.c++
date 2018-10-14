@@ -29,113 +29,106 @@
 #include <core/debug.h++>
 #include <core/utility.h++>
 
-namespace skui
+namespace skui::gui::native_window
 {
-  namespace gui
+  namespace
   {
-    namespace native_window
+    static const HINSTANCE application_instance = static_cast<HINSTANCE>(GetModuleHandleW(nullptr));
+
+    constexpr wchar_t window_class[] = L"skui window";
+
+    bool register_window_class()
     {
-      namespace
-      {
-        static const HINSTANCE application_instance = static_cast<HINSTANCE>(GetModuleHandleW(nullptr));
+      WNDCLASSEXW wc;
 
-        constexpr wchar_t window_class[] = L"skui window";
+      // Register the Window Class
+      wc.cbSize        = sizeof(WNDCLASSEXW);
+      wc.style         = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
+      wc.lpfnWndProc   = events::win32::window_procedure;
+      wc.cbClsExtra    = 0;
+      wc.cbWndExtra    = 0;
+      wc.hInstance     = application_instance;
+      wc.hIcon         = LoadIconW(application_instance, (LPCWSTR)IDI_WINLOGO);
+      wc.hCursor       = LoadCursor(nullptr, IDC_ARROW);
+      wc.hbrBackground = reinterpret_cast<HBRUSH>(COLOR_WINDOW+1);
+      wc.lpszMenuName  = L"Skui menu";
+      wc.lpszClassName = window_class;
+      wc.hIconSm       = LoadIconW(application_instance, (LPCWSTR)IDI_WINLOGO);
 
-        bool register_window_class()
-        {
-          WNDCLASSEXW wc;
-
-          // Register the Window Class
-          wc.cbSize        = sizeof(WNDCLASSEXW);
-          wc.style         = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
-          wc.lpfnWndProc   = events::win32::window_procedure;
-          wc.cbClsExtra    = 0;
-          wc.cbWndExtra    = 0;
-          wc.hInstance     = application_instance;
-          wc.hIcon         = LoadIconW(application_instance, (LPCWSTR)IDI_WINLOGO);
-          wc.hCursor       = LoadCursor(nullptr, IDC_ARROW);
-          wc.hbrBackground = reinterpret_cast<HBRUSH>(COLOR_WINDOW+1);
-          wc.lpszMenuName  = L"Skui menu";
-          wc.lpszClassName = window_class;
-          wc.hIconSm       = LoadIconW(application_instance, (LPCWSTR)IDI_WINLOGO);
-
-          return RegisterClassExW(&wc) != 0;
-        }
-      }
-      win32::win32(std::unique_ptr<native_visual::base> native_visual)
-        : base{std::move(native_visual)}
-        , window{nullptr}
-      {
-        const static bool dummy = register_window_class();
-        if(!dummy)
-        {
-          core::debug_print("Call to RegisterClassExW failed.\n", core::get_last_error_string());
-        }
-      }
-
-      win32::~win32() = default;
-
-      void win32::create(const skui::graphics::pixel_position& initial_position,
-                         const skui::graphics::pixel_size& initial_size)
-      {
-        window = CreateWindowExW(WS_EX_CLIENTEDGE,
-                                 window_class,
-                                 L"A Skui Window",
-                                 WS_OVERLAPPEDWINDOW,
-                                 static_cast<int>(initial_position.x), static_cast<int>(initial_position.y),
-                                 static_cast<int>(initial_size.width), static_cast<int>(initial_size.height),
-                                 nullptr, nullptr,
-                                 application_instance, nullptr
-                                 );
-        if(!window)
-          core::debug_print("Call to CreateWindowExW failed.\n", core::get_last_error_string());
-
-        native_visual->create_surface(reinterpret_cast<std::uintptr_t>(window));
-      }
-
-      void win32::show()
-      {
-        ShowWindowAsync(window, SW_SHOWNORMAL);
-      }
-
-      void win32::hide()
-      {
-        ShowWindowAsync(window, SW_HIDE);
-      }
-
-      void win32::close()
-      {
-        CloseWindow(window);
-      }
-
-      skui::core::string win32::get_title() const
-      {
-        int length = GetWindowTextLengthW(window);
-        std::wstring title;
-        title.resize(static_cast<std::size_t>(length)+1);
-        GetWindowTextW(window, &title[0], length);
-        return core::convert_to_utf8(title);
-      }
-
-      void win32::set_title(const skui::core::string& title)
-      {
-        SetWindowTextW(window, core::convert_to_utf16(title).c_str());
-      }
-
-      std::pair<graphics::pixel_position, graphics::pixel_size> win32::get_current_geometry() const
-      {
-        RECT rect;
-        GetClientRect(window, &rect);
-
-        return {{static_cast<std::int32_t>(rect.left), static_cast<std::int32_t>(rect.top)},
-                {static_cast<graphics::pixel>(rect.right-rect.left), static_cast<graphics::pixel>(rect.bottom - rect.top)}};
-      }
-
-      HWND win32::get_hwnd() const
-      {
-        return window;
-      }
+      return RegisterClassExW(&wc) != 0;
     }
   }
-}
+  win32::win32(std::unique_ptr<native_visual::base> native_visual)
+    : base{std::move(native_visual)}
+    , window{nullptr}
+  {
+    const static bool dummy = register_window_class();
+    if(!dummy)
+    {
+      core::debug_print("Call to RegisterClassExW failed.\n", core::get_last_error_string());
+    }
+  }
 
+  win32::~win32() = default;
+
+  void win32::create(const skui::graphics::pixel_position& initial_position,
+                     const skui::graphics::pixel_size& initial_size)
+  {
+    window = CreateWindowExW(WS_EX_CLIENTEDGE,
+                             window_class,
+                             L"A Skui Window",
+                             WS_OVERLAPPEDWINDOW,
+                             static_cast<int>(initial_position.x), static_cast<int>(initial_position.y),
+                             static_cast<int>(initial_size.width), static_cast<int>(initial_size.height),
+                             nullptr, nullptr,
+                             application_instance, nullptr
+                             );
+    if(!window)
+      core::debug_print("Call to CreateWindowExW failed.\n", core::get_last_error_string());
+
+    native_visual->create_surface(reinterpret_cast<std::uintptr_t>(window));
+  }
+
+  void win32::show()
+  {
+    ShowWindowAsync(window, SW_SHOWNORMAL);
+  }
+
+  void win32::hide()
+  {
+    ShowWindowAsync(window, SW_HIDE);
+  }
+
+  void win32::close()
+  {
+    CloseWindow(window);
+  }
+
+  skui::core::string win32::get_title() const
+  {
+    int length = GetWindowTextLengthW(window);
+    std::wstring title;
+    title.resize(static_cast<std::size_t>(length)+1);
+    GetWindowTextW(window, &title[0], length);
+    return core::convert_to_utf8(title);
+  }
+
+  void win32::set_title(const skui::core::string& title)
+  {
+    SetWindowTextW(window, core::convert_to_utf16(title).c_str());
+  }
+
+  std::pair<graphics::pixel_position, graphics::pixel_size> win32::get_current_geometry() const
+  {
+    RECT rect;
+    GetClientRect(window, &rect);
+
+    return {{static_cast<std::int32_t>(rect.left), static_cast<std::int32_t>(rect.top)},
+      {static_cast<graphics::pixel>(rect.right-rect.left), static_cast<graphics::pixel>(rect.bottom - rect.top)}};
+  }
+
+  HWND win32::get_hwnd() const
+  {
+    return window;
+  }
+}

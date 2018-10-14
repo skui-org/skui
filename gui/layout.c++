@@ -27,30 +27,27 @@
 #include <algorithm>
 #include <utility>
 
-namespace skui
+namespace skui::gui
 {
-  namespace gui
+  layout::~layout() = default;
+
+  layout::layout(element_ptrs children)
+    : children{std::move(children)}
+    , spacing{0}
   {
-    layout::~layout() = default;
+    spacing.value_changed.connect(this, &element::invalidate);
+  }
 
-    layout::layout(element_ptrs children)
-      : children{std::move(children)}
-      , spacing{0}
+  void layout::draw(graphics::canvas& canvas, const graphics::scalar_position& position) const
+  {
+    auto child_offsets = calculate_child_offsets(canvas);
+    const auto padded_position = position + graphics::scalar_position{padding.left, padding.right};
+    std::for_each(child_offsets.begin(), child_offsets.end(),
+                  [&padded_position](auto& offset) { offset += padded_position; });
+
+    for(std::size_t i = 0; i < children.size(); ++i)
     {
-      spacing.value_changed.connect(this, &element::invalidate);
-    }
-
-    void layout::draw(graphics::canvas& canvas, const graphics::scalar_position& position) const
-    {
-      auto child_offsets = calculate_child_offsets(canvas);
-      const auto padded_position = position + graphics::scalar_position{padding.left, padding.right};
-      std::for_each(child_offsets.begin(), child_offsets.end(),
-                    [&padded_position](auto& offset) { offset += padded_position; });
-
-      for(std::size_t i = 0; i < children.size(); ++i)
-      {
-        children[i]->draw(canvas, child_offsets[i]);
-      }
+      children[i]->draw(canvas, child_offsets[i]);
     }
   }
 }

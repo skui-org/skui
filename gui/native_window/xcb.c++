@@ -80,156 +80,150 @@ namespace
   }
 }
 
-namespace skui
+namespace skui::gui::native_window
 {
-  namespace gui
+  xcb_data::xcb_data()
+    : preferred_screen_index{}
+    , connection{xcb_connect(nullptr, &preferred_screen_index)}
+    , preferred_screen{screen_of_display(connection, preferred_screen_index)}
+  {}
+
+  xcb_data::xcb_data(xcb_connection_t* connection)
+    : preferred_screen_index{}
+    , connection{connection}
+    , preferred_screen{screen_of_display(connection, preferred_screen_index)}
+  {}
+
+  xcb_data::~xcb_data() = default;
+
+  xcb::xcb()
+    : xcb_data{}
+    , base{std::make_unique<native_visual::xcb>(connection, preferred_screen)}
+  {}
+
+  xcb::~xcb() = default;
+
+  void xcb::show()
   {
-    namespace native_window
-    {
-      xcb_data::xcb_data()
-        : preferred_screen_index{}
-        , connection{xcb_connect(nullptr, &preferred_screen_index)}
-        , preferred_screen{screen_of_display(connection, preferred_screen_index)}
-      {}
-
-      xcb_data::xcb_data(xcb_connection_t* connection)
-        : preferred_screen_index{}
-        , connection{connection}
-        , preferred_screen{screen_of_display(connection, preferred_screen_index)}
-      {}
-
-      xcb_data::~xcb_data() = default;
-
-      xcb::xcb()
-        : xcb_data{}
-        , base{std::make_unique<native_visual::xcb>(connection, preferred_screen)}
-      {}
-
-      xcb::~xcb() = default;
-
-      void xcb::show()
-      {
-        xcb_map_window(connection, static_cast<xcb_window_t>(window));
-        xcb_flush(connection);
-      }
-
-      void xcb::hide()
-      {
-        xcb_unmap_window(connection, static_cast<xcb_window_t>(window));
-        xcb_flush(connection);
-      }
-
-      void xcb::close()
-      {
-        xcb_unmap_window(connection, window);
-        xcb_destroy_window(connection, window);
-        xcb_flush(connection);
-      }
-
-      core::string xcb::get_title() const
-      {
-        xcb_get_property_cookie_t cookie = xcb_get_property(connection,
-                                                            0,
-                                                            window,
-                                                            XCB_ATOM_WM_NAME,
-                                                            XCB_ATOM_STRING,
-                                                            0,
-                                                            0);
-
-        core::unique_free_ptr<xcb_get_property_reply_t> reply(
-              xcb_get_property_reply(connection,
-                                     cookie,
-                                     nullptr));
-
-        if(reply)
-        {
-          int length = xcb_get_property_value_length(reply.get());
-          if(length > 0)
-          {
-            const char* result = static_cast<char*>(xcb_get_property_value(reply.get()));
-            return core::string(result, result + length);
-          }
-        }
-        return "";
-      }
-
-      void xcb::set_title(const core::string& title)
-      {
-        xcb_change_property(connection,
-                            XCB_PROP_MODE_REPLACE,
-                            window,
-                            XCB_ATOM_WM_NAME,
-                            XCB_ATOM_STRING,
-                            8,
-                            static_cast<std::uint32_t>(title.size()),
-                            title.c_str());
-        xcb_flush(connection);
-      }
-
-      std::pair<graphics::pixel_position, graphics::pixel_size> xcb::get_current_geometry() const
-      {
-        // fetch true dimensions and position of visual window now because the ConfigureNotify event lies to us
-        core::unique_free_ptr<xcb_get_geometry_reply_t> geometry(xcb_get_geometry_reply(connection,
-                                                                                        xcb_get_geometry(connection, window),
-                                                                                        nullptr));
-        if(!geometry)
-          return {};
-
-        core::unique_free_ptr<xcb_query_tree_reply_t> tree(xcb_query_tree_reply(connection,
-                                                                                xcb_query_tree(connection, window),
-                                                                                nullptr));
-        if(!tree)
-          return {};
-
-        xcb_translate_coordinates_cookie_t translateCookie = xcb_translate_coordinates(connection,
-                                                                                       window,
-                                                                                       tree->parent,
-                                                                                       geometry->x, geometry->y);
-
-        core::unique_free_ptr<xcb_translate_coordinates_reply_t> translation(xcb_translate_coordinates_reply(connection,
-                                                                                                             translateCookie,
-                                                                                                             nullptr));
-        if(!translation)
-          return {};
-
-        return {{translation->dst_x, translation->dst_y}, {geometry->width, geometry->height}};
-      }
-
-      xcb_connection_t* xcb::get_connection() const
-      {
-        return connection;
-      }
-
-      xcb_window_t xcb::get_window() const
-      {
-        return window;
-      }
-
-      void xcb::create(const graphics::pixel_position& position,
-                       const graphics::pixel_size& size)
-      {
-        const auto xcb_native_visual = dynamic_cast<native_visual::xcb*>(native_visual.get());
-        if(!xcb_native_visual)
-        {
-          core::debug_print("native_window::xcb can only use native_visual::xcb");
-          std::exit(1);
-        }
-
-        make_xcb_window(position,
-                        size,
-                        connection,
-                        preferred_screen,
-                        xcb_native_visual->visualid(),
-                        window);
-
-        native_visual->create_surface(window);
-      }
-
-      xcb::xcb(std::unique_ptr<native_visual::base>&& native_visual,
-               xcb_connection_t* connection)
-        : xcb_data(connection)
-        , base(std::move(native_visual))
-      {}
-    }
+    xcb_map_window(connection, static_cast<xcb_window_t>(window));
+    xcb_flush(connection);
   }
+
+  void xcb::hide()
+  {
+    xcb_unmap_window(connection, static_cast<xcb_window_t>(window));
+    xcb_flush(connection);
+  }
+
+  void xcb::close()
+  {
+    xcb_unmap_window(connection, window);
+    xcb_destroy_window(connection, window);
+    xcb_flush(connection);
+  }
+
+  core::string xcb::get_title() const
+  {
+    xcb_get_property_cookie_t cookie = xcb_get_property(connection,
+                                                        0,
+                                                        window,
+                                                        XCB_ATOM_WM_NAME,
+                                                        XCB_ATOM_STRING,
+                                                        0,
+                                                        0);
+
+    core::unique_free_ptr<xcb_get_property_reply_t> reply(
+          xcb_get_property_reply(connection,
+                                 cookie,
+                                 nullptr));
+
+    if(reply)
+    {
+      int length = xcb_get_property_value_length(reply.get());
+      if(length > 0)
+      {
+        const char* result = static_cast<char*>(xcb_get_property_value(reply.get()));
+        return core::string(result, result + length);
+      }
+    }
+    return "";
+  }
+
+  void xcb::set_title(const core::string& title)
+  {
+    xcb_change_property(connection,
+                        XCB_PROP_MODE_REPLACE,
+                        window,
+                        XCB_ATOM_WM_NAME,
+                        XCB_ATOM_STRING,
+                        8,
+                        static_cast<std::uint32_t>(title.size()),
+                        title.c_str());
+    xcb_flush(connection);
+  }
+
+  std::pair<graphics::pixel_position, graphics::pixel_size> xcb::get_current_geometry() const
+  {
+    // fetch true dimensions and position of visual window now because the ConfigureNotify event lies to us
+    core::unique_free_ptr<xcb_get_geometry_reply_t> geometry(xcb_get_geometry_reply(connection,
+                                                                                    xcb_get_geometry(connection, window),
+                                                                                    nullptr));
+    if(!geometry)
+      return {};
+
+    core::unique_free_ptr<xcb_query_tree_reply_t> tree(xcb_query_tree_reply(connection,
+                                                                            xcb_query_tree(connection, window),
+                                                                            nullptr));
+    if(!tree)
+      return {};
+
+    xcb_translate_coordinates_cookie_t translateCookie = xcb_translate_coordinates(connection,
+                                                                                   window,
+                                                                                   tree->parent,
+                                                                                   geometry->x, geometry->y);
+
+    core::unique_free_ptr<xcb_translate_coordinates_reply_t> translation(xcb_translate_coordinates_reply(connection,
+                                                                                                         translateCookie,
+                                                                                                         nullptr));
+    if(!translation)
+      return {};
+
+    return {{translation->dst_x, translation->dst_y}, {geometry->width, geometry->height}};
+  }
+
+  xcb_connection_t* xcb::get_connection() const
+  {
+    return connection;
+  }
+
+  xcb_window_t xcb::get_window() const
+  {
+    return window;
+  }
+
+  void xcb::create(const graphics::pixel_position& position,
+                   const graphics::pixel_size& size)
+  {
+    const auto xcb_native_visual = dynamic_cast<native_visual::xcb*>(native_visual.get());
+    if(!xcb_native_visual)
+    {
+      core::debug_print("native_window::xcb can only use native_visual::xcb");
+      std::exit(1);
+    }
+
+    make_xcb_window(position,
+                    size,
+                    connection,
+                    preferred_screen,
+                    xcb_native_visual->visualid(),
+                    window);
+
+    native_visual->create_surface(window);
+  }
+
+  xcb::xcb(std::unique_ptr<native_visual::base>&& native_visual,
+           xcb_connection_t* connection)
+    : xcb_data(connection)
+    , base(std::move(native_visual))
+  {}
 }

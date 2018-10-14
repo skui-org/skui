@@ -26,17 +26,11 @@
 
 #include "gui/events/appkit.h++"
 
-namespace skui
+namespace skui::gui::events
 {
-  namespace gui
+  std::unique_ptr<base> create(window& window)
   {
-    namespace events
-    {
-      std::unique_ptr<base> create(window& window)
-      {
-        return std::make_unique<appkit>(window);
-      }
-    }
+    return std::make_unique<appkit>(window);
   }
 }
 

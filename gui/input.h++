@@ -33,31 +33,25 @@
 
 #include <graphics/position.h++>
 
-namespace skui
+namespace skui::gui::input
 {
-  namespace gui
+  struct keyboard
   {
-    namespace input
-    {
-      struct keyboard
-      {
-        core::signal<key> tapped;
-        core::signal<key> pressed;
-        core::signal<key> released;
-      };
+    core::signal<key> tapped;
+    core::signal<key> pressed;
+    core::signal<key> released;
+  };
 
-      struct pointer
-      {
-        core::signal<graphics::pixel_position> moved;
-        core::signal<graphics::pixel_position> entered;
-        core::signal<graphics::pixel_position> left;
-        core::signal<button, graphics::pixel_position> pressed;
-        core::signal<button, graphics::pixel_position> released;
-        core::signal<button, graphics::pixel_position> clicked;
-        core::signal<input::scroll, graphics::pixel_position> scroll;
-      };
-    }
-  }
+  struct pointer
+  {
+    core::signal<graphics::pixel_position> moved;
+    core::signal<graphics::pixel_position> entered;
+    core::signal<graphics::pixel_position> left;
+    core::signal<button, graphics::pixel_position> pressed;
+    core::signal<button, graphics::pixel_position> released;
+    core::signal<button, graphics::pixel_position> clicked;
+    core::signal<input::scroll, graphics::pixel_position> scroll;
+  };
 }
 
 #endif

@@ -36,41 +36,35 @@
 
 #include <GL/glx.h>
 
-namespace skui
+namespace skui::gui::native_visual
 {
-  namespace gui
+  struct xfree_deleter
   {
-    namespace native_visual
-    {
-      struct xfree_deleter
-      {
-        void operator()(void* x_data);
-      };
+    void operator()(void* x_data);
+  };
 
-      class glx : public base
-      {
-      public:
-        glx(Display* display);
-        ~glx() override;
+  class glx : public base
+  {
+  public:
+    glx(Display* display);
+    ~glx() override;
 
-        void create_surface(std::uintptr_t window) override;
-        void make_current() const override;
-        void swap_buffers(const graphics::pixel_size&) const override;
+    void create_surface(std::uintptr_t window) override;
+    void make_current() const override;
+    void swap_buffers(const graphics::pixel_size&) const override;
 
-        gl_get_function_type get_gl_function() const override;
+    gl_get_function_type get_gl_function() const override;
 
-        XVisualInfo* get_xvisualinfo() const;
+    XVisualInfo* get_xvisualinfo() const;
 
-      private:
-        std::unique_ptr<XVisualInfo, xfree_deleter> create_xvisualinfo();
+  private:
+    std::unique_ptr<XVisualInfo, xfree_deleter> create_xvisualinfo();
 
-        Display* display;
-        std::unique_ptr<XVisualInfo, xfree_deleter> xvisualinfo;
-        GLXContext context;
-        GLXDrawable drawable;
-      };
-    }
-  }
+    Display* display;
+    std::unique_ptr<XVisualInfo, xfree_deleter> xvisualinfo;
+    GLXContext context;
+    GLXDrawable drawable;
+  };
 }
 
 #endif

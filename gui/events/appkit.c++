@@ -24,20 +24,14 @@
 
 #include "gui/events/appkit.h++"
 
-namespace skui
+namespace skui::gui::events
 {
-  namespace gui
-  {
-    namespace events
-    {
-      appkit::appkit(gui::window& window)
-        : base{window}
-      {}
+  appkit::appkit(gui::window& window)
+    : base{window}
+  {}
 
-      appkit::~appkit() = default;
+  appkit::~appkit() = default;
 
-      void appkit::exec()
-      {}
-    }
-  }
+  void appkit::exec()
+  {}
 }

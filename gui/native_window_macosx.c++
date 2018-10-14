@@ -29,29 +29,22 @@
 #include "gui/native_visual/coregraphics.h++"
 #include "gui/native_visual/cgl.h++"
 
-namespace skui
+namespace skui::gui::native_window
 {
-  namespace gui
+  std::unique_ptr<base> create(const graphics::pixel_position& position,
+                               const graphics::pixel_size& size,
+                               const window_flags& flags)
   {
-    namespace native_window
-    {
-      std::unique_ptr<base> create(const graphics::pixel_position& position,
-                                   const graphics::pixel_size& size,
-                                   const window_flags& flags)
-      {
-        std::unique_ptr<native_visual::base> visual;
-        if(flags.test(window_flag::opengl))
-          visual = std::make_unique<native_visual::cgl>();
-        else
-          visual = std::make_unique<native_visual::coregraphics>();
+    std::unique_ptr<native_visual::base> visual;
+    if(flags.test(window_flag::opengl))
+      visual = std::make_unique<native_visual::cgl>();
+    else
+      visual = std::make_unique<native_visual::coregraphics>();
 
-        std::unique_ptr<base> window = std::make_unique<appkit>(std::move(visual));
+    std::unique_ptr<base> window = std::make_unique<appkit>(std::move(visual));
 
-        window->create(position, size);
+    window->create(position, size);
 
-        return window;
-      }
-    }
+    return window;
   }
 }
-

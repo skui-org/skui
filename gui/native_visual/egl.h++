@@ -34,34 +34,28 @@
 
 #include <EGL/egl.h>
 
-namespace skui
+namespace skui::gui::native_visual
 {
-  namespace gui
+  class egl : public base
   {
-    namespace native_visual
-    {
-      class egl : public base
-      {
-      public:
-        egl();
-        ~egl() override;
+  public:
+    egl();
+    ~egl() override;
 
-        void create_surface(std::uintptr_t window) override;
-        void make_current() const override;
-        void swap_buffers(const graphics::pixel_size&) const override;
+    void create_surface(std::uintptr_t window) override;
+    void make_current() const override;
+    void swap_buffers(const graphics::pixel_size&) const override;
 
-        EGLint get_egl_visual();
+    EGLint get_egl_visual();
 
-        gl_get_function_type get_gl_function() const override;
+    gl_get_function_type get_gl_function() const override;
 
-      private:
-        EGLDisplay egl_display;
-        EGLContext egl_context;
-        EGLConfig egl_config;
-        EGLSurface egl_surface;
-      };
-    }
-  }
+  private:
+    EGLDisplay egl_display;
+    EGLContext egl_context;
+    EGLConfig egl_config;
+    EGLSurface egl_surface;
+  };
 }
 
 #endif

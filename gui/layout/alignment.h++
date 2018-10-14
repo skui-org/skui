@@ -27,17 +27,14 @@
 
 #include <cstdint>
 
-namespace skui
+namespace skui::gui
 {
-  namespace gui
+  enum class alignment : std::uint8_t
   {
-    enum class alignment : std::uint8_t
-    {
-      begin,
-      center,
-      end
-    };
-  }
+    begin,
+    center,
+    end
+  };
 }
 
 #endif

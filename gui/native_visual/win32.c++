@@ -26,59 +26,52 @@
 
 #include <core/debug.h++>
 
-namespace skui
+namespace skui::gui::native_visual
 {
-  namespace gui
+  namespace
   {
-    namespace native_visual
+    BITMAPINFO create_bitmapinfo(const graphics::pixel_size& size)
     {
-      namespace
-      {
-        BITMAPINFO create_bitmapinfo(const graphics::pixel_size& size)
-        {
-          BITMAPINFO bitmap_info{};
-          bitmap_info.bmiHeader.biSize        = sizeof(BITMAPINFOHEADER);
-          bitmap_info.bmiHeader.biWidth       = static_cast<LONG>(size.width);
-          bitmap_info.bmiHeader.biHeight      = -static_cast<LONG>(size.height); // top-down image
-          bitmap_info.bmiHeader.biPlanes      = 1;
-          bitmap_info.bmiHeader.biBitCount    = 32;
-          bitmap_info.bmiHeader.biCompression = BI_RGB;
-          bitmap_info.bmiHeader.biSizeImage   = 0;
+      BITMAPINFO bitmap_info{};
+      bitmap_info.bmiHeader.biSize        = sizeof(BITMAPINFOHEADER);
+      bitmap_info.bmiHeader.biWidth       = static_cast<LONG>(size.width);
+      bitmap_info.bmiHeader.biHeight      = -static_cast<LONG>(size.height); // top-down image
+      bitmap_info.bmiHeader.biPlanes      = 1;
+      bitmap_info.bmiHeader.biBitCount    = 32;
+      bitmap_info.bmiHeader.biCompression = BI_RGB;
+      bitmap_info.bmiHeader.biSizeImage   = 0;
 
-          return bitmap_info;
-        }
-      }
-      win32::win32() = default;
-
-      win32::~win32() = default;
-
-      void win32::create_surface(std::uintptr_t window)
-      {
-        HWND hwnd = reinterpret_cast<HWND>(window);
-        device_context = GetDC(hwnd);
-      }
-
-      void win32::make_current() const
-      {
-
-      }
-
-      void win32::swap_buffers(const graphics::pixel_size& size) const
-      {
-        BITMAPINFO bitmap_info = create_bitmapinfo(size);
-
-        int ret = SetDIBitsToDevice(device_context,
-                                    0, 0,
-                                    static_cast<DWORD>(size.width), static_cast<DWORD>(size.height),
-                                    0, 0,
-                                    0, static_cast<UINT>(size.height),
-                                    pixels().data(),
-                                    &bitmap_info,
-                                    DIB_RGB_COLORS);
-        if(ret == 0)
-          core::debug_print("SetDIBitsToDevice failed.\n");
-      }
-
+      return bitmap_info;
     }
+  }
+  win32::win32() = default;
+
+  win32::~win32() = default;
+
+  void win32::create_surface(std::uintptr_t window)
+  {
+    HWND hwnd = reinterpret_cast<HWND>(window);
+    device_context = GetDC(hwnd);
+  }
+
+  void win32::make_current() const
+  {
+
+  }
+
+  void win32::swap_buffers(const graphics::pixel_size& size) const
+  {
+    BITMAPINFO bitmap_info = create_bitmapinfo(size);
+
+    int ret = SetDIBitsToDevice(device_context,
+                                0, 0,
+                                static_cast<DWORD>(size.width), static_cast<DWORD>(size.height),
+                                0, 0,
+                                0, static_cast<UINT>(size.height),
+                                pixels().data(),
+                                &bitmap_info,
+                                DIB_RGB_COLORS);
+    if(ret == 0)
+      core::debug_print("SetDIBitsToDevice failed.\n");
   }
 }

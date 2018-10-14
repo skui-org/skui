@@ -38,178 +38,175 @@
 #include <memory>
 #include <vector>
 
-namespace skui
+namespace skui::gui
 {
-  namespace gui
+  namespace implementation
   {
-    namespace implementation
+    static std::unique_ptr<window::window_list> list_of_windows;
+    window::window_list& windows()
     {
-      static std::unique_ptr<window::window_list> list_of_windows;
-      window::window_list& windows()
-      {
-        list_of_windows = std::make_unique<window::window_list>();
+      list_of_windows = std::make_unique<window::window_list>();
 
-        return *list_of_windows;
-      }
+      return *list_of_windows;
     }
+  }
 
-    window::window(graphics::pixel_position position,
-                   graphics::pixel_size initial_size,
-                   window_flags flags)
-      : trackable{}
-      , size{initial_size}
-      , position{position}
-      , icon{}
-      , title{[this](const core::string& title) { native_window->set_title(title); },
-              [this] { return native_window->get_title(); }}
-      , native_window{nullptr}
-      , thread{}
-      , flags{flags}
-      , has_been_closed{false}
+  window::window(graphics::pixel_position position,
+                 graphics::pixel_size initial_size,
+                 window_flags flags)
+    : trackable{}
+    , size{initial_size}
+    , position{position}
+    , icon{}
+    , title{[this](const core::string& title) { native_window->set_title(title); },
+            [this] { return native_window->get_title(); }}
+    , native_window{nullptr}
+    , thread{}
+    , flags{flags}
+    , has_been_closed{false}
+  {
+    std::unique_lock lock{mutex};
+    std::thread t(&window::initialize_and_execute_platform_loop, this);
+    thread.swap(t);
+    handle_condition_variable.wait(lock, [this] { return native_window != nullptr; });
+    implementation::windows().push_back(this);
+
+    title = core::application::instance().name;
+  }
+
+  window::window(window_flags flags)
+    : window{{0,0}, {800,600}, flags}
+  {}
+
+  window::~window()
+  {
+    core::debug_print("Destroying window.\n");
+    if(native_window)
     {
-      std::unique_lock lock{mutex};
-      std::thread t(&window::initialize_and_execute_platform_loop, this);
-      thread.swap(t);
-      handle_condition_variable.wait(lock, [this] { return native_window != nullptr; });
-      implementation::windows().push_back(this);
-
-      title = core::application::instance().name;
+      close();
     }
+    thread.join();
+  }
 
-    window::window(window_flags flags)
-      : window({0,0}, {800,600}, flags)
-    {}
+  void window::show()
+  {
+    std::unique_lock lock{mutex};
 
-    window::~window()
+    core::debug_print("Showing window.\n");
+
+    native_window->show();
+    state = window_state::windowed;
+  }
+
+  void window::hide()
+  {
+    std::unique_lock lock{mutex};
+
+    core::debug_print("Hiding window.\n");
+
+    native_window->hide();
+    state = window_state::hidden;
+  }
+
+  void window::close()
+  {
+    std::unique_lock lock{mutex};
+
+    core::debug_print("window::close called.\n");
+
+    native_window->close();
+    has_been_closed = true;
+    window::windows().erase(std::remove(windows().begin(), windows().end(), this), windows().end());
+  }
+
+  void window::repaint()
+  {
+    std::unique_lock lock{mutex};
+
+    if(has_been_closed)
+      return;
+
+    bool size_changed = false;
+    auto size_changed_connection = size.value_changed.connect([&size_changed]() { size_changed = true; });
+    std::tie(position, size) = native_window->get_current_geometry();
+    size.value_changed.disconnect(size_changed_connection);
+
+    if(size_changed)
     {
-      core::debug_print("Destroying window.\n");
-      if(native_window)
-      {
-        close();
-      }
-      thread.join();
-    }
+      native_window->make_current();
 
-    void window::show()
+      draw();
+
+      native_window->swap_buffers(size);
+    }
+  }
+
+  native_window::base& window::get_native_window() const
+  {
+    return *native_window;
+  }
+
+  void window::draw()
+  {
+    graphics::canvas_flags canvas_flags;
+    if(flags.test(window_flag::anti_alias))
+      canvas_flags |= graphics::canvas_flag::anti_alias;
+
+    auto canvas = graphics_context->create_canvas(size, canvas_flags);
+    canvas->draw(canvas->background);
+
+    element->draw(*canvas);
+  }
+
+  void window::initialize_and_execute_platform_loop()
+  {
+    native_window = native_window::create(position, size, flags);
+
+    create_graphics_context();
+
+    // Ensure calling thread is waiting for draw_condition_variable
+    std::unique_lock handle_lock{mutex};
+    handle_condition_variable.notify_one();
+
+    // Continue calling thread before initiating event loop
+    handle_lock.unlock();
+
+    execute_event_loop();
+
+    graphics_context.reset();
+    native_window.reset();
+
+    if(flags.test(window_flag::exit_on_close))
+      core::application::instance().quit();
+  }
+
+  void window::create_graphics_context()
+  {
+    if(flags.test(window_flag::opengl))
     {
-      std::unique_lock lock{mutex};
-
-      core::debug_print("Showing window.\n");
-
-      native_window->show();
-      state = window_state::windowed;
+      const auto& native_visual = native_window->get_native_visual();
+      native_visual.make_current();
+      graphics_context = std::make_unique<graphics::skia_gl_context>(native_visual.get_gl_function());
     }
-
-    void window::hide()
+    else
     {
-      std::unique_lock lock{mutex};
+      auto raster_visual = dynamic_cast<native_visual::raster*>(&native_window->get_native_visual());
+      if(!raster_visual)
+        core::debug_print("In case of non-OpenGL, the visual must be a raster visual");
 
-      core::debug_print("Hiding window.\n");
-
-      native_window->hide();
-      state = window_state::hidden;
+      graphics_context = std::make_unique<graphics::skia_raster_context>(raster_visual->pixels());
     }
+  }
 
-    void window::close()
-    {
-      std::unique_lock lock{mutex};
+  void window::execute_event_loop()
+  {
+    std::unique_ptr<events::base> events = events::create(*this);
 
-      core::debug_print("window::close called.\n");
+    events->exec();
+  }
 
-      native_window->close();
-      has_been_closed = true;
-      window::windows().erase(std::remove(windows().begin(), windows().end(), this), windows().end());
-    }
-
-    void window::repaint(bool force)
-    {
-      std::unique_lock lock{mutex};
-
-      if(has_been_closed)
-        return;
-
-      bool size_changed = false;
-      auto size_changed_connection = size.value_changed.connect([&size_changed]() { size_changed = true; });
-      std::tie(position, size) = native_window->get_current_geometry();
-      size.value_changed.disconnect(size_changed_connection);
-
-      if(size_changed || force)
-      {
-        native_window->make_current();
-
-        draw();
-
-        native_window->swap_buffers(size);
-      }
-    }
-
-    native_window::base& window::get_native_window() const
-    {
-      return *native_window;
-    }
-
-    void window::draw()
-    {
-      graphics::canvas_flags canvas_flags;
-      if(flags.test(window_flag::anti_alias))
-        canvas_flags |= graphics::canvas_flag::anti_alias;
-
-      auto canvas = graphics_context->create_canvas(size, canvas_flags);
-      canvas->draw(canvas->background);
-
-      element->draw(*canvas);
-    }
-
-    void window::initialize_and_execute_platform_loop()
-    {
-      native_window = native_window::create(position, size, flags);
-
-      create_graphics_context();
-
-      // Ensure calling thread is waiting for draw_condition_variable
-      std::unique_lock handle_lock{mutex};
-      handle_condition_variable.notify_one();
-
-      // Continue calling thread before initiating event loop
-      handle_lock.unlock();
-
-      execute_event_loop();
-
-      graphics_context.reset();
-      native_window.reset();
-
-      if(flags.test(window_flag::exit_on_close))
-        core::application::instance().quit();
-    }
-
-    void window::create_graphics_context()
-    {
-      if(flags.test(window_flag::opengl))
-      {
-        const auto& native_visual = native_window->get_native_visual();
-        native_visual.make_current();
-        graphics_context = std::make_unique<graphics::skia_gl_context>(native_visual.get_gl_function());
-      }
-      else
-      {
-        auto raster_visual = dynamic_cast<native_visual::raster*>(&native_window->get_native_visual());
-        if(!raster_visual)
-          core::debug_print("In case of non-OpenGL, the visual must be a raster visual");
-
-        graphics_context = std::make_unique<graphics::skia_raster_context>(raster_visual->pixels());
-      }
-    }
-
-    void window::execute_event_loop()
-    {
-      std::unique_ptr<events::base> events = events::create(*this);
-
-      events->exec();
-    }
-
-    window::window_list& window::windows()
-    {
-      return implementation::windows();
-    }
+  window::window_list& window::windows()
+  {
+    return implementation::windows();
   }
 }
