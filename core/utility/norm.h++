@@ -33,19 +33,16 @@
 #include <algorithm>
 #include <cmath>
 
-namespace skui
+namespace skui::core
 {
-  namespace core
+  template<typename ValueType>
+  struct norm
   {
-    template<typename ValueType>
-    struct norm
+    constexpr ValueType operator()(const ValueType& value) const
     {
-      constexpr ValueType operator()(const ValueType& value) const
-      {
-        return std::abs(value);
-      }
-    };
-  }
+      return std::abs(value);
+    }
+  };
 }
 
 

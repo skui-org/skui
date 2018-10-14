@@ -26,47 +26,44 @@
 
 #include <memory>
 
-namespace skui
+namespace skui::core
 {
-  namespace core
+  event_loop::event_loop(std::vector<command_queue::command_ptr> commands)
+    : queue{std::move(commands)}
+  {}
+
+  int event_loop::execute()
   {
-    event_loop::event_loop(std::vector<command_queue::command_ptr> commands)
-      : queue{std::move(commands)}
-    {}
-
-    int event_loop::execute()
+    while(!exit)
     {
-      while(!exit)
+      // wait on the queue to receive work
+      queue.wait();
+
+      auto commands = queue.take_commands();
+
+      while(!commands.empty() && !exit)
       {
-        // wait on the queue to receive work
-        queue.wait();
-
-        auto commands = queue.take_commands();
-
-        while(!commands.empty() && !exit)
-        {
-          commands.front()->execute();
-          commands.pop_front();
-        }
+        commands.front()->execute();
+        commands.pop_front();
       }
-      return exit_code;
     }
+    return exit_code;
+  }
 
-    void event_loop::push(command_queue::command_ptr&& command)
-    {
-      queue.push(std::move(command));
-    }
+  void event_loop::push(command_queue::command_ptr&& command)
+  {
+    queue.push(std::move(command));
+  }
 
-    void event_loop::stop(int return_code)
-    {
-      exit_code = return_code;
-      queue.push(std::make_unique<command>([this] { exit = true; }));
-    }
+  void event_loop::stop(int return_code)
+  {
+    exit_code = return_code;
+    queue.push(std::make_unique<command>([this] { exit = true; }));
+  }
 
-    void event_loop::interrupt(int return_code)
-    {
-      exit_code = return_code;
-      queue.push_front(std::make_unique<command>([this] { exit = true; }));
-    }
+  void event_loop::interrupt(int return_code)
+  {
+    exit_code = return_code;
+    queue.push_front(std::make_unique<command>([this] { exit = true; }));
   }
 }

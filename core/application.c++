@@ -32,53 +32,50 @@
 #include <cstdlib>
 #include <iostream>
 
-namespace skui
+namespace skui::core
 {
-  namespace core
+  namespace implementation
   {
-    namespace implementation
-    {
-      static application* instance = nullptr;
-    }
+    static application* instance = nullptr;
+  }
 
-    application::application(int argc, char* argv[], string name)
-      : commandline_arguments{argv+1, argv+argc}
-      , name{std::move(name)}
+  application::application(int argc, char* argv[], string name)
+    : commandline_arguments{argv+1, argv+argc}
+    , name{std::move(name)}
+  {
+    if(implementation::instance != nullptr)
     {
-      if(implementation::instance != nullptr)
-      {
-        std::cerr << "skui::core::application: creating a second application instance is not allowed.\n";
-        implementation::instance->quit();
-      }
-      implementation::instance = this;
+      std::cerr << "skui::core::application: creating a second application instance is not allowed.\n";
+      implementation::instance->quit();
     }
+    implementation::instance = this;
+  }
 
-    application::~application() = default;
+  application::~application() = default;
 
-    application& application::instance()
+  application& application::instance()
+  {
+    if(implementation::instance == nullptr)
     {
-      if(implementation::instance == nullptr)
-      {
-        std::cerr << "skui::core::application::instance: application instance not created.\n";
-        std::exit(EXIT_FAILURE);
-      }
-      return *implementation::instance;
+      std::cerr << "skui::core::application::instance: application instance not created.\n";
+      std::exit(EXIT_FAILURE);
     }
+    return *implementation::instance;
+  }
 
-    int application::execute()
-    {
-      return event_loop.execute();
-    }
+  int application::execute()
+  {
+    return event_loop.execute();
+  }
 
-    void application::quit(int exit_code)
-    {
-      about_to_quit.emit();
-      event_loop.stop(exit_code);
-    }
+  void application::quit(int exit_code)
+  {
+    about_to_quit.emit();
+    event_loop.stop(exit_code);
+  }
 
-    const std::vector<string>& application::arguments() const
-    {
-      return commandline_arguments;
-    }
+  const std::vector<string>& application::arguments() const
+  {
+    return commandline_arguments;
   }
 }

@@ -33,19 +33,16 @@
 #include <limits>
 #include <type_traits>
 
-namespace skui
+namespace skui::core
 {
-  namespace core
-  {
-    template<typename Type, bool IsEnum = std::is_enum_v<Type>>
-    struct number_of_bits : std::integral_constant<std::size_t, sizeof(Type)*std::numeric_limits<unsigned char>::digits> {};
+  template<typename Type, bool IsEnum = std::is_enum_v<Type>>
+  struct number_of_bits : std::integral_constant<std::size_t, sizeof(Type)*std::numeric_limits<unsigned char>::digits> {};
 
-    template<typename Enum>
-    struct number_of_bits<Enum, true> : number_of_bits<std::underlying_type_t<Enum>> {};
+  template<typename Enum>
+  struct number_of_bits<Enum, true> : number_of_bits<std::underlying_type_t<Enum>> {};
 
-    template<typename Type>
-    constexpr auto number_of_bits_v = number_of_bits<Type>::value;
-  }
+  template<typename Type>
+  constexpr auto number_of_bits_v = number_of_bits<Type>::value;
 }
 
 #endif

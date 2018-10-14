@@ -37,38 +37,36 @@
 #include <cstdlib>
 #include <ostream>
 
-namespace skui
+namespace skui::core
 {
-  namespace core
+  template<typename Freeable>
+  struct free_deleter { void operator()(Freeable* resource) { std::free((void*)resource); } };
+  template<typename T>
+  using unique_free_ptr = std::unique_ptr<T, free_deleter<T>>;
+
+  class ostream_format_keeper
   {
-    template<typename Freeable>
-    struct free_deleter { void operator()(Freeable* resource) { std::free((void*)resource); } };
-    template<typename T>
-    using unique_free_ptr = std::unique_ptr<T, free_deleter<T>>;
+  public:
+    ostream_format_keeper(std::ostream& stream)
+      : stream{stream}
+      , flags{stream.flags()}
+    {}
 
-    class ostream_format_keeper
+    ~ostream_format_keeper()
     {
-    public:
-      ostream_format_keeper(std::ostream& stream)
-        : stream(stream)
-        , flags(stream.flags())
-      {}
-      ~ostream_format_keeper()
-      {
-        stream.flags(flags);
-      }
+      stream.flags(flags);
+    }
 
-      private:
-        std::ostream& stream;
-        std::ios_base::fmtflags flags;
-    };
+  private:
+    std::ostream& stream;
+    std::ios_base::fmtflags flags;
+  };
 
 #ifdef _WIN32
-    string convert_to_utf8(const std::wstring& utf16_string);
-    std::wstring convert_to_utf16(const string& utf8_string);
-    std::string get_last_error_string();
+  string convert_to_utf8(const std::wstring& utf16_string);
+  std::wstring convert_to_utf16(const string& utf8_string);
+  std::string get_last_error_string();
 #endif
-  }
 }
 
 #endif

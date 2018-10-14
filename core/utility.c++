@@ -32,75 +32,72 @@
 #include <windows.h>
 #endif
 
-namespace skui
+namespace skui::core
 {
-  namespace core
-  {
 #ifdef _WIN32
-    string convert_to_utf8(const std::wstring& utf16_string)
+  string convert_to_utf8(const std::wstring& utf16_string)
+  {
+    // get length
+    int length = WideCharToMultiByte(CP_UTF8, 0, utf16_string.c_str(), static_cast<int>(utf16_string.size()),
+                                     nullptr, 0, nullptr, nullptr);
+    if(!(length > 0))
+      return string();
+    else
     {
-      // get length
-      int length = WideCharToMultiByte(CP_UTF8, 0, utf16_string.c_str(), static_cast<int>(utf16_string.size()),
-                                       nullptr, 0, nullptr, nullptr);
-      if(!(length > 0))
-        return string();
+      string result;
+      result.resize(static_cast<string::size_type>(length));
+
+      if(WideCharToMultiByte(CP_UTF8, 0, utf16_string.c_str(), static_cast<int>(utf16_string.size()),
+                             &result[0], static_cast<int>(result.size()), nullptr, nullptr) == 0 )
+        throw std::runtime_error("Failure to execute convert_to_utf8: call to WideCharToMultiByte failed.");
       else
-      {
-        string result;
-        result.resize(static_cast<string::size_type>(length));
-
-        if(WideCharToMultiByte(CP_UTF8, 0, utf16_string.c_str(), static_cast<int>(utf16_string.size()),
-                               &result[0], static_cast<int>(result.size()), nullptr, nullptr) == 0 )
-          throw std::runtime_error("Failure to execute convert_to_utf8: call to WideCharToMultiByte failed.");
-        else
-          return result;
-      }
+        return result;
     }
-    std::wstring convert_to_utf16(const string& utf8_string)
-    {
-      // get length
-      int length = MultiByteToWideChar(CP_UTF8, 0, utf8_string.c_str(), static_cast<int>(utf8_string.size()), nullptr, 0);
-      if(!(length > 0))
-        return {};
-      else
-      {
-        std::wstring result;
-        result.resize(static_cast<string::size_type>(length));
-
-        if(MultiByteToWideChar(CP_UTF8, 0, utf8_string.c_str(), static_cast<int>(utf8_string.size()),
-                               &result[0], static_cast<int>(result.size())) == 0 )
-          throw std::runtime_error("Failure to execute convert_to_utf16: call to MultiByteToWideChar failed.");
-        else
-          return result;
-      }
-    }
-
-    std::string get_last_error_string()
-    {
-      DWORD error = GetLastError();
-      if(error)
-      {
-        wchar_t* buffer = nullptr;
-        DWORD length = FormatMessageW(
-                         FORMAT_MESSAGE_ALLOCATE_BUFFER |
-                         FORMAT_MESSAGE_FROM_SYSTEM |
-                         FORMAT_MESSAGE_IGNORE_INSERTS,
-                         nullptr,
-                         error,
-                         MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-                         (wchar_t*)&buffer,
-                         0, nullptr);
-        if(length)
-        {
-          std::wstring result(buffer, buffer+length);
-
-          LocalFree(buffer);
-
-          return convert_to_utf8(result);
-        }
-      }
-      return std::string();
-    }
-#endif
   }
+  std::wstring convert_to_utf16(const string& utf8_string)
+  {
+    // get length
+    int length = MultiByteToWideChar(CP_UTF8, 0, utf8_string.c_str(), static_cast<int>(utf8_string.size()), nullptr, 0);
+    if(!(length > 0))
+      return {};
+    else
+    {
+      std::wstring result;
+      result.resize(static_cast<string::size_type>(length));
+
+      if(MultiByteToWideChar(CP_UTF8, 0, utf8_string.c_str(), static_cast<int>(utf8_string.size()),
+                             &result[0], static_cast<int>(result.size())) == 0 )
+        throw std::runtime_error("Failure to execute convert_to_utf16: call to MultiByteToWideChar failed.");
+      else
+        return result;
+    }
+  }
+
+  std::string get_last_error_string()
+  {
+    DWORD error = GetLastError();
+    if(error)
+    {
+      wchar_t* buffer = nullptr;
+      DWORD length = FormatMessageW(
+                       FORMAT_MESSAGE_ALLOCATE_BUFFER |
+                       FORMAT_MESSAGE_FROM_SYSTEM |
+                       FORMAT_MESSAGE_IGNORE_INSERTS,
+                       nullptr,
+                       error,
+                       MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                       (wchar_t*)&buffer,
+                       0, nullptr);
+      if(length)
+      {
+        std::wstring result(buffer, buffer+length);
+
+        LocalFree(buffer);
+
+        return convert_to_utf8(result);
+      }
+    }
+    return std::string();
+  }
+#endif
 }

@@ -32,22 +32,19 @@
 
 #include <algorithm>
 
-namespace skui
+namespace skui::core
 {
-  namespace core
+  //! \brief Bounds \param value between \param lower_bound and \param upper_bound.
+  template<typename T>
+  struct bound
   {
-    //! \brief Bounds \param value between \param lower_bound and \param upper_bound.
-    template<typename T>
-    struct bound
+    constexpr T operator()(const T& value,
+                           const T& lower_bound,
+                           const T& upper_bound) const
     {
-      constexpr T operator()(const T& value,
-                             const T& lower_bound,
-                             const T& upper_bound) const
-      {
-        return std::clamp(value, lower_bound, upper_bound);
-      }
-    };
-  }
+      return std::clamp(value, lower_bound, upper_bound);
+    }
+  };
 }
 
 #endif

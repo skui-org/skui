@@ -36,49 +36,46 @@
 #include <string>
 #include <unordered_set>
 
-namespace skui
+namespace skui::core
 {
-  namespace core
+  class trackable;
+
+  namespace implementation
   {
-    class trackable;
-
-    namespace implementation
-    {
-      // Not part of the public interface because a derived class must ensure it untracks all its trackables manually in its destructor.
-      class tracker
-      {
-      public:
-        virtual void trackable_deleted(const trackable* object) = 0;
-        virtual void trackable_copied(const trackable* old_object, const trackable* new_object) = 0;
-        virtual void trackable_moved(const trackable* old_object, const trackable* new_object) = 0;
-
-      protected:
-        tracker() = default;
-        virtual ~tracker() = default;
-      };
-    }
-
-    class trackable
+    // Not part of the public interface because a derived class must ensure it untracks all its trackables manually in its destructor.
+    class tracker
     {
     public:
-      virtual ~trackable();
-
-      trackable(const trackable& other);
-      trackable(trackable&& other) noexcept;
-      trackable& operator=(trackable other);
-
-      void track(implementation::tracker* tracker) const;
-      void untrack(implementation::tracker* tracker) const;
+      virtual void trackable_deleted(const trackable* object) = 0;
+      virtual void trackable_copied(const trackable* old_object, const trackable* new_object) = 0;
+      virtual void trackable_moved(const trackable* old_object, const trackable* new_object) = 0;
 
     protected:
-      trackable() = default;
-
-    private:
-      // mutable so you can be track const objects
-      mutable std::unordered_set<implementation::tracker*> trackers;
-      mutable std::mutex trackers_mutex;
+      tracker() = default;
+      virtual ~tracker() = default;
     };
   }
+
+  class trackable
+  {
+  public:
+    virtual ~trackable();
+
+    trackable(const trackable& other);
+    trackable(trackable&& other) noexcept;
+    trackable& operator=(trackable other);
+
+    void track(implementation::tracker* tracker) const;
+    void untrack(implementation::tracker* tracker) const;
+
+  protected:
+    trackable() = default;
+
+  private:
+    // mutable so you can be track const objects
+    mutable std::unordered_set<implementation::tracker*> trackers;
+    mutable std::mutex trackers_mutex;
+  };
 }
 
 #endif

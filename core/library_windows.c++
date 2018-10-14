@@ -34,54 +34,51 @@
 
 #include <array>
 
-namespace skui
+namespace skui::core
 {
-  namespace core
+  namespace implementation
   {
-    namespace implementation
+    constexpr char dll_prefix[] = "lib";
+    constexpr char dll_suffix[] = ".dll";
+
+    fs::path executable_path()
     {
-      constexpr char dll_prefix[] = "lib";
-      constexpr char dll_suffix[] = ".dll";
-
-      fs::path executable_path()
-      {
-        std::wstring buffer;
-        buffer.resize(MAX_PATH);
-        DWORD size = GetModuleFileNameW(nullptr, &buffer[0], MAX_PATH);
-        buffer.resize(size);
-        buffer.shrink_to_fit();
-        return fs::path(buffer).remove_filename();
-      }
-
-      void* load(const path& filename)
-      {
-        path directory = (fs::current_path() / filename).remove_filename();
-        path filename_only = filename.filename();
-
-        std::array<path, 3> filenames{{directory / filename_only,
-                                       directory / filename_only + dll_suffix,
-                                       directory / dll_prefix + filename_only + dll_suffix}};
-
-        for(const auto& filepath : filenames)
-        {
-          // this should use path::native(), but this is equivalent here and also works on MinGW-w64 Clang
-          void* handle = LoadLibraryW(filepath.wstring().c_str());
-          if(handle)
-            return handle;
-        }
-        return nullptr;
-      }
-
-      bool unload(void* handle)
-      {
-        return FreeLibrary(static_cast<HMODULE>(handle)) == 0;
-      }
+      std::wstring buffer;
+      buffer.resize(MAX_PATH);
+      DWORD size = GetModuleFileNameW(nullptr, &buffer[0], MAX_PATH);
+      buffer.resize(size);
+      buffer.shrink_to_fit();
+      return fs::path(buffer).remove_filename();
     }
 
-    library::function_ptr library::resolve_symbol(const string& symbol_name)
+    void* load(const path& filename)
     {
-      FARPROC function_address = GetProcAddress(static_cast<HMODULE>(native_handle), symbol_name.c_str());
-      return function_ptr(function_address);
+      path directory = (fs::current_path() / filename).remove_filename();
+      path filename_only = filename.filename();
+
+      std::array<path, 3> filenames{{directory / filename_only,
+                                     directory / filename_only + dll_suffix,
+                                     directory / dll_prefix + filename_only + dll_suffix}};
+
+      for(const auto& filepath : filenames)
+      {
+        // this should use path::native(), but this is equivalent here and also works on MinGW-w64 Clang
+        void* handle = LoadLibraryW(filepath.wstring().c_str());
+        if(handle)
+          return handle;
+      }
+      return nullptr;
     }
+
+    bool unload(void* handle)
+    {
+      return FreeLibrary(static_cast<HMODULE>(handle)) == 0;
+    }
+  }
+
+  library::function_ptr library::resolve_symbol(const string& symbol_name)
+  {
+    FARPROC function_address = GetProcAddress(static_cast<HMODULE>(native_handle), symbol_name.c_str());
+    return function_ptr(function_address);
   }
 }

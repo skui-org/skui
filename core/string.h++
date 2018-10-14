@@ -33,12 +33,9 @@
 
 #include <string>
 
-namespace skui
+namespace skui::core
 {
-  namespace core
-  {
-    using string = std::string;
-  }
+  using string = std::string;
 }
 
 #endif

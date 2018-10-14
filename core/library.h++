@@ -36,35 +36,32 @@
 #include <functional>
 #include <vector>
 
-namespace skui
+namespace skui::core
 {
-  namespace core
+  class library
   {
-    class library
+  public:
+    library(path filename);
+    ~library();
+
+    bool load(path filename = {});
+    bool unload();
+
+    template<typename ReturnType, typename... ArgTypes>
+    auto resolve(const string& symbol_name) -> ReturnType(*)(ArgTypes...)
     {
-    public:
-      library(path filename);
-      ~library();
+      using function_type = ReturnType(*)(ArgTypes...);
+      return function_type(resolve_symbol(symbol_name));
+    }
 
-      bool load(path filename = {});
-      bool unload();
+  private:
+    using function_ptr = void(*)();
 
-      template<typename ReturnType, typename... ArgTypes>
-      auto resolve(const string& symbol_name) -> ReturnType(*)(ArgTypes...)
-      {
-        using function_type = ReturnType(*)(ArgTypes...);
-        return function_type(resolve_symbol(symbol_name));
-      }
+    function_ptr resolve_symbol(const string& symbol_name);
 
-    private:
-      using function_ptr = void(*)();
-
-      function_ptr resolve_symbol(const string& symbol_name);
-
-      path filename;
-      void* native_handle;
-    };
-  }
+    path filename;
+    void* native_handle;
+  };
 }
 
 #endif

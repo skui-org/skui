@@ -24,46 +24,43 @@
 
 #include "core/command_queue.h++"
 
-namespace skui
+namespace skui::core
 {
-  namespace core
+  command_queue::command_queue(std::vector<command_queue::command_ptr> commands)
+    : queue{std::make_move_iterator(commands.begin()), std::make_move_iterator(commands.end())}
+  {}
+
+  void command_queue::push(command_ptr&& command)
   {
-    command_queue::command_queue(std::vector<command_queue::command_ptr> commands)
-      : queue{std::make_move_iterator(commands.begin()), std::make_move_iterator(commands.end())}
-    {}
+    const std::lock_guard lock{queue_mutex};
 
-    void command_queue::push(command_ptr&& command)
-    {
-      const std::lock_guard lock{queue_mutex};
+    queue.push_back(std::move(command));
+    condition_variable.notify_one();
+  }
 
-      queue.push_back(std::move(command));
-      condition_variable.notify_one();
-    }
+  void command_queue::push_front(command_queue::command_ptr&& command)
+  {
+    std::lock_guard lock{queue_mutex};
 
-    void command_queue::push_front(command_queue::command_ptr&& command)
-    {
-      std::lock_guard lock{queue_mutex};
+    queue.push_front(std::move(command));
+    condition_variable.notify_one();
+  }
 
-      queue.push_front(std::move(command));
-      condition_variable.notify_one();
-    }
+  void command_queue::wait()
+  {
+    std::unique_lock lock{queue_mutex};
 
-    void command_queue::wait()
-    {
-      std::unique_lock lock{queue_mutex};
+    if(queue.empty())
+      condition_variable.wait(lock, [this] { return !queue.empty(); });
+  }
 
-      if(queue.empty())
-        condition_variable.wait(lock, [this] { return !queue.empty(); });
-    }
+  std::deque<command_queue::command_ptr> command_queue::take_commands()
+  {
+    const std::lock_guard lock{queue_mutex};
 
-    std::deque<command_queue::command_ptr> command_queue::take_commands()
-    {
-      const std::lock_guard lock{queue_mutex};
+    std::deque<command_queue::command_ptr> result;
+    std::swap(result, queue);
 
-      std::deque<command_queue::command_ptr> result;
-      std::swap(result, queue);
-
-      return result;
-    }
+    return result;
   }
 }

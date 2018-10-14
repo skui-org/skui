@@ -34,24 +34,22 @@
 
 #include <algorithm>
 
-namespace skui
+namespace skui::core
 {
-  namespace core
+  template<typename ValueType, typename EpsilonType = ValueType>
+  struct approximate_equal_to
   {
-    template<typename ValueType, typename EpsilonType = ValueType>
-    struct approximate_equal_to
-    {
-    private:
-      constexpr static skui::core::norm<ValueType> norm{};
+  private:
+    constexpr static skui::core::norm<ValueType> norm{};
 
-    public:
-      constexpr bool operator()(const ValueType& left,
-                                const ValueType& right,
-                                const EpsilonType& epsilon) const
-      {
-        return norm(left - right) <= epsilon*std::min(norm(left), norm(right));
-      }
-    };
-  }
+  public:
+    constexpr bool operator()(const ValueType& left,
+                              const ValueType& right,
+                              const EpsilonType& epsilon) const
+    {
+      return norm(left - right) <= epsilon*std::min(norm(left), norm(right));
+    }
+  };
 }
+
 #endif

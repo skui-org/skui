@@ -37,132 +37,129 @@
 #include <type_traits>
 #include <utility>
 
-namespace skui
+namespace skui::core
 {
-  namespace core
+  template<typename T>
+  class property
   {
-    template<typename T>
-    class property
+  public:
+    using value_type = T;
+    using reference = std::add_lvalue_reference_t<T>;
+    using const_reference = std::add_lvalue_reference_t<std::add_const_t<T>>;
+    using rvalue_reference = std::add_rvalue_reference_t<T>;
+
+    static_assert(!std::is_const_v<value_type>, "property<const T> makes no sense and cannot be used.");
+
+    property() = default;
+    template<typename... SlotTypes>
+    property(value_type value, SlotTypes&&... slots)
+      : value{std::move(value)}
     {
-    public:
-      using value_type = T;
-      using reference = std::add_lvalue_reference_t<T>;
-      using const_reference = std::add_lvalue_reference_t<std::add_const_t<T>>;
-      using rvalue_reference = std::add_rvalue_reference_t<T>;
-
-      static_assert(!std::is_const_v<value_type>, "property<const T> makes no sense and cannot be used.");
-
-      property() = default;
-      template<typename... SlotTypes>
-      property(value_type value, SlotTypes&&... slots)
-        : value{std::move(value)}
-      {
-        (value_changed.connect(std::forward<SlotTypes>(slots)), ...);
-      }
-
-      property& operator=(const_reference other)
-      {
-        return const_cast<property&>(const_cast<const property*>(this)->operator=(other));
-      }
-      const property& operator=(const_reference other) const
-      {
-        const bool changed = value != other;
-        value = other;
-        if(changed)
-          value_changed.emit(value);
-
-        return *this;
-      }
-      property& operator=(rvalue_reference other)
-      {
-        return const_cast<property&>(const_cast<const property*>(this)->operator=(std::move(other)));
-      }
-      const property& operator=(rvalue_reference other) const
-      {
-        const bool changed = value != other;
-        value = std::move(other);
-        if(changed)
-          value_changed.emit(value);
-
-        return *this;
-      }
-
-      operator const_reference() const { return value; }
-      const value_type* operator->() const
-      {
-        return &value;
-      }
-
-      bool operator==(const_reference other) const { return value == other; }
-      bool operator!=(const_reference other) const { return value != other; }
-      bool operator< (const_reference other) const { return value <  other; }
-      bool operator<=(const_reference other) const { return value <= other; }
-      bool operator> (const_reference other) const { return value >  other; }
-      bool operator>=(const_reference other) const { return value >= other; }
-
-      property& operator&=(const_reference other)
-      {
-        return const_cast<property&>(const_cast<const property*>(this)->operator&=(other));
-      }
-      const property& operator&=(const_reference other) const
-      {
-        const bool changed = (value & other) != value;
-        value &= other;
-        if(changed)
-          value_changed.emit(value);
-
-        return *this;
-      }
-      property& operator|=(const_reference other)
-      {
-        return const_cast<property&>(const_cast<const property*>(this)->operator|=(other));
-      }
-      const property& operator|=(const_reference other) const
-      {
-        const bool changed = (value | other) != value;
-        value |= other;
-        if(changed)
-          value_changed.emit(value);
-
-        return *this;
-      }
-
-      property& operator^=(const_reference other)
-      {
-        return const_cast<property&>(const_cast<const property*>(this)->operator^=(other));
-      }
-      const property& operator^=(const_reference other) const
-      {
-        const bool changed = (value ^ other) != value;
-        value ^= other;
-        if(changed)
-          value_changed.emit(value);
-
-        return *this;
-      }
-
-      signal<const_reference> value_changed;
-
-    private:
-      // mutable because a const property<non-const T> can be assigned a value
-      mutable value_type value{};
-    };
-
-    template<typename ValueType>
-    std::ostream& operator<<(std::ostream& os, const property<ValueType>& property)
-    {
-      return os << static_cast<ValueType>(property);
+      (value_changed.connect(std::forward<SlotTypes>(slots)), ...);
     }
-    template<typename ValueType>
-    std::istream& operator>>(std::istream& os, property<ValueType>& property)
-    {
-      ValueType result;
-      os >> result;
-      if(os)
-        property = std::move(result);
 
-      return os;
+    property& operator=(const_reference other)
+    {
+      return const_cast<property&>(const_cast<const property*>(this)->operator=(other));
     }
+    const property& operator=(const_reference other) const
+    {
+      const bool changed = value != other;
+      value = other;
+      if(changed)
+        value_changed.emit(value);
+
+      return *this;
+    }
+    property& operator=(rvalue_reference other)
+    {
+      return const_cast<property&>(const_cast<const property*>(this)->operator=(std::move(other)));
+    }
+    const property& operator=(rvalue_reference other) const
+    {
+      const bool changed = value != other;
+      value = std::move(other);
+      if(changed)
+        value_changed.emit(value);
+
+      return *this;
+    }
+
+    operator const_reference() const { return value; }
+    const value_type* operator->() const
+    {
+      return &value;
+    }
+
+    bool operator==(const_reference other) const { return value == other; }
+    bool operator!=(const_reference other) const { return value != other; }
+    bool operator< (const_reference other) const { return value <  other; }
+    bool operator<=(const_reference other) const { return value <= other; }
+    bool operator> (const_reference other) const { return value >  other; }
+    bool operator>=(const_reference other) const { return value >= other; }
+
+    property& operator&=(const_reference other)
+    {
+      return const_cast<property&>(const_cast<const property*>(this)->operator&=(other));
+    }
+    const property& operator&=(const_reference other) const
+    {
+      const bool changed = (value & other) != value;
+      value &= other;
+      if(changed)
+        value_changed.emit(value);
+
+      return *this;
+    }
+    property& operator|=(const_reference other)
+    {
+      return const_cast<property&>(const_cast<const property*>(this)->operator|=(other));
+    }
+    const property& operator|=(const_reference other) const
+    {
+      const bool changed = (value | other) != value;
+      value |= other;
+      if(changed)
+        value_changed.emit(value);
+
+      return *this;
+    }
+
+    property& operator^=(const_reference other)
+    {
+      return const_cast<property&>(const_cast<const property*>(this)->operator^=(other));
+    }
+    const property& operator^=(const_reference other) const
+    {
+      const bool changed = (value ^ other) != value;
+      value ^= other;
+      if(changed)
+        value_changed.emit(value);
+
+      return *this;
+    }
+
+    signal<const_reference> value_changed;
+
+  private:
+    // mutable because a const property<non-const T> can be assigned a value
+    mutable value_type value{};
+  };
+
+  template<typename ValueType>
+  std::ostream& operator<<(std::ostream& os, const property<ValueType>& property)
+  {
+    return os << static_cast<ValueType>(property);
+  }
+  template<typename ValueType>
+  std::istream& operator>>(std::istream& os, property<ValueType>& property)
+  {
+    ValueType result;
+    os >> result;
+    if(os)
+      property = std::move(result);
+
+    return os;
   }
 }
 

@@ -24,19 +24,16 @@
 
 #include "core/command.h++"
 
-namespace skui
+namespace skui::core
 {
-  namespace core
+  command::command()
+    : function{[] {}}
+  {}
+
+  command::~command() = default;
+
+  void command::execute()
   {
-    command::command()
-     : function{[] {}}
-    {}
-
-    command::~command() = default;
-
-    void command::execute()
-    {
-       function();
-    }
+    function();
   }
 }

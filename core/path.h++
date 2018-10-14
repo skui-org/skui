@@ -39,23 +39,20 @@
 #include <experimental/filesystem>
 #endif
 
-namespace skui
+namespace skui::core
 {
-  namespace core
-  {
 #if defined(__MINGW32__) || defined(__APPLE__)
-    namespace fs = boost::filesystem;
+  namespace fs = boost::filesystem;
 #else
-    namespace fs = std::experimental::filesystem;
+  namespace fs = std::experimental::filesystem;
 #endif
-    using path = fs::path;
+  using path = fs::path;
 
-    inline path operator+(const path& left, const path& right)
-    {
-      path::string_type result = left.native();
-      result += right.native();
-      return result;
-    }
+  inline path operator+(const path& left, const path& right)
+  {
+    path::string_type result = left.native();
+    result += right.native();
+    return result;
   }
 }
 

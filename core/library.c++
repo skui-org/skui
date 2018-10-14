@@ -24,52 +24,50 @@
 
 #include "core/library.h++"
 
-namespace skui
+namespace skui::core
 {
-  namespace core
+  namespace implementation
   {
-    namespace implementation
+    // these are defined in library_*.c++
+    void* load(const path& library);
+    bool unload(void*);
+  }
+
+  library::library(path filename)
+    : filename{std::move(filename)}
+    , native_handle{nullptr}
+  {}
+
+  library::~library()
+  {
+    unload();
+  }
+
+  bool library::load(path filename_to_load)
+  {
+    if(filename == filename_to_load)
     {
-      // these are defined in library_*.c++
-      void* load(const path& library);
-      bool unload(void*);
+      if(native_handle)
+        return true;
     }
-    library::library(path filename)
-      : filename{std::move(filename)}
-      , native_handle{nullptr}
-    {}
-
-    library::~library()
+    else
     {
-      unload();
+      if(!filename_to_load.empty())
+        filename = std::move(filename_to_load);
     }
+    native_handle = implementation::load(filename.c_str());
 
-    bool library::load(path filename_to_load)
-    {
-      if(filename == filename_to_load)
-      {
-        if(native_handle)
-          return true;
-      }
-      else
-      {
-        if(!filename_to_load.empty())
-          filename = std::move(filename_to_load);
-      }
-      native_handle = implementation::load(filename.c_str());
+    return native_handle != nullptr;
+  }
 
-      return native_handle != nullptr;
-    }
+  bool library::unload()
+  {
+    bool result = true;
+    if(native_handle != nullptr)
+      result = implementation::unload(native_handle);
 
-    bool library::unload()
-    {
-      bool result = true;
-      if(native_handle != nullptr)
-        result = implementation::unload(native_handle);
+    native_handle = nullptr;
 
-      native_handle = nullptr;
-
-      return result;
-    }
+    return result;
   }
 }

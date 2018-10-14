@@ -37,31 +37,28 @@
 #include <mutex>
 #include <vector>
 
-namespace skui
+namespace skui::core
 {
-  namespace core
+  class command_queue
   {
-    class command_queue
-    {
-    public:
-      using command_ptr = std::unique_ptr<command>;
+  public:
+    using command_ptr = std::unique_ptr<command>;
 
-      command_queue(std::vector<command_ptr> commands = {});
+    command_queue(std::vector<command_ptr> commands = {});
 
-      void push(command_ptr&& command);
-      void push_front(command_ptr&& command);
+    void push(command_ptr&& command);
+    void push_front(command_ptr&& command);
 
-      //! \note returns immediately if there are unprocessed commands in the queue.
-      void wait();
+    //! \note returns immediately if there are unprocessed commands in the queue.
+    void wait();
 
-      std::deque<command_ptr> take_commands();
+    std::deque<command_ptr> take_commands();
 
-    private:
-      std::mutex queue_mutex;
-      std::condition_variable condition_variable;
-      std::deque<command_ptr> queue;
-    };
-  }
+  private:
+    std::mutex queue_mutex;
+    std::condition_variable condition_variable;
+    std::deque<command_ptr> queue;
+  };
 }
 
 #endif

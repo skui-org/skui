@@ -34,72 +34,69 @@
 
 #include <bitset>
 
-namespace skui
+namespace skui::core
 {
-  namespace core
+  template<typename Enum>
+  struct enum_is_bitflag : std::false_type {};
+
+  template<typename Enum, std::size_t number_of_bits = number_of_bits_v<Enum>>
+  class bitflag
+  {
+  public:
+    constexpr bitflag() = default;
+    bitflag(Enum value) : bits{enum_to_bits(value)} {}
+
+    bitflag operator|(bitflag other) const { bitflag result = *this; result |= other; return result; }
+    bitflag operator&(bitflag other) const { bitflag result = *this; result &= other; return result; }
+    bitflag operator^(bitflag other) const { bitflag result = *this; result ^= other; return result; }
+    bitflag operator~() const { bitflag result = *this; result.bits.flip(); return result; }
+
+    bitflag& operator|=(bitflag other) { bits |= other.bits; return *this; }
+    bitflag& operator&=(bitflag other) { bits &= other.bits; return *this; }
+    bitflag& operator^=(bitflag other) { bits ^= other.bits; return *this; }
+
+    bool operator==(const bitflag& other) const { return bits == other.bits; }
+    bool operator!=(const bitflag& other) const { return bits != other.bits; }
+
+    bool any() const { return bits.any(); }
+    bool all() const { return bits.all(); }
+    bool none() const { return bits.none(); }
+    std::size_t count() const { return bits.count(); }
+    operator bool() { return any(); }
+
+    bool test(Enum value) const { return *this & value; }
+    void set(Enum value) { bits |= enum_to_bits(value); }
+    void unset(Enum value) { bits &= ~enum_to_bits(value); }
+    void clear() { bits.reset(); }
+
+  private:
+    std::bitset<number_of_bits> bits;
+
+    template<typename SFINAE = Enum>
+    static std::bitset<number_of_bits> enum_to_bits(std::enable_if_t<!enum_is_bitflag<SFINAE>::value, SFINAE> value)
+    { return { 1ULL << static_cast<std::size_t>(value) }; }
+
+    template<typename SFINAE = Enum>
+    static std::bitset<number_of_bits> enum_to_bits(std::enable_if_t<enum_is_bitflag<SFINAE>::value, SFINAE> value)
+    { return { static_cast<std::size_t>(value) }; }
+  };
+
+  namespace bitflag_operators
   {
     template<typename Enum>
-    struct enum_is_bitflag : std::false_type {};
-
-    template<typename Enum, std::size_t number_of_bits = number_of_bits_v<Enum>>
-    class bitflag
+    constexpr std::enable_if_t<std::is_enum<Enum>::value, bitflag<Enum>> operator|(Enum left, Enum right)
     {
-    public:
-      constexpr bitflag() = default;
-      bitflag(Enum value) : bits{enum_to_bits(value)} {}
-
-      bitflag operator|(bitflag other) const { bitflag result = *this; result |= other; return result; }
-      bitflag operator&(bitflag other) const { bitflag result = *this; result &= other; return result; }
-      bitflag operator^(bitflag other) const { bitflag result = *this; result ^= other; return result; }
-      bitflag operator~() const { bitflag result = *this; result.bits.flip(); return result; }
-
-      bitflag& operator|=(bitflag other) { bits |= other.bits; return *this; }
-      bitflag& operator&=(bitflag other) { bits &= other.bits; return *this; }
-      bitflag& operator^=(bitflag other) { bits ^= other.bits; return *this; }
-
-      bool operator==(const bitflag& other) const { return bits == other.bits; }
-      bool operator!=(const bitflag& other) const { return bits != other.bits; }
-
-      bool any() const { return bits.any(); }
-      bool all() const { return bits.all(); }
-      bool none() const { return bits.none(); }
-      std::size_t count() const { return bits.count(); }
-      operator bool() { return any(); }
-
-      bool test(Enum value) const { return *this & value; }
-      void set(Enum value) { bits |= enum_to_bits(value); }
-      void unset(Enum value) { bits &= ~enum_to_bits(value); }
-      void clear() { bits.reset(); }
-
-    private:
-      std::bitset<number_of_bits> bits;
-
-      template<typename SFINAE = Enum>
-      static std::bitset<number_of_bits> enum_to_bits(std::enable_if_t<!enum_is_bitflag<SFINAE>::value, SFINAE> value)
-      { return { 1ULL << static_cast<std::size_t>(value) }; }
-
-      template<typename SFINAE = Enum>
-      static std::bitset<number_of_bits> enum_to_bits(std::enable_if_t<enum_is_bitflag<SFINAE>::value, SFINAE> value)
-      { return { static_cast<std::size_t>(value) }; }
-    };
-
-    namespace bitflag_operators
+      return bitflag<Enum>(left) | right;
+    }
+    template<typename Enum>
+    constexpr std::enable_if_t<std::is_enum<Enum>::value, bitflag<Enum>> operator&(Enum left, Enum right)
     {
-      template<typename Enum>
-      constexpr std::enable_if_t<std::is_enum<Enum>::value, bitflag<Enum>> operator|(Enum left, Enum right)
-      {
-        return bitflag<Enum>(left) | right;
-      }
-      template<typename Enum>
-      constexpr std::enable_if_t<std::is_enum<Enum>::value, bitflag<Enum>> operator&(Enum left, Enum right)
-      {
-        return bitflag<Enum>(left) & right;
-      }
-      template<typename Enum>
-      constexpr std::enable_if_t<std::is_enum<Enum>::value, bitflag<Enum>> operator^(Enum left, Enum right)
-      {
-        return bitflag<Enum>(left) ^ right;
-      }
+      return bitflag<Enum>(left) & right;
+    }
+    template<typename Enum>
+    constexpr std::enable_if_t<std::is_enum<Enum>::value, bitflag<Enum>> operator^(Enum left, Enum right)
+    {
+      return bitflag<Enum>(left) ^ right;
     }
   }
 }

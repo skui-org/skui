@@ -33,33 +33,30 @@
 
 #include <type_traits>
 
-namespace skui
+namespace skui::core
 {
-  namespace core
-  {
-    template<typename... ArgTypes>
-    struct count : std::integral_constant<std::size_t, sizeof...(ArgTypes)> {};
+  template<typename... ArgTypes>
+  struct count : std::integral_constant<std::size_t, sizeof...(ArgTypes)> {};
 
-    // Most functors - defer to plain member function case
-    template<typename T>
-    struct arity : arity<decltype(&std::remove_reference_t<T>::operator())> {};
+  // Most functors - defer to plain member function case
+  template<typename T>
+  struct arity : arity<decltype(&std::remove_reference_t<T>::operator())> {};
 
-    // Plain function pointers
-    template<typename ReturnType, typename... ArgTypes>
-    struct arity<ReturnType(*)(ArgTypes...)> : count<ArgTypes...> {};
+  // Plain function pointers
+  template<typename ReturnType, typename... ArgTypes>
+  struct arity<ReturnType(*)(ArgTypes...)> : count<ArgTypes...> {};
 
-    // Member function pointers
-    template<typename ClassType, typename ReturnType, typename... ArgTypes>
-    struct arity<ReturnType(ClassType::*)(ArgTypes...)> : count<ArgTypes...> {};
+  // Member function pointers
+  template<typename ClassType, typename ReturnType, typename... ArgTypes>
+  struct arity<ReturnType(ClassType::*)(ArgTypes...)> : count<ArgTypes...> {};
 
-    // Const member function pointers
-    template<typename ClassType, typename ReturnType, typename... ArgTypes>
-    struct arity<ReturnType(ClassType::*)(ArgTypes...) const> : count<ArgTypes...> {};
+  // Const member function pointers
+  template<typename ClassType, typename ReturnType, typename... ArgTypes>
+  struct arity<ReturnType(ClassType::*)(ArgTypes...) const> : count<ArgTypes...> {};
 
-    // Value alias
-    template<typename... ArgTypes>
-    constexpr std::size_t arity_v = arity<ArgTypes...>::value;
-  }
+  // Value alias
+  template<typename... ArgTypes>
+  constexpr std::size_t arity_v = arity<ArgTypes...>::value;
 }
 
 #endif

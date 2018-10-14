@@ -31,47 +31,44 @@
 
 #include <array>
 
-namespace skui
+namespace skui::core
 {
-  namespace core
+  namespace implementation
   {
-    namespace implementation
-    {
-      constexpr char so_suffix[] =
+    constexpr char so_suffix[] =
     #ifdef __APPLE__
-          ".dylib";
-    #else
-          ".so";
-    #endif
-      constexpr char so_prefix[] = "lib";
+        ".dylib";
+#else
+        ".so";
+#endif
+    constexpr char so_prefix[] = "lib";
 
-      void* load(const path& filename)
-      {
-        path directory = fs::absolute(filename).remove_filename();
-        path filename_only = filename.filename();
-
-        std::array<path, 3> filenames{{directory / filename_only,
-                                       directory / (filename_only + so_suffix),
-                                       directory / (so_prefix + filename_only + so_suffix)}};
-        for(const auto& filename : filenames)
-        {
-          core::debug_print("skui::core::library: Attempting to load ", filename, '\n');
-          void* handle = dlopen(filename.c_str(), RTLD_LAZY);
-          if(handle)
-            return handle;
-        }
-        return nullptr;
-      }
-
-      bool unload(void* handle)
-      {
-        return dlclose(handle);
-      }
-    }
-
-    library::function_ptr library::resolve_symbol(const string& symbol_name)
+    void* load(const path& filename)
     {
-      return function_ptr(dlsym(native_handle, symbol_name.c_str()));
+      path directory = fs::absolute(filename).remove_filename();
+      path filename_only = filename.filename();
+
+      std::array<path, 3> filenames{{directory / filename_only,
+                                     directory / (filename_only + so_suffix),
+                                     directory / (so_prefix + filename_only + so_suffix)}};
+      for(const auto& filename : filenames)
+      {
+        core::debug_print("skui::core::library: Attempting to load ", filename, '\n');
+        void* handle = dlopen(filename.c_str(), RTLD_LAZY);
+        if(handle)
+          return handle;
+      }
+      return nullptr;
     }
+
+    bool unload(void* handle)
+    {
+      return dlclose(handle);
+    }
+  }
+
+  library::function_ptr library::resolve_symbol(const string& symbol_name)
+  {
+    return function_ptr(dlsym(native_handle, symbol_name.c_str()));
   }
 }

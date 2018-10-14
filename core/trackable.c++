@@ -32,48 +32,45 @@
 
 #include <vector>
 
-namespace skui
+namespace skui::core
 {
-  namespace core
+  trackable::~trackable()
   {
-    trackable::~trackable()
+    // trackable_deleted will most likely erase elements in this->trackers, so iterate through a copy made up front.
+    const std::vector<implementation::tracker*> trackers_copy(trackers.begin(), trackers.end());
+    for(auto tracker : trackers_copy)
     {
-      // trackable_deleted will most likely erase elements in this->trackers, so iterate through a copy made up front.
-      const std::vector<implementation::tracker*> trackers_copy(trackers.begin(), trackers.end());
-      for(auto tracker : trackers_copy)
-      {
-        tracker->trackable_deleted(this);
-      }
+      tracker->trackable_deleted(this);
     }
+  }
 
-    trackable::trackable(const trackable& other)
-      : trackers{other.trackers}
+  trackable::trackable(const trackable& other)
+    : trackers{other.trackers}
+  {
+    for(auto tracker : trackers)
     {
-      for(auto tracker : trackers)
-      {
-        tracker->trackable_copied(&other, this);
-      }
+      tracker->trackable_copied(&other, this);
     }
+  }
 
-    trackable::trackable(trackable&& other) noexcept
-      : trackers{other.trackers}
+  trackable::trackable(trackable&& other) noexcept
+    : trackers{std::move(other.trackers)}
+  {
+    for(auto tracker : trackers)
     {
-      for(auto tracker : trackers)
-      {
-        tracker->trackable_moved(&other, this);
-      }
+      tracker->trackable_moved(&other, this);
     }
+  }
 
-    void trackable::track(implementation::tracker* tracker) const
-    {
-      const std::lock_guard lock(trackers_mutex);
-      trackers.insert(tracker);
-    }
+  void trackable::track(implementation::tracker* tracker) const
+  {
+    const std::lock_guard lock(trackers_mutex);
+    trackers.insert(tracker);
+  }
 
-    void trackable::untrack(implementation::tracker* tracker) const
-    {
-      const std::lock_guard lock(trackers_mutex);
-      trackers.erase(tracker);
-    }
+  void trackable::untrack(implementation::tracker* tracker) const
+  {
+    const std::lock_guard lock(trackers_mutex);
+    trackers.erase(tracker);
   }
 }

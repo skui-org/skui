@@ -39,33 +39,30 @@
 #include <cstdlib>
 #include <vector>
 
-namespace skui
+namespace skui::core
 {
-  namespace core
+  class application
   {
-    class application
-    {
-    public:
-      application(int argc, char* argv[], string name = "");
-      ~application();
+  public:
+    application(int argc, char* argv[], string name = "");
+    ~application();
 
-      const std::vector<string> commandline_arguments;
+    const std::vector<string> commandline_arguments;
 
-      property<string> name;
+    property<string> name;
 
-      signal<> about_to_quit;
+    signal<> about_to_quit;
 
-      static application& instance();
+    static application& instance();
 
-      int execute();
-      void quit(int exit_code = EXIT_SUCCESS);
+    int execute();
+    void quit(int exit_code = EXIT_SUCCESS);
 
-      const std::vector<string>& arguments() const;
+    const std::vector<string>& arguments() const;
 
-    private:
-      core::event_loop event_loop;
-    };
-  }
+  private:
+    core::event_loop event_loop;
+  };
 }
 
 #endif

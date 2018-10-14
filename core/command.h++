@@ -27,28 +27,25 @@
 
 #include <functional>
 
-namespace skui
+namespace skui::core
 {
-  namespace core
+  class command
   {
-    class command
-    {
-    public:
-      command();
+  public:
+    command();
 
-      template<typename Callable, typename... ArgTypes>
-      command(Callable callable, ArgTypes... args)
-        : function{[callable, args...] { return callable(args...); }}
-      {}
+    template<typename Callable, typename... ArgTypes>
+    command(Callable callable, ArgTypes... args)
+      : function{[callable, args...] { return callable(args...); }}
+    {}
 
-      virtual ~command();
+    virtual ~command();
 
-      virtual void execute();
+    virtual void execute();
 
-    private:
-      std::function<void()> function;
-    };
-  }
+  private:
+    std::function<void()> function;
+  };
 }
 
 #endif
