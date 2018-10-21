@@ -53,8 +53,9 @@ namespace skui::core
 
     void* load(const path& filename)
     {
-      path directory = (fs::current_path() / filename).remove_filename();
-      path filename_only = filename.filename();
+      const path filename_only = filename.filename();
+      const path directory =  filename_only == filename.filename() ? executable_path()
+                                                                   : (fs::current_path() / filename).remove_filename();
 
       std::array<path, 3> filenames{{directory / filename_only,
                                      directory / filename_only + dll_suffix,

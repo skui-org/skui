@@ -24,14 +24,14 @@
 
 #include "test.h++"
 
-#include "core/library.h++"
+#include <core/library.h++>
 
 int main()
 {
   using skui::test::check;
   using skui::test::require;
 
-  skui::core::library library("core/library_lib");
+  skui::core::library library("library_lib");
 
   require(library.load(), "library loaded correctly");
 
