@@ -38,7 +38,7 @@
 namespace skui::graphics::style
 {
   using fill = std::variant<color,
-  gradient>;
+                            gradient>;
 }
 
 #endif
