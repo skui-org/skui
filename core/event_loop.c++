@@ -28,7 +28,7 @@
 
 namespace skui::core
 {
-  event_loop::event_loop(std::vector<command_queue::command_ptr> commands)
+  event_loop::event_loop(command_queue::commands_type commands)
     : queue{std::move(commands)}
   {}
 

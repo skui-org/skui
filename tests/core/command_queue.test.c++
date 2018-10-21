@@ -39,7 +39,7 @@ namespace
 
     void test_command_queue_construct_take()
     {
-      std::vector<std::unique_ptr<skui::core::command>> initial_commands;
+      skui::core::command_queue::commands_type initial_commands;
       initial_commands.push_back(std::make_unique<skui::core::command>([this] { f(); }));
       skui::core::command_queue command_queue{std::move(initial_commands)};
 

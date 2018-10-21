@@ -82,7 +82,7 @@ namespace
 
     void test_construct_execute_stop()
     {
-      std::vector<std::unique_ptr<skui::core::command>> commands;
+      skui::core::command_queue::commands_type commands;
       commands.push_back(std::make_unique<skui::core::command>([this] { f(); }));
       skui::core::event_loop event_loop{std::move(commands)};
       int exit_code {0};

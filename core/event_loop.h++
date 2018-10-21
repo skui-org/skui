@@ -39,7 +39,7 @@ namespace skui::core
   class event_loop
   {
   public:
-    event_loop(std::vector<command_queue::command_ptr> commands = {});
+    event_loop(command_queue::commands_type commands = {});
 
     int execute();
 

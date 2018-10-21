@@ -26,8 +26,8 @@
 
 namespace skui::core
 {
-  command_queue::command_queue(std::vector<command_queue::command_ptr> commands)
-    : queue{std::make_move_iterator(commands.begin()), std::make_move_iterator(commands.end())}
+  command_queue::command_queue(commands_type commands)
+    : queue{std::move(commands)}
   {}
 
   void command_queue::push(command_ptr&& command)
@@ -54,11 +54,11 @@ namespace skui::core
       condition_variable.wait(lock, [this] { return !queue.empty(); });
   }
 
-  std::deque<command_queue::command_ptr> command_queue::take_commands()
+  command_queue::commands_type command_queue::take_commands()
   {
     const std::lock_guard lock{queue_mutex};
 
-    std::deque<command_queue::command_ptr> result;
+    commands_type result;
     std::swap(result, queue);
 
     return result;

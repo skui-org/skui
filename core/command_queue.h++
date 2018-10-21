@@ -43,8 +43,9 @@ namespace skui::core
   {
   public:
     using command_ptr = std::unique_ptr<command>;
+    using commands_type = std::deque<command_ptr>;
 
-    command_queue(std::vector<command_ptr> commands = {});
+    command_queue(commands_type commands = {});
 
     void push(command_ptr&& command);
     void push_front(command_ptr&& command);
@@ -52,12 +53,12 @@ namespace skui::core
     //! \note returns immediately if there are unprocessed commands in the queue.
     void wait();
 
-    std::deque<command_ptr> take_commands();
+    commands_type take_commands();
 
   private:
     std::mutex queue_mutex;
     std::condition_variable condition_variable;
-    std::deque<command_ptr> queue;
+    commands_type queue;
   };
 }
 
