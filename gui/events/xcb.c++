@@ -124,7 +124,7 @@ namespace skui::gui::events
           if(expose.count>0)
             continue;
 
-          window.repaint();
+          window.update();
 
           break;
         }

@@ -36,6 +36,7 @@
 #include "gui/window_state.h++"
 
 #include <core/bounded_property.h++>
+#include <core/event_loop.h++>
 #include <core/proxy_property.h++>
 #include <core/string.h++>
 #include <core/trackable.h++>
@@ -67,7 +68,10 @@ namespace skui::gui
     void hide();
     void close();
 
+    //! immediately repaints window
     void repaint();
+    //! schedules a repaint that will trigger a repaint as soon as possible
+    void update();
 
     std::unique_ptr<gui::element> element;
 
@@ -94,7 +98,7 @@ namespace skui::gui
     void draw();
 
     void initialize_and_execute_platform_loop();
-    void create_graphics_context();
+    void create_graphics_context_and_execute_render_loop();
     void execute_event_loop();
 
     void update_geometry();
@@ -107,7 +111,9 @@ namespace skui::gui
 
     std::mutex mutex;
     std::condition_variable handle_condition_variable;
-    std::thread thread;
+    std::thread render_thread;
+    core::event_loop render_loop;
+    std::thread events_thread;
     window_flags flags;
     bool has_been_closed;
   };

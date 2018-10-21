@@ -49,6 +49,11 @@ namespace skui::gui
 
       return *list_of_windows;
     }
+
+    const auto render_filter = [](core::command_queue::commands_type& commands)
+    {
+      commands.resize(1); // only keep the first command.
+    };
   }
 
   window::window(graphics::pixel_position position,
@@ -61,13 +66,15 @@ namespace skui::gui
     , title{[this](const core::string& title) { native_window->set_title(title); },
             [this] { return native_window->get_title(); }}
     , native_window{nullptr}
-    , thread{}
+    , render_thread{}
+    , render_loop{implementation::render_filter}
+    , events_thread{}
     , flags{flags}
     , has_been_closed{false}
   {
     std::unique_lock lock{mutex};
     std::thread t(&window::initialize_and_execute_platform_loop, this);
-    thread.swap(t);
+    events_thread.swap(t);
     handle_condition_variable.wait(lock, [this] { return native_window != nullptr; });
     implementation::windows().push_back(this);
 
@@ -85,7 +92,8 @@ namespace skui::gui
     {
       close();
     }
-    thread.join();
+    events_thread.join();
+    render_thread.join();
   }
 
   void window::show()
@@ -114,6 +122,7 @@ namespace skui::gui
 
     core::debug_print("window::close called.\n");
 
+    render_loop.interrupt();
     native_window->close();
     has_been_closed = true;
     window::windows().erase(std::remove(windows().begin(), windows().end(), this), windows().end());
@@ -126,19 +135,16 @@ namespace skui::gui
     if(has_been_closed)
       return;
 
-    bool size_changed = false;
-    auto size_changed_connection = size.value_changed.connect([&size_changed]() { size_changed = true; });
-    std::tie(position, size) = native_window->get_current_geometry();
-    size.value_changed.disconnect(size_changed_connection);
+    native_window->make_current();
 
-    if(size_changed)
-    {
-      native_window->make_current();
+    draw();
 
-      draw();
+    native_window->swap_buffers(size);
+  }
 
-      native_window->swap_buffers(size);
-    }
+  void window::update()
+  {
+    render_loop.push(std::make_unique<skui::core::command>([this] { repaint(); }));
   }
 
   native_window::base& window::get_native_window() const
@@ -162,7 +168,8 @@ namespace skui::gui
   {
     native_window = native_window::create(position, size, flags);
 
-    create_graphics_context();
+    std::thread t(&window::create_graphics_context_and_execute_render_loop, this);
+    render_thread.swap(t);
 
     // Ensure calling thread is waiting for draw_condition_variable
     std::unique_lock handle_lock{mutex};
@@ -180,7 +187,7 @@ namespace skui::gui
       core::application::instance().quit();
   }
 
-  void window::create_graphics_context()
+  void window::create_graphics_context_and_execute_render_loop()
   {
     if(flags.test(window_flag::opengl))
     {
@@ -196,11 +203,13 @@ namespace skui::gui
 
       graphics_context = std::make_unique<graphics::skia_raster_context>(raster_visual->pixels());
     }
+
+    render_loop.execute();
   }
 
   void window::execute_event_loop()
   {
-    std::unique_ptr<events::base> events = events::create(*this);
+    auto events = events::create(*this);
 
     events->exec();
   }
