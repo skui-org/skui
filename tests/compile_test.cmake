@@ -22,20 +22,21 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-message(STATUS "runtime test: test_dir=${test_dir}, test_name=${test_name}")
-execute_process(COMMAND "${CMAKE_COMMAND}" -E remove "${test_dir}/${test_name}${CMAKE_EXECUTABLE_SUFFIX}"
+message(STATUS "runtime test: test_component=${test_component}, test_name=${test_name}")
+execute_process(COMMAND "${CMAKE_COMMAND}" -E remove "${test_component}/${test_name}${CMAKE_EXECUTABLE_SUFFIX}"
                 RESULT_VARIABLE exit_code
                 ERROR_VARIABLE stderr)
 
 if(NOT 0 EQUAL ${exit_code})
-  message(FATAL_ERROR "Could not remove ${test_dir}/${test_name}${CMAKE_EXECUTABLE_SUFFIX}:\n${stderr}")
+  message(FATAL_ERROR "Could not remove ${test_component}/${test_name}${CMAKE_EXECUTABLE_SUFFIX}:\n${stderr}")
 endif()
 
-execute_process(COMMAND "${CMAKE_COMMAND}" --build .. --target "${test_name}"
+message(STATUS COMMAND "${CMAKE_COMMAND}" --build ../.. --target "${test_name}")
+execute_process(COMMAND "${CMAKE_COMMAND}" --build ../.. --target "${test_name}"
                 RESULT_VARIABLE exit_code
                 ERROR_VARIABLE stderr
                 OUTPUT_QUIET)
 
 if(NOT 0 EQUAL ${exit_code})
-  message(FATAL_ERROR "Could not compile ${test_dir}/${test_name}${CMAKE_EXECUTABLE_SUFFIX}:\n${stderr}")
+  message(FATAL_ERROR "Could not compile ${test_component}/${test_name}${CMAKE_EXECUTABLE_SUFFIX}:\n${stderr}")
 endif()

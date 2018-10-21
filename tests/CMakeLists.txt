@@ -23,60 +23,67 @@
 # THE SOFTWARE.
 #
 
+set(test_list_dir ${CMAKE_CURRENT_LIST_DIR})
+
 function(runtime_test component test_name)
-  set(test_src ${component}/${test_name}.test.c++)
+  set(test_src ${test_list_dir}/${component}/${test_name}.test.c++)
   source_group("" FILES ${test_src})
   string(REPLACE "/" "_" test_target_name ${test_name})
   add_executable(${test_target_name} ${test_src})
-  set_target_properties(${test_target_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${component}
-                                                       RUNTIME_OUTPUT_DIRECTORY_DEBUG ${component}
-                                                       RUNTIME_OUTPUT_DIRECTORY_RELEASE ${component}
-                                                       RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO ${component}
-                                                       RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL ${component}
+  set_target_properties(${test_target_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+                                                       RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_CURRENT_BINARY_DIR}
+                                                       RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_CURRENT_BINARY_DIR}
+                                                       RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO ${CMAKE_CURRENT_BINARY_DIR}
+                                                       RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL ${CMAKE_CURRENT_BINARY_DIR}
                                                        FOLDER tests/${component})
-  target_include_directories(${test_target_name} PUBLIC ${CMAKE_CURRENT_LIST_DIR} ${PROJECT_SOURCE_DIR})
+  target_include_directories(${test_target_name} PUBLIC ${test_list_dir} ${PROJECT_SOURCE_DIR})
   target_link_libraries(${test_target_name} ${component})
 
-  add_test(${component}/${test_name} ${CMAKE_COMMAND} -Dtest_dir=${component}
+  add_test(${component}/${test_name} ${CMAKE_COMMAND} -Dtest_component=${component}
                                                       -Dtest_name=${test_target_name}
-                                                      -P ${CMAKE_CURRENT_LIST_DIR}/runtime_test.cmake)
+                                                      -P ${test_list_dir}/runtime_test.cmake)
 endfunction()
 
 function(compile_test component test_name)
-  set(test_src ${component}/${test_name}.test.c++ ${CMAKE_CURRENT_LIST_DIR}/test.h++)
+  set(test_src ${test_list_dir}/${component}/${test_name}.test.c++)
   source_group("" FILES ${test_src})
   add_executable(${test_name} ${test_src})
-  set_target_properties(${test_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${component}
-                                     FOLDER tests/${component})
-  target_include_directories(${test_name} PUBLIC ${CMAKE_CURRENT_LIST_DIR} ${PROJECT_SOURCE_DIR})
+  set_target_properties(${test_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+                                                RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_CURRENT_BINARY_DIR}
+                                                RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_CURRENT_BINARY_DIR}
+                                                RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO ${CMAKE_CURRENT_BINARY_DIR}
+                                                RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL ${CMAKE_CURRENT_BINARY_DIR}
+                                                FOLDER tests/${component})
+  target_include_directories(${test_name} PUBLIC ${test_list_dir} ${PROJECT_SOURCE_DIR})
   target_link_libraries(${test_name} ${component})
 
-  add_test(${component}/${test_name} ${CMAKE_COMMAND} -Dtest_dir=${component}
+  add_test(${component}/${test_name} ${CMAKE_COMMAND} -Dtest_component=${component}
                                                       -Dtest_name=${test_name}
-                                                      -P ${CMAKE_CURRENT_LIST_DIR}/compile_test.cmake)
+                                                      -P ${test_list_dir}/compile_test.cmake)
 endfunction()
 
 function(compile_test_library component test_name)
-  set(test_src ${component}/${test_name}.test.c++ ${CMAKE_CURRENT_LIST_DIR}/test.h++)
+  set(test_src ${test_list_dir}/${component}/${test_name}.test.c++)
   source_group("" FILES ${test_src})
   add_library(${test_name} SHARED ${test_src})
-  set_target_properties(${test_name} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${component}
-                                                LIBRARY_OUTPUT_DIRECTORY_DEBUG ${component}
-                                                LIBRARY_OUTPUT_DIRECTORY_RELEASE ${component}
-                                                LIBRARY_OUTPUT_DIRECTORY_RELWITHDEBINFO ${component}
-                                                LIBRARY_OUTPUT_DIRECTORY_MINSIZEREL ${component}
-                                                RUNTIME_OUTPUT_DIRECTORY ${component}
-                                                RUNTIME_OUTPUT_DIRECTORY_DEBUG ${component}
-                                                RUNTIME_OUTPUT_DIRECTORY_RELEASE ${component}
-                                                RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO ${component}
-                                                RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL ${component}
+  set_target_properties(${test_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+                                                RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_CURRENT_BINARY_DIR}
+                                                RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_CURRENT_BINARY_DIR}
+                                                RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO ${CMAKE_CURRENT_BINARY_DIR}
+                                                RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL ${CMAKE_CURRENT_BINARY_DIR}
+                                                LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+                                                LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_CURRENT_BINARY_DIR}
+                                                LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CMAKE_CURRENT_BINARY_DIR}
+                                                LIBRARY_OUTPUT_DIRECTORY_RELWITHDEBINFO ${CMAKE_CURRENT_BINARY_DIR}
+                                                LIBRARY_OUTPUT_DIRECTORY_MINSIZEREL ${CMAKE_CURRENT_BINARY_DIR}
                                                 FOLDER tests/${component})
-  target_include_directories(${test_name} PUBLIC ${CMAKE_CURRENT_LIST_DIR} ${PROJECT_SOURCE_DIR})
+  target_include_directories(${test_name} PUBLIC ${test_list_dir} ${PROJECT_SOURCE_DIR})
   target_link_libraries(${test_name} ${component})
 
-  add_test(${component}/${test_name} ${CMAKE_COMMAND} -Dtest_dir=${component}
+  add_test(${component}/${test_name} ${CMAKE_COMMAND} -Dtest_component=${component}}
                                                       -Dtest_name=${test_name}
-                                                      -P ${CMAKE_CURRENT_LIST_DIR}/compile_test.cmake)
+                                                      -Dtest_binary_dir=}
+                                                      -P ${test_list_dir}/compile_test.cmake)
 endfunction()
 
 add_custom_target(tests_shared SOURCES

@@ -22,28 +22,27 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-message(STATUS "runtime test: test_dir=${test_dir}, test_name=${test_name}")
-execute_process(COMMAND "${CMAKE_COMMAND}" -E remove "${test_dir}/${test_name}${CMAKE_EXECUTABLE_SUFFIX}"
+message(STATUS "runtime test: test_component=${test_component}, test_name=${test_name}")
+execute_process(COMMAND "${CMAKE_COMMAND}" -E remove "${test_component}/${test_name}${CMAKE_EXECUTABLE_SUFFIX}"
                 RESULT_VARIABLE exit_code
                 ERROR_VARIABLE stderr)
 
 if(NOT 0 EQUAL ${exit_code})
-  message(FATAL_ERROR "Could not remove ${test_dir}/${test_name}${CMAKE_EXECUTABLE_SUFFIX}:\n${stderr}")
+  message(FATAL_ERROR "Could not remove ${test_component}/${test_name}${CMAKE_EXECUTABLE_SUFFIX}:\n${stderr}")
 endif()
 
-execute_process(COMMAND "${CMAKE_COMMAND}" --build .. --target "${test_name}"
+execute_process(COMMAND "${CMAKE_COMMAND}" --build ../.. --target "${test_name}"
                 RESULT_VARIABLE exit_code
                 ERROR_VARIABLE stderr
                 OUTPUT_QUIET)
 
 if(NOT 0 EQUAL ${exit_code})
-  message(FATAL_ERROR "Could not compile ${test_dir}/${test_name}${CMAKE_EXECUTABLE_SUFFIX}:\n${stderr}")
+  message(FATAL_ERROR "Could not compile ${test_component}/${test_name}${CMAKE_EXECUTABLE_SUFFIX}:\n${stderr}")
 endif()
 
-message(STATUS "${CMAKE_CURRENT_BINARY_DIR}")
-message(STATUS "Executing ${test_dir}/${test_name}${CMAKE_EXECUTABLE_SUFFIX}")
+message(STATUS "Executing ${test_component}/${test_name}${CMAKE_EXECUTABLE_SUFFIX}")
 
-execute_process(COMMAND "${test_dir}/${test_name}${CMAKE_EXECUTABLE_SUFFIX}"
+execute_process(COMMAND "./${test_name}${CMAKE_EXECUTABLE_SUFFIX}"
                 RESULT_VARIABLE exit_code
                 ERROR_VARIABLE stderr)
 
@@ -51,5 +50,5 @@ if(NOT 0 EQUAL ${exit_code})
   if(NOT stderr STREQUAL "")
     set(executable_output "\nTest executable output:\n${stderr}")
   endif()
-  message(FATAL_ERROR "Test execution failed: ${test_dir}/${test_name}${CMAKE_EXECUTABLE_SUFFIX}${executable_output}")
+  message(FATAL_ERROR "Test execution failed: ${test_component}/${test_name}${CMAKE_EXECUTABLE_SUFFIX}${executable_output}")
 endif()
