@@ -41,8 +41,7 @@ namespace skui
     void print_error(ArgTypes... args)
     {
       std::cerr << "Test failed: ";
-      using expand_variadic_pack = int[];
-      (void)expand_variadic_pack{0, ((std::cerr << args), void(), 0)... };
+      ((std::cerr << args), ...);
     }
 
     static int exit_code = EXIT_SUCCESS;
