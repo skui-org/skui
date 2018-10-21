@@ -24,6 +24,7 @@
 
 #include "system/environment.h++"
 
+#include "core/debug.h++"
 #include "core/utility.h++"
 
 #include <windows.h>
@@ -42,6 +43,8 @@ namespace skui::system
     buffer.resize(size);
     if(GetEnvironmentVariableW(wchar_name.c_str(), &buffer[0], size) == size-1) // on success, this does not include the terminating '\0'
     {
+      buffer.resize(size-1); // cut off the terminating null as std::string handles it by itself
+      skui::core::debug_print(core::convert_to_utf8(buffer), '\n');
       return core::convert_to_utf8(buffer);
     }
     return {};
