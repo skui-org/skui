@@ -95,6 +95,21 @@ namespace
       check(count == 1, "1 commands executed.");
       check(exit_code == 1, "proper exit code returned");
     }
+
+    void test_filter()
+    {
+      std::size_t number_of_commands = 0;
+      auto filter = [&number_of_commands](skui::core::command_queue::commands_type& commands) { number_of_commands = commands.size(); };
+      skui::core::command_queue::commands_type commands;
+      commands.push_back(std::make_unique<skui::core::command>([this] { f(); }));
+
+      skui::core::event_loop event_loop{filter, std::move(commands)};
+
+      event_loop.stop(); // puts event in queue to stop
+      event_loop.execute();
+
+      check(number_of_commands == 2, "filter called on commands in event_loop");
+    }
   };
 }
 
@@ -103,6 +118,7 @@ int main()
   fixture{}.test_execute_stop();
   fixture{}.test_execute_interrupt();
   fixture{}.test_construct_execute_stop();
+  fixture{}.test_filter();
 
   return skui::test::exit_code;
 }

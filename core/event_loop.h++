@@ -39,6 +39,9 @@ namespace skui::core
   class event_loop
   {
   public:
+    using filter_type = std::function<void(command_queue::commands_type&)>;
+    event_loop(filter_type filter,
+               command_queue::commands_type commands = {});
     event_loop(command_queue::commands_type commands = {});
 
     int execute();
@@ -47,6 +50,8 @@ namespace skui::core
 
     void stop(int return_code = 0);
     void interrupt(int return_code = 0);
+
+    filter_type filter;
 
   private:
     command_queue queue;

@@ -28,8 +28,13 @@
 
 namespace skui::core
 {
+  event_loop::event_loop(event_loop::filter_type filter, command_queue::commands_type commands)
+    : filter{std::move(filter)}
+    , queue{std::move(commands)}
+  {}
+
   event_loop::event_loop(command_queue::commands_type commands)
-    : queue{std::move(commands)}
+    : event_loop{{}, std::move(commands)}
   {}
 
   int event_loop::execute()
@@ -40,6 +45,9 @@ namespace skui::core
       queue.wait();
 
       auto commands = queue.take_commands();
+
+      if(filter)
+        filter(commands);
 
       while(!commands.empty() && !exit)
       {
