@@ -39,7 +39,7 @@ namespace skui::gui::native_visual
       if(!load_libopengl_success)
         core::debug_print("Failed to load opengl32.dll.\n");
 
-      return lib.resolve<void>(name);
+      return lib.resolve<void()>(name);
     }
   }
 

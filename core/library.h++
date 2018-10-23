@@ -47,10 +47,12 @@ namespace skui::core
     bool load(path filename = {});
     bool unload();
 
-    template<typename ReturnType, typename... ArgTypes>
-    auto resolve(const string& symbol_name) -> ReturnType(*)(ArgTypes...)
+    template<typename FunctionType>
+    auto resolve(const string& symbol_name)
     {
-      using function_type = ReturnType(*)(ArgTypes...);
+      static_assert(std::is_function_v<FunctionType>);
+      using function_type = std::add_pointer_t<FunctionType>;
+
       return function_type(resolve_symbol(symbol_name));
     }
 

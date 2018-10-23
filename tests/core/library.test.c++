@@ -35,11 +35,11 @@ int main()
 
   require(library.load(), "library loaded correctly");
 
-  auto func = library.resolve<const char*>("library_function");
+  auto func = library.resolve<const char*()>("library_function");
   require(func != nullptr, "function name resolved");
   check(func() == skui::core::string("test string"), "function call returns correct value");
 
-  auto func_arg = library.resolve<int, int>("library_function_int");
+  auto func_arg = library.resolve<int(int)>("library_function_int");
   require(func_arg != nullptr, "function name with arg resolved");
   check(func_arg(2) == 4, "function call returns correct value");
 

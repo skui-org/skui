@@ -65,7 +65,7 @@ namespace skui::graphics::opengl
     {
       for(std::size_t i = 0; i<function_pointers.size(); ++i)
       {
-        function_pointers[i] = libgl.resolve<void>(opengl::name[i]);
+        function_pointers[i] = libgl.resolve<void()>(opengl::name[i]);
         if(function_pointers[i] != nullptr)
         {
           core::debug_print("succesfully loaded ", opengl::name[i]);
