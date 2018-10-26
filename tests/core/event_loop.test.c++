@@ -66,9 +66,9 @@ namespace
       std::mutex mutex;
       std::unique_lock lock{mutex};
       std::condition_variable condition;
-      bool ready = false;
+      std::atomic<bool> ready = false;
       event_loop.push(std::make_unique<skui::core::command>([&condition, &lock, &ready]
-                                                            { condition.wait(lock, [&ready] { return ready; }); }));
+                                                            { condition.wait(lock, [&ready] { return ready.load(); }); }));
       event_loop.push(std::make_unique<skui::core::command>([this] { f(); }));
       event_loop.interrupt(1);
       ready = true;
