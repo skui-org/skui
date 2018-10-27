@@ -36,7 +36,7 @@ namespace skui::gui::native_visual
 
       libgl.load();
 
-      return libgl.resolve<void>(name);
+      return libgl.resolve<void()>(name);
     }
   }
   cgl::cgl() = default;
