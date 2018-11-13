@@ -97,6 +97,7 @@ add_custom_target(tests_shared SOURCES
                  )
 
 add_subdirectory(core)
+add_subdirectory(css)
 add_subdirectory(graphics)
 add_subdirectory(gui)
 add_subdirectory(system)

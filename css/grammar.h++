@@ -1,0 +1,79 @@
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright © 2018 Ruben Van Boxem
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ **/
+
+/*
+ * css::grammar
+ * Rules are based on description at https://www.w3schools.com/css/css_syntax.asp
+ */
+
+#ifndef SKUI_CSS_GRAMMAR_H
+#define SKUI_CSS_GRAMMAR_H
+
+#include "css/declaration_block.h++"
+#include "css/property.h++"
+#include "css/rule_set.h++"
+
+#include "css/grammar/align_content.h++"
+#include "css/grammar/align_items.h++"
+#include "css/grammar/align_self.h++"
+#include "css/grammar/background.h++"
+
+#include "css/grammar/make_property.h++"
+
+#include <boost/spirit/home/x3.hpp>
+
+#include <unordered_map>
+
+namespace skui::css::grammar
+{
+  namespace x3 = boost::spirit::x3;
+  using namespace x3;
+
+  const auto declaration = make_property("align-content", align_content, &css::declaration_block::align_content)
+                         | make_property("align-items", align_items, &css::declaration_block::align_items)
+                         | make_property("align-self", align_self, &css::declaration_block::align_self)
+                      // | make_property("all", all, &css::declaration_block::all)
+                      // | make_property("animation", animation, &css::declaration_block::animation)
+                      // | make_property("animation-delay", animation_delay, &css::declaration_block::animation_delay)
+                      // | make_property("animation-direction", animation_direction, &css::declaration_block::animation_direction)
+                      // | make_property("animation-duration", animation_duration, &css::declaration_block::animation_duration)
+                      // | make_property("animation-fill-mode", animation_fill_mode, &css::declaration_block::animation_fill_mode)
+                      // | make_property("animation-iteration-count", animation_iteration_count, &css::declaration_block::animation_iteration_count)
+                      // | make_property("animation-name", animation_name, &css::declaration_block::animation_name)
+                      // | make_property("animation-play-state", animation_play_state, &css::declaration_block::animation_play_state)
+                      // | make_property("animation-timing_function", animation_timing_function, &css::declaration_block::animation_timing_function)
+                      // | make_property("backface-visibility", backface-visibility, &css::declaration_block::backface-visibility)
+                         | background
+                         | make_sub_property("background-color", background_color, &css::declaration_block::background, &css::background::color)
+                         | make_sub_property("background-image", background_image, &css::declaration_block::background, &css::background::image)
+                         | make_sub_property("background-position", background_position, &css::declaration_block::background, &css::background::position)
+                         | make_sub_property("background-size", background_size, &css::declaration_block::background, &css::background::size)
+                         | make_sub_property("background-repeat", background_repeat, &css::declaration_block::background, &css::background::repeat)
+                         ;
+
+  const auto declaration_block = rule<struct declaration_block, css::declaration_block>{"declaration_block"}
+                               = '{' >> +declaration >> '}';
+}
+
+#endif
