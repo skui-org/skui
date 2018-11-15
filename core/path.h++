@@ -33,19 +33,12 @@
 #include <algorithm>
 #include <iterator>
 
-#if defined(__MINGW32__) || defined(__APPLE__)
-#include <boost/filesystem.hpp>
-#else
 #include <experimental/filesystem>
-#endif
 
 namespace skui::core
 {
-#if defined(__MINGW32__) || defined(__APPLE__)
-  namespace fs = boost::filesystem;
-#else
   namespace fs = std::experimental::filesystem;
-#endif
+
   using path = fs::path;
 
   inline path operator+(const path& left, const path& right)

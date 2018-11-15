@@ -36,6 +36,7 @@ option(SKUI_USE_SYSTEM_LIBPNG "Use system libpng" OFF)
 option(SKUI_USE_SYSTEM_GIFLIB "Use system giflib" OFF)
 option(SKUI_USE_SYSTEM_LIBJPEG_TURBO "Use system libjpeg-turbo" OFF)
 option(SKUI_USE_SYSTEM_SKIA "Use system Skia library" OFF)
+option(SKUI_USE_SYSTEM_BOOST "Use system Boost library" OFF)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS OFF)

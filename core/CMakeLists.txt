@@ -22,7 +22,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-# Common source files
 set(core_src
     application.h++ application.c++
     bitflag.h++
@@ -70,12 +69,6 @@ if(NOT UNIX)
   endif()
 endif()
 
-# Missing C++17 features
-if(MINGW OR APPLE)
-  find_package(Boost COMPONENTS regex system filesystem REQUIRED)
-endif()
-
-# The library itself
 add_library(core
             ${core_src}
             ${traits_src}
@@ -84,16 +77,9 @@ target_include_directories(core PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>)
 target_compile_definitions(core PUBLIC $<$<CONFIG:Debug>:SKUI_DEBUG>
                                        $<$<PLATFORM_ID:Windows>:NOMINMAX>)
 target_link_libraries(core PUBLIC $<$<PLATFORM_ID:Linux>:-pthread>
-                                  $<$<AND:$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Intel>>,$<NOT:$<PLATFORM_ID:Windows>>>:-lstdc++fs>
-                                  $<$<AND:$<AND:$<CXX_COMPILER_ID:Clang>,$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,7>>,$<NOT:$<PLATFORM_ID:Windows>>>:-lc++fs>
-                                  $<$<AND:$<AND:$<CXX_COMPILER_ID:Clang>,$<VERSION_LESS:$<CXX_COMPILER_VERSION>,7>>,$<NOT:$<PLATFORM_ID:Windows>>>:-lc++experimental>
-                                  $<$<AND:$<CXX_COMPILER_ID:Clang>,$<PLATFORM_ID:Darwin>>:-lc++fs>
+                                  $<$<CXX_COMPILER_ID:GNU>:-lstdc++fs>
+                                  $<$<AND:$<PLATFORM_ID:Windows>,$<AND:$<CXX_COMPILER_ID:Clang>,$<NOT:$<STREQUAL:"x${CMAKE_CXX_SIMULATE_ID}","xMSVC">>>>:-lstdc++fs>
+                                  $<$<AND:$<NOT:$<PLATFORM_ID:Windows>>,$<AND:$<CXX_COMPILER_ID:Clang>,$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,7>>>:-lc++fs>
+                                  $<$<AND:$<NOT:$<PLATFORM_ID:Windows>>,$<AND:$<CXX_COMPILER_ID:Clang>,$<VERSION_LESS:$<CXX_COMPILER_VERSION>,7>>>:-lc++experimental>
+                                  $<$<AND:$<PLATFORM_ID:Darwin>,$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>>:-lc++fs>
                                   $<$<NOT:$<PLATFORM_ID:Windows>>:-ldl>)
-
-if(APPLE OR MINGW)
-  # Using imported targets here will, on Linux add an -isystem to the MinGW system include directory, messing up all libstdc++ #include_next's
-  #  target_link_libraries(core PUBLIC Boost::filesystem)
-  target_include_directories(core SYSTEM PUBLIC ${Boost_INCLUDE_DIRS})
-  target_link_libraries(core PUBLIC ${Boost_LIBRARIES})
-endif()
-

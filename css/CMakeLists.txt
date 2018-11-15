@@ -22,8 +22,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-
-find_package(Boost 1.66 REQUIRED)
 set(css_src
     declaration_block.h++
     length.h++
@@ -62,5 +60,5 @@ source_group(grammar FILES ${grammar_src})
 source_group(properties FILES ${properties_src})
 
 add_library(css ${css_src} ${grammar_src} ${properties_src} ${misc})
-target_link_libraries(css PUBLIC core graphics Boost::boost)
+target_link_libraries(css PUBLIC core graphics boost)
 target_compile_definitions(css PUBLIC $<$<CONFIG:Debug>:BOOST_SPIRIT_X3_DEBUG=1>)
