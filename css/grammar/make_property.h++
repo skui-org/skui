@@ -33,24 +33,24 @@ namespace skui::css::grammar
 
   //struct tracking_tag {};
 
-  auto make_property = [](const auto& property, const auto& value, auto member)
-                       {
-                         const auto setter = [member](auto& context)
-                         {
-                           //get<tracking_tag>(context).get().insert(std::addressof(_val(context).*member));
-                           _val(context).*member = _attr(context);
-                         };
-                         return lexeme[property] >> ':' >> value[setter] >> ';';
-                       };
+  inline auto make_property = [](const auto& property, const auto& value, auto member)
+  {
+    const auto setter = [member](auto& context)
+    {
+      //get<tracking_tag>(context).get().insert(std::addressof(_val(context).*member));
+      _val(context).*member = _attr(context);
+    };
+    return lexeme[property] >> ':' >> value[setter] >> ';';
+  };
 
-  auto make_sub_property = [](const auto& property, const auto& value, auto member, auto submember)
-                           {
-                             const auto setter = [member, submember](auto& context)
-                             {
-                               (_val(context).*member).*submember = _attr(context);
-                             };
-                             return lexeme[property] >> ':' >> value[setter] >> ';';
-                           };
+  inline auto make_sub_property = [](const auto& property, const auto& value, auto member, auto submember)
+  {
+    const auto setter = [member, submember](auto& context)
+    {
+      (_val(context).*member).*submember = _attr(context);
+    };
+    return lexeme[property] >> ':' >> value[setter] >> ';';
+  };
 }
 
 #endif
