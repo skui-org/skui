@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  **/
 
-#include "test.h++"
+#include "css/test_rule.h++"
 
 #include <core/debug.h++>
 #include <core/string.h++>
@@ -34,30 +34,7 @@
 
 namespace
 {
-  using skui::test::check;
   using skui::core::string;
-
-  template<typename Rule>
-  void test_rule_success(const Rule& rule,
-                         const string& input,
-                         const typename Rule::attribute_type& expected_value)
-  {
-    using boost::spirit::x3::phrase_parse;
-    using boost::spirit::x3::space;
-
-    typename Rule::attribute_type result;
-    auto first = input.begin();
-    auto last = input.end();
-    bool success = phrase_parse(first, last,
-                                rule,
-                                space,
-                                result);
-
-    const string rule_name = rule.name;
-    check(success, "Rule " + rule_name + " parsed input succesfully");
-    check(first == last, "Rule " + rule_name + " matched complete input");
-    check(result == expected_value, "Rule " + rule_name + " matched expected result");
-  }
 
   const string property_input = "align-content";
   const string declaration_input = "align-content: center;";
@@ -66,16 +43,18 @@ namespace
 
 int main()
 {
+  using skui::test::check_rule_success;
+
   skui::css::declaration_block declaration_block;
   declaration_block.align_content = skui::css::align_content::center;
   declaration_block.align_items = skui::css::align_items::stretch;
-  test_rule_success(skui::css::grammar::declaration_block,
-                    declaration_block_input,
-                    declaration_block);
-  //test_rule_success(skui::css::grammar::property, property_input, skui::css::property::align_content, "property");
-  //test_rule_success(skui::css::grammar::declaration, declaration_input, std::make_pair(skui::css::property::align_content, skui::core::string("center")));
-  //test_rule_success(skui::css::grammar::declaration_block, declaration_block_input,
-  //                  std::unordered_map<skui::css::property, skui::css::grammar::value_type>{{skui::css::property::align_content, skui::css::align_content::center},
-  //                                                                                          {skui::css::property::align_items, skui::css::align_items::stretch}});
+  check_rule_success(skui::css::grammar::declaration_block,
+                     declaration_block_input,
+                     declaration_block);
+  //check_rule_success(skui::css::grammar::property, property_input, skui::css::property::align_content, "property");
+  //check_rule_success(skui::css::grammar::declaration, declaration_input, std::make_pair(skui::css::property::align_content, skui::core::string("center")));
+  //check_rule_success(skui::css::grammar::declaration_block, declaration_block_input,
+  //                   std::unordered_map<skui::css::property, skui::css::grammar::value_type>{{skui::css::property::align_content, skui::css::align_content::center},
+  //                                                                                           {skui::css::property::align_items, skui::css::align_items::stretch}});
   return skui::test::exit_code;
 }

@@ -89,6 +89,7 @@ endfunction()
 add_custom_target(tests_shared SOURCES
                   test.h++
                   core/property_tests.h++
+                  css/test_rule.h++
                   graphics/composite_value_tests.h++
                   gui/mock_canvas.h++
                   gui/mock_element.h++
