@@ -50,6 +50,7 @@ set(grammar_src
     grammar/align_items.h++ grammar/align_items.c++
     grammar/align_self.h++ grammar/align_self.c++
     grammar/background.h++ grammar/background.c++
+    grammar/color.h++ grammar/color.c++
     grammar/make_property.h++
    )
 set(misc
