@@ -32,8 +32,8 @@
 #include <core/application.h++>
 #include <core/debug.h++>
 
+#include <graphics/raster_context.h++>
 #include <graphics/skia_gl_context.h++>
-#include <graphics/skia_raster_context.h++>
 
 #include <memory>
 #include <vector>
@@ -201,7 +201,7 @@ namespace skui::gui
       if(!raster_visual)
         core::debug_print("In case of non-OpenGL, the visual must be a raster visual");
 
-      graphics_context = std::make_unique<graphics::skia_raster_context>(raster_visual->pixels());
+      graphics_context = std::make_unique<graphics::raster_context>(raster_visual->pixels());
     }
 
     render_loop.execute();

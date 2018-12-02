@@ -22,32 +22,28 @@
  * THE SOFTWARE.
  **/
 
-#ifndef SKUI_GRAPHICS_SKIA_CONTEXT_H
-#define SKUI_GRAPHICS_SKIA_CONTEXT_H
+#include "graphics/raster_context.h++"
 
-#include "context.h++"
+#include "graphics/skia_raster_canvas.h++"
 
-#include "size.h++"
+#include <core/debug.h++>
 
-#include <memory>
-#include <vector>
+#include <thread>
 
 namespace skui::graphics
 {
-  class canvas;
+  skui::graphics::raster_context::raster_context(std::vector<std::uint32_t>& pixels)
+    : context{}
+    , pixels{pixels}
+  {}
 
-  class skia_raster_context : public context
+  raster_context::~raster_context() = default;
+
+  std::unique_ptr<canvas> raster_context::create_canvas(const pixel_size& size,
+                                                        canvas_flags flags) const
   {
-  public:
-    skia_raster_context(std::vector<std::uint32_t>& pixels);
-    ~skia_raster_context() override;
+    pixels.resize(size.width*size.height);
 
-    std::unique_ptr<canvas> create_canvas(const pixel_size& size,
-                                          canvas_flags flags) const override;
-
-  private:
-    std::vector<std::uint32_t>& pixels;
-  };
+    return std::make_unique<skia_raster_canvas>(pixels, size, flags);
+  }
 }
-
-#endif

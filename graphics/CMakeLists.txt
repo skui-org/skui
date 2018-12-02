@@ -32,6 +32,7 @@ set(graphics_src
     drawable.h++ drawable.c++
     pixel.h++
     position.h++
+    raster_context.h++ raster_context.c++
     scalar.h++
     scene.h++ scene.c++
     shape.h++ shape.c++
@@ -40,7 +41,6 @@ set(graphics_src
     skia_gl_canvas.h++ skia_gl_canvas.c++
     skia_gl_context.h++ skia_gl_context.c++
     skia_gradient.h++ skia_gradient.c++
-    skia_raster_context.h++ skia_raster_context.c++
     skia_raster_canvas.h++ skia_raster_canvas.c++
     skia_utility.h++ skia_utility.c++
     swizzle.h++ swizzle.c++
