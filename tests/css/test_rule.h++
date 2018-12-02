@@ -50,9 +50,9 @@ namespace skui::test
                                 result);
 
     const string rule_name = rule.name;
-    check(success, "Rule " + rule_name + " parsed input succesfully");
-    check(first == last, "Rule " + rule_name + " matched complete input");
-    check(result == expected_value, "Rule " + rule_name + " matched expected result");
+    check(success, "Rule " + rule_name + " parsed input succesfully; " + input);
+    check(first == last, "Rule " + rule_name + " matched complete input: " + input);
+    check(result == expected_value, "Rule " + rule_name + " matched expected result for input: " + input);
   }
 
   template<typename Rule>
