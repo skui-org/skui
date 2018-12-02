@@ -60,16 +60,17 @@ namespace skui::core
     std::stringstream stream;
 #else
     auto& stream = std::cerr;
+    core::ostream_format_keeper guard(stream);
 #endif
     const auto now = system_clock::now();
     const auto ms = duration_cast<milliseconds>(now.time_since_epoch()) % 1000;
     const auto time = system_clock::to_time_t(now);
     const auto utc_time = std::gmtime(&time);
 
-    core::ostream_format_keeper guard(stream);
     stream << std::put_time(utc_time, "%FT%T.")
            << std::setprecision(4) << std::setfill('0') << std::setw(3) << ms.count()
            << std::put_time(utc_time, "%z: ");
+    stream << std::boolalpha;
     ((stream << args), ...);
 
 #ifdef _WIN32
