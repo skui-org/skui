@@ -57,6 +57,56 @@ namespace skui::css
       , alpha{static_cast<std::uint8_t>(argb)}
     {}
 
+    static constexpr color hsla(std::uint8_t hue,
+                                float saturation,
+                                float lightness,
+                                std::uint8_t alpha)
+    {
+      {
+        const float huef = hue/255.f;
+        float rgb[3]{0};
+        if(saturation < std::numeric_limits<float>::min())
+          rgb[0] = rgb[1] = rgb[2] = lightness;
+        else if(lightness < std::numeric_limits<float>::min())
+          rgb[0] = rgb[1] = rgb[2] = 0;
+        else
+        {
+          const float q = lightness < 0.5f ? lightness * (1.0f + saturation)
+                                           : lightness + saturation - lightness * saturation;
+          const float p = 2.0f * lightness - q;
+          float t[] = {huef + 2.0f, huef, huef - 2.0f};
+
+          for(int i=0; i<3; ++i)
+          {
+            if(t[i] < 0.0f)
+              t[i] += 6.0f;
+            else if(t[i] > 6.0f)
+              t[i] -= 6.0f;
+
+            if(t[i] < 1.0f)
+              rgb[i] = p + (q - p) * t[i];
+            else if(t[i] < 3.0f)
+              rgb[i] = q;
+            else if(t[i] < 4.0f)
+              rgb[i] = p + (q - p) * (4.0f - t[i]);
+            else
+              rgb[i] = p;
+          }
+        }
+        return color{std::uint32_t(static_cast<int>(rgb[0]*255) << 24
+                                 | static_cast<int>(rgb[1]*255) << 16
+                                 | static_cast<int>(rgb[2]*255) << 8
+                                 | alpha)};
+      }
+    }
+
+    static constexpr color hsl(std::uint8_t hue,
+                               float saturation,
+                               float lightness)
+    {
+      return hsla(hue, saturation, lightness, 255);
+    }
+
     explicit constexpr operator std::uint32_t() const
     {
       return static_cast<std::uint32_t>(red << 24 | green << 16 | blue << 8 | alpha);
@@ -67,6 +117,7 @@ namespace skui::css
     std::uint8_t blue;
     std::uint8_t alpha;
   };
+
 
   constexpr bool operator==(const color& left, const color& right)
   {
