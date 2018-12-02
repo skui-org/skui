@@ -52,6 +52,8 @@ set(grammar_src
     grammar/background.h++ grammar/background.c++
     grammar/color.h++ grammar/color.c++
     grammar/make_property.h++
+    grammar/semantic_checks.h++
+    grammar/semantic_math.h++
    )
 set(misc
     units.md
