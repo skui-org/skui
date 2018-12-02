@@ -49,7 +49,7 @@ namespace skui::core
   {
     template<typename... ArgTypes>
     class signal_base : public tracker
-        , public trackable
+                      , public trackable
     {
       using mutex_type = std::mutex;
       using mutex_lock = const std::lock_guard<mutex_type>;

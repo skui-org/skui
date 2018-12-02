@@ -38,7 +38,7 @@ namespace skui::graphics::style
   struct line
   {
     scalar thickness = 0;
-    graphics::color color = graphics::colors::transparent;
+    graphics::color color = colors::transparent;
 
   };
 }
