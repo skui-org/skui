@@ -40,7 +40,7 @@ namespace skui::css::grammar
 {
   using namespace boost::spirit::x3;
 
-  const auto background_color = rule<struct background_color, graphics::color>{"background-color"}
+  const auto background_color = rule<struct background_color, css::color>{"background-color"}
                               = eoi;
   const auto background_image = rule<struct background_image_, css::background_image>{"background-image"}
                               = eoi;
