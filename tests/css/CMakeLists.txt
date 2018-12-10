@@ -25,5 +25,7 @@
 
 runtime_test(css color)
 runtime_test(css grammar/color)
+runtime_test(css grammar/numeric)
 runtime_test(css grammar/semantic_checks)
+runtime_test(css grammar/semantic_math)
 runtime_test(css grammar)
