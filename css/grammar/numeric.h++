@@ -28,6 +28,8 @@
 #include "css/grammar/semantic_checks.h++"
 #include "css/grammar/semantic_math.h++"
 
+#include <core/debug.h++>
+
 #include <boost/spirit/home/x3.hpp>
 
 #include <cmath>
@@ -63,7 +65,6 @@ namespace skui::css::grammar
 
   constexpr auto multiply_by_255 = [](auto& context)
   {
-    core::debug_print("multiplying ", _val(context), " by 255.\n");
     multiply_by(255, context);
   };
   constexpr auto multiply_by_17 = [](auto& context) { multiply_by(17, context); };
@@ -76,15 +77,15 @@ namespace skui::css::grammar
   const auto normalized_percentage = rule<struct normalized_percentage, float>{"normalized_percentage"}
                                    = percentage[ensure_normalized];
 
-  const auto percentage_as_uint8 = rule<struct percentage_as_uint, float, true>{"percentage as uint8"}
-                                 = percentage[clamp<1>][multiply_by_255];
-  const auto percentage_or_uint8 = rule<struct percentage_or_uint8, std::uint8_t, true>{"percentage or uint8"}
-                                = percentage_as_uint8
+  const auto percentage_clamped = rule<struct percentage_as_uint, float>{"percentage clamped"}
+                                 = percentage[clamp<1>];
+  const auto percentage_or_uint8 = rule<struct percentage_or_uint8, std::uint8_t>{"percentage or uint8"}
+                                = percentage_clamped[multiply_by_255]
                                 | ufloat[clamp<255>]
                                 ;
   const auto percentage_or_normalized = rule<struct percentage_or_normalized, float, true>{"percentage or normalized"}
                                       = percentage[clamp<1>]
-                                      | float_[clamp_and_normalize<1>]
+                                      | ufloat[clamp_and_normalize<1>]
                                       ;
   const auto degrees_normalized = rule<struct degrees_normalized, float>{"degrees [0,360] normalized to [0,1]"}
                                 = ufloat[clamp_and_normalize<360>];
