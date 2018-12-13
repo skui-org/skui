@@ -31,6 +31,7 @@
 
 #include <core/utility.h++>
 
+#include <cmath>
 #include <cstdint>
 
 namespace skui::css
@@ -41,15 +42,6 @@ namespace skui::css
     color()
       : color{0,0,0,0}
     {}
-    explicit constexpr color(std::uint8_t red,
-                             std::uint8_t green,
-                             std::uint8_t blue,
-                             std::uint8_t alpha = 255)
-      : red{red}
-      , green{green}
-      , blue{blue}
-      , alpha{alpha}
-    {}
     explicit constexpr color(std::uint32_t argb)
       : red{static_cast<std::uint8_t>(argb >> 24)}
       , green{static_cast<std::uint8_t>(argb >> 16)}
@@ -57,54 +49,67 @@ namespace skui::css
       , alpha{static_cast<std::uint8_t>(argb)}
     {}
 
-    static constexpr color hsla(std::uint8_t hue,
-                                float saturation,
-                                float lightness,
+    static constexpr color rgba(std::uint8_t red,
+                                std::uint8_t green,
+                                std::uint8_t blue,
                                 std::uint8_t alpha)
     {
-      {
-        const float huef = hue/255.f;
-        float rgb[3]{0};
-        if(saturation < std::numeric_limits<float>::min())
-          rgb[0] = rgb[1] = rgb[2] = lightness;
-        else if(lightness < std::numeric_limits<float>::min())
-          rgb[0] = rgb[1] = rgb[2] = 0;
-        else
-        {
-          const float q = lightness < 0.5f ? lightness * (1.0f + saturation)
-                                           : lightness + saturation - lightness * saturation;
-          const float p = 2.0f * lightness - q;
-          float t[] = {huef + 2.0f, huef, huef - 2.0f};
-
-          for(int i=0; i<3; ++i)
-          {
-            if(t[i] < 0.0f)
-              t[i] += 6.0f;
-            else if(t[i] > 6.0f)
-              t[i] -= 6.0f;
-
-            if(t[i] < 1.0f)
-              rgb[i] = p + (q - p) * t[i];
-            else if(t[i] < 3.0f)
-              rgb[i] = q;
-            else if(t[i] < 4.0f)
-              rgb[i] = p + (q - p) * (4.0f - t[i]);
-            else
-              rgb[i] = p;
-          }
-        }
-        return color{std::uint32_t(static_cast<int>(rgb[0]*255) << 24
-                                 | static_cast<int>(rgb[1]*255) << 16
-                                 | static_cast<int>(rgb[2]*255) << 8
-                                 | alpha)};
-      }
+      return color{red, green, blue, alpha};
     }
 
-    static constexpr color hsl(std::uint8_t hue,
-                               float saturation,
-                               float lightness)
+    static constexpr color rgb(std::uint8_t red,
+                                std::uint8_t green,
+                                std::uint8_t blue)
     {
-      return hsla(hue, saturation, lightness, 255);
+      return color{red, green, blue, 255};
+    }
+
+    static color hsla(float hue,
+                      float saturation,
+                      float lightness,
+                      float alpha)
+    {
+      color result{0, 0, 0, std::uint8_t(std::round(alpha*255))};
+      if(saturation < std::numeric_limits<float>::epsilon())
+      {
+         result.red   = std::uint8_t(std::round(lightness * 255.f));
+         result.green = std::uint8_t(std::round(lightness * 255.f));
+         result.blue  = std::uint8_t(std::round(lightness * 255.f));
+      }
+      else
+      {
+         float var_2 = lightness < 0.5f ? lightness * (1.f + saturation)
+                                        : lightness + saturation - saturation*lightness;
+
+         float var_1 = 2 * lightness - var_2;
+
+         constexpr auto hue_to_rgb = [](float v1, float v2, float h)
+         {
+           if(h < 0)
+             h += 1.f;
+           else if(h > 1)
+             h -= 1;
+           if(6.f*h < 1.f)
+             return v1 + (v2-v1)*6.f*h;
+           if(2.f*h < 1.f)
+             return v2;
+           if(3.f*h < 2.f)
+             return v1 + (v2-v1)*((2.f/3.f) - h)*6;
+
+           return v1;
+         };
+         result.red = std::uint8_t(std::round(255.f * hue_to_rgb( var_1, var_2, hue + 1.f/3.f)));
+         result.green = std::uint8_t(std::round(255.f * hue_to_rgb( var_1, var_2, hue)));
+         result.blue = std::uint8_t(std::round(255.f * hue_to_rgb( var_1, var_2, hue - 1.f/3.f)));
+      }
+      return result;
+    }
+
+    static color hsl(float hue,
+                     float saturation,
+                     float lightness)
+    {
+      return hsla(hue, saturation, lightness, 1.f);
     }
 
     explicit constexpr operator std::uint32_t() const
@@ -116,6 +121,17 @@ namespace skui::css
     std::uint8_t green;
     std::uint8_t blue;
     std::uint8_t alpha;
+
+  private:
+    explicit constexpr color(std::uint8_t red,
+                             std::uint8_t green,
+                             std::uint8_t blue,
+                             std::uint8_t alpha)
+      : red{red}
+      , green{green}
+      , blue{blue}
+      , alpha{alpha}
+    {}
   };
 
 
@@ -131,15 +147,15 @@ namespace skui::css
   constexpr color operator+(const color& left, const color& right)
   {
     const auto alpha = left.alpha + right.alpha*(255-left.alpha);
-    return color{static_cast<std::uint8_t>((left.alpha*left.red + right.alpha*right.red*(255-left.alpha))/alpha),
-                 static_cast<std::uint8_t>((left.alpha*left.green + right.alpha*right.green*(255-left.alpha))/alpha),
-                 static_cast<std::uint8_t>((left.alpha*left.blue + right.alpha*right.blue*(255-left.alpha))/alpha),
-                 static_cast<std::uint8_t>(alpha)};
+    return color::rgba(static_cast<std::uint8_t>((left.alpha*left.red + right.alpha*right.red*(255-left.alpha))/alpha),
+                       static_cast<std::uint8_t>((left.alpha*left.green + right.alpha*right.green*(255-left.alpha))/alpha),
+                       static_cast<std::uint8_t>((left.alpha*left.blue + right.alpha*right.blue*(255-left.alpha))/alpha),
+                       static_cast<std::uint8_t>(alpha));
   }
 
   constexpr color semi_transparent(const color& color)
   {
-    return css::color{ color.red, color.green, color.blue, static_cast<std::uint8_t>(color.alpha / 2)};
+    return css::color::rgba(color.red, color.green, color.blue, color.alpha / 2);
   }
 
   inline std::ostream& operator<<(std::ostream& os, const color& color)
@@ -151,7 +167,7 @@ namespace skui::css
 
   namespace colors
   {
-    static constexpr color transparent {0, 0, 0, 0};
+    static constexpr color transparent             {0x00000000};
 
     static constexpr color alice_blue              {0xF0F8FFFF};
     static constexpr color antique_white           {0xFAEBD7FF};

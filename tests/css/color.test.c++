@@ -43,7 +43,7 @@ namespace
       check(c.alpha == 0xee, "alpha set correctly from uint32_t for " + std::to_string(static_cast<std::uint32_t>(c)));
     }
     {
-      skui::css::color c(0xcc, 0xaa, 0xff, 0xee);
+      auto c = skui::css::color::rgba(0xcc, 0xaa, 0xff, 0xee);
 
       check(c.red == 0xcc, "red set correctly for " + std::to_string(static_cast<std::uint32_t>(c)));
       check(c.green == 0xaa, "green set correctly for " + std::to_string(static_cast<std::uint32_t>(c)));
@@ -54,7 +54,7 @@ namespace
 
   void test_from_hsl()
   {
-    check(skui::css::color::hsl(0, 0, 0) == skui::css::colors::white, "hsl(0,0,0) gives white");
+    check(skui::css::color::hsl(0, 0, 0) == skui::css::colors::black, "hsl(0,0,0) gives black");
     check(skui::css::color::hsl(0, 0, 1) == skui::css::colors::white, "hsl(0,0,1) gives white");
     check(skui::css::color::hsl(0, 1, 0) == skui::css::colors::black, "hsl(0,1,0) gives black");
     check(skui::css::color::hsl(0, 1, 1) == skui::css::colors::white, "hsl(0,1,1) gives white");
@@ -64,7 +64,7 @@ namespace
     check(skui::css::color::hsl(1, 1, 1) == skui::css::colors::white, "hsl(1,1,1) gives white");
 
     check(skui::css::color::hsl(0, 0, .5) == skui::css::colors::gray, "hsl(0,0,.5) gives gray");
-    check(skui::css::color::hsl(180, 1, .5) == skui::css::colors::aqua, "hsl(180, 1, .5) gives aqua");
+    check(skui::css::color::hsl(.5, 1, .5) == skui::css::colors::aqua, "hsl(180, 1, .5) gives aqua");
   }
 }
 int main()
