@@ -27,6 +27,9 @@
 
 #include "css/color.h++"
 
+#include "css/grammar/semantic_factory.h++"
+#include "css/grammar/numeric.h++"
+
 #include "css/property/align_self.h++"
 
 #include <boost/fusion/include/adapt_struct.hpp>
@@ -41,32 +44,49 @@ namespace skui::css::grammar
 {
   using namespace boost::spirit::x3;
 
+  // Named colors
   struct named_color_table : public symbols<css::color>
   {
     named_color_table();
   } const named_color;
 
-  constexpr auto uint8_hex = uint_parser<std::uint8_t, 16, 2, 2>{};
-  const auto multiply_by_17 = [](auto& context)
-                              { _val(context) = static_cast<std::remove_reference_t<decltype(_val(context))>>(17*_attr(context)); };
+  // Hex specification
   const auto shorthand_hex = rule<struct _, std::uint8_t>{"shorthand hex digit"}
                            = uint_parser<std::uint8_t, 16, 1, 1>{}[multiply_by_17];
 
-  const auto color_eight_hex = rule<struct eight_hex, css::color>{"8 digit hex color (extension)"}
+  const auto color_hex_alpha = rule<struct hex_alpha, css::color>{"8 digit hex color (extension)"}
                              = uint8_hex >> uint8_hex >> uint8_hex >> uint8_hex;
-  const auto color_six_hex = rule<struct six_hex, css::color>{"6 digit hex color"}
-                           = uint8_hex >> uint8_hex >> uint8_hex >> attr(255);
-  const auto color_four_hex = rule<struct four_hex, css::color>{"4 digit hex color"}
-                            = shorthand_hex >> shorthand_hex >> shorthand_hex >> shorthand_hex;
-  const auto color_three_hex = rule<struct three_hex, css::color>{"3 digit hex color"}
+  const auto color_hex = rule<struct hex, css::color>{"6 digit hex color"}
+                       = uint8_hex >> uint8_hex >> uint8_hex >> attr(255);
+  const auto color_short_hex_alpha = rule<struct short_hex_alpha, css::color>{"4 digit hex color"}
+                                   = shorthand_hex >> shorthand_hex >> shorthand_hex >> shorthand_hex;
+  const auto color_short_hex = rule<struct short_hex, css::color>{"3 digit hex color"}
                              = shorthand_hex >> shorthand_hex >> shorthand_hex >> attr(255);
+
+  template<typename T>
+  inline auto as = [](auto&& p) { return rule<struct _, T>{} = as_parser(p); };
+
+  // functional specifications
+  const auto color_rgb = rule<struct rgb, css::color, true>{"rgb"}
+                       = lit("rgb") >> '(' >> percentage_or_uint8 >> ',' >> percentage_or_uint8 >> ',' >> percentage_or_uint8 >> attr(255) >> ')';
+  const auto color_rgba = rule<struct rgba, css::color, true>{"rgba"}
+                        = lit("rgba") >> '(' >> percentage_or_uint8 >> ',' >> percentage_or_uint8 >> ',' >> percentage_or_uint8 >> ',' >> as<std::uint8_t>(percentage_or_normalized[multiply_by_255]) >> ')';
+  const auto color_hsl = rule<struct hsl, css::color>{"hsl"}
+                       = (lit("hsl") >> '(' >> degrees_normalized >> ',' >> percentage_or_normalized >> ',' >> percentage_or_normalized >> ')')[factory(&css::color::hsl)];
+  const auto color_hsla = rule<struct hsla, css::color>{"hsla"}
+                        = (lit("hsla") >> '(' >> degrees_normalized >> ',' >> percentage_or_normalized >> ',' >> percentage_or_normalized >> ',' >> percentage_or_normalized >> ')')[factory(&css::color::hsla)];
 
   const auto color = rule<struct color_, css::color>{"color"}
                    = named_color
-                   | lexeme['#' >> (  color_eight_hex
-                                    | color_six_hex
-                                    | color_four_hex
-                                    | color_three_hex)]
+                   | lexeme['#' >> ( color_hex_alpha
+                                   | color_hex
+                                   | color_short_hex_alpha
+                                   | color_short_hex
+                                   )]
+                   | color_rgb
+                   | color_rgba
+                   | color_hsl
+                   | color_hsla
                    ;
 }
 
