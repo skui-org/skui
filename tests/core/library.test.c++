@@ -31,7 +31,7 @@ int main()
   using skui::test::check;
   using skui::test::require;
 
-  skui::core::library library("library_lib");
+  skui::core::library library("test.core.library_lib");
 
   require(library.load(), "library loaded correctly");
 
