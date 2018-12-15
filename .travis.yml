@@ -30,7 +30,7 @@ matrix:
             - libxcb-util0-dev
             - libxcb-image0-dev
       before_install:
-        - . ./ci/setup_cmake.sh 3.8.2 Linux
+        - . ./ci/setup_cmake.sh 3.13.2 Linux
         - . ./ci/setup_ninja.sh 1.8.2 linux
     - os: linux
       compiler: gcc-8
@@ -49,7 +49,7 @@ matrix:
             - libxcb-util0-dev
             - libxcb-image0-dev
       before_install:
-        - . ./ci/setup_cmake.sh 3.8.2 Linux
+        - . ./ci/setup_cmake.sh 3.13.2 Linux
         - . ./ci/setup_ninja.sh 1.8.2 linux
     - os: linux
       compiler: clang-5.0
@@ -68,7 +68,7 @@ matrix:
           sources:
             - llvm-toolchain-trusty-5.0
       before_install:
-        - . ./ci/setup_cmake.sh 3.8.2 Linux
+        - . ./ci/setup_cmake.sh 3.13.2 Linux
         - . ./ci/setup_ninja.sh 1.8.2 linux
         - . ./ci/setup_libcxx.sh 5.0.2 /usr
     - os: linux
@@ -89,7 +89,7 @@ matrix:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-trusty-6.0
       before_install:
-        - . ./ci/setup_cmake.sh 3.8.2 Linux
+        - . ./ci/setup_cmake.sh 3.13.2 Linux
         - . ./ci/setup_ninja.sh 1.8.2 linux
         - . ./ci/setup_libcxx.sh 6.0.0 /usr
     - os: linux
@@ -110,7 +110,7 @@ matrix:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-trusty-7
       before_install:
-        - . ./ci/setup_cmake.sh 3.8.2 Linux
+        - . ./ci/setup_cmake.sh 3.13.2 Linux
         - . ./ci/setup_ninja.sh 1.8.2 linux
         - . ./ci/setup_libcxx.sh 7.0.0 /usr
     - os: osx
@@ -121,7 +121,7 @@ matrix:
         - CI_CXX_FLAGS='-Wno-unused-command-line-argument -nostdinc++ -isystem /Users/travis/libc++/include/c++/v1'
         - CI_LDFLAGS='-L /Users/travis/libc++/lib'
       before_install:
-        - . ./ci/setup_cmake.sh 3.8.2 Darwin
+        - . ./ci/setup_cmake.sh 3.13.2 Darwin
         - . ./ci/setup_ninja.sh 1.8.2 mac
         - . ./ci/setup_libcxx.sh 7.0.0 /Users/travis/libc++
     - os: osx
@@ -132,7 +132,7 @@ matrix:
         - CI_CXX_FLAGS='-Wno-unused-command-line-argument -nostdinc++ -isystem /Users/travis/libc++/include/c++/v1'
         - CI_LDFLAGS='-L /Users/travis/libc++/lib'
       before_install:
-        - . ./ci/setup_cmake.sh 3.8.2 Darwin
+        - . ./ci/setup_cmake.sh 3.13.2 Darwin
         - . ./ci/setup_ninja.sh 1.8.2 mac
         - . ./ci/setup_libcxx.sh 7.0.0 /Users/travis/libc++
 

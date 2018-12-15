@@ -57,11 +57,11 @@ shallow_clone: true
 install:
  - if defined CLANG_URL appveyor DownloadFile %CLANG_URL% -FileName llvm-installer.exe
  - if defined CLANG_URL START /WAIT llvm-installer.exe /S /D=C:\"Program Files\LLVM"
- - set CMAKE_URL="https://cmake.org/files/v3.12/cmake-3.12.0-win64-x64.zip"
+ - set CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v3.13.2/cmake-3.13.2-win64-x64.zip"
  - appveyor DownloadFile %CMAKE_URL% -FileName cmake.zip
  - mkdir C:\cmake
  - 7z x cmake.zip -oC:\cmake > nul
- - set PATH=C:\cmake\cmake-3.12.0-win64-x64\bin;%PATH%
+ - set PATH=C:\cmake\cmake-3.13.2-win64-x64\bin;%PATH%
 
 clone_script:
   - git clone -q --branch=%APPVEYOR_REPO_BRANCH% https://github.com/skui-org/skui.git %APPVEYOR_BUILD_FOLDER%
