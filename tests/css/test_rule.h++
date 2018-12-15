@@ -24,6 +24,7 @@
 
 #include "test.h++"
 
+#include <core/debug.h++>
 #include <core/string.h++>
 
 #include <boost/spirit/home/x3.hpp>
@@ -53,6 +54,10 @@ namespace skui::test
     check(success, "Rule " + rule_name + " parsed input succesfully; " + input);
     check(first == last, "Rule " + rule_name + " matched complete input: " + input);
     check(result == expected_value, "Rule " + rule_name + " matched expected result for input: " + input);
+    if constexpr(std::is_same_v<typename Rule::attribute_type, unsigned char>)
+      core::debug_print("result: ", +result, '\n');
+    else
+      core::debug_print("result: ", result, '\n');
   }
 
   template<typename Rule>
@@ -72,6 +77,10 @@ namespace skui::test
 
     const string rule_name = rule.name;
     bool failure = !success || first != last;
-    check(failure, "Rule " + rule_name + " parsed input unsuccesfully");
+    check(failure, "Rule " + rule_name + " parsed input unsuccesfully: " + input);
+    if constexpr(std::is_same_v<typename Rule::attribute_type, unsigned char>)
+      core::debug_print("result: ", +result, '\n');
+    else
+      core::debug_print("result: ", result, '\n');
   }
 }
