@@ -5,11 +5,13 @@ environment:
     GENERATOR: Visual Studio 15 2017
     VCVARS: C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat
     VCVARSARG: x86
+    BUILD_ARGS: /m:4
   - TOOLCHAIN: "Visual Studio 2017 x64"
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     GENERATOR: Visual Studio 15 2017 Win64
     VCVARS: C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat
     VCVARSARG: amd64
+    BUILD_ARGS: /m:4
 
   # Mingw-w64
   - TOOLCHAIN: "MinGW-w64 GCC"
@@ -64,10 +66,10 @@ install:
  - set PATH=C:\cmake\cmake-3.13.2-win64-x64\bin;%PATH%
 
 clone_script:
-  - git clone -q --branch=%APPVEYOR_REPO_BRANCH% https://github.com/skui-org/skui.git %APPVEYOR_BUILD_FOLDER%
+  - git clone -q --depth=1 --branch=%APPVEYOR_REPO_BRANCH% https://github.com/skui-org/skui.git %APPVEYOR_BUILD_FOLDER%
   - cd %APPVEYOR_BUILD_FOLDER%
   - git checkout -qf %APPVEYOR_REPO_COMMIT%
-  - git submodule -q update --init --recursive
+  - git submodule -q update --init --recursive --depth=1
 
 before_build:
   - mkdir build
@@ -80,7 +82,7 @@ before_build:
   - cmake %CMAKE_ARGS% -G"%GENERATOR%" -DCMAKE_BUILD_TYPE="%CONFIGURATION%" .. || (echo CMAKEERROR && type CMakeFiles\CMakeError.log && echo CMAKEOUTPUT && type CMakeFiles\CMakeOutput.log && exit 1)
 
 build_script:
-  - cmake --build . --config %CONFIGURATION%
+  - cmake --build . --config %CONFIGURATION% -- %BUILD_ARGS%
 
 test_script:
   - ctest --output-on-failure -C %CONFIGURATION%
