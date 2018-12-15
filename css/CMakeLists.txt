@@ -54,6 +54,7 @@ set(grammar_src
     grammar/make_property.h++
     grammar/numeric.h++
     grammar/semantic_checks.h++
+    grammar/semantic_factory.h++
     grammar/semantic_math.h++
    )
 set(misc
