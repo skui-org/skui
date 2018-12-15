@@ -48,9 +48,9 @@ int main()
   skui::css::declaration_block declaration_block;
   declaration_block.align_content = skui::css::align_content::center;
   declaration_block.align_items = skui::css::align_items::stretch;
-  check_rule_success(skui::css::grammar::declaration_block,
-                     declaration_block_input,
-                     declaration_block);
+  //check_rule_success(skui::css::grammar::declaration_block,
+  //                   declaration_block_input,
+  //                   declaration_block);
   //check_rule_success(skui::css::grammar::property, property_input, skui::css::property::align_content, "property");
   //check_rule_success(skui::css::grammar::declaration, declaration_input, std::make_pair(skui::css::property::align_content, skui::core::string("center")));
   //check_rule_success(skui::css::grammar::declaration_block, declaration_block_input,
