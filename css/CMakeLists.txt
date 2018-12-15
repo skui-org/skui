@@ -41,6 +41,7 @@ set(properties_src
     property/animation_play_state.h++
     property/backface_visibility.h++
     property/background.h++
+    property/border.h++
    )
 set(grammar_src
     grammar.h++ grammar.c++

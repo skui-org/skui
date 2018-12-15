@@ -22,84 +22,69 @@
  * THE SOFTWARE.
  **/
 
-#ifndef SKUI_CSS_PROPERTY_BACKGROUND_H
-#define SKUI_CSS_PROPERTY_BACKGROUND_H
+#ifndef SKUI_CSS_PROPERTY_BORDER_H
+#define SKUI_CSS_PROPERTY_BORDER_H
 
-#include <graphics/color.h++>
-#include <graphics/size.h++>
+#include "css/color.h++"
+#include "css/length.h++"
 
+#include <optional>
 #include <variant>
 
 namespace skui::css
 {
-  enum class background_size_enum
+  enum class border_width_enum
   {
-    auto_,
-    cover,
-    contain,
+    medium,
+    thin,
+    thick,
     initial,
     inherit
   };
 
-  enum class background_repeat
+  enum class border_style
   {
-    repeat,
-    repeat_x,
-    repeat_y,
-    no_repeat,
-    space,
-    round,
+    none,
+    hidden,
+    dotted,
+    dashed,
+    solid,
+    double_,
+    groove,
+    ridge,
+    inset,
+    outset,
     initial,
     inherit
   };
 
-  struct background_gradient{};
-  using background_image = std::variant<core::string, background_gradient>;
+  using border_width = std::variant<border_width_enum, length>;
 
-  struct background_position{};
-
-  using background_size = std::variant<background_size_enum, graphics::pixel_size>;
-
-  enum class background_origin
+  struct border
   {
-    padding_box,
-    border_box,
-    content_box,
-    initial,
-    inherit
-  };
+    struct side
+    {
+      border_width width{};
+      border_style style{};
+      css::color color{};
+    };
 
-  enum class background_clip
-  {
-    border_box,
-    padding_box,
-    content_box,
-    initial,
-    inherit
-  };
+    struct horizontal_side : side
+    {
+      length left_radius{};
+      length right_radius{};
+    };
 
-  enum class background_attachment
-  {
-    scroll,
-    fixed,
-    local,
-    initial,
-    inherit
-  };
+    struct vertical_side : side
+    {
+      length top_radius{};
+      length bottom_radius{};
+    };
 
-  struct background
-  {
-
-    struct gradient{};
-
-    css::color color;
-    background_image image;
-    background_position position;
-    background_size size;
-    background_repeat repeat;
-    background_origin origin;
-    background_clip clip;
-    background_attachment attachment;
+    horizontal_side top{};
+    horizontal_side bottom{};
+    vertical_side left{};
+    vertical_side right{};
   };
 }
 
