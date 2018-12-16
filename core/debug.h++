@@ -71,6 +71,7 @@ namespace skui::core
            << std::setprecision(4) << std::setfill('0') << std::setw(3) << ms.count()
            << std::put_time(utc_time, "%z: ");
     stream << std::boolalpha;
+    stream << std::setprecision(15);
     ((stream << args), ...);
 
 #ifdef _WIN32
