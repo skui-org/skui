@@ -38,6 +38,7 @@
 #include "css/grammar/align_items.h++"
 #include "css/grammar/align_self.h++"
 #include "css/grammar/background.h++"
+#include "css/grammar/backface_visibility.h++"
 
 #include "css/grammar/make_property.h++"
 
@@ -63,7 +64,7 @@ namespace skui::css::grammar
                       // | make_property("animation-name", animation_name, &css::declaration_block::animation_name)
                       // | make_property("animation-play-state", animation_play_state, &css::declaration_block::animation_play_state)
                       // | make_property("animation-timing_function", animation_timing_function, &css::declaration_block::animation_timing_function)
-                      // | make_property("backface-visibility", backface-visibility, &css::declaration_block::backface-visibility)
+                         | make_property("backface-visibility", backface_visibility, &css::declaration_block::backface_visibility)
                          | background
                          | make_sub_property("background-color", background_color, &css::declaration_block::background, &css::background::color)
                          | make_sub_property("background-image", background_image, &css::declaration_block::background, &css::background::image)

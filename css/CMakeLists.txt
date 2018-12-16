@@ -51,6 +51,7 @@ set(grammar_src
     grammar/align_items.h++ grammar/align_items.c++
     grammar/align_self.h++ grammar/align_self.c++
     grammar/background.h++ grammar/background.c++
+    grammar/backface_visibility.h++ grammar/backface_visibility.c++
     grammar/color.h++ grammar/color.c++
     grammar/make_property.h++
     grammar/numeric.h++
