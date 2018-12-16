@@ -42,7 +42,7 @@ namespace skui::test
     using boost::spirit::x3::phrase_parse;
     using boost::spirit::x3::space;
 
-    typename Rule::attribute_type result;
+    typename Rule::attribute_type result{};
     auto first = input.begin();
     auto last = input.end();
     bool success = phrase_parse(first, last,
@@ -67,7 +67,7 @@ namespace skui::test
     using boost::spirit::x3::phrase_parse;
     using boost::spirit::x3::space;
 
-    typename Rule::attribute_type result;
+    typename Rule::attribute_type result{};
     auto first = input.begin();
     auto last = input.end();
     bool success = phrase_parse(first, last,
