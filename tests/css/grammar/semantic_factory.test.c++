@@ -50,12 +50,19 @@ namespace
           && other.b == b;
     }
 
+    friend std::ostream& operator<<(std::ostream&, const two_ints&);
+
   private:
     two_ints(int a, int b) : b{b}, a{a} {}
 
     int b;
     int a;
   };
+
+  std::ostream& operator<<(std::ostream& os, const two_ints& ints)
+  {
+    return os << ints.a << ", " << ints.b;
+  }
 
   const auto two_ints_rule = rule<struct two_ints_rule, two_ints>{"two ints"}
                            = (int_ >> int_)[factory(&two_ints::create)];
