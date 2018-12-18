@@ -43,6 +43,8 @@ set(core_src
     value_ptr.h++
    )
 set(traits_src
+    traits/are_convertible.h++
+    traits/are_same.h++
     traits/arity.h++
     traits/number_of_bits.h++
    )
