@@ -24,5 +24,5 @@
 #
 
 runtime_test(gui layout)
-runtime_test(gui layout/row)
 runtime_test(gui layout/column)
+runtime_test(gui layout/row)

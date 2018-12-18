@@ -23,7 +23,7 @@
 # THE SOFTWARE.
 #
 
+compile_test(graphics color)
 runtime_test(graphics position)
 runtime_test(graphics size)
 runtime_test(graphics swizzle)
-compile_test(graphics color)
