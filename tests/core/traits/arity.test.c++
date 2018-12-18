@@ -28,17 +28,17 @@
 
 namespace
 {
-  void f() {}
-  void g(int) {}
+  [[maybe_unused]] void f() {}
+  [[maybe_unused]] void g(int) {}
   //void h(...) {}
 
-  const auto l = []{};
-  const auto l_int = [](int){};
+  [[maybe_unused]] const auto l = []{};
+  [[maybe_unused]] const auto l_int = [](int){};
 
   struct mock
   {
-    void f();
-    void g(int);
+    [[maybe_unused]] void f();
+    [[maybe_unused]] void g(int);
   };
 }
 
