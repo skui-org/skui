@@ -34,9 +34,7 @@ namespace skui::css
     none,
     forwards,
     backwards,
-    both,
-    initial,
-    inherit
+    both
   };
 }
 #endif

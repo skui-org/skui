@@ -25,13 +25,15 @@
 #ifndef SKUI_CSS_GRAMMAR_ALIGN_ITEMS_H
 #define SKUI_CSS_GRAMMAR_ALIGN_ITEMS_H
 
+#include "css/grammar/property_symbols_table.h++"
+
 #include "css/property/align_items.h++"
 
 #include <boost/spirit/home/x3/string/symbols.hpp>
 
 namespace skui::css::grammar
 {
-  struct align_items_table : public boost::spirit::x3::symbols<css::align_items>
+  struct align_items_table : property_symbols_table<css::align_items>
   {
     align_items_table();
   } const align_items;

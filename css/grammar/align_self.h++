@@ -25,15 +25,15 @@
 #ifndef SKUI_CSS_GRAMMAR_ALIGN_SELF_H
 #define SKUI_CSS_GRAMMAR_ALIGN_SELF_H
 
+#include "css/grammar/property_symbols_table.h++"
+
 #include "css/property/align_self.h++"
 
 #include <boost/spirit/home/x3/string/symbols.hpp>
 
 namespace skui::css::grammar
 {
-  using boost::spirit::x3::symbols;
-
-  struct align_self_table : public symbols<css::align_self>
+  struct align_self_table : property_symbols_table<css::align_self>
   {
     align_self_table();
   } const align_self;

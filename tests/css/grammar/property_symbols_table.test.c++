@@ -22,19 +22,48 @@
  * THE SOFTWARE.
  **/
 
-#include "css/grammar/property.h++"
+#include "css/test_rule.h++"
 
-namespace skui::css::grammar
+#include <css/grammar/property_symbols_table.h++>
+
+namespace
 {
-  property_table::property_table()
+  using skui::core::string;
+
+  enum class Enum
   {
-    using css::property_enum;
-    add("align-content", property_enum::align_content)
-       ("align-items",   property_enum::align_items)
-       ("align-self",    property_enum::align_self)
-       //("all",           property::all)
-       //("animation", property::animation)
-       //("animation-delay")
-       ;
-  }
+    one,
+    two
+  };
+
+  const string inherit = "inherit";
+  const string initial = "initial";
+  const string one = "one";
+  const string two = "two";
+
+  struct enum_table : skui::css::grammar::property_symbols_table<Enum>
+  {
+    enum_table()
+    {
+      add("one", Enum::one)
+         ("two", Enum::two)
+         ;
+    }
+  } const enum_parser;
+
+  using namespace boost::spirit::x3;
+  const auto enum_rule = rule<struct enum_rule, skui::css::property<Enum>>{"enum rule"}
+                       = enum_parser;
+}
+
+int main()
+{
+  using skui::test::check_rule_success;
+
+  check_rule_success(enum_rule, inherit, skui::css::inherit);
+  check_rule_success(enum_rule, initial, skui::css::initial);
+  check_rule_success(enum_rule, one, Enum::one);
+  check_rule_success(enum_rule, two, Enum::two);
+
+  return skui::test::exit_code;
 }

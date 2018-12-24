@@ -32,9 +32,7 @@ namespace skui::css
   enum class animation_play_state : std::uint8_t
   {
     running,
-    paused,
-    initial,
-    inherit
+    paused
   };
 }
 

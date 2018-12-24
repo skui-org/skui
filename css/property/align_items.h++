@@ -35,9 +35,7 @@ namespace skui::css
     center,
     flex_start,
     flex_end,
-    baseline,
-    initial,
-    inherit
+    baseline
   };
 }
 

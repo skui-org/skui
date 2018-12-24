@@ -25,17 +25,13 @@
 #ifndef SKUI_CSS_GRAMMAR_BACKFACE_VISIBILITY_H
 #define SKUI_CSS_GRAMMAR_BACKFACE_VISIBILITY_H
 
-#include "css/grammar/make_property.h++"
+#include "css/grammar/property_symbols_table.h++"
 
 #include "css/property/backface_visibility.h++"
 
-#include <boost/spirit/home/x3.hpp>
-
 namespace skui::css::grammar
 {
-  using boost::spirit::x3::symbols;
-
-  struct backface_visibility_table : symbols<css::backface_visibility>
+  struct backface_visibility_table : property_symbols_table<css::backface_visibility>
   {
     backface_visibility_table();
   } const backface_visibility;

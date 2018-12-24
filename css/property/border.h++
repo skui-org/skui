@@ -37,9 +37,7 @@ namespace skui::css
   {
     medium,
     thin,
-    thick,
-    initial,
-    inherit
+    thick
   };
 
   enum class border_style
@@ -53,9 +51,7 @@ namespace skui::css
     groove,
     ridge,
     inset,
-    outset,
-    initial,
-    inherit
+    outset
   };
 
   using border_width = std::variant<border_width_enum, length>;

@@ -36,6 +36,6 @@ namespace skui::css::grammar
        ("flex-end", align_content::flex_end)
        ("space-between", align_content::space_between)
        ("space-around", align_content::space_around)
-       ("initial", align_content::initial);
+       ;
   }
 }

@@ -25,6 +25,8 @@
 #ifndef SKUI_CSS_PROPERTY_BACKGROUND_H
 #define SKUI_CSS_PROPERTY_BACKGROUND_H
 
+#include "css/property.h++"
+
 #include <graphics/color.h++>
 #include <graphics/size.h++>
 
@@ -37,8 +39,6 @@ namespace skui::css
     auto_,
     cover,
     contain,
-    initial,
-    inherit
   };
 
   enum class background_repeat
@@ -49,8 +49,6 @@ namespace skui::css
     no_repeat,
     space,
     round,
-    initial,
-    inherit
   };
 
   struct background_gradient{};
@@ -65,8 +63,6 @@ namespace skui::css
     padding_box,
     border_box,
     content_box,
-    initial,
-    inherit
   };
 
   enum class background_clip
@@ -74,8 +70,6 @@ namespace skui::css
     border_box,
     padding_box,
     content_box,
-    initial,
-    inherit
   };
 
   enum class background_attachment
@@ -83,23 +77,18 @@ namespace skui::css
     scroll,
     fixed,
     local,
-    initial,
-    inherit
   };
 
   struct background
   {
-
-    struct gradient{};
-
-    css::color color;
-    background_image image;
-    background_position position;
-    background_size size;
-    background_repeat repeat;
-    background_origin origin;
-    background_clip clip;
-    background_attachment attachment;
+    property<css::color> color;
+    property<background_image> image;
+    property<background_position> position;
+    property<background_size> size;
+    property<background_repeat> repeat;
+    property<background_origin> origin;
+    property<background_clip> clip;
+    property<background_attachment> attachment;
   };
 }
 

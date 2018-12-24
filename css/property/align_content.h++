@@ -36,9 +36,7 @@ namespace skui::css
     flex_start,
     flex_end,
     space_between,
-    space_around,
-    initial,
-    inherit
+    space_around
   };
 }
 

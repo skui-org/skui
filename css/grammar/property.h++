@@ -31,7 +31,7 @@
 
 namespace skui::css::grammar
 {
-  struct property_table : boost::spirit::x3::symbols<css::property>
+  struct property_table : boost::spirit::x3::symbols<css::property_enum>
   {
     property_table();
   } const property;

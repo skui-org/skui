@@ -32,9 +32,7 @@ namespace skui::css
   enum class backface_visibility : std::uint8_t
   {
     visible,
-    hidden,
-    initial,
-    inherit
+    hidden
   };
 }
 

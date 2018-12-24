@@ -35,7 +35,6 @@ namespace skui::css::grammar
        ("flex-start", align_self::flex_start)
        ("flex-end", align_self::flex_end)
        ("baseline", align_self::baseline)
-       ("initial", align_self::initial)
-       ("inherit", align_self::inherit);
+       ;
   }
 }

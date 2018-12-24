@@ -36,8 +36,7 @@ namespace skui::css::grammar
        ("no-repeat", background_repeat::no_repeat)
        ("space", background_repeat::space)
        ("round", background_repeat::round)
-       ("initial", background_repeat::initial)
-       ("inherit", background_repeat::inherit);
+       ;
   }
 
   background_origin_table::background_origin_table()
@@ -45,8 +44,7 @@ namespace skui::css::grammar
     add("padding-box", background_origin::padding_box)
        ("border-box", background_origin::border_box)
        ("content-box", background_origin::content_box)
-       ("initial", background_origin::initial)
-       ("inherit", background_origin::inherit);
+       ;
   }
 
   background_clip_table::background_clip_table()
@@ -54,8 +52,7 @@ namespace skui::css::grammar
     add("border-box", background_clip::border_box)
        ("padding-box", background_clip::padding_box)
        ("content-box", background_clip::content_box)
-       ("initial", background_clip::initial)
-       ("inherit", background_clip::inherit);
+       ;
   }
 
   background_attachment_table::background_attachment_table()
@@ -63,7 +60,6 @@ namespace skui::css::grammar
     add("scroll", background_attachment::scroll)
        ("fixed", background_attachment::fixed)
        ("local", background_attachment::local)
-       ("initial", background_attachment::initial)
-       ("inherit", background_attachment::inherit);
+       ;
   }
 }

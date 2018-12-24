@@ -34,9 +34,7 @@ namespace skui::css
     normal,
     reverse,
     alternate,
-    alternate_reverse,
-    initial,
-    inherit
+    alternate_reverse
   };
 }
 #endif

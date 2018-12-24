@@ -31,6 +31,7 @@
 #define SKUI_CSS_GRAMMAR_BACKGROUND_H
 
 #include "css/grammar/make_property.h++"
+#include "css/grammar/property_symbols_table.h++"
 
 #include "css/property/background.h++"
 
@@ -48,19 +49,19 @@ namespace skui::css::grammar
                                  = eoi;
   const auto background_size = rule<struct background_size_, css::background_size>{"background-size"}
                              = eoi;
-  struct background_repeat_table : symbols<css::background_repeat>
+  struct background_repeat_table : property_symbols_table<css::background_repeat>
   {
     background_repeat_table();
   } const background_repeat;
-  struct background_origin_table : symbols<css::background_origin>
+  struct background_origin_table : property_symbols_table<css::background_origin>
   {
     background_origin_table();
   } const background_origin;
-  struct background_clip_table : symbols<css::background_clip>
+  struct background_clip_table : property_symbols_table<css::background_clip>
   {
     background_clip_table();
   } const background_clip;
-  struct background_attachment_table : symbols<css::background_attachment>
+  struct background_attachment_table : property_symbols_table<css::background_attachment>
   {
     background_attachment_table();
   } const background_attachment;

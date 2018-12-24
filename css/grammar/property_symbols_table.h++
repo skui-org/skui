@@ -22,19 +22,27 @@
  * THE SOFTWARE.
  **/
 
-#include "css/grammar/property.h++"
+#ifndef SKUI_CSS_GRAMMAR_PROPERTY_SYMBOLS_TABLE_H
+#define SKUI_CSS_GRAMMAR_PROPERTY_SYMBOLS_TABLE_H
+
+#include "css/property.h++"
+
+#include <boost/spirit/home/x3.hpp>
 
 namespace skui::css::grammar
 {
-  property_table::property_table()
+  using boost::spirit::x3::symbols;
+
+  template<typename... ValueTypes>
+  struct property_symbols_table : symbols<property<ValueTypes...>>
   {
-    using css::property_enum;
-    add("align-content", property_enum::align_content)
-       ("align-items",   property_enum::align_items)
-       ("align-self",    property_enum::align_self)
-       //("all",           property::all)
-       //("animation", property::animation)
-       //("animation-delay")
-       ;
-  }
+    property_symbols_table()
+    {
+      this->add("initial", initial)
+               ("inherit", inherit)
+               ;
+    }
+  };
 }
+
+#endif

@@ -32,8 +32,6 @@ namespace skui::css::grammar
 
     add("visible", backface_visibility::visible)
        ("hidden", backface_visibility::hidden)
-       ("initial", backface_visibility::initial)
-       ("inherit", backface_visibility::inherit)
        ;
   }
 }

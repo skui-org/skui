@@ -33,9 +33,7 @@ namespace skui::css
 {
   enum class animation_iteration_count : std::uint64_t
   {
-    infinite = std::numeric_limits<std::uint64_t>::max(),
-    initial = 1,
-    inherit = infinite-1
+    infinite = std::numeric_limits<std::uint64_t>::max()
   };
 }
 

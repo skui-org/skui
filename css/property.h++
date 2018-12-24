@@ -31,10 +31,20 @@
 #define SKUI_CSS_PROPERTY_H
 
 #include <functional>
+#include <variant>
 
 namespace skui::css
 {
-  enum class property
+  inline struct inherit_t final {} inherit;
+  inline struct initial_t final {} initial;
+
+  constexpr bool operator==(const inherit_t&, const inherit_t&) { return true; }
+  constexpr bool operator==(const initial_t&, const initial_t&) { return true; }
+
+  template<typename... ValueTypes>
+  using property = std::variant<ValueTypes..., inherit_t, initial_t>;
+
+  enum class property_enum
   {
     align_content,
     align_items,
@@ -248,11 +258,12 @@ namespace skui::css
 namespace std
 {
   template<>
-  struct hash<skui::css::property>
+  struct hash<skui::css::property_enum>
   {
-    std::size_t operator()(skui::css::property property) const
+    std::size_t operator()(skui::css::property_enum property) const
     {
-      return static_cast<std::size_t>(property);
+      using enum_type = std::underlying_type_t<skui::css::property_enum>;
+      return std::hash<enum_type>{}(static_cast<enum_type>(property));
     }
   };
 }
