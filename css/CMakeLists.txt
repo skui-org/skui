@@ -55,6 +55,7 @@ set(grammar_src
     grammar/color.h++ grammar/color.c++
     grammar/make_property.h++
     grammar/numeric.h++
+    grammar/semantic/repeat_value.h++
     grammar/semantic_checks.h++
     grammar/semantic_factory.h++
     grammar/semantic_math.h++
