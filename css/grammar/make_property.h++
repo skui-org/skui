@@ -25,32 +25,28 @@
 #ifndef SKUI_CSS_GRAMMAR_MAKE_PROPERTY_H
 #define SKUI_CSS_GRAMMAR_MAKE_PROPERTY_H
 
-#include <boost/spirit/home/x3/directive/lexeme.hpp>
+#include "css/declaration_block.h++"
+
+#include <boost/spirit/home/x3.hpp>
 
 namespace skui::css::grammar
 {
   using boost::spirit::x3::lexeme;
+  using boost::spirit::x3::traits::move_to;
 
   //struct tracking_tag {};
 
-  inline auto make_property = [](const auto& property, const auto& value, auto member)
+  template<typename PropertyType, typename ValueType, typename... PointerToMemberType>
+  auto make_property(const PropertyType& property, const ValueType& value, PointerToMemberType... member)
   {
-    const auto setter = [member](auto& context)
+    const auto setter = [member...](auto& context)
     {
-      //get<tracking_tag>(context).get().insert(std::addressof(_val(context).*member));
-      _val(context).*member = _attr(context);
+      //get<tracking_tag>(context).get().insert(std::addressof(_val(context).* ... .* member));
+      move_to(_attr(context), (_val(context).* ... .* member));
     };
     return lexeme[property] >> ':' >> value[setter] >> ';';
-  };
+  }
 
-  inline auto make_sub_property = [](const auto& property, const auto& value, auto member, auto submember)
-  {
-    const auto setter = [member, submember](auto& context)
-    {
-      (_val(context).*member).*submember = _attr(context);
-    };
-    return lexeme[property] >> ':' >> value[setter] >> ';';
-  };
 }
 
 #endif
