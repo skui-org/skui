@@ -63,6 +63,7 @@ set(grammar_src
     grammar/semantic_checks.h++
     grammar/semantic_factory.h++
     grammar/semantic_math.h++
+    grammar/url.h++
    )
 set(misc
     units.md
