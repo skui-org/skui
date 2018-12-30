@@ -52,8 +52,8 @@ namespace skui::css::grammar
   } const named_color;
 
   // Hex specification
-  const auto shorthand_hex = rule<struct _, std::uint8_t>{"shorthand hex digit"}
-                           = uint_parser<std::uint8_t, 16, 1, 1>{}[multiply_by_17];
+  const auto shorthand_hex = rule<struct shorthand_hex, std::uint8_t>{"shorthand hex digit"}
+                          %= uint_parser<std::uint8_t, 16, 1, 1>{}[multiply{std::uint8_t{17}}];
 
   const auto color_hex_alpha = rule<struct hex_alpha, css::color>{"8 digit hex color (extension)"}
                              = uint8_hex >> uint8_hex >> uint8_hex >> uint8_hex;
@@ -65,10 +65,10 @@ namespace skui::css::grammar
                              = shorthand_hex >> shorthand_hex >> shorthand_hex >> attr(255);
 
   // functional specifications
-  const auto color_rgb = rule<struct rgb, css::color, true>{"rgb"}
-                       = lit("rgb") >> '(' >> percentage_or_uint8 >> ',' >> percentage_or_uint8 >> ',' >> percentage_or_uint8 >> attr(255) >> ')';
-  const auto color_rgba = rule<struct rgba, css::color, true>{"rgba"}
-                        = lit("rgba") >> '(' >> percentage_or_uint8 >> ',' >> percentage_or_uint8 >> ',' >> percentage_or_uint8 >> ',' >> as<std::uint8_t>(percentage_or_normalized[multiply_by_255]) >> ')';
+  const auto color_rgb = rule<struct rgb, css::color>{"rgb"}
+                      %= lit("rgb") >> '(' >> percentage_or_uint8 >> ',' >> percentage_or_uint8 >> ',' >> percentage_or_uint8 >> attr(255) >> ')';
+  const auto color_rgba = rule<struct rgba, css::color>{"rgba"}
+                       %= lit("rgba") >> '(' >> percentage_or_uint8 >> ',' >> percentage_or_uint8 >> ',' >> percentage_or_uint8 >> ',' >> as<float>(percentage_or_normalized[multiply{255.f}][round]) >> ')';
   const auto color_hsl = rule<struct hsl, css::color>{"hsl"}
                        = (lit("hsl") >> '(' >> degrees_normalized >> ',' >> percentage_or_normalized >> ',' >> percentage_or_normalized >> ')')[factory(&css::color::hsl)];
   const auto color_hsla = rule<struct hsla, css::color>{"hsla"}

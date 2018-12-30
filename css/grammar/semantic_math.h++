@@ -33,14 +33,60 @@ namespace skui::css::grammar
 {
   using namespace boost::spirit::x3;
 
-  template<typename T, typename ContextType>
-  void multiply_by(T multiplier, ContextType& context)
+  template<typename ValueType>
+  struct divide
   {
-    using value_type = std::remove_reference_t<decltype(_val(context))>;
-    using attribute_type = std::remove_reference_t<decltype(_attr(context))>;
+    constexpr divide(ValueType value) : divisor{value} {}
 
-    _val(context) = static_cast<value_type>(std::round(_attr(context) * attribute_type(multiplier)));
-  }
+    template<typename ContextType>
+    void operator()(ContextType& context) const
+    {
+      // triggers conversion warnings when multiplying integer types with sizeof(T) < sizeof(int)
+      using attribute_type = std::remove_reference_t<decltype(_attr(context))>;
+      _attr(context) = static_cast<attribute_type>(_attr(context) / divisor);
+    }
+
+  private:
+    const ValueType divisor;
+  };
+
+  template<typename ValueType>
+  struct multiply
+  {
+    constexpr multiply(ValueType value) : factor{value} {}
+
+    template<typename ContextType>
+    void operator()(ContextType& context) const
+    {
+      // triggers conversion warnings when multiplying integer types with sizeof(T) < sizeof(int)
+      using attribute_type = std::remove_reference_t<decltype(_attr(context))>;
+      _attr(context) = static_cast<attribute_type>(_attr(context) * factor);
+    }
+
+  private:
+    const ValueType factor;
+  };
+  template<typename ValueType>
+  struct clamp
+  {
+    constexpr clamp(ValueType max) : lower{0}, upper{max} {}
+    constexpr clamp(ValueType min, ValueType max) : lower{min}, upper{max} {}
+
+    template<typename ContextType>
+    void operator()(ContextType& context)
+    {
+      using attribute_type = std::remove_reference_t<decltype(_attr(context))>;
+      _attr(context) = std::clamp<attribute_type>(_attr(context), lower, upper);
+    }
+
+  private:
+    const ValueType lower;
+    const ValueType upper;
+  };
+  constexpr auto round = [](auto& context)
+  {
+    _attr(context) = std::round(_attr(context));
+  };
 }
 
 #endif

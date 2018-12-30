@@ -58,8 +58,8 @@ int main()
 {
   using skui::test::check_rule_success;
   using skui::test::check_rule_failure;
+
   using skui::css::grammar::color;
-  using skui::css::grammar::shorthand_hex;
 
   check_rule_success(color, named, skui::css::colors::magenta);
   check_rule_failure(color, named_incorrect);

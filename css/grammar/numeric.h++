@@ -25,6 +25,7 @@
 #ifndef SKUI_CSS_GRAMMAR_NUMERIC_H
 #define SKUI_CSS_GRAMMAR_NUMERIC_H
 
+#include "css/grammar/as.h++"
 #include "css/grammar/semantic_checks.h++"
 #include "css/grammar/semantic_math.h++"
 
@@ -39,22 +40,6 @@ namespace skui::css::grammar
   using namespace boost::spirit::x3;
 
   template<int max_value>
-  constexpr auto clamp = [](auto& context)
-  {
-    using value_type = std::remove_reference_t<decltype(_val(context))>;
-    using attribute_type = std::remove_reference_t<decltype(_attr(context))>;
-
-    _val(context) = value_type(std::clamp<attribute_type>(_attr(context), 0, max_value));
-  };
-  template<int max_value>
-  constexpr auto normalize = [](auto& context)
-  {
-    using value_type = std::remove_reference_t<decltype(_val(context))>;
-    using attribute_type = std::remove_reference_t<decltype(_attr(context))>;
-
-    _val(context) = value_type(_attr(context)/attribute_type(max_value));
-  };
-  template<int max_value>
   constexpr auto clamp_and_normalize = [](auto& context)
   {
     using value_type = std::remove_reference_t<decltype(_val(context))>;
@@ -63,32 +48,22 @@ namespace skui::css::grammar
     _val(context) = value_type(std::clamp<attribute_type>(_attr(context), 0, max_value)/attribute_type(max_value));
   };
 
-  constexpr auto multiply_by_255 = [](auto& context)
-  {
-    multiply_by(255, context);
-  };
-  constexpr auto multiply_by_17 = [](auto& context) { multiply_by(17, context); };
-
   constexpr auto uint8_hex = uint_parser<std::uint8_t, 16, 2, 2>{};
   const auto ufloat = real_parser<float, ureal_policies<float>>{};
 
   const auto percentage = rule<struct percentage, float>{"percentage"}
-                        = (float_ >> '%')[normalize<100>];
-  const auto normalized_percentage = rule<struct normalized_percentage, float>{"normalized_percentage"}
-                                   = percentage[ensure_normalized];
+                       %= (float_ >> '%')[divide{100.f}];
 
-  const auto percentage_clamped = rule<struct percentage_as_uint, float>{"percentage clamped"}
-                                 = percentage[clamp<1>];
   const auto percentage_or_uint8 = rule<struct percentage_or_uint8, std::uint8_t>{"percentage or uint8"}
-                                = percentage_clamped[multiply_by_255]
-                                | ufloat[clamp<255>]
-                                ;
-  const auto percentage_or_normalized = rule<struct percentage_or_normalized, float, true>{"percentage or normalized"}
-                                      = percentage[clamp<1>]
-                                      | ufloat[clamp_and_normalize<1>]
+                                %= as<float>(percentage[clamp{1.f}][multiply{255.f}][round])
+                                 | as<float>(ufloat[clamp{255.f}])
+                                 ;
+  const auto percentage_or_normalized = rule<struct percentage_or_normalized, float>{"percentage or normalized"}
+                                     %= percentage[clamp{1.f}]
+                                      | ufloat[clamp{1.f}]
                                       ;
   const auto degrees_normalized = rule<struct degrees_normalized, float>{"degrees [0,360] normalized to [0,1]"}
-                                = ufloat[clamp_and_normalize<360>];
+                               %= ufloat[clamp_and_normalize<360>];
 }
 
 #endif

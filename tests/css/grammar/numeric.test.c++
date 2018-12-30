@@ -102,28 +102,6 @@ int main()
   check_rule_success(percentage, percentage_higher, 1.12f);
   check_rule_success(percentage, percentage_negative, -.05f);
 
-  using skui::css::grammar::normalized_percentage;
-  check_rule_failure(normalized_percentage, positive);
-  check_rule_failure(normalized_percentage, negative);
-  check_rule_failure(normalized_percentage, decimal);
-  check_rule_failure(normalized_percentage, hex);
-  check_rule_failure(normalized_percentage, text);
-  check_rule_success(normalized_percentage, percentage_integral, .76f);
-  check_rule_success(normalized_percentage, percentage_decimal, .234f);
-  check_rule_failure(normalized_percentage, percentage_higher);
-  check_rule_failure(normalized_percentage, percentage_negative);
-
-  using skui::css::grammar::percentage_clamped;
-  check_rule_failure(percentage_clamped, positive);
-  check_rule_failure(percentage_clamped, negative);
-  check_rule_failure(percentage_clamped, decimal);
-  check_rule_failure(percentage_clamped, hex);
-  check_rule_failure(percentage_clamped, text);
-  check_rule_success(percentage_clamped, percentage_integral, 76.f/100);
-  check_rule_success(percentage_clamped, percentage_decimal, 23.4f/100);
-  check_rule_success(percentage_clamped, percentage_higher, 1);
-  check_rule_success(percentage_clamped, percentage_negative, 0);
-
   using skui::css::grammar::percentage_or_uint8;
   check_rule_success(percentage_or_uint8, positive, 123);
   check_rule_failure(percentage_or_uint8, negative);
