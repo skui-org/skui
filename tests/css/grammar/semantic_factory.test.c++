@@ -59,7 +59,7 @@ namespace
     int a;
   };
 
-  std::ostream& operator<<(std::ostream& os, const two_ints& ints)
+  inline std::ostream& operator<<(std::ostream& os, const two_ints& ints)
   {
     return os << ints.a << ", " << ints.b;
   }
