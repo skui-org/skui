@@ -67,15 +67,6 @@ namespace skui::css
     //css::animation_timing_function animation_timing_function{};
     css::backface_visibility backface_visibility{};
     css::background background{};
-    // background_attachment,
-    // background_blend_mode,
-    // background_clip,
-    // background_color,
-    // background_image,
-    // background_origin,
-    // background_position,
-    // background_repeat,
-    // background_size,
     css::border border{};
     // border_bottom,
     // border_bottom_color,
