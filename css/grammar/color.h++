@@ -27,6 +27,7 @@
 
 #include "css/color.h++"
 
+#include "css/grammar/as.h++"
 #include "css/grammar/semantic_factory.h++"
 #include "css/grammar/numeric.h++"
 
@@ -62,9 +63,6 @@ namespace skui::css::grammar
                                    = shorthand_hex >> shorthand_hex >> shorthand_hex >> shorthand_hex;
   const auto color_short_hex = rule<struct short_hex, css::color>{"3 digit hex color"}
                              = shorthand_hex >> shorthand_hex >> shorthand_hex >> attr(255);
-
-  template<typename T>
-  inline auto as = [](auto&& p) { return rule<struct _, T>{} = as_parser(p); };
 
   // functional specifications
   const auto color_rgb = rule<struct rgb, css::color, true>{"rgb"}

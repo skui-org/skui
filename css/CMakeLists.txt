@@ -45,6 +45,7 @@ set(properties_src
    )
 set(grammar_src
     grammar.h++ grammar.c++
+    grammar/as.h++
     grammar/declaration_block.h++
     grammar/property.h++ grammar/property.c++
     grammar/align_content.h++ grammar/align_content.c++
