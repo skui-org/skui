@@ -39,6 +39,7 @@
 #include "css/grammar/align_self.h++"
 #include "css/grammar/background.h++"
 #include "css/grammar/backface_visibility.h++"
+#include "css/grammar/color.h++"
 
 #include "css/grammar/make_property.h++"
 
@@ -65,12 +66,15 @@ namespace skui::css::grammar
                       // | make_property("animation-play-state", animation_play_state, &css::declaration_block::animation_play_state)
                       // | make_property("animation-timing_function", animation_timing_function, &css::declaration_block::animation_timing_function)
                          | make_property("backface-visibility", backface_visibility, &css::declaration_block::backface_visibility)
-                         | background
-                         | make_sub_property("background-color", background_color, &css::declaration_block::background, &css::background::color)
-                         | make_sub_property("background-image", background_image, &css::declaration_block::background, &css::background::image)
-                         | make_sub_property("background-position", background_position, &css::declaration_block::background, &css::background::position)
-                         | make_sub_property("background-size", background_size, &css::declaration_block::background, &css::background::size)
-                         | make_sub_property("background-repeat", background_repeat, &css::declaration_block::background, &css::background::repeat)
+                         | make_property("background", background, &css::declaration_block::background)
+                         | make_background_property("background-color", color, &css::background::color)
+                         | make_background_property("background-image", background_image, &css::background::image)
+                         | make_background_property("background-position", background_position, &css::background::position)
+                         | make_background_property("background-size", background_size, &css::background::size)
+                         | make_background_property("background-repeat", background_repeat, &css::background::repeat)
+                         | make_background_property("background-origin", background_origin, &css::background::origin)
+                         | make_background_property("background-clip", background_clip, &css::background::clip)
+                         | make_background_property("background-attachment", background_attachment, &css::background::attachment)
                          ;
 
   const auto declaration_block = rule<struct declaration_block, css::declaration_block>{"declaration_block"}

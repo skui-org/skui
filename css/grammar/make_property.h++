@@ -47,6 +47,11 @@ namespace skui::css::grammar
     return lexeme[property] >> ':' >> value[setter] >> ';';
   }
 
+  template<typename PropertyType, typename ValueType, typename... PointerToMemberType>
+  auto make_background_property(const PropertyType& property, const ValueType& value, PointerToMemberType... member)
+  {
+    return make_property(property, value, &css::declaration_block::background, member...);
+  }
 }
 
 #endif
