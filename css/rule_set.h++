@@ -30,17 +30,20 @@
 #ifndef SKUI_CSS_RULE_SET_H
 #define SKUI_CSS_RULE_SET_H
 
-#include <css/property.h++>
 #include "css/declaration_block.h++"
+#include "css/selector.h++"
 
 #include <core/string.h++>
 
-#include <any>
-#include <unordered_map>
+#include <utility>
+#include <vector>
 
 namespace skui::css
 {
-  using rule_set = std::unordered_map<core::string, std::unordered_map<property, std::any>>;
+  class rule_set
+  {
+    std::vector<std::pair<selector, declaration_block>> declaration_blocks;
+  };
 }
 
 #endif
