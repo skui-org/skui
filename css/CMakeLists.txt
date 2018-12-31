@@ -76,4 +76,3 @@ source_group(properties FILES ${properties_src})
 
 add_library(css ${css_src} ${grammar_src} ${properties_src} ${misc})
 target_link_libraries(css PUBLIC core boost)
-target_compile_definitions(css PUBLIC $<$<CONFIG:Debug>:BOOST_SPIRIT_X3_DEBUG=1>)
