@@ -32,7 +32,7 @@
 
 #include "css/property/animation_iteration_count.h++"
 #include "css/property/background.h++"
-#include "css/property/border.h++"
+//#include "css/property/border.h++"
 
 #include <core/string.h++>
 
@@ -66,7 +66,7 @@ namespace skui::css
     //css::animation_timing_function animation_timing_function{};
     css::property<css::backface_visibility> backface_visibility{};
     css::background background{};
-    css::border border{};
+    //css::border border{};
     // border_bottom,
     // border_bottom_color,
     // border_bottom_left_radius,
