@@ -26,15 +26,19 @@
 
 #include <css/grammar/property_symbols_table.h++>
 
+enum class Enum
+{
+  one,
+  two
+};
+std::ostream& operator<<(std::ostream& os, skui::css::property<Enum>)
+{
+  return os;
+}
+
 namespace
 {
   using skui::core::string;
-
-  enum class Enum
-  {
-    one,
-    two
-  };
 
   const string inherit = "inherit";
   const string initial = "initial";
