@@ -53,19 +53,18 @@ namespace skui::css
 
   struct declaration_block
   {
-
-    css::align_content align_content{};
-    css::align_items align_items{};
-    css::align_self align_self{};
-    milliseconds animation_delay{};
-    css::animation_direction animation_direction{};
-    milliseconds animation_duration{};
-    css::animation_fill_mode animation_fill_mode{};
-    css::animation_iteration_count animation_iteration_count{1};
-    core::string animation_name{};
-    css::animation_play_state animation_play_state{};
+    property<css::align_content> align_content{};
+    property<css::align_items> align_items{};
+    property<css::align_self> align_self{};
+    property<milliseconds> animation_delay{};
+    property<css::animation_direction> animation_direction{};
+    property<milliseconds> animation_duration{};
+    property<css::animation_fill_mode> animation_fill_mode{};
+    property<css::animation_iteration_count> animation_iteration_count{css::animation_iteration_count{1}};
+    property<core::string> animation_name{};
+    property<css::animation_play_state> animation_play_state{};
     //css::animation_timing_function animation_timing_function{};
-    css::backface_visibility backface_visibility{};
+    css::property<css::backface_visibility> backface_visibility{};
     css::background background{};
     css::border border{};
     // border_bottom,
