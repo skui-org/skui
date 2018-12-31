@@ -40,6 +40,7 @@
 #include "css/grammar/background.h++"
 #include "css/grammar/backface_visibility.h++"
 #include "css/grammar/color.h++"
+#include "css/grammar/x3_stdvariant.h++"
 
 #include "css/grammar/make_property.h++"
 
