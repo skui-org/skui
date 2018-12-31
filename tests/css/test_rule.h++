@@ -29,6 +29,18 @@
 
 #include <boost/spirit/home/x3.hpp>
 
+#include <vector>
+#include <type_traits>
+
+template<typename... Ts>
+struct is_vector : std::false_type {};
+
+template<typename... Ts>
+struct is_vector<std::vector<Ts...>> : std::true_type {};
+
+template<typename... Ts>
+constexpr bool is_vector_v = is_vector<Ts...>::value;
+
 namespace skui::test
 {
   using skui::test::check;
@@ -56,7 +68,7 @@ namespace skui::test
     check(result == expected_value, "Rule " + rule_name + " matched expected result for input: " + input);
     if constexpr(std::is_same_v<typename Rule::attribute_type, unsigned char>)
       core::debug_print("result: ", +result, '\n');
-    else
+    else if constexpr(!is_vector_v<typename Rule::attribute_type>)
       core::debug_print("result: ", result, '\n');
   }
 
