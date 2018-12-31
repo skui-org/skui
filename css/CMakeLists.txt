@@ -64,6 +64,7 @@ set(grammar_src
     grammar/semantic_factory.h++
     grammar/semantic_math.h++
     grammar/url.h++
+    grammar/x3_stdvariant.h++
    )
 set(misc
     units.md
