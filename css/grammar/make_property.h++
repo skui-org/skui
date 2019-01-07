@@ -36,13 +36,20 @@ namespace skui::css::grammar
 
   //struct tracking_tag {};
 
-  template<typename PropertyType, typename ValueType, typename... PointerToMemberType>
-  auto make_property(const PropertyType& property, const ValueType& value, PointerToMemberType... member)
+  template<typename Context, typename... PointerToMemberTypes>
+  auto& member_ref(Context& context, PointerToMemberTypes... member)
+  {
+    return (_val(context).* ... .* member);
+  }
+
+  template<typename PropertyType, typename ValueType, typename... PointerToMemberTypes>
+  auto make_property(const PropertyType& property, const ValueType& value, PointerToMemberTypes... member)
   {
     const auto setter = [member...](auto& context)
     {
       //get<tracking_tag>(context).get().insert(std::addressof(_val(context).* ... .* member));
-      move_to(_attr(context), (_val(context).* ... .* member));
+
+      move_to(_attr(context), member_ref(context, member...));
     };
     return lexeme[property] >> ':' >> value[setter] >> ';';
   }
