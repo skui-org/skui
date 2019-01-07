@@ -39,6 +39,10 @@ environment:
     PATH: C:\msys64\mingw64\bin;%PATH%
     CMAKE_ARGS: -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang
 
+matrix:
+  allow_failures:
+    - TOOLCHAIN: "MinGW-w64 Clang"
+
 configuration:
  - Debug
  - Release
