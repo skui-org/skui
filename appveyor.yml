@@ -19,6 +19,7 @@ environment:
     GENERATOR: Ninja
     PACMAN_PACKAGES: "mingw-w64-x86_64-{headers,crt,gcc,ninja}"
     PATH: C:\msys64\mingw64\bin;%PATH%
+    CMAKE_ARGS: -DGC_SECTIONS=OFF
 
   # Clang targeting MSVC
   - TOOLCHAIN: "Visual Studio 2017 Clang/LLVM 7.0.1"
