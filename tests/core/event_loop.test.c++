@@ -56,6 +56,27 @@ namespace
       check(exit_code == 1, "proper exit code returned");
     }
 
+    // This is only a baseline check, it cannot verify all scheduling possibilities
+    //thread 1                     | thread 2
+    // start                       |
+    //                             | start
+    // lock mutex                  |
+    // ready = false               |
+    // *add command1*              |
+    // unlock mutex/wait condition |
+    //                             | [command1] lock mutex
+    //                             | [command1] ready = true
+    //                             | [command1] unlock mutex
+    //                             | [command1] notify condition
+    // [condition] locks mutex     |
+    // *add command 2*             |
+    // *add interrupt command*     |
+    // unlock mutex2               |
+    //                             | [command1] lock mutex2
+    //                             | [command1] finish
+    //                             | [interrupt command] exit = false before command2
+    //                           join
+    // check 2 commands executed
     void test_execute_interrupt()
     {
       skui::core::event_loop event_loop;
@@ -63,18 +84,33 @@ namespace
 
       std::thread thread([&event_loop, &exit_code] { exit_code = event_loop.execute(); });
 
-      std::mutex mutex;
-      std::unique_lock lock{mutex};
+      std::mutex mutex, mutex2;
       std::condition_variable condition;
-      std::atomic<bool> ready = false;
-      event_loop.push(std::make_unique<skui::core::command>([&condition, &lock, &ready]
-                                                            { condition.wait(lock, [&ready] { return ready.load(); }); }));
+      std::atomic_bool ready;
+
+      std::unique_lock lock{mutex}; // block command until we wait on condition
+      std::unique_lock lock2{mutex2}; // block part 2 of command
+      event_loop.push(std::make_unique<skui::core::command>([&mutex, &mutex2,
+                                                             &condition,
+                                                             &ready]
+                                                            {
+                                                              // block command until wait on condition has been called
+                                                              std::unique_lock thread_lock{mutex};
+                                                              ready = true;
+                                                              thread_lock.unlock();
+                                                              condition.notify_one();
+
+                                                              // block command until main thread has requested interrupt
+                                                              std::unique_lock thread_lock2{mutex2};
+                                                            }));
+      condition.wait(lock,
+                     [&ready] { return ready.load(); });
+
       event_loop.push(std::make_unique<skui::core::command>([this] { f(); }));
       event_loop.interrupt(1);
-      ready = true;
-      condition.notify_one();
 
-      thread.join();
+      lock2.unlock();
+      thread.join(); // wait for event_loop to exit
 
       check(count == 0, "Interrupt prevents further command execution.");
       check(exit_code == 1, "Interrupt returns proper exit code.");
