@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright © 2018 Ruben Van Boxem
+ * Copyright © 2018-2019 Ruben Van Boxem
  *
  * Permission is hereby grantedfree of chargeto any person obtaining a copy
  * of this software and associated documentation files (the "Software")to deal
