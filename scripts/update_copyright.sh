@@ -9,3 +9,9 @@ find . \
      -o -name "*.?++" \
      -o -name "LICENSE" \) \
      -print | xargs sed -i "s/Copyright © 2017-${old_year} Ruben Van Boxem/Copyright © 2017-${new_year} Ruben Van Boxem/"
+find . \
+     \( -name "*.cmake" \
+     -o -name "*.txt" \
+     -o -name "*.?++" \
+     -o -name "LICENSE" \) \
+     -print | xargs sed -i "s/Copyright © ${old_year} Ruben Van Boxem/Copyright © ${old_year}-${new_year} Ruben Van Boxem/"
