@@ -91,7 +91,7 @@ matrix:
       before_install:
         - . ./ci/setup_cmake.sh 3.13.2 Linux
         - . ./ci/setup_ninja.sh 1.8.2 linux
-        - . ./ci/setup_libcxx.sh 6.0.0 /usr
+        - . ./ci/setup_libcxx.sh 6.0.1 /usr
     - os: linux
       compiler: clang-7.0
       env:
@@ -112,7 +112,7 @@ matrix:
       before_install:
         - . ./ci/setup_cmake.sh 3.13.2 Linux
         - . ./ci/setup_ninja.sh 1.8.2 linux
-        - . ./ci/setup_libcxx.sh 7.0.0 /usr
+        - . ./ci/setup_libcxx.sh 7.0.1 /usr
     - os: osx
       osx_image: xcode9.4
       env:
@@ -123,7 +123,7 @@ matrix:
       before_install:
         - . ./ci/setup_cmake.sh 3.13.2 Darwin
         - . ./ci/setup_ninja.sh 1.8.2 mac
-        - . ./ci/setup_libcxx.sh 7.0.0 /Users/travis/libc++
+        - . ./ci/setup_libcxx.sh 7.0.1 /Users/travis/libc++
     - os: osx
       osx_image: xcode10
       env:
@@ -134,5 +134,5 @@ matrix:
       before_install:
         - . ./ci/setup_cmake.sh 3.13.2 Darwin
         - . ./ci/setup_ninja.sh 1.8.2 mac
-        - . ./ci/setup_libcxx.sh 7.0.0 /Users/travis/libc++
+        - . ./ci/setup_libcxx.sh 7.0.1 /Users/travis/libc++
 
