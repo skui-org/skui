@@ -42,8 +42,10 @@ namespace skui::css::grammar
     return (_val(context).* ... .* member);
   }
 
-  template<typename PropertyType, typename ValueType, typename... PointerToMemberTypes>
-  auto make_property(const PropertyType& property, const ValueType& value, PointerToMemberTypes... member)
+  template<typename PropertyType, typename ParserType, typename... PointerToMemberTypes>
+  auto make_property(const PropertyType& property,
+                     const ParserType& parser,
+                     PointerToMemberTypes... member)
   {
     const auto setter = [member...](auto& context)
     {
@@ -51,11 +53,13 @@ namespace skui::css::grammar
 
       move_to(_attr(context), member_ref(context, member...));
     };
-    return lexeme[property] >> ':' >> value[setter] >> ';';
+    return lexeme[property] >> ':' >> parser[setter] >> ';';
   }
 
-  template<typename PropertyType, typename ValueType, typename... PointerToMemberType>
-  auto make_background_property(const PropertyType& property, const ValueType& value, PointerToMemberType... member)
+  template<typename PropertyType, typename ParserType, typename... PointerToMemberType>
+  auto make_background_property(const PropertyType& property,
+                                const ParserType& value,
+                                PointerToMemberType... member)
   {
     return make_property(property, value, &css::declaration_block::background, member...);
   }
