@@ -51,6 +51,17 @@ namespace skui::css::grammar
   constexpr auto uint8_hex = uint_parser<std::uint8_t, 16, 2, 2>{};
   const auto ufloat = real_parser<float, ureal_policies<float>>{};
 
+  template<typename ValueType>
+  struct non_scientific_real_policies : real_policies<ValueType>
+  {
+    template<typename Iterator>
+    static bool parse_exp(Iterator&, const Iterator&)
+    {
+      return false;
+    }
+  };
+  const auto non_scientific_float = real_parser<float, non_scientific_real_policies<float>>{};
+
   const auto percentage = rule<struct percentage, float>{"percentage"}
                        %= (float_ >> '%')[divide{100.f}];
 

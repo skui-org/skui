@@ -40,6 +40,8 @@ namespace
                        = skui::css::grammar::uint8_hex;
   const auto ufloat = rule<struct ufloat, float>{"ufloat"}
                     = skui::css::grammar::ufloat;
+  const auto non_scientific_float = rule<struct non_scientific_float>{"non-scientific float"}
+                                  = skui::css::grammar::non_scientific_float;
 
   const string positive = "123";
   const string negative = "-123";
@@ -52,6 +54,8 @@ namespace
   const string percentage_decimal = "23.4%";
   const string percentage_higher = "112%";
   const string percentage_negative = "-5%";
+
+  const string scientific = "1e-5";
 }
 
 int main()
@@ -134,6 +138,8 @@ int main()
   check_rule_failure(degrees_normalized, percentage_decimal);
   check_rule_failure(degrees_normalized, percentage_higher);
   check_rule_failure(degrees_normalized, percentage_negative);
+
+  check_rule_failure(non_scientific_float, scientific);
 
   return skui::test::exit_code;
 }
