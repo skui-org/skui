@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright © 2018-2019 Ruben Van Boxem
+ * Copyright © 2019 Ruben Van Boxem
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,17 +25,45 @@
 #ifndef SKUI_CSS_LENGTH_H
 #define SKUI_CSS_LENGTH_H
 
+#include <iosfwd>
+
 namespace skui::css
 {
-  struct absolute_length
+  enum class unit
   {
-
+    // absolute
+    cm, // centimeters
+    mm, // millimeters
+    in, // inches (1in = 96px = 2.54cm)
+    px, // pixels (1px = 1/96th of 1in)
+    pt, // points (1pt = 1/72 of 1in)
+    pc, // picas (1pc = 12 pt)
+    // relative
+    em, // Relative to the font-size of the element (2em means 2 times the size of the current font)
+    ex, // Relative to the x-height of the current font (rarely used)
+    ch, // Relative to width of the "0" (zero)
+    rem, // Relative to font-size of the root element
+    vw, // Relative to 1% of the width of the viewport
+    vh, // Relative to 1% of the height of the viewport
+    vmin, // Relative to 1% of viewport's smaller dimension
+    vmax, // Relative to 1% of viewport's larger dimension
+    percentage, // Relative to the parent element
   };
 
-  struct relative_length
+  struct length
   {
-    enum class
+    float value;
+
+    css::unit unit;
   };
+
+  std::ostream& operator<<(std::ostream& os, const css::unit unit);
+  std::ostream& operator<<(std::ostream& os, const length& length);
+
+  constexpr bool operator==(const length& left, const length& right)
+  {
+    return left.value == right.value && left.unit == right.unit;
+  }
 }
 
 #endif

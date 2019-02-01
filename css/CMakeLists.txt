@@ -26,6 +26,7 @@ set(css_src
     color.h++
     declaration_block.h++
     length.h++
+    length.h++ length.c++
     parser.h++ parser.c++
     rule_set.h++
     selector.h++ selector.c++
@@ -54,6 +55,7 @@ set(grammar_src
     grammar/background.h++ grammar/background.c++
     grammar/backface_visibility.h++ grammar/backface_visibility.c++
     grammar/color.h++ grammar/color.c++
+    grammar/length.h++ grammar/length.c++
     grammar/make_property.h++
     grammar/numeric.h++
     grammar/property_symbols_table.h++
