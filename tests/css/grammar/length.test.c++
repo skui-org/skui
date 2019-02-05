@@ -22,7 +22,6 @@
  * THE SOFTWARE.
  **/
 
-#define BOOST_SPIRIT_X3_DEBUG
 #include "css/test_rule.h++"
 
 #include <css/grammar/length.h++>
@@ -38,7 +37,7 @@ namespace
   const string point = "12pt";
   const string pica = "300pc";
 
-  const string em = "2em";
+  const string em = "2e-7em";
   const string ex = "3.4ex";
   const string ch = "123ch";
   const string rem = "1rem";
@@ -63,7 +62,7 @@ int main()
   check_rule_success(length, point, {12, unit::pt});
   check_rule_success(length, pica, {300.f, unit::pc});
 
-  check_rule_success(length, em, {2.f, unit::em});
+  check_rule_success(length, em, {2e-7f, unit::em});
   check_rule_success(length, ex, {3.4f, unit::ex});
   check_rule_success(length, ch, {123.f, unit::ch});
   check_rule_success(length, rem, {1.f, unit::rem});
