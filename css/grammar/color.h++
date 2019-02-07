@@ -43,44 +43,44 @@ BOOST_FUSION_ADAPT_STRUCT(skui::css::color,
 
 namespace skui::css::grammar
 {
-  using namespace boost::spirit::x3;
+  namespace x3 = boost::spirit::x3;
 
   // Named colors
-  struct named_color_table : public symbols<css::color>
+  struct named_color_table : public x3::symbols<css::color>
   {
     named_color_table();
   } const named_color;
 
   // Hex specification
-  const auto shorthand_hex = rule<struct shorthand_hex, std::uint8_t>{"shorthand hex digit"}
-                          %= uint_parser<std::uint8_t, 16, 1, 1>{}[multiply{std::uint8_t{17}}];
+  const auto shorthand_hex = x3::rule<struct shorthand_hex, std::uint8_t>{"shorthand hex digit"}
+                          %= x3::uint_parser<std::uint8_t, 16, 1, 1>{}[multiply{std::uint8_t{17}}];
 
-  const auto color_hex_alpha = rule<struct hex_alpha, css::color>{"8 digit hex color (extension)"}
+  const auto color_hex_alpha = x3::rule<struct hex_alpha, css::color>{"8 digit hex color (extension)"}
                              = uint8_hex >> uint8_hex >> uint8_hex >> uint8_hex;
-  const auto color_hex = rule<struct hex, css::color>{"6 digit hex color"}
-                       = uint8_hex >> uint8_hex >> uint8_hex >> attr(255);
-  const auto color_short_hex_alpha = rule<struct short_hex_alpha, css::color>{"4 digit hex color"}
+  const auto color_hex = x3::rule<struct hex, css::color>{"6 digit hex color"}
+                       = uint8_hex >> uint8_hex >> uint8_hex >> x3::attr(255);
+  const auto color_short_hex_alpha = x3::rule<struct short_hex_alpha, css::color>{"4 digit hex color"}
                                    = shorthand_hex >> shorthand_hex >> shorthand_hex >> shorthand_hex;
-  const auto color_short_hex = rule<struct short_hex, css::color>{"3 digit hex color"}
-                             = shorthand_hex >> shorthand_hex >> shorthand_hex >> attr(255);
+  const auto color_short_hex = x3::rule<struct short_hex, css::color>{"3 digit hex color"}
+                             = shorthand_hex >> shorthand_hex >> shorthand_hex >> x3::attr(255);
 
   // functional specifications
-  const auto color_rgb = rule<struct rgb, css::color>{"rgb"}
-                      %= lit("rgb") >> '(' >> percentage_or_uint8 >> ',' >> percentage_or_uint8 >> ',' >> percentage_or_uint8 >> attr(255) >> ')';
-  const auto color_rgba = rule<struct rgba, css::color>{"rgba"}
-                       %= lit("rgba") >> '(' >> percentage_or_uint8 >> ',' >> percentage_or_uint8 >> ',' >> percentage_or_uint8 >> ',' >> as<float>(percentage_or_normalized[multiply{255.f}][round]) >> ')';
-  const auto color_hsl = rule<struct hsl, css::color>{"hsl"}
-                       = (lit("hsl") >> '(' >> degrees_normalized >> ',' >> percentage_or_normalized >> ',' >> percentage_or_normalized >> ')')[factory(&css::color::hsl)];
-  const auto color_hsla = rule<struct hsla, css::color>{"hsla"}
-                        = (lit("hsla") >> '(' >> degrees_normalized >> ',' >> percentage_or_normalized >> ',' >> percentage_or_normalized >> ',' >> percentage_or_normalized >> ')')[factory(&css::color::hsla)];
+  const auto color_rgb = x3::rule<struct rgb, css::color>{"rgb"}
+                      %= x3::lit("rgb") >> '(' >> percentage_or_uint8 >> ',' >> percentage_or_uint8 >> ',' >> percentage_or_uint8 >> x3::attr(255) >> ')';
+  const auto color_rgba = x3::rule<struct rgba, css::color>{"rgba"}
+                       %= x3::lit("rgba") >> '(' >> percentage_or_uint8 >> ',' >> percentage_or_uint8 >> ',' >> percentage_or_uint8 >> ',' >> as<float>(percentage_or_normalized[multiply{255.f}][round]) >> ')';
+  const auto color_hsl = x3::rule<struct hsl, css::color>{"hsl"}
+                       = (x3::lit("hsl") >> '(' >> degrees_normalized >> ',' >> percentage_or_normalized >> ',' >> percentage_or_normalized >> ')')[factory(&css::color::hsl)];
+  const auto color_hsla = x3::rule<struct hsla, css::color>{"hsla"}
+                        = (x3::lit("hsla") >> '(' >> degrees_normalized >> ',' >> percentage_or_normalized >> ',' >> percentage_or_normalized >> ',' >> percentage_or_normalized >> ')')[factory(&css::color::hsla)];
 
-  const auto color = rule<struct color_, css::color>{"color"}
+  const auto color = x3::rule<struct color_, css::color>{"color"}
                    = named_color
-                   | lexeme['#' >> ( color_hex_alpha
-                                   | color_hex
-                                   | color_short_hex_alpha
-                                   | color_short_hex
-                                   )]
+                   | x3::lexeme['#' >> ( color_hex_alpha
+                                       | color_hex
+                                       | color_short_hex_alpha
+                                       | color_short_hex
+                                       )]
                    | color_rgb
                    | color_rgba
                    | color_hsl

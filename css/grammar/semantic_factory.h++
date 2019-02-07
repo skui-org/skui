@@ -30,7 +30,7 @@
 
 namespace skui::css::grammar
 {
-  using namespace boost::spirit::x3;
+  namespace x3 = boost::spirit::x3;
 
   namespace implementation
   {
@@ -53,7 +53,7 @@ namespace skui::css::grammar
   {
     return [f](auto& ctx)
            {
-             _val(ctx) = apply(f, _attr(ctx));
+             x3::_val(ctx) = apply(f, x3::_attr(ctx));
            };
   }
 }

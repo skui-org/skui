@@ -37,22 +37,22 @@
 
 namespace skui::css::grammar
 {
-  using namespace boost::spirit::x3;
+  namespace x3 = boost::spirit::x3;
 
   template<int max_value>
   constexpr auto clamp_and_normalize = [](auto& context)
   {
-    using value_type = std::remove_reference_t<decltype(_val(context))>;
-    using attribute_type = std::remove_reference_t<decltype(_attr(context))>;
+    using value_type = std::remove_reference_t<decltype(x3::_val(context))>;
+    using attribute_type = std::remove_reference_t<decltype(x3::_attr(context))>;
 
-    _val(context) = value_type(std::clamp<attribute_type>(_attr(context), 0, max_value)/attribute_type(max_value));
+    x3::_val(context) = value_type(std::clamp<attribute_type>(x3::_attr(context), 0, max_value)/attribute_type(max_value));
   };
 
-  constexpr auto uint8_hex = uint_parser<std::uint8_t, 16, 2, 2>{};
-  const auto ufloat = real_parser<float, ureal_policies<float>>{};
+  constexpr auto uint8_hex = x3::uint_parser<std::uint8_t, 16, 2, 2>{};
+  const auto ufloat = x3::real_parser<float, x3::ureal_policies<float>>{};
 
   template<typename ValueType>
-  struct non_scientific_real_policies : real_policies<ValueType>
+  struct non_scientific_real_policies : x3::real_policies<ValueType>
   {
     template<typename Iterator>
     static bool parse_exp(Iterator&, const Iterator&)
@@ -60,20 +60,20 @@ namespace skui::css::grammar
       return false;
     }
   };
-  const auto non_scientific_float = real_parser<float, non_scientific_real_policies<float>>{};
+  const auto non_scientific_float = x3::real_parser<float, non_scientific_real_policies<float>>{};
 
-  const auto percentage = rule<struct percentage, float>{"percentage"}
-                       %= (float_ >> '%')[divide{100.f}];
+  const auto percentage = x3::rule<struct percentage, float>{"percentage"}
+                       %= (x3::float_ >> '%')[divide{100.f}];
 
-  const auto percentage_or_uint8 = rule<struct percentage_or_uint8, std::uint8_t>{"percentage or uint8"}
+  const auto percentage_or_uint8 = x3::rule<struct percentage_or_uint8, std::uint8_t>{"percentage or uint8"}
                                 %= as<float>(percentage[clamp{1.f}][multiply{255.f}][round])
                                  | as<float>(ufloat[clamp{255.f}])
                                  ;
-  const auto percentage_or_normalized = rule<struct percentage_or_normalized, float>{"percentage or normalized"}
+  const auto percentage_or_normalized = x3::rule<struct percentage_or_normalized, float>{"percentage or normalized"}
                                      %= percentage[clamp{1.f}]
                                       | ufloat[clamp{1.f}]
                                       ;
-  const auto degrees_normalized = rule<struct degrees_normalized, float>{"degrees [0,360] normalized to [0,1]"}
+  const auto degrees_normalized = x3::rule<struct degrees_normalized, float>{"degrees [0,360] normalized to [0,1]"}
                                %= ufloat[clamp_and_normalize<360>];
 }
 

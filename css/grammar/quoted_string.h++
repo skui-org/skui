@@ -31,10 +31,10 @@
 
 namespace skui::css::grammar
 {
-  using namespace boost::spirit::x3;
+  namespace x3 = boost::spirit::x3;
 
-  const auto quoted_string = rule<struct quoted, core::string>{"quoted string"}
-                           = lexeme['"' >> +(char_ - '"') >> '"'];
+  const auto quoted_string = x3::rule<struct quoted, core::string>{"quoted string"}
+                           = x3::lexeme['"' >> +(x3::char_ - '"') >> '"'];
 }
 
 #endif

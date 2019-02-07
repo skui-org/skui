@@ -31,9 +31,9 @@
 
 namespace skui::css::grammar
 {
-  using boost::spirit::x3::rule;
+  namespace x3 = boost::spirit::x3;
 
-  const auto declaration_block = rule<css::declaration_block>{"declaration block"};
+  const auto declaration_block = x3::rule<css::declaration_block>{"declaration block"}
 
   const auto declaration_block_def = '{' >>
 

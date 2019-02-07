@@ -55,8 +55,8 @@ namespace
     }
   } const enum_parser;
 
-  using namespace boost::spirit::x3;
-  const auto enum_rule = rule<struct enum_rule, skui::css::property<Enum>>{"enum rule"}
+  namespace x3 = boost::spirit::x3;
+  const auto enum_rule = x3::rule<struct enum_rule, skui::css::property<Enum>>{"enum rule"}
                        = enum_parser;
 }
 

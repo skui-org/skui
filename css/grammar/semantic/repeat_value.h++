@@ -31,10 +31,12 @@
 
 namespace skui::css::grammar
 {
+  namespace x3 = boost::spirit::x3;
+
   template<std::size_t... Ns>
   auto repeat_value = [](auto& context)
   {
-      auto& value = _attr(context);
+      auto& value = x3::_attr(context);
       (value.push_back(value[Ns]), ...);
   };
 }

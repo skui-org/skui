@@ -5,9 +5,9 @@
 
 namespace skui::css::grammar
 {
-  using namespace boost::spirit::x3;
+  namespace x3 = boost::spirit::x3;
 
   template<typename AttributeType>
-  inline auto as = [](auto&& parser) { return rule<struct _, AttributeType>{} %= as_parser(parser); };
+  inline auto as = [](auto&& parser) { return x3::rule<struct _, AttributeType>{} %= as_parser(parser); };
 }
 #endif

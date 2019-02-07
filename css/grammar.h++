@@ -51,7 +51,6 @@
 namespace skui::css::grammar
 {
   namespace x3 = boost::spirit::x3;
-  using namespace x3;
 
   const auto declaration = make_property("align-content", align_content, &css::declaration_block::align_content)
                          | make_property("align-items", align_items, &css::declaration_block::align_items)
@@ -78,7 +77,7 @@ namespace skui::css::grammar
                          | make_background_property("background-attachment", background_attachment, &css::background::attachment)
                          ;
 
-  const auto declaration_block = rule<struct declaration_block, css::declaration_block>{"declaration_block"}
+  const auto declaration_block = x3::rule<struct declaration_block, css::declaration_block>{"declaration_block"}
                                = '{' >> +declaration >> '}';
 }
 

@@ -31,7 +31,7 @@
 
 namespace skui::css::grammar
 {
-  using namespace boost::spirit::x3;
+  namespace x3 = boost::spirit::x3;
 
   template<typename ValueType>
   struct divide
@@ -42,8 +42,8 @@ namespace skui::css::grammar
     void operator()(ContextType& context) const
     {
       // triggers conversion warnings when multiplying integer types with sizeof(T) < sizeof(int)
-      using attribute_type = std::remove_reference_t<decltype(_attr(context))>;
-      _attr(context) = static_cast<attribute_type>(_attr(context) / divisor);
+      using attribute_type = std::remove_reference_t<decltype(x3::_attr(context))>;
+      x3::_attr(context) = static_cast<attribute_type>(x3::_attr(context) / divisor);
     }
 
   private:
@@ -59,8 +59,8 @@ namespace skui::css::grammar
     void operator()(ContextType& context) const
     {
       // triggers conversion warnings when multiplying integer types with sizeof(T) < sizeof(int)
-      using attribute_type = std::remove_reference_t<decltype(_attr(context))>;
-      _attr(context) = static_cast<attribute_type>(_attr(context) * factor);
+      using attribute_type = std::remove_reference_t<decltype(x3::_attr(context))>;
+      x3::_attr(context) = static_cast<attribute_type>(x3::_attr(context) * factor);
     }
 
   private:
@@ -75,8 +75,8 @@ namespace skui::css::grammar
     template<typename ContextType>
     void operator()(ContextType& context)
     {
-      using attribute_type = std::remove_reference_t<decltype(_attr(context))>;
-      _attr(context) = std::clamp<attribute_type>(_attr(context), lower, upper);
+      using value_type = std::remove_reference_t<decltype(x3::_val(context))>;
+      x3::_val(context) = std::clamp<value_type>(x3::_attr(context), lower, upper);
     }
 
   private:
@@ -86,8 +86,8 @@ namespace skui::css::grammar
 
   constexpr auto round = [](auto& context)
   {
-    using attribute_type = std::remove_reference_t<decltype(_val(context))>;
-    _val(context) = static_cast<attribute_type>(std::round(_attr(context)));
+    using value_type = std::remove_reference_t<decltype(x3::_val(context))>;
+    x3::_val(context) = static_cast<value_type>(std::round(x3::_attr(context)));
   };
 }
 

@@ -39,16 +39,16 @@
 
 namespace skui::css::grammar
 {
-  using namespace boost::spirit::x3;
+  namespace x3 = boost::spirit::x3;
 
-  const auto background_color = rule<struct background_color, css::color>{"background-color"}
-                              = eoi;
-  const auto background_image = rule<struct background_image_, css::background_image>{"background-image"}
-                              = eoi;
-  const auto background_position = rule<struct background_position_, css::background_position>{"background-position"}
-                                 = eoi;
-  const auto background_size = rule<struct background_size_, css::background_size>{"background-size"}
-                             = eoi;
+  const auto background_color = x3::rule<struct background_color, css::color>{"background-color"}
+                              = x3::eoi;
+  const auto background_image = x3::rule<struct background_image_, css::background_image>{"background-image"}
+                              = x3::eoi;
+  const auto background_position = x3::rule<struct background_position_, css::background_position>{"background-position"}
+                                 = x3::eoi;
+  const auto background_size = x3::rule<struct background_size_, css::background_size>{"background-size"}
+                             = x3::eoi;
   struct background_repeat_table : property_symbols_table<css::background_repeat>
   {
     background_repeat_table();
@@ -66,8 +66,8 @@ namespace skui::css::grammar
     background_attachment_table();
   } const background_attachment;
 
-  const auto background = rule<struct background, css::background>{"background"}
-                        = eoi;
+  const auto background = x3::rule<struct background, css::background>{"background"}
+                        = x3::eoi;
 }
 
 #endif

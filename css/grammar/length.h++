@@ -42,7 +42,7 @@ namespace skui::css::grammar
     unit_table();
   } const unit;
 
-  const auto length = rule<struct length, css::length>{"length"}
+  const auto length = x3::rule<struct length, css::length>{"length"}
                    %= non_scientific_float >> unit
                     | x3::float_ >> unit;
 }

@@ -30,15 +30,15 @@ namespace
 {
   using skui::core::string;
   using skui::css::grammar::repeat_value;
-  using namespace boost::spirit::x3;
+  namespace x3 = boost::spirit::x3;
 
   const string one = "1.2";
   const string two = "1.2 3.4";
 
-  const auto one_to_four = rule<struct one_to_four, std::vector<double>, true>{"one to four"}
-                         = (double_ >> eps)[repeat_value<0,0,0>];
-  const auto two_to_six = rule<struct two_to_six, std::vector<double>, true>{"two to six"}
-                        = (double_ >> double_)[repeat_value<0,1,1,0>];
+  const auto one_to_four = x3::rule<struct one_to_four, std::vector<double>, true>{"one to four"}
+                         = (x3::double_ >> x3::eps)[repeat_value<0,0,0>];
+  const auto two_to_six = x3::rule<struct two_to_six, std::vector<double>, true>{"two to six"}
+                        = (x3::double_ >> x3::double_)[repeat_value<0,1,1,0>];
 }
 
 int main()
