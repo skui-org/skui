@@ -83,9 +83,11 @@ namespace skui::css::grammar
     const ValueType lower;
     const ValueType upper;
   };
+
   constexpr auto round = [](auto& context)
   {
-    _attr(context) = std::round(_attr(context));
+    using attribute_type = std::remove_reference_t<decltype(_val(context))>;
+    _val(context) = static_cast<attribute_type>(std::round(_attr(context)));
   };
 }
 
