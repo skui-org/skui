@@ -30,6 +30,7 @@ set(css_src
     parser.h++ parser.c++
     rule_set.h++
     selector.h++ selector.c++
+    time.h++
    )
 set(properties_src
     property.h++
