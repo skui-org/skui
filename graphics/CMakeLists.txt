@@ -26,6 +26,7 @@ find_package(OpenGL REQUIRED)
 
 # Common source files
 set(graphics_src
+    bounding_box.h++
     canvas.h++ canvas.c++
     color.h++
     context.h++ context.c++
