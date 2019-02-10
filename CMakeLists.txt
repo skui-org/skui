@@ -59,6 +59,7 @@ add_custom_target(miscellaneous SOURCES
     ci/setup_libcxx.sh
     ci/setup_ninja.sh
     cmake/toolchain_options.cmake
+    scripts/update_copyright.sh
     )
 
 # Skia and its dependencies
