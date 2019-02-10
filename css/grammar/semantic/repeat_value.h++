@@ -34,7 +34,7 @@ namespace skui::css::grammar
   template<std::size_t... Ns>
   auto repeat_value = [](auto& context)
   {
-      auto& value = _val(context);
+      auto& value = _attr(context);
       (value.push_back(value[Ns]), ...);
   };
 }
