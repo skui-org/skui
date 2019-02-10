@@ -55,16 +55,15 @@ namespace skui::core
 #else
   inline void debug_print(ArgTypes... args)
   {
-    using namespace std::chrono;
 #ifdef _WIN32
     std::stringstream stream;
 #else
     auto& stream = std::cerr;
     core::ostream_format_keeper guard(stream);
 #endif
-    const auto now = system_clock::now();
-    const auto ms = duration_cast<milliseconds>(now.time_since_epoch()) % 1000;
-    const auto time = system_clock::to_time_t(now);
+    const auto now = std::chrono::system_clock::now();
+    const auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
+    const auto time = std::chrono::system_clock::to_time_t(now);
     const auto utc_time = std::gmtime(&time);
 
     stream << std::put_time(utc_time, "%FT%T.")
