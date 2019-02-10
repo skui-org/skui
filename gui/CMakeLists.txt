@@ -33,6 +33,7 @@ endif()
 # Common source files
 set(gui_src
     icon.h++
+    input.h++
     layout.h++ layout.c++
     main_windows.c++
     make_element.h++
