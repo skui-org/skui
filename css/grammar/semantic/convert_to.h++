@@ -22,29 +22,24 @@
  * THE SOFTWARE.
  **/
 
-#ifndef SKUI_CSS_GRAMMAR_TIME_H
-#define SKUI_CSS_GRAMMAR_TIME_H
-
-#include "css/grammar/semantic/convert_to.h++"
-#include "css/grammar/semantic_math.h++"
+#ifndef SKUI_CSS_GRAMMAR_SEMANTIC_CONVERT_TO_H
+#define SKUI_CSS_GRAMMAR_SEMANTIC_CONVERT_TO_H
 
 #include <boost/spirit/home/x3.hpp>
-
-#include <chrono>
 
 namespace skui::css::grammar
 {
   namespace x3 = boost::spirit::x3;
 
-  constexpr auto to_milliseconds = convert_to<std::chrono::milliseconds, std::chrono::milliseconds::rep>{};
-
-  const auto milliseconds = x3::rule<struct milliseconds, float>{"milliseconds"}
-                          = x3::float_[round] >> "ms";
-  const auto seconds = x3::rule<struct seconds, float>{"seconds"}
-                     = x3::float_[multiply{1000.f}][round] >> "s";
-
-  const auto time = x3::rule<struct time, std::chrono::milliseconds>{"time"}
-                  = milliseconds[to_milliseconds]
-                  | seconds[to_milliseconds];
+  template<typename ResultType, typename IntermediateType = ResultType>
+  struct convert_to
+  {
+    template<typename ContextType>
+    void operator()(ContextType& context)
+    {
+      x3::_val(context) = ResultType{static_cast<IntermediateType>(x3::_attr(context))};
+    }
+  };
 }
+
 #endif
