@@ -39,6 +39,7 @@ elseif(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
   else()
     add_compile_options(-Wno-error=unused-command-line-argument)
     set(CMAKE_CXX_FLAGS "-stdlib=libc++ ${CMAKE_CXX_FLAGS}")
+    set(CMAKE_EXE_LINKER_FLAGS "-stdlib=libc++ ${CMAKE_EXE_LINKER_FLAGS}")
   endif()
 endif()
 
