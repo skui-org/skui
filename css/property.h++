@@ -31,6 +31,7 @@
 #define SKUI_CSS_PROPERTY_H
 
 #include <functional>
+#include <iosfwd>
 #include <variant>
 
 namespace skui::css
@@ -40,6 +41,9 @@ namespace skui::css
 
   constexpr bool operator==(const inherit_t&, const inherit_t&) { return true; }
   constexpr bool operator==(const initial_t&, const initial_t&) { return true; }
+
+  std::ostream& operator<<(std::ostream& os, const inherit_t& inherit);
+  std::ostream& operator<<(std::ostream& os, const initial_t& initial);
 
   template<typename... ValueTypes>
   using property = std::variant<ValueTypes..., inherit_t, initial_t>;

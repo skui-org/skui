@@ -33,7 +33,7 @@ set(css_src
     time.h++
    )
 set(properties_src
-    property.h++
+    property.h++ property.c++
     property/align_content.h++
     property/align_items.h++
     property/align_self.h++
