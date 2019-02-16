@@ -43,7 +43,7 @@ namespace skui::css::grammar
   const auto seconds = x3::rule<struct seconds, float>{"seconds"}
                      = x3::float_[multiply{1000.f}][round] >> "s";
 
-  const auto time = x3::rule<struct time, std::chrono::milliseconds>{"time"}
+  const auto time = x3::rule<struct time_, std::chrono::milliseconds>{"time"}
                   = milliseconds[to_milliseconds]
                   | seconds[to_milliseconds];
 }
