@@ -83,6 +83,12 @@ namespace boost::spirit::x3::traits
 
     using type = mpl::not_<is_same<iter, end>>;
   };
+
+  template<typename Out, typename... Ts>
+  void print_attribute(Out& out, const std::variant<Ts...>& variant)
+  {
+    std::visit([&out](const auto& value) { out << value; }, variant);
+  }
 }
 
 #endif
