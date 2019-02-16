@@ -30,6 +30,7 @@ set(css_src
     rule_set.h++
     selector.h++ selector.c++
     time.h++
+    timing_function.h++ timing_function.c++
    )
 set(properties_src
     property.h++ property.c++
@@ -67,6 +68,7 @@ set(grammar_src
     grammar/semantic_factory.h++
     grammar/semantic_math.h++
     grammar/time.h++
+    grammar/timing_function.h++ grammar/timing_function.c++
     grammar/url.h++
     grammar/x3_stdvariant.h++
    )
