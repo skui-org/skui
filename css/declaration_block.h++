@@ -30,25 +30,19 @@
 #ifndef SKUI_CSS_DECLARATION_BLOCK_H
 #define SKUI_CSS_DECLARATION_BLOCK_H
 
-#include "css/property/animation_iteration_count.h++"
+#include "css/property/animation.h++"
 #include "css/property/background.h++"
 //#include "css/property/border.h++"
 
 #include <core/string.h++>
 
-#include <chrono>
 #include <cstdint>
 
 namespace skui::css
 {
-  using std::chrono::milliseconds;
-
   enum class align_content : std::uint8_t;
   enum class align_items : std::uint8_t;
   enum class align_self : std::uint8_t;
-  enum class animation_direction : std::uint8_t;
-  enum class animation_fill_mode : std::uint8_t;
-  enum class animation_play_state : std::uint8_t;
   enum class backface_visibility : std::uint8_t;
 
   struct declaration_block
@@ -56,14 +50,7 @@ namespace skui::css
     property<css::align_content> align_content{};
     property<css::align_items> align_items{};
     property<css::align_self> align_self{};
-    property<milliseconds> animation_delay{};
-    property<css::animation_direction> animation_direction{};
-    property<milliseconds> animation_duration{};
-    property<css::animation_fill_mode> animation_fill_mode{};
-    property<css::animation_iteration_count> animation_iteration_count{css::animation_iteration_count{1}};
-    property<core::string> animation_name{};
-    property<css::animation_play_state> animation_play_state{};
-    //css::animation_timing_function animation_timing_function{};
+    css::animation animation;
     css::property<css::backface_visibility> backface_visibility{};
     css::background background{};
     //css::border border{};

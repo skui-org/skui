@@ -37,10 +37,7 @@ set(properties_src
     property/align_content.h++
     property/align_items.h++
     property/align_self.h++
-    property/animation_direction.h++
-    property/animation_fill_mode.h++
-    property/animation_iteration_count.h++
-    property/animation_play_state.h++
+    property/animation.h++ property/animation.c++
     property/backface_visibility.h++
     property/background.h++
     property/border.h++
@@ -53,6 +50,7 @@ set(grammar_src
     grammar/align_content.h++ grammar/align_content.c++
     grammar/align_items.h++ grammar/align_items.c++
     grammar/align_self.h++ grammar/align_self.c++
+    grammar/animation.h++ grammar/animation.c++
     grammar/background.h++ grammar/background.c++
     grammar/backface_visibility.h++ grammar/backface_visibility.c++
     grammar/color.h++ grammar/color.c++

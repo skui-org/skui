@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright © 2018-2019 Ruben Van Boxem
+ * Copyright © 2019 Ruben Van Boxem
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,19 +22,32 @@
  * THE SOFTWARE.
  **/
 
-#ifndef SKUI_CSS_PROPERTY_ANIMATION_DIRECTION_H
-#define SKUI_CSS_PROPERTY_ANIMATION_DIRECTION_H
+#include "css/grammar/animation.h++"
 
-#include <cstdint>
-#include <limits>
-#include <variant>
-
-namespace skui::css
+namespace skui::css::grammar
 {
-  enum class animation_iteration_count : std::uint64_t
+  direction_table::direction_table()
   {
-    infinite = std::numeric_limits<std::uint64_t>::max()
-  };
-}
+    add("normal", animation_direction::normal)
+       ("reverse", animation_direction::reverse)
+       ("alternate", animation_direction::alternate)
+       ("alternate-reverse", animation_direction::alternate_reverse)
+       ;
+  }
 
-#endif
+  fill_mode_table::fill_mode_table()
+  {
+    add("none", fill_mode::none)
+       ("forwards", fill_mode::forwards)
+       ("backwards", fill_mode::backwards)
+       ("both", fill_mode::both)
+       ;
+  }
+
+  play_state_table::play_state_table()
+  {
+    add("running", play_state::running)
+       ("paused", play_state::paused)
+       ;
+  }
+}

@@ -24,6 +24,7 @@
 #
 
 runtime_test(css color)
+runtime_test(css grammar/animation)
 runtime_test(css grammar/color)
 runtime_test(css grammar/length)
 runtime_test(css grammar/numeric)

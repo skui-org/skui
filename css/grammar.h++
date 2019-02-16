@@ -37,6 +37,7 @@
 #include "css/grammar/align_content.h++"
 #include "css/grammar/align_items.h++"
 #include "css/grammar/align_self.h++"
+#include "css/grammar/animation.h++"
 #include "css/grammar/background.h++"
 #include "css/grammar/backface_visibility.h++"
 #include "css/grammar/color.h++"
@@ -56,15 +57,15 @@ namespace skui::css::grammar
                          | make_property("align-items", align_items, &css::declaration_block::align_items)
                          | make_property("align-self", align_self, &css::declaration_block::align_self)
                       // | make_property("all", all, &css::declaration_block::all)
-                      // | make_property("animation", animation, &css::declaration_block::animation)
-                      // | make_property("animation-delay", animation_delay, &css::declaration_block::animation_delay)
-                      // | make_property("animation-direction", animation_direction, &css::declaration_block::animation_direction)
-                      // | make_property("animation-duration", animation_duration, &css::declaration_block::animation_duration)
-                      // | make_property("animation-fill-mode", animation_fill_mode, &css::declaration_block::animation_fill_mode)
-                      // | make_property("animation-iteration-count", animation_iteration_count, &css::declaration_block::animation_iteration_count)
-                      // | make_property("animation-name", animation_name, &css::declaration_block::animation_name)
-                      // | make_property("animation-play-state", animation_play_state, &css::declaration_block::animation_play_state)
-                      // | make_property("animation-timing_function", animation_timing_function, &css::declaration_block::animation_timing_function)
+                         | make_property("animation", animation, &css::declaration_block::animation)
+                         | make_property("animation-delay", animation_delay, &css::declaration_block::animation, &css::animation::delay)
+                         | make_property("animation-direction", animation_direction, &css::declaration_block::animation, &css::animation::direction)
+                         | make_property("animation-duration", animation_duration, &css::declaration_block::animation, &css::animation::duration)
+                         | make_property("animation-fill-mode", animation_fill_mode, &css::declaration_block::animation, &css::animation::fill_mode)
+                         | make_property("animation-iteration-count", animation_iteration_count, &css::declaration_block::animation, &css::animation::iteration_count)
+                         | make_property("animation-name", animation_name, &css::declaration_block::animation, &css::animation::name)
+                         | make_property("animation-play-state", animation_play_state, &css::declaration_block::animation, &css::animation::play_state)
+                         | make_property("animation-timing-function", animation_timing_function, &css::declaration_block::animation, &css::animation::timing_function)
                          | make_property("backface-visibility", backface_visibility, &css::declaration_block::backface_visibility)
                          | make_property("background", background, &css::declaration_block::background)
                          | make_background_property("background-color", color, &css::background::color)

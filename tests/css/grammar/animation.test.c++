@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright © 2018-2019 Ruben Van Boxem
+ * Copyright © 2019 Ruben Van Boxem
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,19 +22,41 @@
  * THE SOFTWARE.
  **/
 
-#ifndef SKUI_CSS_PROPERTY_ANIMATION_DIRECTION_H
-#define SKUI_CSS_PROPERTY_ANIMATION_DIRECTION_H
+#include "css/test_rule.h++"
 
-#include <cstdint>
+#include <css/grammar/animation.h++>
 
-namespace skui::css
+namespace
 {
-  enum class animation_direction : std::uint8_t
+  using namespace std::chrono_literals;
+  using skui::core::string;
+
+  using skui::css::animation;
+
+  const string full_animation_ordered_input = "my_name 20s linear 5s 2 alternate both paused";
+  animation full_animation_ordered()
   {
-    normal,
-    reverse,
-    alternate,
-    alternate_reverse
-  };
+    animation a;
+    a.name = "my_name";
+    a.duration = 20s;
+    a.timing_function = skui::css::linear;
+    a.delay = 5s;
+    a.iteration_count = 2;
+    a.direction = skui::css::animation_direction::alternate;
+    a.fill_mode = skui::css::fill_mode::both;
+    a.play_state = skui::css::play_state::paused;
+
+    return a;
+  }
 }
-#endif
+
+int main()
+{
+  using skui::test::check_rule_success;
+  using skui::test::check_rule_failure;
+
+  check_rule_success(skui::css::grammar::animation, full_animation_ordered_input,
+                     full_animation_ordered());
+
+  return skui::test::exit_code;
+}
