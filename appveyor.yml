@@ -72,7 +72,7 @@ install:
  - set PATH=C:\cmake\cmake-3.14.1-win64-x64\bin;%PATH%
 
 clone_script:
-  - git clone -q --depth=1 --branch=%APPVEYOR_REPO_BRANCH% https://github.com/skui-org/skui.git %APPVEYOR_BUILD_FOLDER%
+  - git clone -q --branch=%APPVEYOR_REPO_BRANCH% https://github.com/skui-org/skui.git %APPVEYOR_BUILD_FOLDER%
   - cd %APPVEYOR_BUILD_FOLDER%
   - git checkout -qf %APPVEYOR_REPO_COMMIT%
   - git submodule -q update --init --recursive --depth=1
