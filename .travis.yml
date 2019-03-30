@@ -6,7 +6,7 @@ language: c++
 script:
  - mkdir build
  - cd build
- - export CXXFLAGS=${CI_CXX_FLAGS} LDFLAGS=${CI_LDFLAGS}
+ - export CXXFLAGS=${CI_CXX_FLAGS} LDFLAGS=${CI_LDFLAGS} CPPFLAGS=${CI_CPP_FLAGS}
  - cmake .. -G Ninja -DCMAKE_C_COMPILER=$C_COMPILER -DCMAKE_CXX_COMPILER=$CXX_COMPILER -DCMAKE_BUILD_TYPE=Release
  - ninja
  - ctest --output-on-failure
@@ -139,6 +139,7 @@ matrix:
       env:
         - C_COMPILER=clang
         - CXX_COMPILER=clang++
+        - CI_CPP_FLAGS='-D_LIBCPP_DISABLE_AVAILABILITY'
         - CI_CXX_FLAGS='-Wno-unused-command-line-argument -nostdinc++ -isystem /Users/travis/libc++/include/c++/v1'
         - CI_LDFLAGS='-L /Users/travis/libc++/lib'
       before_install:
@@ -150,6 +151,7 @@ matrix:
       env:
         - C_COMPILER=clang
         - CXX_COMPILER=clang++
+        - CI_CPP_FLAGS='-D_LIBCPP_DISABLE_AVAILABILITY'
         - CI_CXX_FLAGS='-Wno-unused-command-line-argument -nostdinc++ -isystem /Users/travis/libc++/include/c++/v1'
         - CI_LDFLAGS='-L /Users/travis/libc++/lib'
       before_install:
@@ -161,6 +163,7 @@ matrix:
       env:
         - C_COMPILER=clang
         - CXX_COMPILER=clang++
+        - CI_CPP_FLAGS='-D_LIBCPP_DISABLE_AVAILABILITY'
         - CI_CXX_FLAGS='-Wno-unused-command-line-argument -nostdinc++ -isystem /Users/travis/libc++/include/c++/v1'
         - CI_LDFLAGS='-L /Users/travis/libc++/lib'
       before_install:
