@@ -111,7 +111,7 @@ matrix:
             - llvm-toolchain-trusty-7
       before_install:
         - . ./ci/setup_cmake.sh 3.13.2 Linux
-        - . ./ci/setup_ninja.sh 1.9.0 linux
+        - . ./ci/setup_ninja.sh 1.8.2 linux
         - . ./ci/setup_libcxx.sh 7.0.1 /usr
     - os: linux
       compiler: clang-8.0
@@ -143,7 +143,7 @@ matrix:
         - CI_LDFLAGS='-L /Users/travis/libc++/lib'
       before_install:
         - . ./ci/setup_cmake.sh 3.13.2 Darwin
-        - . ./ci/setup_ninja.sh 1.9.0 mac
+        - . ./ci/setup_ninja.sh 1.8.2 mac
         - . ./ci/setup_libcxx.sh 8.0.0 /Users/travis/libc++
     - os: osx
       osx_image: xcode10
@@ -154,7 +154,7 @@ matrix:
         - CI_LDFLAGS='-L /Users/travis/libc++/lib'
       before_install:
         - . ./ci/setup_cmake.sh 3.13.2 Darwin
-        - . ./ci/setup_ninja.sh 1.9.0 mac
+        - . ./ci/setup_ninja.sh 1.8.2 mac
         - . ./ci/setup_libcxx.sh 8.0.0 /Users/travis/libc++
     - os: osx
       osx_image: xcode10.1
@@ -165,5 +165,5 @@ matrix:
         - CI_LDFLAGS='-L /Users/travis/libc++/lib'
       before_install:
         - . ./ci/setup_cmake.sh 3.13.2 Darwin
-        - . ./ci/setup_ninja.sh 1.9.0 mac
+        - . ./ci/setup_ninja.sh 1.8.2 mac
         - . ./ci/setup_libcxx.sh 8.0.0 /Users/travis/libc++
