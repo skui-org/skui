@@ -41,6 +41,8 @@
 
 #include <SkCanvas.h>
 #include <SkColor.h>
+#include <SkFont.h>
+#include <SkFontMetrics.h>
 #include <SkPath.h>
 #include <SkRRect.h>
 #include <SkSurface.h>
@@ -200,29 +202,33 @@ namespace skui::graphics
     const canvas_guard guard(canvas, clipping_box);
 
     auto [fill_paint, border_paint] = make_paint(text, position, flags);
-    fill_paint.setTextSize(text.font.size);
-    border_paint.setTextSize(text.font.size);
+    SkFont font;
+    font.setSize(text.font.size);
 
     SkPaint paint = text.border.color == colors::transparent ? make_fill_paint(text, {0, 0}, flags)
                                                              : make_border_paint(text, flags);
-    paint.setTextSize(text.font.size);
+    //paint.setTextSize(text.font.size);
 
-    SkPaint::FontMetrics metrics;
-    paint.getFontMetrics(&metrics);
+    SkFontMetrics metrics;
+    font.getMetrics(&metrics);
 
     SkScalar offset = -metrics.fAscent;
     // 0.5f offset is to correct an apparent offset in the size/positioning of text
-    canvas->drawText(text.characters.c_str(),
-                     text.characters.size(),
-                     position.x - .5f,
-                     position.y + offset - .5f,
-                     fill_paint);
+    canvas->drawSimpleText(text.characters.c_str(),
+                           text.characters.size(),
+                           SkTextEncoding::kUTF8,
+                           position.x - .5f,
+                           position.y + offset - .5f,
+                           font,
+                           fill_paint);
 
-    canvas->drawText(text.characters.c_str(),
-                     text.characters.size(),
-                     position.x - .5f,
-                     position.y + offset - .5f,
-                     border_paint);
+    canvas->drawSimpleText(text.characters.c_str(),
+                           text.characters.size(),
+                           SkTextEncoding::kUTF8,
+                           position.x - .5f,
+                           position.y + offset - .5f,
+                           font,
+                           border_paint);
   }
 
   void skia_canvas::draw(const path& path,
@@ -246,13 +252,18 @@ namespace skui::graphics
   {
     SkPaint paint = text.border.color == colors::transparent ? make_fill_paint(text, {0, 0}, flags)
                                                              : make_border_paint(text, flags);
-    paint.setTextSize(text.font.size);
+    SkFont font;
+    font.setSize(text.font.size);
 
-    SkPaint::FontMetrics metrics;
-    paint.getFontMetrics(&metrics);
+    SkFontMetrics metrics;
+    font.getMetrics(&metrics);
 
     SkRect bounds;
-    const SkScalar width = paint.measureText(text.characters.c_str(), text.characters.size(), &bounds);
+    const SkScalar width = font.measureText(text.characters.c_str(),
+                                            text.characters.size(),
+                                            SkTextEncoding::kUTF8,
+                                            &bounds,
+                                            &paint);
     const SkScalar height = std::abs(metrics.fAscent - metrics.fDescent);
 
     core::debug_print("printing text: \'", text.characters, "\'\n",
