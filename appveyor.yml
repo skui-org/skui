@@ -33,6 +33,17 @@ environment:
     CMAKE_ARGS: -DCMAKE_C_COMPILER=clang-cl.exe -DCMAKE_CXX_COMPILER=clang-cl.exe
     CLANG_URL: http://releases.llvm.org/7.0.1/LLVM-7.0.1-win64.exe
 
+  # Clang targeting MSVC
+  - TOOLCHAIN: "Visual Studio 2017 Clang/LLVM 8.0.0"
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    GENERATOR: Ninja
+    PACMAN_PACKAGES: "mingw-w64-x86_64-ninja"
+    PATH: C:\Program Files\LLVM\bin;C:\msys64\mingw64\bin;%PATH%
+    VCVARS: C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat
+    VCVARSARG: amd64
+    CMAKE_ARGS: -DCMAKE_C_COMPILER=clang-cl.exe -DCMAKE_CXX_COMPILER=clang-cl.exe
+    CLANG_URL: http://releases.llvm.org/8.0.0/LLVM-8.0.0-win64.exe
+
   # Clang targeting mingw-w64
   - TOOLCHAIN: "MinGW-w64 Clang"
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
