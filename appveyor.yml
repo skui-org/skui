@@ -8,9 +8,10 @@ environment:
     BUILD_ARGS: /m:4 /verbosity:minimal
   - TOOLCHAIN: "Visual Studio 2019 x64"
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019 Preview
-    GENERATOR: Visual Studio 16 2019 Win64
+    GENERATOR: Visual Studio 16 2019
     VCVARS: C:\Program Files (x86)\Microsoft Visual Studio\2019\Preview\VC\Auxiliary\Build\vcvarsall.bat
     VCVARSARG: amd64
+    CMAKE_ARGS: -A x64
     BUILD_ARGS: /m:4 /verbosity:minimal
 
   # Mingw-w64
