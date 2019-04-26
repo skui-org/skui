@@ -7,7 +7,7 @@ script:
  - mkdir build
  - cd build
  - export CXXFLAGS=${CI_CXX_FLAGS} LDFLAGS=${CI_LDFLAGS}
- - cmake .. -G Ninja -DCMAKE_C_COMPILER=$C_COMPILER -DCMAKE_CXX_COMPILER=$CXX_COMPILER -DCMAKE_BUILD_TYPE=Release
+ - cmake .. -G ${GENERATOR} -DCMAKE_C_COMPILER=${C_COMPILER} -DCMAKE_CXX_COMPILER=${CXX_COMPILER} -DCMAKE_BUILD_TYPE=${CONFIGURATION}
  - ninja
  - ctest --output-on-failure
 
@@ -16,8 +16,10 @@ matrix:
     - os: linux
       compiler: gcc-7
       env:
+        - GENERATOR=Ninja
         - C_COMPILER=gcc-7
         - CXX_COMPILER=g++-7
+        - CONFIGURATION=Release
       addons:
         apt:
           sources:
@@ -35,8 +37,10 @@ matrix:
     - os: linux
       compiler: gcc-8
       env:
+        - GENERATOR=Ninja
         - C_COMPILER=gcc-8
         - CXX_COMPILER=g++-8
+        - CONFIGURATION=Release
       addons:
         apt:
           sources:
@@ -54,8 +58,10 @@ matrix:
     - os: linux
       compiler: clang-5.0
       env:
+        - GENERATOR=Ninja
         - C_COMPILER=clang-5.0
         - CXX_COMPILER=clang++-5.0
+        - CONFIGURATION=Release
       addons:
         apt:
           packages:
@@ -74,8 +80,10 @@ matrix:
     - os: linux
       compiler: clang-6.0
       env:
+        - GENERATOR=Ninja
         - C_COMPILER=clang-6.0
         - CXX_COMPILER=clang++-6.0
+        - CONFIGURATION=Release
       addons:
         apt:
           packages:
@@ -95,8 +103,10 @@ matrix:
     - os: linux
       compiler: clang-7.0
       env:
+        - GENERATOR=Ninja
         - C_COMPILER=clang-7
         - CXX_COMPILER=clang++-7
+        - CONFIGURATION=Release
       addons:
         apt:
           packages:
@@ -116,8 +126,10 @@ matrix:
     - os: linux
       compiler: clang-8.0
       env:
+        - GENERATOR=Ninja
         - C_COMPILER=clang-8
         - CXX_COMPILER=clang++-8
+        - CONFIGURATION=Release
       addons:
         apt:
           packages:
@@ -148,10 +160,12 @@ matrix:
     - os: osx
       osx_image: xcode10
       env:
+        - GENERATOR=Ninja
         - C_COMPILER=clang
         - CXX_COMPILER=clang++
         - CI_CXX_FLAGS='-D_LIBCPP_DISABLE_AVAILABILITY -Wno-unused-command-line-argument -nostdinc++ -isystem /Users/travis/libc++/include/c++/v1'
         - CI_LDFLAGS='-L /Users/travis/libc++/lib'
+        - CONFIGURATION=Release
       before_install:
         - . ./ci/setup_cmake.sh 3.13.2 Darwin
         - . ./ci/setup_ninja.sh 1.8.2 mac
@@ -159,10 +173,12 @@ matrix:
     - os: osx
       osx_image: xcode10.1
       env:
+        - GENERATOR=Ninja
         - C_COMPILER=clang
         - CXX_COMPILER=clang++
         - CI_CXX_FLAGS='-D_LIBCPP_DISABLE_AVAILABILITY -Wno-unused-command-line-argument -nostdinc++ -isystem /Users/travis/libc++/include/c++/v1'
         - CI_LDFLAGS='-L /Users/travis/libc++/lib'
+        - CONFIGURATION=Release
       before_install:
         - . ./ci/setup_cmake.sh 3.13.2 Darwin
         - . ./ci/setup_ninja.sh 1.8.2 mac
