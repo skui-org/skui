@@ -52,9 +52,38 @@ matrix:
             - libgles2-mesa-dev
             - libxcb-util0-dev
             - libxcb-image0-dev
+    - os: linux
+      compiler: gcc-8
+      env:
+        - GENERATOR=Ninja
+        - C_COMPILER=gcc-8
+        - CXX_COMPILER=g++-8
+        - CONFIGURATION=Debug
+        - CI_CXX_FLAGS=--coverage
+        - CI_LDFLAGS=--coverage
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - lcov
+            - g++-8
+            - libgl1-mesa-dev
+            - libegl1-mesa-dev
+            - libgles2-mesa-dev
+            - libxcb-util0-dev
+            - libxcb-image0-dev
       before_install:
         - . ./ci/setup_cmake.sh 3.13.2 Linux
         - . ./ci/setup_ninja.sh 1.8.2 linux
+      after_success:
+        # Create lcov report
+        - lcov --capture --directory . --output-file coverage.info
+        - lcov --remove coverage.info '/usr/*' --output-file coverage.info # filter system-files
+        - lcov --remove coverage.info '*/3rdparty/*'
+        - lcov --list coverage.info # debug info
+        # Uploading report to CodeCov
+        - bash <(curl -s https://codecov.io/bash) -f coverage.info || echo "Codecov did not collect coverage reports"
     - os: linux
       compiler: clang-5.0
       env:
