@@ -52,6 +52,9 @@ matrix:
             - libgles2-mesa-dev
             - libxcb-util0-dev
             - libxcb-image0-dev
+      before_install:
+        - . ./ci/setup_cmake.sh 3.13.2 Linux
+        - . ./ci/setup_ninja.sh 1.8.2 linux
     - os: linux
       compiler: gcc-8
       env:
@@ -77,13 +80,7 @@ matrix:
         - . ./ci/setup_cmake.sh 3.13.2 Linux
         - . ./ci/setup_ninja.sh 1.8.2 linux
       after_success:
-        # Create lcov report
-        - lcov --capture --directory . --output-file coverage.info
-        - lcov --remove coverage.info '/usr/*' --output-file coverage.info # filter system-files
-        - lcov --remove coverage.info '*/3rdparty/*'
-        - lcov --list coverage.info # debug info
-        # Uploading report to CodeCov
-        - bash <(curl -s https://codecov.io/bash) -f coverage.info || echo "Codecov did not collect coverage reports"
+        - bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
     - os: linux
       compiler: clang-5.0
       env:
@@ -178,10 +175,12 @@ matrix:
     - os: osx
       osx_image: xcode9.4
       env:
+        - GENERATOR=Ninja
         - C_COMPILER=clang
         - CXX_COMPILER=clang++
         - CI_CXX_FLAGS='-D_LIBCPP_DISABLE_AVAILABILITY -Wno-unused-command-line-argument -nostdinc++ -isystem /Users/travis/libc++/include/c++/v1'
         - CI_LDFLAGS='-L /Users/travis/libc++/lib'
+        - CONFIGURATION=Release
       before_install:
         - . ./ci/setup_cmake.sh 3.13.2 Darwin
         - . ./ci/setup_ninja.sh 1.8.2 mac
