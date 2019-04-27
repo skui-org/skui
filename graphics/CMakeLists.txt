@@ -78,4 +78,5 @@ target_link_libraries(graphics PRIVATE skia
                                        ${OPENGL_LIBRARIES}
                                        $<$<OR:$<PLATFORM_ID:Windows>,$<PLATFORM_ID:Darwin>>:opengl-api>)
 target_compile_definitions(graphics PRIVATE SKUI_GRAPHICS_INSIDES
-                                            $<$<PLATFORM_ID:Windows>:NOMINMAX>)
+                                            $<$<PLATFORM_ID:Windows>:NOMINMAX>
+                                            $<$<PLATFORM_ID:Darwin>:GL_SILENCE_DEPRECATION>)
