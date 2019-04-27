@@ -51,7 +51,7 @@ namespace skui::graphics
                                                  colors.data(),
                                                  nullptr,
                                                  static_cast<int>(points.size()),
-                                                 SkShader::TileMode::kMirror_TileMode));
+                                                 SkTileMode::kMirror));
   }
 
   void set_gradient(const radial_gradient& radial,
@@ -63,7 +63,7 @@ namespace skui::graphics
                                                  convert_to<std::vector<SkColor>>(radial.colors).data(),
                                                  nullptr,
                                                  static_cast<int>(radial.positions.size()),
-                                                 SkShader::TileMode::kMirror_TileMode));
+                                                 SkTileMode::kMirror));
   }
 
   void set_gradient(const sweep_gradient& sweep,
@@ -89,6 +89,6 @@ namespace skui::graphics
                                                           convert_to<std::vector<SkColor>>(conical.colors).data(),
                                                           nullptr,
                                                           static_cast<int>(conical.colors.size()),
-                                                          SkShader::TileMode::kMirror_TileMode));
+                                                          SkTileMode::kMirror));
   }
 }
