@@ -22,8 +22,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-find_package(OpenGL REQUIRED)
-
 # Common source files
 set(graphics_src
     bounding_box.h++
@@ -74,9 +72,7 @@ source_group(style FILES ${style_src})
 # The library itself
 add_library(graphics ${graphics_src} ${gradient_src} ${shape_src} ${style_src})
 target_link_libraries(graphics PUBLIC core)
-target_link_libraries(graphics PRIVATE skia
-                                       ${OPENGL_LIBRARIES}
-                                       $<$<OR:$<PLATFORM_ID:Windows>,$<PLATFORM_ID:Darwin>>:opengl-api>)
+target_link_libraries(graphics PRIVATE skia opengl)
 target_compile_definitions(graphics PRIVATE SKUI_GRAPHICS_INSIDES
                                             $<$<PLATFORM_ID:Windows>:NOMINMAX>
                                             $<$<PLATFORM_ID:Darwin>:GL_SILENCE_DEPRECATION>)

@@ -22,6 +22,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+find_package(OpenGL REQUIRED)
+
 # Common source files
 set(opengl_src
     functions.h++ functions.c++
@@ -34,4 +36,6 @@ source_group("" FILES ${opengl_src})
 
 # The library itself
 add_library(opengl ${opengl_src})
-target_link_libraries(opengl PUBLIC core opengl-api)
+target_link_libraries(opengl PUBLIC core opengl-api
+                                    ${OPENGL_LIBRARIES})
+target_compile_definitions(opengl PRIVATE $<$<PLATFORM_ID:Darwin>:GL_SILENCE_DEPRECATION>)
