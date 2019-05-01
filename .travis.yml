@@ -1,5 +1,5 @@
 sudo: required
-dist: trusty
+dist: xenial
 
 language: c++
 
@@ -25,7 +25,6 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - binutils
             - g++-7
             - libgl1-mesa-dev
             - libegl1-mesa-dev
@@ -47,7 +46,6 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - binutils
             - g++-8
             - libgl1-mesa-dev
             - libegl1-mesa-dev
@@ -71,7 +69,6 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - binutils
             - lcov
             - g++-8
             - libgl1-mesa-dev
@@ -101,7 +98,7 @@ matrix:
             - libxcb-util0-dev
             - libxcb-image0-dev
           sources:
-            - llvm-toolchain-trusty-5.0
+            - llvm-toolchain-xenial-5.0
       before_install:
         - . ./ci/setup_cmake.sh 3.13.2 Linux
         - . ./ci/setup_ninja.sh 1.8.2 linux
@@ -124,7 +121,7 @@ matrix:
             - libxcb-image0-dev
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-trusty-6.0
+            - llvm-toolchain-xenial-6.0
       before_install:
         - . ./ci/setup_cmake.sh 3.13.2 Linux
         - . ./ci/setup_ninja.sh 1.8.2 linux
@@ -147,7 +144,7 @@ matrix:
             - libxcb-image0-dev
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-trusty-7
+            - llvm-toolchain-xenial-7
       before_install:
         - . ./ci/setup_cmake.sh 3.13.2 Linux
         - . ./ci/setup_ninja.sh 1.8.2 linux
@@ -170,7 +167,7 @@ matrix:
             - libxcb-image0-dev
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-trusty-8
+            - llvm-toolchain-xenial-8
       before_install:
         - . ./ci/setup_cmake.sh 3.13.2 Linux
         - . ./ci/setup_ninja.sh 1.8.2 linux
