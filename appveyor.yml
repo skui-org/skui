@@ -5,6 +5,7 @@ environment:
     GENERATOR: Visual Studio 15 2017 Win64
     VCVARS: C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat
     VCVARSARG: amd64
+    CMAKE_ARGS: -DCMAKE_SYSTEM_VERSION=10.0
     BUILD_ARGS: /m:4 /verbosity:minimal
   - TOOLCHAIN: "Visual Studio 2019 x64"
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019 Preview
