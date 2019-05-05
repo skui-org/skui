@@ -22,19 +22,38 @@
  * THE SOFTWARE.
  **/
 
-#include "css/property.h++"
+#ifndef SKUI_CSS_OSTREAM_H
+#define SKUI_CSS_OSTREAM_H
 
-#include <iostream>
+#include "css/color.h++"
+#include "css/length.h++"
+#include "css/property.h++"
+#include "css/timing_function.h++"
+
+#include "css/property/animation.h++"
+
+#include <iosfwd>
 
 namespace skui::css
 {
-  std::ostream& operator<<(std::ostream& os, const inherit_t&)
-  {
-    return os << "inherit";
-  }
+  std::ostream& operator<<(std::ostream& os, const inherit_t& inherit);
+  std::ostream& operator<<(std::ostream& os, const initial_t& initial);
 
-  std::ostream& operator<<(std::ostream& os, const initial_t&)
-  {
-    return os << "initial";
-  }
+  std::ostream& operator<<(std::ostream& os, const color& color);
+
+  std::ostream& operator<<(std::ostream& os, const unit unit);
+  std::ostream& operator<<(std::ostream& os, const length& length);
+
+  std::ostream& operator<<(std::ostream& os, const steps& steps);
+  std::ostream& operator<<(std::ostream& os, const cubic_bezier& cubic_bezier);
+  std::ostream& operator<<(std::ostream& os, const timing_function& timing_function);
+
+  std::ostream& operator<<(std::ostream& os, const animation_direction&);
+  std::ostream& operator<<(std::ostream& os, const fill_mode&);
+  std::ostream& operator<<(std::ostream& os, const play_state&);
+  std::ostream& operator<<(std::ostream& os, const timing_function&);
+  std::ostream& operator<<(std::ostream& os, const infinite_t&);
+  std::ostream& operator<<(std::ostream& os, const animation& animation);
 }
+
+#endif

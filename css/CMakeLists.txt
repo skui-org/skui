@@ -25,19 +25,20 @@
 set(css_src
     color.h++
     declaration_block.h++
-    length.h++ length.c++
+    length.h++
+    ostream.h++ ostream.c++
     parser.h++ parser.c++
     rule_set.h++
     selector.h++ selector.c++
     time.h++
-    timing_function.h++ timing_function.c++
+    timing_function.h++
    )
 set(properties_src
-    property.h++ property.c++
+    property.h++
     property/align_content.h++
     property/align_items.h++
     property/align_self.h++
-    property/animation.h++ property/animation.c++
+    property/animation.h++
     property/backface_visibility.h++
     property/background.h++
     property/border.h++

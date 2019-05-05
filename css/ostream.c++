@@ -22,11 +22,9 @@
  * THE SOFTWARE.
  **/
 
-#include "css/property/animation.h++"
-#include "css/time.h++"
+#include "ostream.h++"
 
 #include <iostream>
-#include <variant>
 
 namespace skui::css
 {
@@ -34,6 +32,83 @@ namespace skui::css
   std::ostream& operator<<(std::ostream& os, const std::variant<ValueTypes...>& value)
   {
     std::visit([&os](auto&& v) { os << v; }, value);
+    return os;
+  }
+
+  std::ostream& operator<<(std::ostream& os, const inherit_t&)
+  {
+    return os << "inherit";
+  }
+
+  std::ostream& operator<<(std::ostream& os, const initial_t&)
+  {
+    return os << "initial";
+  }
+
+  std::ostream& operator<<(std::ostream& os, const color& color)
+  {
+    core::ostream_format_keeper keeper(os);
+
+    return os << std::hex << std::uint32_t(color);
+  }
+
+  std::ostream& operator<<(std::ostream& os, const unit unit)
+  {
+    switch(unit)
+    {
+      case unit::mm:
+        return os << "mm";
+      case unit::cm:
+        return os << "cm";
+      case unit::in:
+        return os << "in";
+      case unit::px:
+        return os << "px";
+      case unit::pt:
+        return os << "pt";
+      case unit::pc:
+        return os << "pc";
+      case unit::em:
+        return os << "em";
+      case unit::ex:
+        return os << "ex";
+      case unit::ch:
+        return os << "ch";
+      case unit::rem:
+        return os << "rem";
+      case unit::vw:
+        return os << "vw";
+      case unit::vh:
+        return os << "vh";
+      case unit::vmin:
+        return os << "vmin";
+      case unit::vmax:
+        return os << "vmax";
+      case unit::percentage:
+        return os << "%";
+    }
+    return os;
+  }
+
+  std::ostream& operator<<(std::ostream& os, const length& length)
+  {
+    return os << length.value << ' ' << length.unit;
+  }
+
+  std::ostream& operator<<(std::ostream& os, const steps& steps)
+  {
+    return os << "steps(" << steps.intervals << ", " << steps.change << ')';
+  }
+
+  std::ostream& operator<<(std::ostream& os, const cubic_bezier& cubic_bezier)
+  {
+    return os << "cubic-bezier(" << cubic_bezier.x1 << ", " << cubic_bezier.y1 << ", "
+                                 << cubic_bezier.x2 << ", " << cubic_bezier.y2 << ')';
+  }
+
+  std::ostream& operator<<(std::ostream& os, const timing_function& timing_function)
+  {
+    std::visit([&os](const auto& value) { os << value; }, timing_function);
     return os;
   }
 
@@ -97,6 +172,6 @@ namespace skui::css
                  "  direction: " << animation.direction << ";\n"
                  "  fill_mode: " << animation.fill_mode << ";\n"
                  "  play_state: " << animation.play_state << ";\n"
-                 "}";
+                                                             "}";
   }
 }

@@ -26,6 +26,7 @@
 
 #include <core/string.h++>
 #include <css/grammar/color.h++>
+#include <css/ostream.h++>
 
 namespace
 {

@@ -158,13 +158,6 @@ namespace skui::css
     return css::color::rgba(color.red, color.green, color.blue, color.alpha / 2);
   }
 
-  inline std::ostream& operator<<(std::ostream& os, const color& color)
-  {
-    core::ostream_format_keeper keeper(os);
-
-    return os << std::hex << std::uint32_t(color) << '\n';
-  }
-
   namespace colors
   {
     static constexpr color transparent             {0x00000000};

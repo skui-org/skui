@@ -60,7 +60,6 @@ namespace skui::css
 
   using iteration_count = std::variant<std::uint64_t, infinite_t>;
 
-
   struct animation final
   {
     animation() = default;
@@ -128,12 +127,5 @@ namespace skui::css
         && left.fill_mode == right.fill_mode
         && left.play_state == right.play_state;
   }
-
-  std::ostream& operator<<(std::ostream& os, const animation_direction&);
-  std::ostream& operator<<(std::ostream& os, const fill_mode&);
-  std::ostream& operator<<(std::ostream& os, const play_state&);
-  std::ostream& operator<<(std::ostream& os, const timing_function&);
-  std::ostream& operator<<(std::ostream& os, const infinite_t&);
-  std::ostream& operator<<(std::ostream& os, const animation& animation);
 }
 #endif
