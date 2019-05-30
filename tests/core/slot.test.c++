@@ -29,15 +29,13 @@
 namespace
 {
   using skui::test::check;
-  using skui::core::implementation::callable_slot;
-  using skui::core::implementation::member_function_slot;
 
   int f_called = 0;
-  void f() { f_called = 1; }
+  void f() { f_called++; }
   void f_arg(int i) { f_called = i; }
 
   int l_called = 0;
-  const auto l = [] { l_called = 1; };
+  const auto l = [] { l_called++; };
   const auto l_arg = [](int i) { l_called = i; };
 
   int f_return() { return 42; }
@@ -58,37 +56,41 @@ namespace
   void test_callable_slot()
   {
     {
-      callable_slot<decltype(&f), void> slot(&f);
-      slot(nullptr);
+      skui::core::slot<void> slot(&f);
+      slot();
       check(f_called == 1, "function called through slot.");
 
-      callable_slot<decltype(&f_arg), void, int> slot_arg(&f_arg);
-      slot_arg(nullptr, 2);
+      skui::core::slot<void, int> slot_arg(&f_arg);
+      slot_arg(2);
       check(f_called == 2, "function with argument called through slot.");
 
-      callable_slot<decltype(&f), void, int> slot_arg_less(&f);
-      slot_arg_less(nullptr, 3);
-      check(f_called == 1, "function called through slot extra arguments ignored.");
+      skui::core::slot<void, int> slot_arg_less(&f);
+      slot_arg_less(3);
+      check(f_called == 3, "function called through slot extra arguments ignored.");
     }
     {
-      callable_slot<decltype(l), void> slot(l);
-      slot(nullptr);
+      skui::core::slot<void> slot(l);
+      slot();
       check(l_called == 1, "lambda called through slot.");
 
-      callable_slot<decltype(l_arg), void, int> slot_arg(l_arg);
-      slot_arg(nullptr, 2);
-      check(l_called == 2, "lambda with argument called through slot.");
+      skui::core::slot<void> rvalue_slot{[&slot] { slot(); }};
+      rvalue_slot();
+      check(l_called == 2, "rvalue lambda slot called through slot.");
 
-      callable_slot<decltype(l), void, int> slot_arg_less(l);
-      slot_arg_less(nullptr, 3);
-      check(l_called == 1, "lambda called through slot extra arguments ignored.");
+      skui::core::slot<void, int> slot_arg(l_arg);
+      slot_arg(1);
+      check(l_called == 1, "lambda with argument called through slot.");
+
+      skui::core::slot<void, int> slot_arg_less(l);
+      slot_arg_less(3);
+      check(l_called == 2, "lambda called through slot extra arguments ignored.");
     }
     {
       int captured = 0;
       const auto cl = [&captured](int i) { captured = i; };
 
-      callable_slot<decltype(cl), void, int> slot(cl);
-      slot(nullptr, 1);
+      skui::core::slot<void, int> slot(cl);
+      slot(1);
       check(captured == 1, "Capturing lambda slot called.");
     }
   }
@@ -98,50 +100,53 @@ namespace
     {
       mock object;
 
-      member_function_slot<mock, void(mock::*)(), void> slot(&mock::m);
-      slot(&object);
+      skui::core::slot<void> slot(&object, &mock::m);
+      slot();
       check(object.called == 1, "member function called through slot.");
 
-      member_function_slot<mock, void(mock::*)(int), void, int> slot_arg(&mock::m_arg);
-      slot_arg(&object, 2);
+      skui::core::slot<void, int> slot_arg(&object, &mock::m_arg);
+      slot_arg(2);
       check(object.called == 2, "member function with argument called through slot.");
 
-      member_function_slot<mock, void(mock::*)(), void, int> slot_arg_less(&mock::m);
-      slot_arg_less(&object, 3);
+      skui::core::slot<void, int> slot_arg_less(&object, &mock::m);
+      slot_arg_less(3);
       check(object.called == 1, "member function called through slot extra arguments ignored.");
     }
     {
       const mock object;
 
-      const member_function_slot<mock, void(mock::*)() const, void> slot(&mock::m);
-      slot(&object);
+      const skui::core::slot<void> slot(&object, &mock::m);
+      slot();
       check(object.const_called == 11, "const member function called through slot.");
 
-      const member_function_slot<mock, void(mock::*)(int) const, void, int> slot_arg(&mock::m_arg);
-      slot_arg(&object, 22);
+      const skui::core::slot<void, int> slot_arg(&object, &mock::m_arg);
+      slot_arg(22);
       check(object.const_called == 22, "const member function with argument called through slot.");
 
-      const member_function_slot<mock, void(mock::*)() const, void, int> slot_arg_less(&mock::m);
-      slot_arg_less(&object, 33);
+      const skui::core::slot<void, int> slot_arg_less(&object, &mock::m);
+      slot_arg_less(33);
       check(object.const_called == 11, "const member function called through slot extra arguments ignored.");
     }
   }
 
   void test_return_value_slot()
   {
-    callable_slot<decltype(&f_return), int> function_slot(f_return);
-    check(function_slot(nullptr) == 42, "function slot returns correct return value.");
+    skui::core::slot<int> function_slot(&f_return);
+    check(function_slot() == 42, "function slot returns correct return value.");
 
-    callable_slot<decltype(l_return), int> lambda_slot(l_return);
-    check(lambda_slot(nullptr) == 43, "lambda slot returns correct return value.");
+    skui::core::slot<int> lambda_slot(l_return);
+    check(lambda_slot() == 43, "lambda slot returns correct return value.");
+
+    skui::core::slot<int> rvalue_lambda_slot([&lambda_slot] {return lambda_slot(); });
+    check(rvalue_lambda_slot() == 43, "rvalue lambda slot returns correct return value.");
 
     mock object;
 
-    member_function_slot<mock, int(mock::*)(), int> member_slot(&mock::m_return);
-    check(member_slot(&object) == 44, "member slot returns correct return value.");
+    skui::core::slot<int> member_slot(&object, &mock::m_return);
+    check(member_slot() == 44, "member slot returns correct return value.");
 
-    member_function_slot<mock, int(mock::*)() const, int> const_member_slot(&mock::m_return);
-    check(const_member_slot(&object) == 33, "const member slot returns correct return value.");
+    skui::core::slot<int> const_member_slot(static_cast<const mock*>(&object), &mock::m_return);
+    check(const_member_slot() == 33, "const member slot returns correct return value.");
   }
 }
 

@@ -32,106 +32,148 @@
 #define SKUI_CORE_SLOT_H
 
 #include <functional>
-#include <utility>
 
 #include "core/traits/arity.h++"
 
-namespace skui::core::implementation
+namespace skui::core
 {
-  // interface
   template<typename ReturnType, typename... ArgTypes>
   class slot
   {
   public:
-    virtual ~slot() = default;
-
-    virtual ReturnType operator()(const void* object, ArgTypes...) const = 0;
-
-  protected:
-    slot() = default;
-  };
-
-  // Implementation for function pointers and functors (including lambdas)
-  template<typename Callable, typename ReturnType = void, typename... ArgTypes>
-  class callable_slot : public slot<ReturnType, ArgTypes...>
-  {
-  public:
-    callable_slot(Callable function_pointer_or_lambda)
-      : callable{function_pointer_or_lambda}
+    // Callable
+    template<typename CallableType>
+    slot(CallableType&& callable)
+      : target{nullptr}
+      , proxy{bind(std::forward<CallableType>(callable))}
     {}
-
-    ReturnType operator()(const void*, ArgTypes... args) const override
+    // Member function
+    template<typename ClassType,
+             typename FunctionClassType,
+             typename FunctionReturnType,
+             typename... FunctionArgTypes,
+             typename = std::enable_if_t<!std::is_const_v<ClassType>>>
+    slot(ClassType* instance,
+         FunctionReturnType (FunctionClassType::* member_function_pointer)(FunctionArgTypes...))
+      : target{get_pointer_to_most_derived(instance)}
+      , proxy{bind(instance, member_function_pointer)}
     {
-      return call(std::make_index_sequence<arity_v<Callable>>{},
-                  std::forward<ArgTypes>(args)...);
+      static_assert(std::is_base_of<FunctionClassType, ClassType>::value,
+                    "You can only wrap member functions of a related object.");
+    }
+    // Const member function
+    template<typename ClassType,
+             typename FunctionClassType,
+             typename FunctionReturnType,
+             typename... FunctionArgTypes>
+    slot(const ClassType* instance,
+         FunctionReturnType (FunctionClassType::* const_member_function_pointer)(FunctionArgTypes...) const)
+      : target{get_pointer_to_most_derived(instance)}
+      , proxy{bind(instance, const_member_function_pointer)}
+    {
+      static_assert(std::is_base_of<FunctionClassType, ClassType>::value,
+                    "You can only wrap member functions of a related object.");
+    }
+
+    slot(const slot& other) = default;
+    slot(slot&& other)
+      : target{other.target}
+      , proxy{std::move(other.proxy)}
+    {
+      other.object = nullptr;
+    }
+
+    template<typename... InputArgTypes>
+    auto operator()(InputArgTypes&&... input_arguments) const
+    {
+      return proxy(target, std::forward<InputArgTypes>(input_arguments)...);
+    }
+
+    void reseat(const void* object)
+    {
+      target = object;
+    }
+
+    template<typename T>
+    const T* get_target() const
+    {
+      return static_cast<T*>(target);
     }
 
   private:
-    template<std::size_t... Indices>
-    ReturnType call(const std::index_sequence<Indices...>&,
-                    ArgTypes&&... args) const
+    const void* target;
+    std::function<ReturnType(const void*, ArgTypes...)> proxy;
+
+    // Pointer to most derived class in inheritance chain
+    template<typename ClassType>
+    static auto get_pointer_to_most_derived(ClassType* instance)
+    {
+      if constexpr(std::is_polymorphic_v<ClassType>)
+        return dynamic_cast<const void*>(instance);
+      else
+        return instance;
+    }
+
+    // binding all types of callable objects in a lambda
+    template<typename CallableType>
+    auto bind(CallableType&& callable)
+    {
+      return [callable = std::move(callable)](const void*, auto&&... arguments)
+             {
+               return call(callable,
+                           std::make_index_sequence<arity_v<CallableType>>(),
+                           std::forward<ArgTypes>(arguments)...);
+             };
+    }
+    template<typename ClassType,
+             typename FunctionClassType,
+             typename FunctionReturnType,
+             typename... FunctionArgTypes>
+    auto bind(ClassType*,
+              FunctionReturnType(FunctionClassType::* member_function_pointer)(FunctionArgTypes...))
+    {
+      return [=] (const void* object, auto&&... arguments)
+             {
+               return call(member_function_pointer,
+                           std::make_index_sequence<sizeof...(FunctionArgTypes)>(),
+                           const_cast<ClassType*>(static_cast<const ClassType*>(object)),
+                           std::forward<decltype(arguments)>(arguments)...);
+             };
+    }
+    template<typename ClassType,
+             typename FunctionClassType,
+             typename FunctionReturnType,
+             typename... FunctionArgTypes>
+    auto bind(const ClassType*,
+              FunctionReturnType(FunctionClassType::* const_member_function_pointer)(FunctionArgTypes...) const)
+    {
+      return [=] (const void* object, auto&&... arguments)
+             {
+               return call(const_member_function_pointer,
+                           std::make_index_sequence<sizeof...(FunctionArgTypes)>(),
+                           static_cast<const ClassType*>(object),
+                           std::forward<decltype(arguments)>(arguments)...);
+             };
+    }
+
+
+    // arity matching - drop extra arguments to slot function
+    template<typename CallableType, std::size_t... Indices>
+    static ReturnType call(CallableType&& callable,
+                           const std::index_sequence<Indices...>&,
+                           ArgTypes... args)
     {
       return callable(std::get<Indices>(std::make_tuple(args...))...);
     }
 
-    Callable callable;
-  };
-
-  // Implementation for member functions
-  template<typename Class, typename MemberFunctionPointer, typename ReturnType, typename... ArgTypes>
-  class member_function_slot : public slot<ReturnType, ArgTypes...>
-  {
-  public:
-    member_function_slot(MemberFunctionPointer member_function)
-      : member_function_ptr{member_function}
-    {}
-
-    ReturnType operator()(const void* object, ArgTypes... args) const override
+    template<typename MemberFunctionPointer, typename ClassType, std::size_t ... Indices>
+    static ReturnType call(MemberFunctionPointer member_function_pointer,
+                           const std::index_sequence<Indices...>&,
+                           ClassType* object,
+                           ArgTypes&&... args)
     {
-      return call(std::make_index_sequence<arity_v<MemberFunctionPointer>>{},
-                  const_cast<Class*>(static_cast<const Class*>(object)),
-                  std::forward<ArgTypes>(args)...);
+      return (object->*member_function_pointer)(std::get<Indices>(std::make_tuple(args...))...);
     }
-
-  private:
-    template<std::size_t ... Indices>
-    ReturnType call(const std::index_sequence<Indices...>&,
-                    Class* object,
-                    ArgTypes&&... args) const
-    {
-      return (object->*member_function_ptr)(std::get<Indices>(std::make_tuple(args...))...);
-    }
-
-    MemberFunctionPointer member_function_ptr;
-  };
-
-  // Implementation for const member functions
-  template<typename Class, typename ConstMemberFunctionPointer, typename ReturnType, typename... ArgTypes>
-  class const_member_function_slot : public slot<ReturnType, ArgTypes...>
-  {
-
-  public:
-    const_member_function_slot(ConstMemberFunctionPointer const_member_function)
-      : const_member_function_ptr{const_member_function}
-    {}
-
-    ReturnType operator()(const void* object, ArgTypes... args) const override
-    {
-      return call(std::make_index_sequence<arity_v<ConstMemberFunctionPointer>>{},
-                  static_cast<const Class*>(object),
-                  std::forward<ArgTypes>(args)...);
-    }
-
-  private:
-    template<std::size_t... Indices>
-    ReturnType call(const std::index_sequence<Indices...>&,
-                    const Class* object,
-                    ArgTypes&&... args) const
-    {
-      return (object->*const_member_function_ptr)(std::get<Indices>(std::make_tuple(args...))...);
-    }
-
-    ConstMemberFunctionPointer const_member_function_ptr;
   };
 }
 

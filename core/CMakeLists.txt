@@ -40,7 +40,6 @@ set(core_src
     string.h++
     trackable.h++ trackable.c++
     utility.h++ utility.c++
-    value_ptr.h++
    )
 set(traits_src
     traits/are_convertible.h++

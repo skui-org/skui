@@ -41,7 +41,6 @@ runtime_test(core proxy_property)
 runtime_test(core signal)
 runtime_test(core slot)
 runtime_test(core trackable)
-runtime_test(core value_ptr)
 
 compile_test(core traits/are_convertible)
 compile_test(core traits/are_same)
