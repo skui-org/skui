@@ -27,6 +27,7 @@
 
 #include "css/color.h++"
 #include "css/length.h++"
+#include "css/position.h++"
 #include "css/property.h++"
 #include "css/timing_function.h++"
 
@@ -43,6 +44,9 @@ namespace skui::css
 
   std::ostream& operator<<(std::ostream& os, const unit unit);
   std::ostream& operator<<(std::ostream& os, const length& length);
+
+  std::ostream& operator<<(std::ostream& os, const length_with_offset& length_with_offset);
+  std::ostream& operator<<(std::ostream& os, const position& position);
 
   std::ostream& operator<<(std::ostream& os, const steps& steps);
   std::ostream& operator<<(std::ostream& os, const cubic_bezier& cubic_bezier);

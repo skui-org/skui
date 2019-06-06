@@ -58,6 +58,7 @@ set(grammar_src
     grammar/length.h++ grammar/length.c++
     grammar/make_property.h++
     grammar/numeric.h++
+    grammar/position.h++ grammar/position.c++
     grammar/property_symbols_table.h++
     grammar/quoted_string.h++
     grammar/semantic/convert_to.h++

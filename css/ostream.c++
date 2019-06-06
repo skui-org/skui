@@ -95,6 +95,21 @@ namespace skui::css
     return os << length.value << ' ' << length.unit;
   }
 
+  std::ostream& operator<<(std::ostream& os, const length_with_offset& length_with_offset)
+  {
+    os << length_with_offset.value;
+    if(length_with_offset.offset != length{})
+    {
+      os << " (offset: " << length_with_offset.offset << ')';
+    }
+    return os;
+  }
+
+  std::ostream& operator<<(std::ostream& os, const position& position)
+  {
+    return os << "position(" << position.x << ", " << position.y << ")";
+  }
+
   std::ostream& operator<<(std::ostream& os, const steps& steps)
   {
     return os << "steps(" << steps.intervals << ", " << steps.change << ')';
