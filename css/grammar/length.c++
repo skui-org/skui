@@ -41,7 +41,11 @@ namespace skui::css::grammar
        ("vw", unit::vw)
        ("vh", unit::vh)
        ("vmin", unit::vmin)
-       ("vmax", unit::vmax)
-       ("%", unit::percentage);
+       ("vmax", unit::vmax);
+  }
+
+  unit_percentage_table::unit_percentage_table()
+  {
+    add("%", unit::percentage);
   }
 }

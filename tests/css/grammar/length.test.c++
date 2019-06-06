@@ -70,7 +70,25 @@ int main()
   check_rule_success(length, vh, {100.f, unit::vh});
   check_rule_success(length, vmin, {10.f, unit::vmin});
   check_rule_success(length, vmax, {20.f, unit::vmax});
-  check_rule_success(length, percentage, {3.4f, unit::percentage});
+  check_rule_failure(length, percentage);
+
+  using skui::css::grammar::length_percentage;
+  check_rule_success(length_percentage, centimeter, {2.f, unit::cm});
+  check_rule_success(length_percentage, millimeter, {1e3f, unit::mm});
+  check_rule_success(length_percentage, inch, {2e-3f, unit::in});
+  check_rule_success(length_percentage, pixel, {20.f, unit::px});
+  check_rule_success(length_percentage, point, {12, unit::pt});
+  check_rule_success(length_percentage, pica, {300.f, unit::pc});
+
+  check_rule_success(length_percentage, em, {2e-7f, unit::em});
+  check_rule_success(length_percentage, ex, {3.4f, unit::ex});
+  check_rule_success(length_percentage, ch, {123.f, unit::ch});
+  check_rule_success(length_percentage, rem, {1.f, unit::rem});
+  check_rule_success(length_percentage, vw, {.1f, unit::vw});
+  check_rule_success(length_percentage, vh, {100.f, unit::vh});
+  check_rule_success(length_percentage, vmin, {10.f, unit::vmin});
+  check_rule_success(length_percentage, vmax, {20.f, unit::vmax});
+  check_rule_success(length_percentage, percentage, {3.4f, unit::percentage});
 
   return skui::test::exit_code;
 }

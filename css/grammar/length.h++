@@ -42,8 +42,16 @@ namespace skui::css::grammar
     unit_table();
   } const unit;
 
+  struct unit_percentage_table : unit_table
+  {
+    unit_percentage_table();
+  } const unit_percentage;
+
   const auto length = x3::rule<struct length, css::length>{"length"}
                    %= non_scientific_float >> unit
                     | x3::float_ >> unit;
+  const auto length_percentage = x3::rule<struct length, css::length>{"length-percentage"}
+                              %= non_scientific_float >> unit_percentage
+                               | x3::float_ >> unit_percentage;
 }
 #endif
