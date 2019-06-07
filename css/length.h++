@@ -64,6 +64,10 @@ namespace skui::css
   {
     return left.value == right.value && left.unit == right.unit;
   }
+  constexpr bool operator!=(const length& left, const length& right)
+  {
+    return !(left == right);
+  }
 }
 
 #endif
