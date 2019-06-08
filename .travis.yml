@@ -56,6 +56,27 @@ matrix:
         - . ./ci/setup_cmake.sh 3.13.2 Linux
         - . ./ci/setup_ninja.sh 1.8.2 linux
     - os: linux
+      compiler: gcc-9
+      env:
+        - GENERATOR=Ninja
+        - C_COMPILER=gcc-9
+        - CXX_COMPILER=g++-9
+        - CONFIGURATION=Release
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-9
+            - libgl1-mesa-dev
+            - libegl1-mesa-dev
+            - libgles2-mesa-dev
+            - libxcb-util0-dev
+            - libxcb-image0-dev
+      before_install:
+        - . ./ci/setup_cmake.sh 3.13.2 Linux
+        - . ./ci/setup_ninja.sh 1.8.2 linux
+    - os: linux
       compiler: gcc-8
       env:
         - GENERATOR=Ninja
