@@ -90,7 +90,6 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - lcov
             - g++-8
             - libgl1-mesa-dev
             - libegl1-mesa-dev
@@ -100,8 +99,12 @@ matrix:
       before_install:
         - . ./ci/setup_cmake.sh 3.13.2 Linux
         - . ./ci/setup_ninja.sh 1.8.2 linux
+        - . ./ci/setup_lcov.sh 1.14
       after_success:
-        - bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
+        - lcov --directory . --capture --output-file coverage.info --gcov-tool gcov-8 # capture coverage info
+        - lcov --remove coverage.info '/usr/*' '*/tests/*' '*/tests/*' '*/3rdparty/*' --output-file coverage.info # filter out system and tests
+        - lcov --list coverage.info # debug info
+        - bash <(curl -s https://codecov.io/bash) -f coverage.info || echo "Codecov did not collect coverage reports"
     - os: linux
       compiler: clang-5.0
       env:

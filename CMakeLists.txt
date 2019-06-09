@@ -56,6 +56,7 @@ add_custom_target(miscellaneous SOURCES
     appveyor.yml
     .travis.yml
     ci/setup_cmake.sh
+    ci/setup_lcov.sh
     ci/setup_libcxx.sh
     ci/setup_ninja.sh
     cmake/toolchain_options.cmake
