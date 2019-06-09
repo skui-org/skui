@@ -56,9 +56,11 @@ namespace skui::core
 
     explicit smart_copy() { static_assert(!std::is_abstract<T>::value, "Cannot default construct smart_copy for an abstract type."); }
     explicit smart_copy(copy_function_type copy_function) : copy_function(copy_function) {}
-    smart_copy(const smart_copy& other) : copy_function(other.get_copy_function()) {}
+    smart_copy(const smart_copy& other) = default;
+    smart_copy& operator=(const smart_copy&) = default;
     template<typename U>
     smart_copy(const smart_copy<U>& other) : copy_function(other.get_copy_function()) {}
+
 
     void* operator()(void* other) const { return copy_function(other); }
     copy_function_type get_copy_function() const { return copy_function; }
