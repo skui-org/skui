@@ -57,9 +57,6 @@ namespace skui::css
     css::unit unit;
   };
 
-  std::ostream& operator<<(std::ostream& os, const css::unit unit);
-  std::ostream& operator<<(std::ostream& os, const length& length);
-
   constexpr bool operator==(const length& left, const length& right)
   {
     return left.value == right.value && left.unit == right.unit;
