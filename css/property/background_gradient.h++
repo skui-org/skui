@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright © 2019 Ruben Van Boxem
+ * Copyright © 2018-2019 Ruben Van Boxem
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,29 +22,29 @@
  * THE SOFTWARE.
  **/
 
-#ifndef SKUI_CSS_PROPERTY_LINEAR_GRADIENT_H
-#define SKUI_CSS_PROPERTY_LINEAR_GRADIENT_H
+#ifndef SKUI_CSS_PROPERTY_BACKGROUND_GRADIENT_H
+#define SKUI_CSS_PROPERTY_BACKGROUND_GRADIENT_H
 
 #include "css/angle.h++"
+#include "css/color_stop.h++"
+#include "css/length.h++"
 #include "css/position.h++"
 
-#include "css/property/background_gradient.h++"
-
-#include <variant>
-
-#include <cinttypes>
+#include <vector>
 
 namespace skui::css
 {
-  struct linear_gradient : background_gradient
+  struct background_gradient
   {
-    std::variant<css::position, css::angle> direction; // direction or explicit angle [0,360] degrees
+    bool repeating{false};
+    std::vector<color_stop> colors;
   };
 
-  constexpr bool operator==(const linear_gradient& left, const linear_gradient& right)
+  constexpr bool operator==(const background_gradient& left,
+                            const background_gradient& right)
   {
-    return static_cast<const background_gradient&>(left) == static_cast<const background_gradient&>(right)
-        && left.direction == right.direction;
+    return left.repeating == right.repeating
+        && left.colors == right.colors;
   }
 }
 

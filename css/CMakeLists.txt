@@ -44,6 +44,7 @@ set(properties_src
     property/animation.h++
     property/backface_visibility.h++
     property/background.h++
+    property/background_gradient.h++
     property/border.h++
     property/linear_gradient.h++
    )
