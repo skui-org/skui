@@ -58,6 +58,8 @@ namespace skui::css
   std::ostream& operator<<(std::ostream& os, const timing_function&);
   std::ostream& operator<<(std::ostream& os, const infinite_t&);
   std::ostream& operator<<(std::ostream& os, const animation& animation);
+
+  std::ostream& operator<<(std::ostream& os, const linear_gradient& linear_gradient);
 }
 
 #endif

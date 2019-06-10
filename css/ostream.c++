@@ -189,4 +189,16 @@ namespace skui::css
                  "  play_state: " << animation.play_state << ";\n"
                                                              "}";
   }
+
+  std::ostream& operator<<(std::ostream& os,
+                           const linear_gradient& linear_gradient)
+  {
+    if(linear_gradient.repeating)
+      os << "repeating-";
+
+    os << "linear-gradient(to ";
+    std::visit([&os](auto&& direction) { os << direction; }, linear_gradient.direction);
+
+    return os << ", " << linear_gradient.colors << ")";
+  }
 }
