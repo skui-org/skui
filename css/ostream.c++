@@ -49,7 +49,7 @@ namespace skui::css
   {
     core::ostream_format_keeper keeper(os);
 
-    return os << std::hex << std::uint32_t(color);
+    return os << std::setfill('0') << std::setw(8) << std::hex << std::uint32_t(color);
   }
 
   std::ostream& operator<<(std::ostream& os, const unit unit)
