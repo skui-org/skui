@@ -24,6 +24,7 @@
 
 #include "css/test_rule.h++"
 
+#include <css/ostream.h++>
 #include <css/grammar/semantic/repeat_value.h++>
 
 namespace
