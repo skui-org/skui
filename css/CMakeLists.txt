@@ -24,6 +24,7 @@
 
 set(css_src
     color.h++
+    color_stop.h++
     declaration_block.h++
     length.h++
     ostream.h++ ostream.c++
@@ -56,6 +57,7 @@ set(grammar_src
     grammar/background.h++ grammar/background.c++
     grammar/backface_visibility.h++ grammar/backface_visibility.c++
     grammar/color.h++ grammar/color.c++
+    grammar/color_stop.h++
     grammar/length.h++ grammar/length.c++
     grammar/linear_gradient.h++ grammar/linear_gradient.c++
     grammar/make_property.h++
