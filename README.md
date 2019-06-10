@@ -11,17 +11,20 @@ New functionality must be accompanied by corresponding tests.
 
 [![Build Status](https://travis-ci.org/skui-org/skui.svg?branch=master)](https://travis-ci.org/skui-org/skui)
 [![Build status](https://ci.appveyor.com/api/projects/status/s9t7o9k8u0p15e0x?svg=true)](https://ci.appveyor.com/project/RubenVanBoxem/skui)
+[![codecov](https://codecov.io/gh/skui-org/skui/branch/master/graph/badge.svg)](https://codecov.io/gh/skui-org/skui)
 
 | Operating System | Compiler                | Supported          | Notes |
 |------------------| ------------------------|--------------------| ----- |
+| Windows          | Visual Studio 2019      | :heavy_check_mark: |       |
+| Windows          | VS 2019 CLang/LLVM 8.0+ | :heavy_check_mark: |       |
 | Windows          | Visual Studio 2017      | :heavy_check_mark: |       |
 | Windows          | VS 2017 Clang/LLVM 6.0+ | :heavy_check_mark: |       |
-| Windows          | MinGW-w64 GCC 7.3+      | :heavy_check_mark: | Requires Boost. |
-| Windows          | MinGW-w64 Clang 5.0+    | :heavy_check_mark: | Requires Boost. |
-| Windows          | Intel C++ 18+           |        :x:         | Lacks required C++17 features. |
+| Windows          | MinGW-w64 GCC 7.3+      | :heavy_check_mark: | Requires usable filesystem TS implementation. |
+| Windows          | MinGW-w64 Clang 5.0+    | :heavy_check_mark: | Requires usable filesystem TS implementation. |
+| Windows          | Intel C++ 19+           |        :x:         | Lacks required C++17 features. |
 | Linux            | GCC 7.3+                | :heavy_check_mark: |       |
 | Linux            | Clang 5.0+              | :heavy_check_mark: |       |
-| Linux            | Intel C++ 18+           |        :x:         | Lacks required C++17 features. |
+| Linux            | Intel C++ 19+           |        :x:         | Lacks required C++17 features. |
 | Mac OS X 10.13+  | XCode 9.4+ Clang        |      :soon:        | Requires LLVM libc++ build. Missing implementation of core window/application classes. |
 | Mac OS X 10.13+  | Homebrew GCC 7.3+       |      :soon:        | Missing implementation of core window/application classes. |
 | Mac OS X 10.13+  | Homebrew Clang 6.0+     |      :soon:        | Missing implementation of core window/application classes. |
