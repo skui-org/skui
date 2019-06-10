@@ -196,6 +196,28 @@ namespace skui::css
   }
 
   std::ostream& operator<<(std::ostream& os,
+                           const std::vector<skui::css::color_stop>& colors)
+  {
+    for(auto it = colors.begin(); it != colors.end(); ++it)
+    {
+      os << *it;
+      if(it+1 != colors.end())
+        os << ", ";
+    }
+    return os;
+  }
+
+  std::ostream&operator<<(std::ostream& os, const color_stop& color_stop)
+  {
+    os << "color-stop(" << color_stop.color;
+    if(color_stop.stop)
+    {
+      os << ", " << *color_stop.stop;
+    }
+    return os << ")";
+  }
+
+  std::ostream& operator<<(std::ostream& os,
                            const linear_gradient& linear_gradient)
   {
     if(linear_gradient.repeating)

@@ -41,6 +41,7 @@ namespace skui::css
   std::ostream& operator<<(std::ostream& os, const initial_t& initial);
 
   std::ostream& operator<<(std::ostream& os, const color& color);
+  std::ostream& operator<<(std::ostream& os, const color_stop& color_stop);
 
   std::ostream& operator<<(std::ostream& os, const unit unit);
   std::ostream& operator<<(std::ostream& os, const length& length);
