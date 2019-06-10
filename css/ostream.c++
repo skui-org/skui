@@ -107,7 +107,28 @@ namespace skui::css
 
   std::ostream& operator<<(std::ostream& os, const position& position)
   {
-    return os << "position(" << position.x << ", " << position.y << ")";
+    if(position == top)
+      os << "top";
+    else if(position == center)
+      os << "center";
+    else if(position == bottom)
+      os << "bottom";
+    else if(position == left)
+      os << "left";
+    else if(position == right)
+      os << "right";
+    else if(position == top_left)
+      os << "top left";
+    else if(position == top_right)
+      os << "top right";
+    else if(position == bottom_left)
+      os << "bottom left";
+    else if(position == bottom_right)
+      os << "bottom right";
+    else
+      os << "position(" << position.x << ", " << position.y << ")";
+
+    return os;
   }
 
   std::ostream& operator<<(std::ostream& os, const skui::css::time& time)
