@@ -48,6 +48,8 @@ namespace skui::css
   std::ostream& operator<<(std::ostream& os, const length_with_offset& length_with_offset);
   std::ostream& operator<<(std::ostream& os, const position& position);
 
+  std::ostream& operator<<(std::ostream& os, const css::time& time);
+
   std::ostream& operator<<(std::ostream& os, const steps& steps);
   std::ostream& operator<<(std::ostream& os, const cubic_bezier& cubic_bezier);
   std::ostream& operator<<(std::ostream& os, const timing_function& timing_function);

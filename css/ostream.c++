@@ -110,6 +110,11 @@ namespace skui::css
     return os << "position(" << position.x << ", " << position.y << ")";
   }
 
+  std::ostream& operator<<(std::ostream& os, const skui::css::time& time)
+  {
+    return os << time.count() << " ms";
+  }
+
   std::ostream& operator<<(std::ostream& os, const steps& steps)
   {
     return os << "steps(" << steps.intervals << ", " << steps.change << ')';
