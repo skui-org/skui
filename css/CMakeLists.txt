@@ -81,6 +81,7 @@ set(grammar_src
    )
 set(misc
     units.md
+    README.md
    )
 
 source_group(css FILES ${css_src})
