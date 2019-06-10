@@ -93,7 +93,7 @@ before_build:
   - mkdir build
   - cd build
   - if defined VCVARS call "%VCVARS%" %VCVARSARG%
-  - if DEFINED PACMAN_PACKAGES C:\msys64\usr\bin\bash.exe -lc "yes | pacman -Rd --noconfirm mingw-w64-i686-gcc-ada mingw-w64-x86_64-gcc-ada"
+  - if DEFINED PACMAN_PACKAGES C:\msys64\usr\bin\bash.exe -lc "yes | pacman -Rd --noconfirm mingw-w64-i686-gcc-ada mingw-w64-x86_64-gcc-ada mingw-w64-i686-gcc-objc mingw-w64-x86_64-gcc-objc"
   - if DEFINED PACMAN_PACKAGES C:\msys64\usr\bin\bash.exe -lc "yes | pacman --needed --noconfirm -Syu"
   - if DEFINED PACMAN_PACKAGES C:\msys64\usr\bin\bash.exe -lc "yes | pacman --needed --noconfirm -Syu"
   - if DEFINED PACMAN_PACKAGES C:\msys64\usr\bin\bash.exe -lc "yes | pacman --needed --noconfirm -S %PACMAN_PACKAGES%"
