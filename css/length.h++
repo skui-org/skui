@@ -27,9 +27,11 @@
 
 #include <iosfwd>
 
+#include <cstdint>
+
 namespace skui::css
 {
-  enum class unit
+  enum class unit : std::uint8_t
   {
     // absolute
     cm, // centimeters

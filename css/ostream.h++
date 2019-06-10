@@ -25,18 +25,33 @@
 #ifndef SKUI_CSS_OSTREAM_H
 #define SKUI_CSS_OSTREAM_H
 
-#include "css/color.h++"
-#include "css/length.h++"
-#include "css/position.h++"
-#include "css/property.h++"
+#include "css/time.h++"
 #include "css/timing_function.h++"
 
-#include "css/property/animation.h++"
 
 #include <iosfwd>
 
 namespace skui::css
 {
+  class color;
+
+  struct animation;
+  struct cubic_bezier;
+  struct color_stop;
+  struct infinite_t;
+  struct initial_t;
+  struct inherit_t;
+  struct length;
+  struct length_with_offset;
+  struct linear_gradient;
+  struct steps;
+  struct position;
+
+  enum class animation_direction : std::uint8_t;
+  enum class fill_mode : std::uint8_t;
+  enum class play_state : std::uint8_t;
+  enum class unit : std::uint8_t;
+
   std::ostream& operator<<(std::ostream& os, const inherit_t& inherit);
   std::ostream& operator<<(std::ostream& os, const initial_t& initial);
 

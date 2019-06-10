@@ -24,6 +24,12 @@
 
 #include "ostream.h++"
 
+#include "css/position.h++"
+
+#include "css/property/animation.h++"
+#include "css/property/linear_gradient.h++"
+
+#include <iomanip>
 #include <iostream>
 
 namespace skui::css
