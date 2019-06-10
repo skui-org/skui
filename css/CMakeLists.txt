@@ -30,6 +30,7 @@ set(css_src
     length.h++
     ostream.h++ ostream.c++
     parser.h++ parser.c++
+    position.h++
     rule_set.h++
     selector.h++ selector.c++
     time.h++
