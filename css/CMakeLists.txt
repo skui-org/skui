@@ -23,6 +23,7 @@
 # THE SOFTWARE.
 
 set(css_src
+    angle.h++
     color.h++
     color_stop.h++
     declaration_block.h++
@@ -47,6 +48,7 @@ set(properties_src
    )
 set(grammar_src
     grammar.h++ grammar.c++
+    grammar/angle.h++
     grammar/as.h++
     grammar/declaration_block.h++
     grammar/property.h++ grammar/property.c++
