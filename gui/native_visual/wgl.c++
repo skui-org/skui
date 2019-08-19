@@ -33,13 +33,23 @@ namespace skui::gui::native_visual
   {
     base::gl_function_type get_gl(void*, const char name[])
     {
-      static core::library lib("opengl32.dll");
+	  auto p = (base::gl_function_type)wglGetProcAddress(name);
+      if(p == 0 ||
+         p == reinterpret_cast<base::gl_function_type>(0x1) ||
+         p == reinterpret_cast<base::gl_function_type>(0x2) ||
+         p == reinterpret_cast<base::gl_function_type>(0x3) ||
+         p == reinterpret_cast<base::gl_function_type>(-1) )
+      {
+        static core::library lib("opengl32.dll");
 
-      static const bool load_libopengl_success = lib.load();
-      if(!load_libopengl_success)
-        core::debug_print("Failed to load opengl32.dll.\n");
+        static const bool load_libopengl_success = lib.load();
+        if(!load_libopengl_success)
+          core::debug_print("Failed to load opengl32.dll.\n");
 
-      return lib.resolve<void()>(name);
+        return lib.resolve<void()>(name);
+      }
+
+      return p;
     }
   }
 
