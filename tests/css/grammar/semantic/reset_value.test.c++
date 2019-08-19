@@ -40,12 +40,6 @@ namespace
                         = int_ >> int_
                         | eps[reset_value] >> int_ >> attr(1)
                         ;
-  template<typename T>
-  inline auto as = [](auto&& p) { return rule<struct _, T>{} = as_parser(p); };
-
-  const auto one_two = rule<struct one_two, std::vector<int>>{"one two"}
-                     = as<std::vector<int>>(int_ >> int_)
-                     | as<std::vector<int>>(int_ >> attr(1));
 }
 
 int main()
@@ -54,9 +48,6 @@ int main()
 
   check_rule_success(one_or_two, one, {1, 1});
   check_rule_success(one_or_two, two, {1, 2});
-
-  check_rule_success(one_two, one, {1, 1});
-  check_rule_success(one_two, two, {1, 2});
 
   return skui::test::exit_code;
 }
