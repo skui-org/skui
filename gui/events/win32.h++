@@ -35,12 +35,6 @@
 
 #include <core/utility.h++>
 
-#ifndef WIN32_MEAN_AND_LEAN
-#define WIN32_MEAN_AND_LEAN
-#endif
-#include <windows.h>
-#undef WIN32_MEAN_AND_LEAN
-
 namespace skui::gui::events
 {
   class win32 : public base
@@ -50,11 +44,6 @@ namespace skui::gui::events
     ~win32() override;
 
     void exec() override;
-
-    static LRESULT CALLBACK window_procedure(HWND hwnd,
-                                             UINT msg,
-                                             WPARAM wparam,
-                                             LPARAM lparam);
   };
 }
 

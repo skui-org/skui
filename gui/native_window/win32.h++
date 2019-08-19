@@ -30,6 +30,9 @@
 #ifndef SKUI_GUI_NATIVE_WINDOW_WIN32_H
 #define SKUI_GUI_NATIVE_WINDOW_WIN32_H
 
+#ifndef _WIN32_WINNT
+#define _WIN32_WINNT 0x0600
+#endif
 #include "gui/native_window.h++"
 
 #ifndef WIN32_MEAN_AND_LEAN
@@ -37,6 +40,8 @@
 #endif
 #include <windows.h>
 #undef WIN32_MEAN_AND_LEAN
+
+#include <windowsx.h>
 
 namespace skui::gui::native_window
 {

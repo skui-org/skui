@@ -37,6 +37,94 @@ namespace skui::gui::native_window
 
     constexpr wchar_t window_class[] = L"skui window";
 
+    skui::graphics::pixel_position get_position(LPARAM lparam)
+    {
+      return {GET_X_LPARAM(lparam),
+              GET_Y_LPARAM(lparam)};
+    }
+
+
+    LRESULT CALLBACK window_procedure(HWND hwnd,
+                                      UINT msg,
+                                      WPARAM wparam,
+                                      LPARAM lparam)
+    {
+      using namespace skui::gui::input;
+
+      auto& window = *reinterpret_cast<skui::gui::window*>(GetWindowLongPtrW(hwnd, GWLP_USERDATA));
+
+      switch(msg)
+      {
+        case WM_CLOSE:
+          DestroyWindow(hwnd);
+          break;
+        case WM_PAINT:
+        {
+          PAINTSTRUCT paint_struct;
+          BeginPaint(hwnd, &paint_struct);
+          window.repaint();
+          EndPaint(hwnd, &paint_struct);
+          break;
+        }
+        case WM_MOUSEMOVE:
+          window.pointer.moved(get_position(lparam));
+          break;
+        case WM_MOUSELEAVE:
+          window.pointer.left(get_position(lparam));
+          break;
+        case WM_LBUTTONDOWN:
+          window.pointer.pressed(button::primary, get_position(lparam));
+          break;
+        case WM_LBUTTONUP:
+          window.pointer.released(button::primary, get_position(lparam));
+          break;
+        case WM_MBUTTONDOWN:
+          window.pointer.pressed(button::middle, get_position(lparam));
+          break;
+        case WM_MBUTTONUP:
+          window.pointer.released(button::middle, get_position(lparam));
+          break;
+        case WM_RBUTTONDOWN:
+          window.pointer.pressed(button::secondary, get_position(lparam));
+          break;
+        case WM_RBUTTONUP:
+          window.pointer.released(button::secondary, get_position(lparam));
+          break;
+        case WM_MOUSEWHEEL:
+        {
+          auto scroll = GET_WHEEL_DELTA_WPARAM(wparam) > 0 ? scroll::up
+                                                           : scroll::down;
+          window.pointer.scroll(scroll, get_position(lparam));
+          break;
+        }
+        case WM_MOUSEHWHEEL:
+        {
+          auto scroll = GET_WHEEL_DELTA_WPARAM(wparam) > 0 ? scroll::right
+                                                           : scroll::left;
+          window.pointer.scroll(scroll, get_position(lparam));
+          break;
+        }
+        case WM_SIZE:
+        {
+          window.size = {LOWORD(lparam), HIWORD(lparam)};
+
+          break;
+        }
+        case WM_SIZING:
+        {
+          const RECT& rect = *reinterpret_cast<RECT*>(lparam);
+
+          window.size = {static_cast<skui::graphics::pixel>(rect.right - rect.left),
+                         static_cast<skui::graphics::pixel>(rect.top - rect.bottom)};
+          window.position = {rect.top, rect.left};
+          break;
+        }
+        default:
+          return DefWindowProcW(hwnd, msg, wparam, lparam);
+      }
+      return 0;
+    }
+
     bool register_window_class()
     {
       WNDCLASSEXW wc;
@@ -44,7 +132,7 @@ namespace skui::gui::native_window
       // Register the Window Class
       wc.cbSize        = sizeof(WNDCLASSEXW);
       wc.style         = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
-      wc.lpfnWndProc   = events::win32::window_procedure;
+      wc.lpfnWndProc   = window_procedure;
       wc.cbClsExtra    = 0;
       wc.cbWndExtra    = 0;
       wc.hInstance     = application_instance;

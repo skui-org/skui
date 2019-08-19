@@ -22,7 +22,6 @@
  * THE SOFTWARE.
  **/
 
-#define _WIN32_WINNT 0x0600
 #include "gui/events/win32.h++"
 
 #include "gui/native_window/win32.h++"
@@ -31,17 +30,6 @@
 #include <core/debug.h++>
 #include <core/utility.h++>
 
-#include <windowsx.h>
-
-namespace
-{
-  skui::graphics::pixel_position get_position(LPARAM lparam)
-  {
-    return {GET_X_LPARAM(lparam),
-            GET_Y_LPARAM(lparam)};
-  }
-}
-
 namespace skui::gui::events
 {
   win32::win32(gui::window& window)
@@ -49,70 +37,6 @@ namespace skui::gui::events
   {}
 
   win32::~win32() = default;
-
-  LRESULT CALLBACK win32::window_procedure(HWND hwnd,
-                                           UINT msg,
-                                           WPARAM wparam,
-                                           LPARAM lparam)
-  {
-    auto& window = *reinterpret_cast<gui::window*>(GetWindowLongPtrW(hwnd, GWLP_USERDATA));
-
-    switch(msg)
-    {
-      case WM_CLOSE:
-        DestroyWindow(hwnd);
-        break;
-      case WM_PAINT:
-      {
-        PAINTSTRUCT paint_struct;
-        BeginPaint(hwnd, &paint_struct);
-        window.repaint();
-        EndPaint(hwnd, &paint_struct);
-        break;
-      }
-      case WM_MOUSEMOVE:
-        window.pointer.moved(get_position(lparam));
-        break;
-      case WM_MOUSELEAVE:
-        window.pointer.left(get_position(lparam));
-        break;
-      case WM_LBUTTONDOWN:
-        window.pointer.pressed(input::button::primary, get_position(lparam));
-        break;
-      case WM_LBUTTONUP:
-        window.pointer.released(input::button::primary, get_position(lparam));
-        break;
-      case WM_MBUTTONDOWN:
-        window.pointer.pressed(input::button::middle, get_position(lparam));
-        break;
-      case WM_MBUTTONUP:
-        window.pointer.released(input::button::middle, get_position(lparam));
-        break;
-      case WM_RBUTTONDOWN:
-        window.pointer.pressed(input::button::secondary, get_position(lparam));
-        break;
-      case WM_RBUTTONUP:
-        window.pointer.released(input::button::secondary, get_position(lparam));
-        break;
-      case WM_MOUSEWHEEL:
-      {
-        auto scroll = GET_WHEEL_DELTA_WPARAM(wparam) > 0 ? input::scroll::up
-                                                         : input::scroll::down;
-        window.pointer.scroll(scroll, get_position(lparam));
-        break;
-      }
-      case WM_MOUSEHWHEEL:
-      {
-        auto scroll = GET_WHEEL_DELTA_WPARAM(wparam) > 0 ? input::scroll::right
-                                                         : input::scroll::left;
-        window.pointer.scroll(scroll, get_position(lparam));
-        break;
-      }
-      default:
-        return DefWindowProcW(hwnd, msg, wparam, lparam);
-    }
-    return 0;
-  }
 
   void skui::gui::events::win32::exec()
   {
