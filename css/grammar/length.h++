@@ -50,8 +50,9 @@ namespace skui::css::grammar
   const auto length = x3::rule<struct length, css::length>{"length"}
                    %= non_scientific_float >> unit
                     | x3::float_ >> unit;
-  const auto length_percentage = x3::rule<struct length, css::length>{"length-percentage"}
+  const auto length_percentage = x3::rule<struct length_percentage, css::length>{"length-percentage"}
                               %= non_scientific_float >> unit_percentage
                                | x3::float_ >> unit_percentage;
 }
+
 #endif
