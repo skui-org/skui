@@ -67,7 +67,7 @@ namespace
   const auto x = "20em";
   const auto x_y = "10in 20pt";
 
-  const auto x_relative_y = "left bottom 3pt";
+  const auto x_relative_y = "2 vw bottom 3pt";
   const auto y_relative_x = "bottom -2em right";
 }
 
@@ -122,7 +122,7 @@ int main()
                                                       {{50, unit::percentage}, {}}});
   check_rule_success(position, x_y, skui::css::position{{{10, unit::in}, {}},
                                                         {{20, unit::pt}, {}}});
-  check_rule_success(position, x_relative_y, skui::css::position{{{0, unit::percentage}, {}},
+  check_rule_success(position, x_relative_y, skui::css::position{{{2, unit::vw}, {}},
                                                                  {{100, unit::percentage}, {3, unit::pt}}});
   check_rule_success(position, y_relative_x, skui::css::position{{{100, unit::percentage}, {}},
                                                                  {{100, unit::percentage}, {-2, unit::em}}});
