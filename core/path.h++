@@ -33,12 +33,19 @@
 #include <algorithm>
 #include <iterator>
 
+#if __has_include(<filesystem>)
+#include <filesystem>
+#else
 #include <experimental/filesystem>
+#endif
 
 namespace skui::core
 {
+#if __has_include(<filesystem>)
+  namespace fs = std::filesystem;
+#else
   namespace fs = std::experimental::filesystem;
-
+#endif
   using path = fs::path;
 
   inline path operator+(const path& lhs, const path& rhs)
