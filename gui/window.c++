@@ -171,7 +171,7 @@ namespace skui::gui
     std::thread t(&window::create_graphics_context_and_execute_render_loop, this);
     render_thread.swap(t);
 
-    // Ensure calling thread is waiting for draw_condition_variable
+    // Ensure calling thread is waiting for handle_condition_variable
     std::unique_lock handle_lock{mutex};
     handle_condition_variable.notify_one();
 
