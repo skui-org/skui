@@ -40,11 +40,11 @@ namespace skui::css
     std::vector<color_stop> colors;
   };
 
-  constexpr bool operator==(const background_gradient& left,
-                            const background_gradient& right)
+  constexpr bool operator==(const background_gradient& lhs,
+                            const background_gradient& rhs)
   {
-    return left.repeating == right.repeating
-        && left.colors == right.colors;
+    return lhs.repeating == rhs.repeating
+        && lhs.colors == rhs.colors;
   }
 }
 

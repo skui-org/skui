@@ -38,11 +38,11 @@ namespace skui::css
     std::optional<css::length> stop;
   };
 
-  constexpr bool operator==(const color_stop& left,
-                            const color_stop& right)
+  constexpr bool operator==(const color_stop& lhs,
+                            const color_stop& rhs)
   {
-      return left.color == right.color
-          && left.stop == right.stop;
+      return lhs.color == rhs.color
+          && lhs.stop == rhs.stop;
   }
 }
 

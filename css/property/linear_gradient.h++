@@ -41,10 +41,10 @@ namespace skui::css
     std::variant<css::position, css::angle> direction; // direction or explicit angle [0,360] degrees
   };
 
-  constexpr bool operator==(const linear_gradient& left, const linear_gradient& right)
+  constexpr bool operator==(const linear_gradient& lhs, const linear_gradient& rhs)
   {
-    return static_cast<const background_gradient&>(left) == static_cast<const background_gradient&>(right)
-        && left.direction == right.direction;
+    return static_cast<const background_gradient&>(lhs) == static_cast<const background_gradient&>(rhs)
+        && lhs.direction == rhs.direction;
   }
 }
 

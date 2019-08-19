@@ -59,13 +59,13 @@ namespace skui::css
     css::unit unit;
   };
 
-  constexpr bool operator==(const length& left, const length& right)
+  constexpr bool operator==(const length& lhs, const length& rhs)
   {
-    return left.value == right.value && left.unit == right.unit;
+    return lhs.value == rhs.value && lhs.unit == rhs.unit;
   }
-  constexpr bool operator!=(const length& left, const length& right)
+  constexpr bool operator!=(const length& lhs, const length& rhs)
   {
-    return !(left == right);
+    return !(lhs == rhs);
   }
 }
 

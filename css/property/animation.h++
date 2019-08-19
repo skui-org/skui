@@ -116,16 +116,16 @@ namespace skui::css
     return *this;
   }
 
-  constexpr bool operator==(const animation& left, const animation& right)
+  constexpr bool operator==(const animation& lhs, const animation& rhs)
   {
-    return left.name == right.name
-        && left.duration == right.duration
-        && left.timing_function == right.timing_function
-        && left.delay == right.delay
-        && left.iteration_count == right.iteration_count
-        && left.direction == right.direction
-        && left.fill_mode == right.fill_mode
-        && left.play_state == right.play_state;
+    return lhs.name == rhs.name
+        && lhs.duration == rhs.duration
+        && lhs.timing_function == rhs.timing_function
+        && lhs.delay == rhs.delay
+        && lhs.iteration_count == rhs.iteration_count
+        && lhs.direction == rhs.direction
+        && lhs.fill_mode == rhs.fill_mode
+        && lhs.play_state == rhs.play_state;
   }
 }
 #endif

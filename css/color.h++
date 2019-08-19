@@ -135,21 +135,21 @@ namespace skui::css
   };
 
 
-  constexpr bool operator==(const color& left, const color& right)
+  constexpr bool operator==(const color& lhs, const color& rhs)
   {
-    return std::uint32_t(left) == std::uint32_t(right);
+    return std::uint32_t(lhs) == std::uint32_t(rhs);
   }
-  constexpr bool operator!=(const color& left, const color& right)
+  constexpr bool operator!=(const color& lhs, const color& rhs)
   {
-    return std::uint32_t(left) != std::uint32_t(right);
+    return std::uint32_t(lhs) != std::uint32_t(rhs);
   }
 
-  constexpr color operator+(const color& left, const color& right)
+  constexpr color operator+(const color& lhs, const color& rhs)
   {
-    const auto alpha = left.alpha + right.alpha*(255-left.alpha);
-    return color::rgba(static_cast<std::uint8_t>((left.alpha*left.red + right.alpha*right.red*(255-left.alpha))/alpha),
-                       static_cast<std::uint8_t>((left.alpha*left.green + right.alpha*right.green*(255-left.alpha))/alpha),
-                       static_cast<std::uint8_t>((left.alpha*left.blue + right.alpha*right.blue*(255-left.alpha))/alpha),
+    const auto alpha = lhs.alpha + rhs.alpha*(255-lhs.alpha);
+    return color::rgba(static_cast<std::uint8_t>((lhs.alpha*lhs.red + rhs.alpha*rhs.red*(255-lhs.alpha))/alpha),
+                       static_cast<std::uint8_t>((lhs.alpha*lhs.green + rhs.alpha*rhs.green*(255-lhs.alpha))/alpha),
+                       static_cast<std::uint8_t>((lhs.alpha*lhs.blue + rhs.alpha*rhs.blue*(255-lhs.alpha))/alpha),
                        static_cast<std::uint8_t>(alpha));
   }
 

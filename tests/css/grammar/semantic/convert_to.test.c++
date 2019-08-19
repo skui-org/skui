@@ -47,13 +47,13 @@ namespace
     float v;
   };
 
-  bool operator==(const constructible_from_int& left, const constructible_from_int& right)
+  bool operator==(const constructible_from_int& lhs, const constructible_from_int& rhs)
   {
-    return left.v == right.v;
+    return lhs.v == rhs.v;
   }
-  bool operator==(const constructible_from_float& left, const constructible_from_float& right)
+  bool operator==(const constructible_from_float& lhs, const constructible_from_float& rhs)
   {
-    return left.v == right.v;
+    return lhs.v == rhs.v;
   }
 
   std::ostream& operator<<(std::ostream& os, const constructible_from_int& c)

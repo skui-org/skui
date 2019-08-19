@@ -41,10 +41,10 @@ namespace skui::core
 
   using path = fs::path;
 
-  inline path operator+(const path& left, const path& right)
+  inline path operator+(const path& lhs, const path& rhs)
   {
-    path::string_type result = left.native();
-    result += right.native();
+    path::string_type result = lhs.native();
+    result += rhs.native();
     return result;
   }
 }

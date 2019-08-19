@@ -79,35 +79,35 @@ namespace skui::graphics
   }
 
   template<typename ValueType>
-  constexpr position2D<ValueType> operator+(const position2D<ValueType>& left,
-                                            const position2D<ValueType>& right)
+  constexpr position2D<ValueType> operator+(const position2D<ValueType>& lhs,
+                                            const position2D<ValueType>& rhs)
   {
-    auto result = left;
-    result += right;
+    auto result = lhs;
+    result += rhs;
     return result;
   }
 
   template<typename ValueType>
-  constexpr position2D<ValueType> operator-(const position2D<ValueType>& left,
-                                            const position2D<ValueType>& right)
+  constexpr position2D<ValueType> operator-(const position2D<ValueType>& lhs,
+                                            const position2D<ValueType>& rhs)
   {
-    auto result = left;
-    result -= right;
+    auto result = lhs;
+    result -= rhs;
     return result;
   }
 
   template<typename ValueType>
-  constexpr bool operator==(const position2D<ValueType>& left,
-                            const position2D<ValueType>& right)
+  constexpr bool operator==(const position2D<ValueType>& lhs,
+                            const position2D<ValueType>& rhs)
   {
-    return std::tie(left.x, left.y) == std::tie(right.x, right.y);
+    return std::tie(lhs.x, lhs.y) == std::tie(rhs.x, rhs.y);
   }
 
   template<typename ValueType>
-  constexpr bool operator!=(const position2D<ValueType>& left,
-                            const position2D<ValueType>& right)
+  constexpr bool operator!=(const position2D<ValueType>& lhs,
+                            const position2D<ValueType>& rhs)
   {
-    return !(left == right);
+    return !(lhs == rhs);
   }
 
   // pixel here means device independent pixel

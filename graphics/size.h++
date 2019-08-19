@@ -59,14 +59,14 @@ namespace skui::graphics
   };
 
   template<typename ValueType>
-  constexpr bool operator==(const size2D<ValueType>& left, const size2D<ValueType>& right)
+  constexpr bool operator==(const size2D<ValueType>& lhs, const size2D<ValueType>& rhs)
   {
-    return left.width == right.width && left.height == right.height;
+    return lhs.width == rhs.width && lhs.height == rhs.height;
   }
   template<typename ValueType>
-  constexpr bool operator!=(const size2D<ValueType>& left, const size2D<ValueType>& right)
+  constexpr bool operator!=(const size2D<ValueType>& lhs, const size2D<ValueType>& rhs)
   {
-    return left.width != right.width || left.height != right.height;
+    return lhs.width != rhs.width || lhs.height != rhs.height;
   }
   template<typename ValueType>
   constexpr size2D<ValueType>& size2D<ValueType>::operator+=(const size2D<ValueType>& other)
@@ -103,14 +103,14 @@ namespace skui::graphics
     return *this;
   }
   template<typename ValueType>
-  constexpr size2D<ValueType> operator+(const size2D<ValueType>& left, const size2D<ValueType>& right)
+  constexpr size2D<ValueType> operator+(const size2D<ValueType>& lhs, const size2D<ValueType>& rhs)
   {
-    return {left.width + right.width, left.height + right.height};
+    return {lhs.width + rhs.width, lhs.height + rhs.height};
   }
   template<typename ValueType>
-  constexpr size2D<ValueType> operator-(const size2D<ValueType>& left, const size2D<ValueType>& right)
+  constexpr size2D<ValueType> operator-(const size2D<ValueType>& lhs, const size2D<ValueType>& rhs)
   {
-    return {left.width - right.width, left.height - right.height};
+    return {lhs.width - rhs.width, lhs.height - rhs.height};
   }
   template<typename ValueType, typename FactorType>
   constexpr size2D<ValueType> operator*(const size2D<ValueType>& size, FactorType factor)

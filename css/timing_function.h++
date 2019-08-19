@@ -60,17 +60,17 @@ namespace skui::css
   constexpr auto step_start = steps{1, steps::start};
   constexpr auto step_end = steps{1, steps::end};
 
-  constexpr bool operator==(const steps& left, const steps right)
+  constexpr bool operator==(const steps& lhs, const steps& rhs)
   {
-    return left.intervals == right.intervals
-        && left.change == right.change;
+    return lhs.intervals == rhs.intervals
+        && lhs.change == rhs.change;
   }
-  constexpr bool operator==(const cubic_bezier& left, const cubic_bezier& right)
+  constexpr bool operator==(const cubic_bezier& lhs, const cubic_bezier& rhs)
   {
-    return left.x1 == right.x1
-        && left.y1 == right.y1
-        && left.x2 == right.x2
-        && left.y2 == right.y2;
+    return lhs.x1 == rhs.x1
+        && lhs.y1 == rhs.y1
+        && lhs.x2 == rhs.x2
+        && lhs.y2 == rhs.y2;
   }
   std::ostream& operator<<(std::ostream& os, const steps& steps);
   std::ostream& operator<<(std::ostream& os, const cubic_bezier& cubic_bezier);

@@ -77,18 +77,18 @@ namespace skui::css
   static constexpr position top = top_center;
   static constexpr position bottom = bottom_center;
 
-  constexpr bool operator==(const length_with_offset& left,
-                            const length_with_offset& right)
+  constexpr bool operator==(const length_with_offset& lhs,
+                            const length_with_offset& rhs)
   {
-    return left.value == right.value
-        && left.offset == right.offset;
+    return lhs.value == rhs.value
+        && lhs.offset == rhs.offset;
   }
 
-  constexpr bool operator==(const position& left,
-                            const position& right)
+  constexpr bool operator==(const position& lhs,
+                            const position& rhs)
   {
-    return left.x == right.x
-        && left.y == right.y;
+    return lhs.x == rhs.x
+        && lhs.y == rhs.y;
   }
 }
 
