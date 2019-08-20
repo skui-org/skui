@@ -52,6 +52,13 @@ namespace skui::css
   enum class play_state : std::uint8_t;
   enum class unit : std::uint8_t;
 
+  template<typename... ValueTypes>
+  std::ostream& operator<<(std::ostream& os, const std::variant<ValueTypes...>& value)
+  {
+    std::visit([&os](auto&& v) { os << v; }, value);
+    return os;
+  }
+
   std::ostream& operator<<(std::ostream& os, const inherit_t& inherit);
   std::ostream& operator<<(std::ostream& os, const initial_t& initial);
 

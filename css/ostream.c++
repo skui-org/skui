@@ -34,13 +34,6 @@
 
 namespace skui::css
 {
-  template<typename... ValueTypes>
-  std::ostream& operator<<(std::ostream& os, const std::variant<ValueTypes...>& value)
-  {
-    std::visit([&os](auto&& v) { os << v; }, value);
-    return os;
-  }
-
   std::ostream& operator<<(std::ostream& os, const inherit_t&)
   {
     return os << "inherit";
