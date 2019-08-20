@@ -29,14 +29,25 @@
 
 namespace
 {
+  const auto direction = "to top";
+  const auto angle = "1.25 turn";
+
   const auto non_repeating_linear_gradient = "linear-gradient(to right, red, blue)";
   const auto repeating_linear_gradient = "repeating-linear-gradient(to bottom left, yellow 30%, green 100vw, black)";
   const auto default_direction_linear_gradient = "linear-gradient(#FF00FF, rgb(255,0,0))";
+
+  const auto leading_comma = "linear-gradient(, red)";
+  const auto missing_comma = "linear-gradient(to top red)";
 }
 
 int main()
 {
   using skui::test::check_rule_success;
+  using skui::test::check_rule_failure;
+
+  using skui::css::grammar::direction_or_angle;
+  check_rule_success(direction_or_angle, direction, skui::css::top);
+  check_rule_success(direction_or_angle, angle, 450);
 
   using skui::css::grammar::linear_gradient;
   check_rule_success(linear_gradient, non_repeating_linear_gradient,
@@ -55,6 +66,9 @@ int main()
                                                  {{skui::css::colors::fuchsia, {}},
                                                   {skui::css::colors::red, {}}}},
                                                 skui::css::top});
+
+  check_rule_failure(linear_gradient, leading_comma);
+  check_rule_failure(linear_gradient, missing_comma);
 
   return skui::test::exit_code;
 }

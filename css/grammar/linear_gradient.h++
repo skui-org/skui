@@ -25,7 +25,9 @@
 #ifndef SKUI_CSS_GRAMMAR_LINEAR_GRADIENT_H
 #define SKUI_CSS_GRAMMAR_LINEAR_GRADIENT_H
 
+#include "css/grammar/angle.h++"
 #include "css/grammar/color_stop.h++"
+#include "css/grammar/repeating.h++"
 
 #include "css/property/linear_gradient.h++"
 
@@ -44,13 +46,14 @@ namespace skui::css::grammar
     linear_gradient_direction_table();
   } const linear_gradient_direction;
 
+  const auto direction_or_angle = x3::rule<struct direction_or_angle, std::variant<css::position, css::angle>>{"direction-or-angle"}
+                                = ( "to" >> linear_gradient_direction
+                                  | angle
+                                  );
+
   const auto linear_gradient = x3::rule<struct linear_gradient, css::linear_gradient>{"linear-gradient"}
-                             = ( x3::lit("repeating-") >> x3::attr(true)
-                               | x3::attr(false)
-                               )
-                               >> x3::lit("linear-gradient") >> "(" >> ( ( "to" >> linear_gradient_direction
-                                                                         | degrees_normalized
-                                                                         ) >> ','
+                             = repeating
+                               >> x3::lit("linear-gradient") >> "(" >> ( direction_or_angle >> ','
                                                                        | x3::attr(css::top)
                                                                        )
                                                                     >> color_stop % ','
