@@ -69,6 +69,7 @@ set(grammar_src
     grammar/position.h++ grammar/position.c++
     grammar/property_symbols_table.h++
     grammar/quoted_string.h++
+    grammar/repeating.h++
     grammar/semantic/convert_to.h++
     grammar/semantic/repeat_value.h++
     grammar/semantic/reset_value.h++
