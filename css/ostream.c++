@@ -248,4 +248,57 @@ namespace skui::css
 
     return os << ", " << linear_gradient.colors << ")";
   }
+
+  std::ostream& operator<<(std::ostream& os,
+                           radial_gradient::shape shape)
+  {
+    switch(shape)
+    {
+      case radial_gradient::shape::circle: return os << "circle";
+      case radial_gradient::shape::ellipse: return os << "ellipse";
+    }
+    return os;
+  }
+
+  std::ostream& operator<<(std::ostream& os,
+                           radial_gradient::extent extent)
+  {
+    switch(extent)
+    {
+      case radial_gradient::extent::farthest_corner: return os << "farthest-corner";
+      case radial_gradient::extent::closest_side: return os << "closest-side";
+      case radial_gradient::extent::closest_corner: return os << "closest-corner";
+      case radial_gradient::extent::farthest_side: return os << "farthest-side";
+    }
+    return os;
+  }
+
+  std::ostream& operator<<(std::ostream& os, const radial_gradient::shape_extent& shape_extent)
+  {
+    return os << shape_extent.shape << ' ' << shape_extent.extent;
+  }
+
+  std::ostream& operator<<(std::ostream& os, const radial_gradient::ellipse_size& ellipse_size)
+  {
+    return os << "(" << ellipse_size.horizontal << ", " << ellipse_size.vertical << ")";
+  }
+
+  std::ostream& operator<<(std::ostream& os, const std::variant<radial_gradient::shape_extent, length, radial_gradient::ellipse_size>& shape_size)
+  {
+    std::visit([&os](auto&& v) { os << v; }, shape_size);
+
+    return os;
+  }
+
+  std::ostream& operator<<(std::ostream& os,
+                           const radial_gradient& radial_gradient)
+  {
+    if(radial_gradient.repeating)
+      os << "repeating-";
+
+    return os << "radial-gradient("
+              << radial_gradient.shape_size << " at " << radial_gradient.position << ", "
+              << radial_gradient.colors
+              << ")";
+  }
 }

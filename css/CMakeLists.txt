@@ -47,6 +47,7 @@ set(properties_src
     property/background_gradient.h++
     property/border.h++
     property/linear_gradient.h++
+    property/radial_gradient.h++
    )
 set(grammar_src
     grammar.h++ grammar.c++
@@ -69,6 +70,7 @@ set(grammar_src
     grammar/position.h++ grammar/position.c++
     grammar/property_symbols_table.h++
     grammar/quoted_string.h++
+    grammar/radial_gradient.h++ grammar/radial_gradient.c++
     grammar/repeating.h++
     grammar/semantic/convert_to.h++
     grammar/semantic/repeat_value.h++
