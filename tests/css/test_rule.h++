@@ -46,7 +46,7 @@ namespace skui::test
   using skui::test::check;
   using skui::core::string;
 
-  template<typename Rule>
+  template<bool matches_complete_input = true, typename Rule>
   void check_rule_success(const Rule& rule,
                           const string& input,
                           const typename Rule::attribute_type& expected_value)
@@ -64,7 +64,10 @@ namespace skui::test
 
     const string rule_name = rule.name;
     check(success, "Rule \"" + rule_name + "\" parsed input succesfully: \"" + input + "\"");
-    check(first == last, "Rule \"" + rule_name + "\" matched complete input: \"" + input + "\"");
+
+    if constexpr(matches_complete_input)
+        check(first == last, "Rule \"" + rule_name + "\" matched complete input: \"" + input + "\"");
+
     check(result == expected_value, "Rule \"" + rule_name + "\" matched expected result for input: \"" + input + "\"");
     if(!(result == expected_value))
     {
