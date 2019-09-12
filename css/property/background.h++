@@ -26,6 +26,8 @@
 #define SKUI_CSS_PROPERTY_BACKGROUND_H
 
 #include "css/property.h++"
+#include "css/property/linear_gradient.h++"
+#include "css/property/radial_gradient.h++"
 
 #include <graphics/color.h++>
 #include <graphics/size.h++>

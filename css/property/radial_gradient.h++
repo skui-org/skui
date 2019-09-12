@@ -30,6 +30,8 @@
 #include "css/length.h++"
 #include "css/position.h++"
 
+#include "graphics/size.h++"
+
 #include <utility>
 #include <variant>
 
@@ -39,12 +41,6 @@ namespace skui::css
 {
   struct radial_gradient : background_gradient
   {
-    enum class shape : std::uint8_t
-    {
-      ellipse,
-      circle
-    };
-
     enum class extent : std::uint8_t
     {
       farthest_corner,
@@ -53,42 +49,38 @@ namespace skui::css
       farthest_side
     };
 
-    struct shape_extent
+    struct circle
     {
-      radial_gradient::shape shape;
-      radial_gradient::extent extent;
+      std::variant<extent, length> radius;
     };
 
-    struct ellipse_size
+    struct ellipse
     {
-      length horizontal;
-      length vertical;
+      std::variant<extent, graphics::size2D<length>> size;
     };
 
-    // Either a shape+extent, or it's a circle with one radius, or an ellipse with two dimensions
-    using shape_size_t = std::variant<shape_extent, length, ellipse_size>;
-    shape_size_t shape_size;
+    std::variant<ellipse, circle> shape;
     css::position position;
   };
 
-  constexpr bool operator==(const radial_gradient::shape_extent& lhs,
-                            const radial_gradient::shape_extent& rhs)
+  constexpr bool operator==(const radial_gradient::circle& lhs,
+                            const radial_gradient::circle& rhs)
   {
-    return lhs.shape == rhs.shape
-        && lhs.extent == rhs.extent;
+    return lhs.radius == rhs.radius;
   }
-  constexpr bool operator==(const radial_gradient::ellipse_size& lhs,
-                            const radial_gradient::ellipse_size& rhs)
+
+  constexpr bool operator==(const radial_gradient::ellipse& lhs,
+                            const radial_gradient::ellipse& rhs)
   {
-    return lhs.horizontal == rhs.horizontal
-        && lhs.vertical == rhs.vertical;
+    return lhs.size == rhs.size;
   }
+
   constexpr bool operator==(const radial_gradient& lhs,
                             const radial_gradient& rhs)
   {
-      return static_cast<const background_gradient&>(lhs) == static_cast<const background_gradient&>(rhs)
-          //&& lhs.shape_size == rhs.shape_size
-          && lhs.position == rhs.position;
+    return static_cast<const background_gradient&>(lhs) == static_cast<const background_gradient&>(rhs)
+        && lhs.shape == rhs.shape
+        && lhs.position == rhs.position;
   }
 }
 

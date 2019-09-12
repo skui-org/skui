@@ -27,7 +27,6 @@
 #include "css/position.h++"
 
 #include "css/property/animation.h++"
-#include "css/property/linear_gradient.h++"
 
 #include <iomanip>
 #include <iostream>
@@ -250,17 +249,6 @@ namespace skui::css
   }
 
   std::ostream& operator<<(std::ostream& os,
-                           radial_gradient::shape shape)
-  {
-    switch(shape)
-    {
-      case radial_gradient::shape::circle: return os << "circle";
-      case radial_gradient::shape::ellipse: return os << "ellipse";
-    }
-    return os;
-  }
-
-  std::ostream& operator<<(std::ostream& os,
                            radial_gradient::extent extent)
   {
     switch(extent)
@@ -273,17 +261,22 @@ namespace skui::css
     return os;
   }
 
-  std::ostream& operator<<(std::ostream& os, const radial_gradient::shape_extent& shape_extent)
+  std::ostream& operator<<(std::ostream& os, const graphics::size2D<length>& size)
   {
-    return os << shape_extent.shape << ' ' << shape_extent.extent;
+    return os << '(' << size.width << ", " << size.height << ')';
   }
 
-  std::ostream& operator<<(std::ostream& os, const radial_gradient::ellipse_size& ellipse_size)
+  std::ostream& operator<<(std::ostream& os, const radial_gradient::circle& circle)
   {
-    return os << "(" << ellipse_size.horizontal << ", " << ellipse_size.vertical << ")";
+    return os << "circle " << circle.radius;
   }
 
-  std::ostream& operator<<(std::ostream& os, const std::variant<radial_gradient::shape_extent, length, radial_gradient::ellipse_size>& shape_size)
+  std::ostream& operator<<(std::ostream& os, const radial_gradient::ellipse& ellipse)
+  {
+    return os << "ellipse " << ellipse.size;
+  }
+
+  std::ostream& operator<<(std::ostream& os, const std::variant<radial_gradient::circle, radial_gradient::ellipse>& shape_size)
   {
     std::visit([&os](auto&& v) { os << v; }, shape_size);
 
@@ -297,8 +290,38 @@ namespace skui::css
       os << "repeating-";
 
     return os << "radial-gradient("
-              << radial_gradient.shape_size << " at " << radial_gradient.position << ", "
+              << radial_gradient.shape << " at " << radial_gradient.position << ", "
               << radial_gradient.colors
               << ")";
   }
+
+  std::ostream& operator<<(std::ostream& os, const std::variant<core::string, linear_gradient, radial_gradient>& background_image)
+  {
+    std::visit([&os](auto&& v) { os << v; }, background_image);
+
+    return os;
+  }
+
+  std::ostream& operator<<(std::ostream& os, const background_size_enum& background_size_enum)
+  {
+    switch(background_size_enum)
+    {
+      case css::background_size_enum::cover:
+        return os << "cover";
+      case css::background_size_enum::contain:
+        return os << "contain";
+    }
+    return os;
+  }
+
+  std::ostream& operator<<(std::ostream& os, const background_size_width_height& width_height)
+  {
+    return os << width_height.width << ' ' << width_height.height;
+  }
+
+  std::ostream& operator<<(std::ostream& os, const background_size_auto&)
+  {
+    return os << "auto";
+  }
+
 }

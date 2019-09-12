@@ -26,13 +26,6 @@
 
 namespace skui::css::grammar
 {
-  radial_gradient_shape_table::radial_gradient_shape_table()
-  {
-    add("ellipse", radial_gradient::shape::ellipse)
-       ("circle",  radial_gradient::shape::circle)
-       ;
-  }
-
   radial_gradient_extent_table::radial_gradient_extent_table()
   {
     add("farthest-corner", radial_gradient::extent::farthest_corner)

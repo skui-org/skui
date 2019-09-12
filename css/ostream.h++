@@ -28,7 +28,7 @@
 #include "css/time.h++"
 #include "css/timing_function.h++"
 
-#include "css/property/radial_gradient.h++"
+#include "css/property/background.h++"
 
 #include <iosfwd>
 
@@ -44,7 +44,6 @@ namespace skui::css
   struct inherit_t;
   struct length;
   struct length_with_offset;
-  struct linear_gradient;
   struct steps;
   struct position;
 
@@ -87,11 +86,11 @@ namespace skui::css
 
   std::ostream& operator<<(std::ostream& os, const linear_gradient& linear_gradient);
 
-  std::ostream& operator<<(std::ostream& os, radial_gradient::shape shape);
   std::ostream& operator<<(std::ostream& os, radial_gradient::extent extent);
-  std::ostream& operator<<(std::ostream& os, const radial_gradient::shape_extent& shape_extent);
-  std::ostream& operator<<(std::ostream& os, const radial_gradient::ellipse_size& ellipse_size);
-  std::ostream& operator<<(std::ostream& os, const std::variant<radial_gradient::shape_extent, length, radial_gradient::ellipse_size>& shape_size);
+  std::ostream& operator<<(std::ostream& os, graphics::size2D<length>& size);
+  std::ostream& operator<<(std::ostream& os, const radial_gradient::circle& circle);
+  std::ostream& operator<<(std::ostream& os, const radial_gradient::ellipse& ellipse);
+  std::ostream& operator<<(std::ostream& os, const std::variant<radial_gradient::circle, radial_gradient::ellipse>& shape_size);
   std::ostream& operator<<(std::ostream& os, const radial_gradient& radial_gradient);
 }
 

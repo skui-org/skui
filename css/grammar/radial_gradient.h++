@@ -39,49 +39,43 @@
 #include <boost/spirit/home/x3.hpp>
 
 BOOST_FUSION_ADAPT_STRUCT(skui::css::radial_gradient,
-                          repeating, shape_size, position, colors)
-BOOST_FUSION_ADAPT_STRUCT(skui::css::radial_gradient::shape_extent,
-                          shape, extent)
-BOOST_FUSION_ADAPT_STRUCT(skui::css::radial_gradient::ellipse_size,
-                          horizontal, vertical)
+                          repeating, shape, position, colors)
+BOOST_FUSION_ADAPT_STRUCT(skui::css::radial_gradient::circle,
+                          radius)
+BOOST_FUSION_ADAPT_STRUCT(skui::graphics::size2D<skui::css::length>,
+                          width, height)
+BOOST_FUSION_ADAPT_STRUCT(skui::css::radial_gradient::ellipse,
+                          size)
 
 namespace skui::css::grammar
 {
   namespace x3 = boost::spirit::x3;
-
-  struct radial_gradient_shape_table : x3::symbols<enum css::radial_gradient::shape>
-  {
-    radial_gradient_shape_table();
-  } const radial_gradient_shape;
 
   struct radial_gradient_extent_table : x3::symbols<css::radial_gradient::extent>
   {
     radial_gradient_extent_table();
   } const radial_gradient_extent;
 
-  const auto circle = x3::rule<struct circle, css::radial_gradient::shape_size_t>{"circle"}
-                    = x3::lit("circle") >> ( length
-                                           | x3::attr(radial_gradient::shape::circle) >> ( radial_gradient_extent
-                                                                                         | x3::attr(css::radial_gradient::extent{})
-                                                                                         )
-                                           );
-  const auto ellipse = x3::rule<struct ellipse, css::radial_gradient::shape_size_t>{"ellipse"}
-                     = x3::lit("ellipse") >> ( length_percentage >> length_percentage
-                                             | x3::attr(radial_gradient::shape::ellipse) >> ( radial_gradient_extent
-                                                                                            | x3::attr(css::radial_gradient::extent{})
-                                                                                            )
-                                             );
-  const auto shape_position = ( circle
-                              | ellipse
-                              | x3::attr(css::radial_gradient::shape_extent{})
-                              ) >> ( "at" >> position
-                                   | x3::attr(css::center)
-                                   );
+  const auto circle = x3::rule<struct circle, css::radial_gradient::circle>{"circle"}
+                    = x3::lit("circle") >> -( length
+                                            | radial_gradient_extent
+                                            );
+
+  const auto ellipse = x3::rule<struct ellipse, css::radial_gradient::ellipse>{"ellipse"}
+                     = x3::lit("ellipse") >> -( length_percentage >> length_percentage
+                                              | radial_gradient_extent
+                                              );
+
+  const auto position_or_center = ( "at" >> position
+                                  | x3::attr(css::center)
+                                  );
 
   const auto radial_gradient = x3::rule<struct radial_gradient, css::radial_gradient>{"radial-gradient"}
                              = repeating >> x3::lit("radial-gradient")
-                               >> '(' >> !x3::lit(',')
-                                      >> shape_position >> -x3::lit(',')
+                               >> '(' >> !x3::lit(',') >> -( -( circle
+                                                              | ellipse
+                                                              ) >> position_or_center >> x3::lit(',')
+                                                           )
                                       >> color_stop % ','
                                >> ')';
 }
