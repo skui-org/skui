@@ -37,6 +37,8 @@ namespace skui::css
   class color;
 
   struct animation;
+  struct background_size_width_height;
+  struct background_size_auto;
   struct cubic_bezier;
   struct color_stop;
   struct infinite_t;
@@ -51,6 +53,7 @@ namespace skui::css
   enum class fill_mode : std::uint8_t;
   enum class play_state : std::uint8_t;
   enum class unit : std::uint8_t;
+  enum class background_size_enum : std::uint8_t;
 
   template<typename... ValueTypes>
   std::ostream& operator<<(std::ostream& os, const std::variant<ValueTypes...>& value)
@@ -92,6 +95,11 @@ namespace skui::css
   std::ostream& operator<<(std::ostream& os, const radial_gradient::ellipse& ellipse);
   std::ostream& operator<<(std::ostream& os, const std::variant<radial_gradient::circle, radial_gradient::ellipse>& shape_size);
   std::ostream& operator<<(std::ostream& os, const radial_gradient& radial_gradient);
+
+  std::ostream& operator<<(std::ostream& os, const background_size_auto&);
+  std::ostream& operator<<(std::ostream& os, const background_size_enum& background_size_enum);
+  std::ostream& operator<<(std::ostream& os, const background_size_width_height& width_height);
+  std::ostream& operator<<(std::ostream& os, const std::variant<core::string, linear_gradient, radial_gradient>& background_image);
 }
 
 #endif

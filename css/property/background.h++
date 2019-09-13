@@ -29,6 +29,9 @@
 #include "css/property/linear_gradient.h++"
 #include "css/property/radial_gradient.h++"
 
+#include "css/property/linear_gradient.h++"
+#include "css/property/radial_gradient.h++"
+
 #include <graphics/color.h++>
 #include <graphics/size.h++>
 
@@ -36,14 +39,15 @@
 
 namespace skui::css
 {
-  enum class background_size_enum
+  enum class background_size_enum : std::uint8_t
   {
-    auto_,
     cover,
     contain,
   };
+  struct background_size_auto{};
+  constexpr bool operator==(const background_size_auto&, const background_size_auto&) { return true; }
 
-  enum class background_repeat
+  enum class background_repeat : std::uint8_t
   {
     repeat,
     repeat_x,
@@ -53,28 +57,44 @@ namespace skui::css
     round,
   };
 
-  struct background_gradient{};
-  using background_image = std::variant<core::string, background_gradient>;
+  using background_image = std::vector<std::variant<core::string,
+                                                    linear_gradient,
+                                                    radial_gradient>>;
 
-  struct background_position{};
+  using background_size_length = std::variant<background_size_auto, length>;
 
-  using background_size = std::variant<background_size_enum, graphics::pixel_size>;
+  struct background_size_width_height
+  {
+    background_size_length width;
+    background_size_length height;
+  };
 
-  enum class background_origin
+  constexpr bool operator==(const background_size_width_height& lhs,
+                            const background_size_width_height& rhs)
+  {
+    return lhs.width == rhs.width
+        && lhs.height == lhs.height;
+  }
+
+  using background_size = std::vector<std::variant<background_size_enum,
+                                                   background_size_width_height>>;
+
+  enum class background_origin : std::uint8_t
   {
     padding_box,
     border_box,
     content_box,
   };
 
-  enum class background_clip
+  enum class background_clip : std::uint8_t
   {
     border_box,
     padding_box,
     content_box,
+    text
   };
 
-  enum class background_attachment
+  enum class background_attachment : std::uint8_t
   {
     scroll,
     fixed,
@@ -85,7 +105,7 @@ namespace skui::css
   {
     property<css::color> color;
     property<background_image> image;
-    property<background_position> position;
+    property<std::vector<css::position>> position;
     property<background_size> size;
     property<background_repeat> repeat;
     property<background_origin> origin;
