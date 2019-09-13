@@ -81,6 +81,20 @@ namespace skui::test
         core::debug_print("result:   ", result, '\n');
         core::debug_print("expected: ", expected_value, '\n');
       }
+      else
+      {
+        core::debug_print("result:\n");
+        for(const auto& element : result)
+        {
+          core::debug_print("element: ", element, '\n');
+        }
+
+        core::debug_print("expected:\n");
+        for(const auto& element : expected_value)
+        {
+          core::debug_print("element: ", element, '\n');
+        }
+      }
     }
   }
 
