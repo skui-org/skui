@@ -44,8 +44,8 @@ namespace skui::css
     cover,
     contain,
   };
-  struct background_size_auto{};
-  constexpr bool operator==(const background_size_auto&, const background_size_auto&) { return true; }
+  struct background_size_auto_t {} constexpr background_size_auto;
+  constexpr bool operator==(const background_size_auto_t&, const background_size_auto_t&) { return true; }
 
   enum class background_repeat : std::uint8_t
   {
@@ -61,7 +61,7 @@ namespace skui::css
                                                     linear_gradient,
                                                     radial_gradient>>;
 
-  using background_size_length = std::variant<background_size_auto, length>;
+  using background_size_length = std::variant<background_size_auto_t, length>;
 
   struct background_size_width_height
   {

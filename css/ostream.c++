@@ -319,7 +319,7 @@ namespace skui::css
     return os << width_height.width << ' ' << width_height.height;
   }
 
-  std::ostream& operator<<(std::ostream& os, const background_size_auto&)
+  std::ostream& operator<<(std::ostream& os, const background_size_auto_t&)
   {
     return os << "auto";
   }

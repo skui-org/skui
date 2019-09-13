@@ -52,6 +52,7 @@ namespace skui::css::grammar
     add("border-box", background_clip::border_box)
        ("padding-box", background_clip::padding_box)
        ("content-box", background_clip::content_box)
+       ("text", background_clip::text)
        ;
   }
 
@@ -60,6 +61,14 @@ namespace skui::css::grammar
     add("scroll", background_attachment::scroll)
        ("fixed", background_attachment::fixed)
        ("local", background_attachment::local)
+        ;
+  }
+
+  background_size_enum_table::background_size_enum_table()
+  {
+    add("cover", background_size_enum::cover)
+       ("contain", background_size_enum::contain)
        ;
   }
+
 }
