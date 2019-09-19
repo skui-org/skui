@@ -25,23 +25,30 @@
 #ifndef SKUI_CSS_GRAMMAR_COLOR_STOP_H
 #define SKUI_CSS_GRAMMAR_COLOR_STOP_H
 
+#include "css/angle.h++"
 #include "css/color_stop.h++"
 
+#include "css/grammar/angle.h++"
 #include "css/grammar/color.h++"
 #include "css/grammar/length.h++"
 
 #include <boost/fusion/adapted/struct.hpp>
 #include <boost/spirit/home/x3.hpp>
 
-BOOST_FUSION_ADAPT_STRUCT(skui::css::color_stop,
+BOOST_FUSION_ADAPT_STRUCT(skui::css::color_stop<skui::css::length>,
+                          color, stop)
+BOOST_FUSION_ADAPT_STRUCT(skui::css::color_stop<skui::css::angle>,
                           color, stop)
 
 namespace skui::css::grammar
 {
   namespace x3 = boost::spirit::x3;
 
-  const auto color_stop = x3::rule<struct color_stop, css::color_stop>{"color-stop"}
-                        = color >> (-length_percentage | x3::attr(std::optional<css::length>{}));
+  const auto linear_color_stop = x3::rule<struct linear_color_stop_, css::linear_color_stop>{"linear-color-stop"}
+                               = color >> (-length_percentage | x3::attr(std::optional<css::length>{}));
+
+  const auto angular_color_stop = x3::rule<struct angular_color_stop_, css::angular_color_stop>{"angular-color-stop"}
+                                = color >> (-angle | x3::attr(std::optional<css::angle>{}));
 }
 
 #endif

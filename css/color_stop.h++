@@ -25,6 +25,7 @@
 #ifndef SKUI_CSS_COLOR_STOP_H
 #define SKUI_CSS_COLOR_STOP_H
 
+#include "css/angle.h++"
 #include "css/color.h++"
 #include "css/length.h++"
 
@@ -32,14 +33,19 @@
 
 namespace skui::css
 {
+  template<typename StopType = css::length>
   struct color_stop
   {
     css::color color;
-    std::optional<css::length> stop;
+    std::optional<StopType> stop;
   };
 
-  constexpr bool operator==(const color_stop& lhs,
-                            const color_stop& rhs)
+  using linear_color_stop = color_stop<length>;
+  using angular_color_stop = color_stop<angle>;
+
+  template<typename StopType>
+  constexpr bool operator==(const color_stop<StopType>& lhs,
+                            const color_stop<StopType>& rhs)
   {
       return lhs.color == rhs.color
           && lhs.stop == rhs.stop;

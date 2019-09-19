@@ -76,7 +76,7 @@ namespace skui::css::grammar
                                                               | ellipse
                                                               ) >> position_or_center >> x3::lit(',')
                                                            )
-                                      >> color_stop % ','
+                                      >> linear_color_stop % ','
                                >> ')';
 }
 

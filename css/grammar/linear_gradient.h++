@@ -56,7 +56,7 @@ namespace skui::css::grammar
                                >> x3::lit("linear-gradient") >> "(" >> ( direction_or_angle >> ','
                                                                        | x3::attr(css::top)
                                                                        )
-                                                                    >> color_stop % ','
+                                                                    >> linear_color_stop % ','
                                                              >> ")";
 }
 

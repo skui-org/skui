@@ -25,6 +25,7 @@
 #ifndef SKUI_CSS_OSTREAM_H
 #define SKUI_CSS_OSTREAM_H
 
+#include "css/color_stop.h++"
 #include "css/time.h++"
 #include "css/timing_function.h++"
 
@@ -40,7 +41,6 @@ namespace skui::css
   struct background_size_width_height;
   struct background_size_auto;
   struct cubic_bezier;
-  struct color_stop;
   struct infinite_t;
   struct initial_t;
   struct inherit_t;
@@ -66,7 +66,11 @@ namespace skui::css
   std::ostream& operator<<(std::ostream& os, const initial_t& initial);
 
   std::ostream& operator<<(std::ostream& os, const color& color);
-  std::ostream& operator<<(std::ostream& os, const color_stop& color_stop);
+  template<typename ColorStopType>
+  std::ostream& operator<<(std::ostream& os, const color_stop<ColorStopType>& color_stop);
+  template<typename ColorStopType>
+  std::ostream& operator<<(std::ostream& os,
+                           const std::vector<skui::css::color_stop<ColorStopType>>& colors);
 
   std::ostream& operator<<(std::ostream& os, const unit unit);
   std::ostream& operator<<(std::ostream& os, const length& length);
@@ -100,6 +104,30 @@ namespace skui::css
   std::ostream& operator<<(std::ostream& os, const background_size_enum& background_size_enum);
   std::ostream& operator<<(std::ostream& os, const background_size_width_height& width_height);
   std::ostream& operator<<(std::ostream& os, const std::variant<core::string, linear_gradient, radial_gradient>& background_image);
+}
+
+template<typename ColorStopType>
+std::ostream& skui::css::operator<<(std::ostream& os, const color_stop<ColorStopType>& color_stop)
+{
+  os << "color-stop(" << color_stop.color;
+  if(color_stop.stop)
+  {
+    os << ", " << *color_stop.stop;
+  }
+  return os << ")";
+}
+
+template<typename ColorStopType>
+std::ostream& skui::css::operator<<(std::ostream& os,
+                                    const std::vector<skui::css::color_stop<ColorStopType>>& colors)
+{
+  for(auto it = colors.begin(); it != colors.end(); ++it)
+  {
+    os << *it;
+    if(it+1 != colors.end())
+      os << ", ";
+  }
+  return os;
 }
 
 #endif

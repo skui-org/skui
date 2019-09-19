@@ -25,23 +25,22 @@
 #ifndef SKUI_CSS_PROPERTY_BACKGROUND_GRADIENT_H
 #define SKUI_CSS_PROPERTY_BACKGROUND_GRADIENT_H
 
-#include "css/angle.h++"
 #include "css/color_stop.h++"
-#include "css/length.h++"
-#include "css/position.h++"
 
 #include <vector>
 
 namespace skui::css
 {
+  template<typename ColorStopType>
   struct background_gradient
   {
     bool repeating{false};
-    std::vector<color_stop> colors;
+    std::vector<color_stop<ColorStopType>> colors;
   };
 
-  constexpr bool operator==(const background_gradient& lhs,
-                            const background_gradient& rhs)
+  template<typename ColorStopType>
+  constexpr bool operator==(const background_gradient<ColorStopType>& lhs,
+                            const background_gradient<ColorStopType>& rhs)
   {
     return lhs.repeating == rhs.repeating
         && lhs.colors == rhs.colors;

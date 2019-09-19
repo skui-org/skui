@@ -36,14 +36,14 @@
 
 namespace skui::css
 {
-  struct linear_gradient : background_gradient
+  struct linear_gradient : background_gradient<length>
   {
-    std::variant<css::position, css::angle> direction; // direction or explicit angle [0,360] degrees
+    std::variant<position, angle> direction; // direction or explicit angle [0,360] degrees
   };
 
   constexpr bool operator==(const linear_gradient& lhs, const linear_gradient& rhs)
   {
-    return static_cast<const background_gradient&>(lhs) == static_cast<const background_gradient&>(rhs)
+    return static_cast<const background_gradient<length>&>(lhs) == static_cast<const background_gradient<length>&>(rhs)
         && lhs.direction == rhs.direction;
   }
 }

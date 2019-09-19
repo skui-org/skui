@@ -30,18 +30,25 @@
 namespace
 {
   const auto color = "red";
+
   const auto color_percentage = "blue 5.4%";
   const auto color_length = "green .3in";
+
+  const auto color_angle = "yellow .5turn";
 }
 
 int main()
 {
   using skui::test::check_rule_success;
 
-  using skui::css::grammar::color_stop;
-  check_rule_success(color_stop, color, {skui::css::colors::red, {}});
-  check_rule_success(color_stop, color_percentage, {skui::css::colors::blue, skui::css::length{5.4f, skui::css::unit::percentage}});
-  check_rule_success(color_stop, color_length, {skui::css::colors::green, skui::css::length{.3f, skui::css::unit::in}});
+  using skui::css::grammar::linear_color_stop;
+  check_rule_success(linear_color_stop, color, {skui::css::colors::red, {}});
+  check_rule_success(linear_color_stop, color_percentage, {skui::css::colors::blue, skui::css::length{5.4f, skui::css::unit::percentage}});
+  check_rule_success(linear_color_stop, color_length, {skui::css::colors::green, skui::css::length{.3f, skui::css::unit::in}});
+
+  using skui::css::grammar::angular_color_stop;
+  check_rule_success(angular_color_stop, color, {skui::css::colors::red, {}});
+  check_rule_success(angular_color_stop, color_angle, {skui::css::colors::yellow, 180});
 
   return skui::test::exit_code;
 }

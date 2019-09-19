@@ -39,7 +39,7 @@
 
 namespace skui::css
 {
-  struct radial_gradient : background_gradient
+  struct radial_gradient : background_gradient<length>
   {
     enum class extent : std::uint8_t
     {
@@ -78,7 +78,7 @@ namespace skui::css
   constexpr bool operator==(const radial_gradient& lhs,
                             const radial_gradient& rhs)
   {
-    return static_cast<const background_gradient&>(lhs) == static_cast<const background_gradient&>(rhs)
+    return static_cast<const background_gradient<length>&>(lhs) == static_cast<const background_gradient<length>&>(rhs)
         && lhs.shape == rhs.shape
         && lhs.position == rhs.position;
   }
