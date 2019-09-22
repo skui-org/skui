@@ -80,7 +80,7 @@ target_compile_definitions(core PUBLIC $<$<CONFIG:Debug>:SKUI_DEBUG>
 target_link_libraries(core PUBLIC $<$<PLATFORM_ID:Linux>:-pthread>
                                   $<$<CXX_COMPILER_ID:GNU>:-lstdc++fs>
                                   $<$<AND:$<PLATFORM_ID:Windows>,$<AND:$<CXX_COMPILER_ID:Clang>,$<NOT:$<STREQUAL:"x${CMAKE_CXX_SIMULATE_ID}","xMSVC">>>>:-lstdc++fs>
-                                  $<$<AND:$<NOT:$<PLATFORM_ID:Windows>>,$<AND:$<CXX_COMPILER_ID:Clang>,$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,7>>>:-lc++fs>
+                                  $<$<AND:$<NOT:$<PLATFORM_ID:Windows>>,$<AND:$<CXX_COMPILER_ID:Clang>,$<AND:$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,7>,$<VERSION_LESS:$<CXX_COMPILER_VERSION>,9>>>>:-lc++fs>
                                   $<$<AND:$<NOT:$<PLATFORM_ID:Windows>>,$<AND:$<CXX_COMPILER_ID:Clang>,$<VERSION_LESS:$<CXX_COMPILER_VERSION>,7>>>:-lc++experimental>
                                   $<$<AND:$<PLATFORM_ID:Darwin>,$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>>:-lc++fs>
                                   $<$<NOT:$<PLATFORM_ID:Windows>>:-ldl>)
