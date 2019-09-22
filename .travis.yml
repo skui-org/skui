@@ -190,3 +190,13 @@ jobs:
         - . ./ci/setup_cmake.sh 3.13.2 Darwin
         - . ./ci/setup_ninja.sh 1.8.2 mac
         - . ./ci/setup_libcxx.sh 8.0.1 /Users/travis/libc++
+    - os: windows
+      env:
+        - GENERATOR=Ninja
+        - C_COMPILER=cl
+        - CXX_COMPILER=cl
+        - CONFIGURATION=Release
+      before_install:
+        - yes | pacman --needed --noconfirm -Syu
+        - yes | pacman --needed --noconfirm -Syu
+        - yes | pacman --needed --noconfirm -S mingw-w64-x86_64-ninja
