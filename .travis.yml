@@ -1,7 +1,6 @@
-sudo: required
 dist: xenial
 
-language: c++
+language: cpp
 
 script:
  - mkdir build
