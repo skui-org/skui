@@ -4,3 +4,6 @@
 [submodule "ci"]
 	path = ci
 	url = https://github.com/skui-org/ci.git
+[submodule "cmake"]
+	path = cmake
+	url = https://github.com/skui-org/cmake.git
