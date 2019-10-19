@@ -47,7 +47,7 @@ int main()
 
   using skui::css::grammar::direction_or_angle;
   check_rule_success(direction_or_angle, direction, skui::css::top);
-  check_rule_success(direction_or_angle, angle, 450);
+  check_rule_success(direction_or_angle, angle, 450.f);
 
   using skui::css::grammar::linear_gradient;
   check_rule_success(linear_gradient, non_repeating_linear_gradient,

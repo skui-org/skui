@@ -58,8 +58,6 @@ namespace skui::css
   struct infinite_t final {} constexpr infinite;
   constexpr bool operator==(const infinite_t&, const infinite_t&) { return true; }
 
-  using iteration_count = std::variant<std::uint64_t, infinite_t>;
-
   struct animation final
   {
     animation() = default;
@@ -76,7 +74,7 @@ namespace skui::css
     property<time> duration;
     property<css::timing_function> timing_function;
     property<time> delay;
-    property<css::iteration_count> iteration_count;
+    property<std::uint64_t, infinite_t> iteration_count;
     property<animation_direction> direction;
     property<css::fill_mode> fill_mode;
     property<css::play_state> play_state;

@@ -42,7 +42,7 @@ namespace
     a.duration = 20s;
     a.timing_function = skui::css::linear;
     a.delay = 5s;
-    a.iteration_count = 2;
+    a.iteration_count = 2ul;
     a.direction = skui::css::animation_direction::alternate;
     a.fill_mode = skui::css::fill_mode::both;
     a.play_state = skui::css::play_state::paused;

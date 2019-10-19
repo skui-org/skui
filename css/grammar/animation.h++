@@ -61,7 +61,7 @@ namespace skui::css::grammar
   const auto animation_delay = x3::rule<struct delay, css::time>{"animation-delay"}
                              = time;
 
-  const auto animation_iteration_count = x3::rule<struct animation_iteration_count, css::iteration_count>{"animation-iteration-count"}
+  const auto animation_iteration_count = x3::rule<struct animation_iteration_count, css::property<std::uint64_t, css::infinite_t>>{"animation-iteration-count"}
                                        = x3::uint_
                                        | "infinite" >> x3::attr(infinite);
 
