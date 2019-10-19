@@ -2,14 +2,25 @@ dist: xenial
 
 language: cpp
 
+# deploy filename
+before_script:
+ - REPOSITORY=`echo ${TRAVIS_REPO_SLUG} | cut -d/ -f2`
+ - export DEPLOY_FILE_NAME=${REPOSITORY}_${TRAVIS_OS_NAME}-${TRAVIS_OSX_IMAGE:-$TRAVIS_COMPILER}_${TRAVIS_BRANCH}
+ - PREBUILT_3RDPARTY_HASH=`git rev-parse --short=10 @:./3rdparty`
+ - export PREBUILT_3RDPARTY_PACKAGE=3rdparty_${TRAVIS_OS_NAME}-${TRAVIS_OSX_IMAGE:-$TRAVIS_COMPILER}_${PREBUILT_3RDPARTY_HASH}
+ - wget https://github.com/skui-org/3rdparty/releases/download/${PREBUILT_3RDPARTY_HASH}/${PREBUILT_3RDPARTY_PACKAGE}.tar.xz
+ - tar -xf ${PREBUILT_3RDPARTY_PACKAGE}.tar.xz
+
+# actual build script
 script:
  - mkdir build
  - cd build
  - export CXXFLAGS=${CI_CXX_FLAGS} LDFLAGS=${CI_LDFLAGS}
- - cmake .. -G ${GENERATOR} -DCMAKE_C_COMPILER=${C_COMPILER} -DCMAKE_CXX_COMPILER=${CXX_COMPILER} -DCMAKE_BUILD_TYPE=${CONFIGURATION}
- - ninja
+ - cmake .. -G ${GENERATOR} -DCMAKE_C_COMPILER=${C_COMPILER} -DCMAKE_CXX_COMPILER=${CXX_COMPILER} -DCMAKE_BUILD_TYPE=${CONFIGURATION} -DSKUI_USE_PREBUILT_3RDPARTY=ON -DSKUI_PREBUILT_3RDPARTY_PATH=`pwd`/../${PREBUILT_3RDPARTY_PACKAGE} -DCPACK_PACKAGE_FILE_NAME=${DEPLOY_FILE_NAME}
+ - cmake --build .
  - ctest --output-on-failure
 
+# Linux packages
 addons:
   apt:
     sources:
@@ -65,6 +76,7 @@ jobs:
         - . ./ci/setup_ninja.sh 1.8.2 linux
     - os: linux
       compiler: gcc-8
+      if: repo = skui-org/skui
       env:
         - GENERATOR=Ninja
         - C_COMPILER=gcc-8
