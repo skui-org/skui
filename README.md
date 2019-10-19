@@ -1,17 +1,16 @@
 # Introduction
 
-UI framework that uses skia as a low-level drawing toolkit.
-It uses the newest features of the C++ Standard library (currently targetting C++14).
-This including Technical Specifications (TS) that introduce "desktop" facilities such as `<filesystem>`.
+UI framework that uses [Skia](https://skia.org/) as a low-level drawing toolkit.
+It uses the newest features of the C++ Standard library (currently targetting C++17).
 
 # Status
 
-Skui is in a pre-release development phase, and the API is definitely not stable.
-New functionality must be accompanied by corresponding tests.
+SkUI is in a pre-release development phase, and the API is definitely not stable.
 
 [![Build Status](https://travis-ci.org/skui-org/skui.svg?branch=master)](https://travis-ci.org/skui-org/skui)
 [![Build status](https://ci.appveyor.com/api/projects/status/s9t7o9k8u0p15e0x?svg=true)](https://ci.appveyor.com/project/RubenVanBoxem/skui)
 [![codecov](https://codecov.io/gh/skui-org/skui/branch/master/graph/badge.svg)](https://codecov.io/gh/skui-org/skui)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/e461d12770cf4234b7d5a1ffcd880c2c)](https://www.codacy.com/manual/rubenvb/skui?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=skui-org/skui&amp;utm_campaign=Badge_Grade)
 
 | Operating System | Compiler                | Supported          | Notes |
 |------------------| ------------------------|--------------------| ----- |
@@ -19,8 +18,8 @@ New functionality must be accompanied by corresponding tests.
 | Windows          | VS 2019 CLang/LLVM 8.0+ | :heavy_check_mark: |       |
 | Windows          | Visual Studio 2017      | :heavy_check_mark: |       |
 | Windows          | VS 2017 Clang/LLVM 6.0+ | :heavy_check_mark: |       |
-| Windows          | MinGW-w64 GCC 7.3+      | :heavy_check_mark: | Requires usable filesystem TS implementation. |
-| Windows          | MinGW-w64 Clang 5.0+    | :heavy_check_mark: | Requires usable filesystem TS implementation. |
+| Windows          | MinGW-w64 GCC 7.3+      | :heavy_check_mark: | Requires usable std::filesystem implementation. |
+| Windows          | MinGW-w64 Clang 5.0+    | :heavy_check_mark: | Requires usable std::filesystem implementation. |
 | Windows          | Intel C++ 19+           |        :x:         | Lacks required C++17 features. |
 | Linux            | GCC 7.3+                | :heavy_check_mark: |       |
 | Linux            | Clang 5.0+              | :heavy_check_mark: |       |
@@ -31,11 +30,12 @@ New functionality must be accompanied by corresponding tests.
 
 # Components
 
-Skui is subdivided in several modules which can depend on other modules but shouldn't become a dependency mess:
+SkUI is subdivided in several modules which can depend on other modules but shouldn't become a dependency mess:
 
  * Core: basic functionality, including signals, properties, strings, paths, application, os abstraction...
+ * CSS: CSS parser built on top of Boost.Spirit X3.
  * Graphics: graphical functionality such as canvases, contexts, shapes, text, ...
- * GUI: abstraction of platform-specific UI code, including event loops, windows, ...
+ * GUI: abstraction of platform-specific UI code, including event loops, windows, input, ...
  * OpenGL: abstraction of platform-specific OpenGL initialization code, header differences, ...
  * ...
  * Examples: example programs showing SkUI features
@@ -63,6 +63,7 @@ Run CMake (here, the [ninja](https://ninja-build.org/) build system is used, but
 
     cmake ../skui -G Ninja
 
+This step should inform you of any missing dependencies.
 Then build
 
     cmake --build .
