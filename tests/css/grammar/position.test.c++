@@ -69,6 +69,11 @@ namespace
 
   const auto x_relative_y = "2 vw bottom 3pt";
   const auto y_relative_x = "bottom -2em right";
+
+  const auto zero_x_relative_y = "0 bottom -3px";
+  const auto x_zero_y = "2px 0";
+  const auto zero_x_zero_y = "0 0";
+
 }
 
 int main()
@@ -127,5 +132,11 @@ int main()
   check_rule_success(position, y_relative_x, skui::css::position{{{100, unit::percentage}, {}},
                                                                  {{100, unit::percentage}, {-2, unit::em}}});
 
+  check_rule_success(position, zero_x_relative_y, skui::css::position{{{0, unit::percentage}, {}},
+                                                                      {{100, unit::percentage}, {-3, unit::px}}});
+  check_rule_success(position, x_zero_y, skui::css::position{{{2, unit::px}, {}},
+                                                             {{0, unit::percentage}, {}}});
+  check_rule_success(position, zero_x_zero_y, skui::css::position{{{0, unit::percentage}, {}},
+                                                                  {{0, unit::percentage}, {}}});
   return skui::test::exit_code;
 }

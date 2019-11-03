@@ -66,12 +66,14 @@ namespace skui::css::grammar
   } const vertical_relative_position;
 
   const auto horizontal_position = x3::rule<struct horizontal_position, css::length_with_offset>{"horizontal_position"}
-                                                    = horizontal_relative_position >> -length_percentage
-                                                    | length_percentage >> x3::attr(css::length{})
-                                                    ;
+                                 = horizontal_relative_position >> -length_percentage
+                                 | x3::lit('0') >> x3::attr(css::length{}) >> x3::attr(css::length{})
+                                 | length_percentage >> x3::attr(css::length{})
+                                 ;
   const auto vertical_position = x3::rule<struct vertical_position, css::length_with_offset>{"vertical_position"}
-                                                    = vertical_relative_position >> -length_percentage
-                                                    | length_percentage >> x3::attr(css::length{})
+                               = vertical_relative_position >> -length_percentage
+                               | x3::lit('0') >> x3::attr(css::length{}) >> x3::attr(css::length{})
+                               | length_percentage >> x3::attr(css::length{})
                                                     ;
 
   //| vertical_relative_position
