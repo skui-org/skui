@@ -63,6 +63,7 @@ namespace skui::css
     animation() = default;
     animation(const animation&) = default;
     animation(animation&&) = default;
+    ~animation() = default;
     explicit animation(initial_t);
     explicit animation(inherit_t);
     animation& operator=(initial_t);
