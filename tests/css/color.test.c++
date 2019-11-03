@@ -67,6 +67,7 @@ namespace
     check(skui::css::color::hsl(.5, 1, .5) == skui::css::colors::aqua, "hsl(180, 1, .5) gives aqua");
   }
 }
+
 int main()
 {
   test_from_rgb();
