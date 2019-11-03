@@ -54,9 +54,9 @@ namespace skui::css
 
   struct length
   {
-    float value;
+    float value{0.f};
 
-    css::unit unit;
+    css::unit unit{unit::percentage};
   };
 
   constexpr bool operator==(const length& lhs, const length& rhs)
