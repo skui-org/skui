@@ -117,6 +117,7 @@ namespace skui::gui::native_window
 
   void xcb::close()
   {
+    core::debug_print("Closing XCB window\n");
     xcb_unmap_window(connection, window);
     xcb_destroy_window(connection, window);
     xcb_flush(connection);
