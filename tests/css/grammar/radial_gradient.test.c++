@@ -28,9 +28,6 @@
 
 #include "css/test_rule.h++"
 
-
-#include <boost/fusion/adapted/std_pair.hpp>
-
 #include <utility>
 
 namespace
