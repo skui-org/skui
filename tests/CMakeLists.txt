@@ -84,13 +84,13 @@ function(compile_test_library component test_name)
 
   add_test(${component}/${test_name} ${CMAKE_COMMAND} -Dtest_component=${component}}
                                                       -Dtest_name=${test_target_name}
-                                                      -Dtest_binary_dir=}
                                                       -P ${test_list_dir}/compile_test.cmake)
 endfunction()
 
 add_custom_target(tests_shared SOURCES
                   test.h++
                   core/property_tests.h++
+                  core/types.h++
                   css/test_rule.h++
                   graphics/composite_value_tests.h++
                   gui/mock_canvas.h++
