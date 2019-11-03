@@ -97,6 +97,7 @@ The below tables attempts to track what has already been implemented.
 | radial-gradient()           | :heavy_check_mark: | :heavy_check_mark: |       |
 | repeating-linear-gradient() | :heavy_check_mark: | :heavy_check_mark: |       |
 | repeating-radial-gradient() | :heavy_check_mark: | :heavy_check_mark: |       |
+| conical-gradient()          | :heavy_check_mark: | :heavy_check_mark: |       |
 | rgb()                       | :heavy_check_mark: | :heavy_check_mark: |       |
 | rgba()                      | :heavy_check_mark: | :heavy_check_mark: |       |
 | var()                       |        :x:         |        :x:         |       |

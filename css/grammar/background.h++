@@ -31,6 +31,7 @@
 #define SKUI_CSS_GRAMMAR_BACKGROUND_H
 
 #include "css/grammar/color.h++"
+#include "css/grammar/conic_gradient.h++"
 #include "css/grammar/linear_gradient.h++"
 #include "css/grammar/make_property.h++"
 #include "css/grammar/property_symbols_table.h++"
@@ -73,6 +74,7 @@ namespace skui::css::grammar
   const auto background_image = x3::rule<struct background_image_, css::background_image>{"background-image"}
                               = ( x3::lit("none") >> x3::attr(core::string{})
                                 | url
+                                | conic_gradient
                                 | linear_gradient
                                 | radial_gradient
                                 ) % ',';

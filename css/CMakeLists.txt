@@ -42,6 +42,7 @@ set(properties_src
     property/align_items.h++
     property/align_self.h++
     property/animation.h++
+    property/conic_gradient.h++
     property/backface_visibility.h++
     property/background.h++
     property/background_gradient.h++
@@ -63,6 +64,7 @@ set(grammar_src
     grammar/backface_visibility.h++ grammar/backface_visibility.c++
     grammar/color.h++ grammar/color.c++
     grammar/color_stop.h++
+    grammar/conic_gradient.h++
     grammar/length.h++ grammar/length.c++
     grammar/linear_gradient.h++ grammar/linear_gradient.c++
     grammar/make_property.h++

@@ -100,6 +100,8 @@ namespace skui::css
   std::ostream& operator<<(std::ostream& os, const std::variant<radial_gradient::circle, radial_gradient::ellipse>& shape_size);
   std::ostream& operator<<(std::ostream& os, const radial_gradient& radial_gradient);
 
+  std::ostream& operator<<(std::ostream& os, const conic_gradient& conic_gradient);
+
   std::ostream& operator<<(std::ostream& os, const background_size_auto_t&);
   std::ostream& operator<<(std::ostream& os, const background_size_enum& background_size_enum);
   std::ostream& operator<<(std::ostream& os, const background_size_width_height& width_height);

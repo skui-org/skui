@@ -302,4 +302,11 @@ namespace skui::css
     return os << "auto";
   }
 
+  std::ostream& operator<<(std::ostream& os, const conic_gradient& conic_gradient)
+  {
+    return os << "conic-gradient(from " << conic_gradient.from << ", "
+                                "at " << conic_gradient.position << ", "
+                              << conic_gradient.colors << ")";
+  }
+
 }

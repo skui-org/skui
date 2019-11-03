@@ -29,6 +29,7 @@
 #include "css/property/linear_gradient.h++"
 #include "css/property/radial_gradient.h++"
 
+#include "css/property/conic_gradient.h++"
 #include "css/property/linear_gradient.h++"
 #include "css/property/radial_gradient.h++"
 
@@ -58,6 +59,7 @@ namespace skui::css
   };
 
   using background_image = std::vector<std::variant<core::string,
+                                                    conic_gradient,
                                                     linear_gradient,
                                                     radial_gradient>>;
 
