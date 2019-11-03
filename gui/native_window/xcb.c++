@@ -60,7 +60,7 @@ namespace
     window = xcb_generate_id(connection);
 
     static const uint32_t mask = XCB_CW_BACK_PIXEL | XCB_CW_EVENT_MASK;
-    static const uint32_t values[] = { preferred_screen->black_pixel,
+    static const uint32_t values[] = { preferred_screen->white_pixel,
                                        XCB_EVENT_MASK_EXPOSURE       | XCB_EVENT_MASK_STRUCTURE_NOTIFY |
                                        XCB_EVENT_MASK_BUTTON_PRESS   | XCB_EVENT_MASK_BUTTON_RELEASE |
                                        XCB_EVENT_MASK_POINTER_MOTION |
