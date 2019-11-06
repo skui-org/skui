@@ -24,7 +24,7 @@
 
 #include "skia_raster_canvas.h++"
 
-#include <SkSurface.h>
+#include <include/core/SkSurface.h>
 
 namespace skui::graphics
 {

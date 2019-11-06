@@ -27,8 +27,8 @@
 #include "graphics/position.h++"
 #include "graphics/skia_utility.h++"
 
-#include <SkGradientShader.h>
-#include <SkPaint.h>
+#include <include/effects/SkGradientShader.h>
+#include <include/core/SkPaint.h>
 
 namespace skui::graphics
 {

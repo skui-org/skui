@@ -26,8 +26,8 @@
 
 #include "graphics/canvas.h++"
 
-#include <SkPaint.h>
-#include <SkRect.h>
+#include <include/core/SkPaint.h>
+#include <include/core/SkRect.h>
 
 namespace skui::graphics
 {

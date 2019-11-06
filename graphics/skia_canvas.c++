@@ -39,13 +39,13 @@
 #include "graphics/skia_gradient.h++"
 #include "graphics/skia_utility.h++"
 
-#include <SkCanvas.h>
-#include <SkColor.h>
-#include <SkFont.h>
-#include <SkFontMetrics.h>
-#include <SkPath.h>
-#include <SkRRect.h>
-#include <SkSurface.h>
+#include <include/core/SkCanvas.h>
+#include <include/core/SkColor.h>
+#include <include/core/SkFont.h>
+#include <include/core/SkFontMetrics.h>
+#include <include/core/SkPath.h>
+#include <include/core/SkRRect.h>
+#include <include/core/SkSurface.h>
 
 #include <array>
 

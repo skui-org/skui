@@ -24,7 +24,7 @@
 
 #include "graphics/swizzle.h++"
 
-#include <SkSwizzle.h>
+#include <include/core/SkSwizzle.h>
 
 namespace skui::graphics
 {

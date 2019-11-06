@@ -28,8 +28,8 @@
 
 #include <core/debug.h++>
 
-#include <GrGLAssembleInterface.h>
-#include <GrGLInterface.h>
+#include <include/gpu/gl/GrGLAssembleInterface.h>
+#include <include/gpu/gl/GrGLInterface.h>
 
 #ifdef _WIN32
 #include <windows.h>

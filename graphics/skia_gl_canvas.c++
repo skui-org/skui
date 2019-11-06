@@ -24,14 +24,14 @@
 
 #include "graphics/skia_gl_canvas.h++"
 
-#include <GrBackendSurface.h>
-#include <GrContext.h>
-#include <GrGLInterface.h>
+#include <include/gpu/GrBackendSurface.h>
+#include <include/gpu/GrContext.h>
+#include <include/gpu/gl/GrGLInterface.h>
 
-#include <SkCanvas.h>
-#include <SkColor.h>
-#include <SkGradientShader.h>
-#include <SkSurface.h>
+#include <include/core/SkCanvas.h>
+#include <include/core/SkColor.h>
+#include <include/effects/SkGradientShader.h>
+#include <include/core/SkSurface.h>
 
 #ifdef _WIN32
 #include <windows.h>

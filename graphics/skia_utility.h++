@@ -36,8 +36,8 @@
 #include "graphics/color.h++"
 #include "graphics/position.h++"
 
-#include <SkColor.h>
-#include <SkPoint.h>
+#include <include/core/SkColor.h>
+#include <include/core/SkPoint.h>
 
 #include <algorithm>
 #include <iterator>
