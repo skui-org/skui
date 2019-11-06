@@ -134,7 +134,7 @@ before_build:
 build_script:
  - mkdir build
  - cd build
- - cmake %CMAKE_ARGS% -G"%GENERATOR%" -DCMAKE_BUILD_TYPE="%CONFIGURATION%" -DSKUI_USE_PREBUILT_3RDPARTY=ON -DSKUI_PREBUILT_3RDPARTY_PATH=%CD%/../%PREBUILT_3RDPARTY_PACKAGE% -DCPACK_PACKAGE_FILE_NAME=%DEPLOY_FILE_NAME% -DCPACK_GENERATOR=7z .. || (echo CMAKEERROR && type CMakeFiles\CMakeError.log && echo CMAKEOUTPUT && type CMakeFiles\CMakeOutput.log && exit 1)
+ - cmake %CMAKE_ARGS% -G"%GENERATOR%" -DCMAKE_BUILD_TYPE="%CONFIGURATION%" -DSKUI_USE_PREBUILT_3RDPARTY=ON -DSKUI_PREBUILT_3RDPARTY_PATH=%CD%/../%PREBUILT_3RDPARTY_PACKAGE% -DCPACK_PACKAGE_FILE_NAME=%DEPLOY_FILE_NAME% -DCPACK_GENERATOR=7Z .. || (echo CMAKEERROR && type CMakeFiles\CMakeError.log && echo CMAKEOUTPUT && type CMakeFiles\CMakeOutput.log && exit 1)
  - cmake --build . --config %CONFIGURATION% --target package -- %BUILD_ARGS%
 
 artifacts:
