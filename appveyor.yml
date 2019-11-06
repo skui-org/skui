@@ -6,14 +6,17 @@ environment:
     VCVARS: C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat
     VCVARSARG: amd64
     CMAKE_ARGS: -DCMAKE_SYSTEM_VERSION=10.0
-    BUILD_ARGS: /m:4 /verbosity:minimal
+    BUILD_ARGS: /verbosity:minimal
+    PACKAGE_ID: vs2017_x86_64
+
   - TOOLCHAIN: "Visual Studio 2019 x64"
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
     GENERATOR: Visual Studio 16 2019
     VCVARS: C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat
     VCVARSARG: amd64
     CMAKE_ARGS: -A x64
-    BUILD_ARGS: /m:4 /verbosity:minimal
+    BUILD_ARGS: /verbosity:minimal
+    PACKAGE_ID: vs2019_x86_64
 
   # Mingw-w64
   - TOOLCHAIN: "MinGW-w64 GCC"
@@ -22,6 +25,7 @@ environment:
     PACMAN_PACKAGES: "mingw-w64-x86_64-{headers,crt,gcc,ninja,binutils}"
     PATH: C:\msys64\mingw64\bin;%PATH%
     CMAKE_ARGS: -DGC_SECTIONS=OFF
+    PACKAGE_ID: mingw_x86_64
 
   # Clang targeting MSVC
   - TOOLCHAIN: "Visual Studio 2017 Clang/LLVM 7.1.0"
@@ -33,6 +37,7 @@ environment:
     VCVARSARG: amd64
     CMAKE_ARGS: -DCMAKE_C_COMPILER=clang-cl.exe -DCMAKE_CXX_COMPILER=clang-cl.exe
     CLANG_URL: https://github.com/llvm/llvm-project/releases/download/llvmorg-7.1.0/LLVM-7.1.0-win64.exe
+    PACKAGE_ID: vs2017clang7_x86_64
 
   # Clang targeting MSVC
   - TOOLCHAIN: "Visual Studio 2017 Clang/LLVM 8.0.1"
@@ -44,6 +49,7 @@ environment:
     VCVARSARG: amd64
     CMAKE_ARGS: -DCMAKE_C_COMPILER=clang-cl.exe -DCMAKE_CXX_COMPILER=clang-cl.exe
     CLANG_URL: https://github.com/llvm/llvm-project/releases/download/llvmorg-8.0.1/LLVM-8.0.1-win64.exe
+    PACKAGE_ID: vs2017clang8_x86_64
 
   # Clang targeting MSVC
   - TOOLCHAIN: "Visual Studio 2017 Clang/LLVM 9.0.0"
@@ -55,17 +61,7 @@ environment:
     VCVARSARG: amd64
     CMAKE_ARGS: -DCMAKE_C_COMPILER=clang-cl.exe -DCMAKE_CXX_COMPILER=clang-cl.exe
     CLANG_URL: https://releases.llvm.org/9.0.0/LLVM-9.0.0-win64.exe
-
-  # Clang targeting MSVC
-  - TOOLCHAIN: "Visual Studio 2019 Clang/LLVM 7.1.0"
-    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-    GENERATOR: Ninja
-    PACMAN_PACKAGES: "mingw-w64-x86_64-ninja"
-    PATH: C:\Program Files\LLVM\bin;C:\msys64\mingw64\bin;%PATH%
-    VCVARS: C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat
-    VCVARSARG: amd64
-    CMAKE_ARGS: -DCMAKE_C_COMPILER=clang-cl.exe -DCMAKE_CXX_COMPILER=clang-cl.exe
-    CLANG_URL: https://github.com/llvm/llvm-project/releases/download/llvmorg-7.1.0/LLVM-7.1.0-win64.exe
+    PACKAGE_ID: vs2017clang9_x86_64
 
   # Clang targeting MSVC
   - TOOLCHAIN: "Visual Studio 2019 Clang/LLVM 8.0.1"
@@ -77,6 +73,7 @@ environment:
     VCVARSARG: amd64
     CMAKE_ARGS: -DCMAKE_C_COMPILER=clang-cl.exe -DCMAKE_CXX_COMPILER=clang-cl.exe
     CLANG_URL: https://github.com/llvm/llvm-project/releases/download/llvmorg-8.0.1/LLVM-8.0.1-win64.exe
+    PACKAGE_ID: vs2019clang8_x86_64
 
   # Clang targeting MSVC
   - TOOLCHAIN: "Visual Studio 2019 Clang/LLVM 9.0.0"
@@ -88,6 +85,7 @@ environment:
     VCVARSARG: amd64
     CMAKE_ARGS: -DCMAKE_C_COMPILER=clang-cl.exe -DCMAKE_CXX_COMPILER=clang-cl.exe
     CLANG_URL: https://releases.llvm.org/9.0.0/LLVM-9.0.0-win64.exe
+    PACKAGE_ID: vs2019clang9_x86_64
 
   # Clang targeting mingw-w64
   - TOOLCHAIN: "MinGW-w64 Clang"
@@ -96,18 +94,23 @@ environment:
     PACMAN_PACKAGES: "mingw-w64-x86_64-{headers,crt,clang,ninja,binutils}"
     PATH: C:\msys64\mingw64\bin;%PATH%
     CMAKE_ARGS: -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang -DGC_SECTIONS=OFF
+    PACKAGE_ID: mingwclang_x86_64
+
+configuration:
+ - Release
 
 matrix:
   allow_failures:
     - TOOLCHAIN: "MinGW-w64 Clang"
 
-configuration:
- - Debug
- - Release
-
-shallow_clone: true
-
 install:
+ - if defined VCVARS call "%VCVARS%" %VCVARSARG%
+ - if DEFINED PACMAN_PACKAGES C:\msys64\usr\bin\bash.exe -lc "yes | pacman -Rd --noconfirm mingw-w64-i686-gcc-ada mingw-w64-x86_64-gcc-ada mingw-w64-i686-gcc-objc mingw-w64-x86_64-gcc-objc"
+ - if DEFINED PACMAN_PACKAGES C:\msys64\usr\bin\bash.exe -lc "yes | pacman --needed --noconfirm -Syu"
+ - if DEFINED PACMAN_PACKAGES C:\msys64\usr\bin\bash.exe -lc "yes | pacman --needed --noconfirm -Syu"
+ - if DEFINED PACMAN_PACKAGES C:\msys64\usr\bin\bash.exe -lc "yes | pacman --needed --noconfirm -S %PACMAN_PACKAGES%"
+ - set PATH=%PATH:C:\Program Files\Git\usr\bin;=%
+
  - if defined CLANG_URL appveyor DownloadFile %CLANG_URL% -FileName llvm-installer.exe
  - if defined CLANG_URL START /WAIT llvm-installer.exe /S /D=C:\"Program Files\LLVM"
  - set CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v3.14.3/cmake-3.14.3-win64-x64.zip"
@@ -116,25 +119,35 @@ install:
  - 7z x cmake.zip -oC:\cmake > nul
  - set PATH=C:\cmake\cmake-3.14.3-win64-x64\bin;%PATH%
 
-clone_script:
-  - git clone -q --branch=%APPVEYOR_REPO_BRANCH% https://github.com/skui-org/skui.git %APPVEYOR_BUILD_FOLDER%
-  - cd %APPVEYOR_BUILD_FOLDER%
-  - git checkout -qf %APPVEYOR_REPO_COMMIT%
-  - git submodule -q update --init --recursive --depth=1
+ - cd %APPVEYOR_BUILD_FOLDER%
+ - git submodule -q update --init --recursive
 
 before_build:
-  - mkdir build
-  - cd build
-  - if defined VCVARS call "%VCVARS%" %VCVARSARG%
-  - if DEFINED PACMAN_PACKAGES C:\msys64\usr\bin\bash.exe -lc "yes | pacman -Rd --noconfirm mingw-w64-i686-gcc-ada mingw-w64-x86_64-gcc-ada mingw-w64-i686-gcc-objc mingw-w64-x86_64-gcc-objc"
-  - if DEFINED PACMAN_PACKAGES C:\msys64\usr\bin\bash.exe -lc "yes | pacman --needed --noconfirm -Syu"
-  - if DEFINED PACMAN_PACKAGES C:\msys64\usr\bin\bash.exe -lc "yes | pacman --needed --noconfirm -Syu"
-  - if DEFINED PACMAN_PACKAGES C:\msys64\usr\bin\bash.exe -lc "yes | pacman --needed --noconfirm -S %PACMAN_PACKAGES%"
-  - set PATH=%PATH:C:\Program Files\Git\usr\bin;=%
-  - cmake %CMAKE_ARGS% -G"%GENERATOR%" -DCMAKE_BUILD_TYPE="%CONFIGURATION%" .. || (echo CMAKEERROR && type CMakeFiles\CMakeError.log && echo CMAKEOUTPUT && type CMakeFiles\CMakeOutput.log && exit 1)
+ - set DEPLOY_FILE_NAME=skui_windows-%PACKAGE_ID%_%APPVEYOR_REPO_TAG_NAME%
+ - git rev-parse --short=10 @:./3rdparty > 3rdparty_hash.txt
+ - set /p PREBUILT_3RDPARTY_HASH=<3rdparty_hash.txt
+ - set PREBUILT_3RDPARTY_PACKAGE=3rdparty_windows-%PACKAGE_ID%_%PREBUILT_3RDPARTY_HASH%
+ - echo %PREBUILT_3RDPARTY_PACKAGE%
+ - appveyor DownloadFile https://github.com/skui-org/3rdparty/releases/download/%PREBUILT_3RDPARTY_HASH%/%PREBUILT_3RDPARTY_PACKAGE%.7z
+ - 7z x %PREBUILT_3RDPARTY_PACKAGE%.7z
 
 build_script:
-  - cmake --build . --config %CONFIGURATION% -- %BUILD_ARGS%
+ - mkdir build
+ - cd build
+ - cmake %CMAKE_ARGS% -G"%GENERATOR%" -DCMAKE_BUILD_TYPE="%CONFIGURATION%" -DSKUI_USE_PREBUILT_3RDPARTY=ON -DSKUI_PREBUILT_3RDPARTY_PATH=%CD%/../%PREBUILT_3RDPARTY_PACKAGE% -DCPACK_PACKAGE_FILE_NAME=%DEPLOY_FILE_NAME% -DCPACK_GENERATOR=7z .. || (echo CMAKEERROR && type CMakeFiles\CMakeError.log && echo CMAKEOUTPUT && type CMakeFiles\CMakeOutput.log && exit 1)
+ - cmake --build . --config %CONFIGURATION% --target package -- %BUILD_ARGS%
 
-test_script:
-  - ctest --output-on-failure -C %CONFIGURATION%
+artifacts:
+ - path: build/$(DEPLOY_FILE_NAME).7z
+   name: package
+
+deploy:
+ - provider: GitHub
+   release: $(APPVEYOR_REPO_TAG_NAME)
+   tag: $(APPVEYOR_REPO_TAG_NAME)
+   force_update: true
+   artifact: package
+   auth_token:
+     secure: MLSAQ6y/jIxgGwKzO1/LIoG7hueJzhunmBHCIb3c/MbvP64eeY6py4Xqk39k8Gwc
+   on:
+     APPVEYOR_REPO_TAG: true
