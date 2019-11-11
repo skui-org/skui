@@ -38,7 +38,7 @@ namespace
   const auto background_size_cover_and_auto = "cover, auto";
   const auto background_size_width = "5 %";
   const auto background_size_auto_height = "auto 10px";
-  const auto background_size_auto_contain = "auto contain";
+  const auto background_size_auto_contain = "auto, contain";
 }
 
 int main()
@@ -76,6 +76,13 @@ int main()
                      {skui::css::background_size_width_height{skui::css::length{5, skui::css::unit::percentage},
                                                               skui::css::background_size_auto}});
 
+  check_rule_success(background_size, background_size_auto_height,
+                     {skui::css::background_size_width_height{skui::css::background_size_auto,
+                                                              skui::css::length{10.f, skui::css::unit::px}}});
+  check_rule_success(background_size, background_size_auto_contain,
+                     {skui::css::background_size_width_height{skui::css::background_size_auto,
+                                                              skui::css::background_size_auto},
+                      skui::css::background_size_keyword::contain});
 
   return skui::test::exit_code;
 }
