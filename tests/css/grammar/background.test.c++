@@ -68,7 +68,7 @@ int main()
 
   using skui::css::grammar::background_size;
   check_rule_success(background_size, background_size_cover_and_auto,
-                     {skui::css::background_size_enum::cover,
+                     {skui::css::background_size_keyword::cover,
                       skui::css::background_size_width_height{skui::css::background_size_auto,
                                                               skui::css::background_size_auto}});
 

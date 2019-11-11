@@ -66,10 +66,10 @@ namespace skui::css::grammar
   {
     background_attachment_table();
   } const background_attachment;
-  struct background_size_enum_table : x3::symbols<css::background_size_enum>
+  struct background_size_keyword_table : x3::symbols<css::background_size_keyword>
   {
-    background_size_enum_table();
-  } const background_size_enum;
+    background_size_keyword_table();
+  } const background_size_keyword;
 
   const auto background_image = x3::rule<struct background_image_, css::background_image>{"background-image"}
                               = ( x3::lit("none") >> x3::attr(core::string{})
@@ -88,7 +88,7 @@ namespace skui::css::grammar
                                           = length_or_auto >> ( length_or_auto | x3::attr(css::background_size_auto) );
 
   const auto background_size = x3::rule<struct background_size_, css::background_size>{"background-size"}
-                             = ( background_size_enum
+                             = ( background_size_keyword
                                | background_size_width_height
                                ) % ',';
 

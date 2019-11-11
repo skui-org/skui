@@ -40,7 +40,7 @@
 
 namespace skui::css
 {
-  enum class background_size_enum : std::uint8_t
+  enum class background_size_keyword : std::uint8_t
   {
     cover,
     contain,
@@ -78,7 +78,7 @@ namespace skui::css
         && lhs.height == lhs.height;
   }
 
-  using background_size = std::vector<std::variant<background_size_enum,
+  using background_size = std::vector<std::variant<background_size_keyword,
                                                    background_size_width_height>>;
 
   enum class background_origin : std::uint8_t

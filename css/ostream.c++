@@ -280,13 +280,13 @@ namespace skui::css
     return os;
   }
 
-  std::ostream& operator<<(std::ostream& os, const background_size_enum& background_size_enum)
+  std::ostream& operator<<(std::ostream& os, const background_size_keyword& background_size_keyword)
   {
-    switch(background_size_enum)
+    switch(background_size_keyword)
     {
-      case css::background_size_enum::cover:
+      case css::background_size_keyword::cover:
         return os << "cover";
-      case css::background_size_enum::contain:
+      case css::background_size_keyword::contain:
         return os << "contain";
     }
     return os;

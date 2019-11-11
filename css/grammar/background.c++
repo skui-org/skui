@@ -64,10 +64,10 @@ namespace skui::css::grammar
         ;
   }
 
-  background_size_enum_table::background_size_enum_table()
+  background_size_keyword_table::background_size_keyword_table()
   {
-    add("cover", background_size_enum::cover)
-       ("contain", background_size_enum::contain)
+    add("cover", background_size_keyword::cover)
+       ("contain", background_size_keyword::contain)
        ;
   }
 
