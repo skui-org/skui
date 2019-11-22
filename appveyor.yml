@@ -137,6 +137,9 @@ build_script:
  - cmake %CMAKE_ARGS% -G"%GENERATOR%" -DCMAKE_BUILD_TYPE="%CONFIGURATION%" -DSKUI_USE_PREBUILT_3RDPARTY=ON -DSKUI_PREBUILT_3RDPARTY_PATH=%CD%/../%PREBUILT_3RDPARTY_PACKAGE% -DCPACK_PACKAGE_FILE_NAME=%DEPLOY_FILE_NAME% -DCPACK_GENERATOR=7Z .. || (echo CMAKEERROR && type CMakeFiles\CMakeError.log && echo CMAKEOUTPUT && type CMakeFiles\CMakeOutput.log && exit 1)
  - cmake --build . --config %CONFIGURATION% --target package -- %BUILD_ARGS%
 
+test_script:
+ - ctest --output-on-failure -C %CONFIGURATION%
+
 artifacts:
  - path: build/$(DEPLOY_FILE_NAME).7z
    name: package
