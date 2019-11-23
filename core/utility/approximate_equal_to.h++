@@ -45,9 +45,9 @@ namespace skui::core
   public:
     constexpr bool operator()(const ValueType& left,
                               const ValueType& right,
-                              const EpsilonType& epsilon) const
+                              const EpsilonType& eps) const
     {
-      return norm(left - right) <= epsilon*std::min(norm(left), norm(right));
+      return norm(left - right) <= eps*std::min(norm(left), norm(right));
     }
   };
 }

@@ -48,7 +48,7 @@ int main()
 
   using skui::css::grammar::angular_color_stop;
   check_rule_success(angular_color_stop, color, {skui::css::colors::red, {}});
-  check_rule_success(angular_color_stop, color_angle, {skui::css::colors::yellow, 180});
+  check_rule_success(angular_color_stop, color_angle, {skui::css::colors::yellow, 180.f});
 
   return skui::test::exit_code;
 }

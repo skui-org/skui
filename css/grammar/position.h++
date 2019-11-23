@@ -50,9 +50,9 @@ namespace skui::css::grammar
 
   constexpr auto swap_x_y = [](auto& context)
   {
-    css::position& position = x3::_attr(context);
+    css::position& position2d = x3::_attr(context);
 
-    std::swap(position.x, position.y);
+    std::swap(position2d.x, position2d.y);
   };
 
   struct horizontal_relative_position_table : x3::symbols<css::length>

@@ -71,6 +71,8 @@ namespace skui::core::implementation
     ReturnType call(const std::index_sequence<Indices...>&,
                     ArgTypes&&... args) const
     {
+      ((void)args, ...);
+
       return callable(std::get<Indices>(std::make_tuple(args...))...);
     }
 
@@ -99,6 +101,8 @@ namespace skui::core::implementation
                     Class* object,
                     ArgTypes&&... args) const
     {
+      ((void)args, ...);
+
       return (object->*member_function_ptr)(std::get<Indices>(std::make_tuple(args...))...);
     }
 
@@ -109,7 +113,6 @@ namespace skui::core::implementation
   template<typename Class, typename ConstMemberFunctionPointer, typename ReturnType, typename... ArgTypes>
   class const_member_function_slot : public slot<ReturnType, ArgTypes...>
   {
-
   public:
     const_member_function_slot(ConstMemberFunctionPointer const_member_function)
       : const_member_function_ptr{const_member_function}
@@ -128,6 +131,8 @@ namespace skui::core::implementation
                     const Class* object,
                     ArgTypes&&... args) const
     {
+      ((void)args, ...);
+
       return (object->*const_member_function_ptr)(std::get<Indices>(std::make_tuple(args...))...);
     }
 
