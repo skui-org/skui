@@ -26,6 +26,7 @@
 #define SKUI_CSS_GRAMMAR_NUMERIC_H
 
 #include "css/grammar/as.h++"
+#include "css/grammar/semantic/convert_to.h++"
 #include "css/grammar/semantic_checks.h++"
 #include "css/grammar/semantic_math.h++"
 
@@ -40,7 +41,7 @@ namespace skui::css::grammar
   namespace x3 = boost::spirit::x3;
 
   template<int max_value>
-  constexpr auto clamp_and_normalize = [](auto& context)
+  constexpr inline auto clamp_and_normalize = [](auto& context)
   {
     using value_type = std::remove_reference_t<decltype(x3::_val(context))>;
     using attribute_type = std::remove_reference_t<decltype(x3::_attr(context))>;
@@ -65,10 +66,10 @@ namespace skui::css::grammar
   const auto percentage = x3::rule<struct percentage, float>{"percentage"}
                        %= (x3::float_ >> '%')[divide{100.f}];
 
-  const auto percentage_or_uint8 = x3::rule<struct percentage_or_uint8, std::uint8_t>{"percentage or uint8"}
-                                %= as<float>(percentage[clamp{1.f}][multiply{255.f}][round])
-                                 | as<float>(ufloat[clamp{255.f}])
-                                 ;
+  const auto percentage_or_uint8_as_float = x3::rule<struct percentage_or_uint8_as_float, float>{"percentage or uint8"}
+                                         %= percentage[clamp{1.f}]
+                                          | ufloat[clamp{255.f}][floor][divide{255.f}]
+                                          ;
   const auto percentage_or_normalized = x3::rule<struct percentage_or_normalized, float>{"percentage or normalized"}
                                      %= percentage[clamp{1.f}]
                                       | ufloat[clamp{1.f}]

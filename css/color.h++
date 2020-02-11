@@ -39,9 +39,7 @@ namespace skui::css
   class color
   {
   public:
-    color()
-      : color{0,0,0,0}
-    {}
+    color() = default;
     explicit constexpr color(std::uint32_t argb)
       : red{static_cast<std::uint8_t>(argb >> 24)}
       , green{static_cast<std::uint8_t>(argb >> 16)}
@@ -57,11 +55,26 @@ namespace skui::css
       return color{red, green, blue, alpha};
     }
 
+    static color rgbaf(float red,
+                       float green,
+                       float blue,
+                       float alpha)
+    {
+      return color{rescale(red), rescale(green), rescale(blue), rescale(alpha)};
+    }
+
     static constexpr color rgb(std::uint8_t red,
-                                std::uint8_t green,
-                                std::uint8_t blue)
+                               std::uint8_t green,
+                               std::uint8_t blue)
     {
       return color{red, green, blue, 255};
+    }
+
+    static color rgbf(float red,
+                      float green,
+                      float blue)
+    {
+      return rgbaf(red, green, blue, 1.f);
     }
 
     static color hsla(float hue,
@@ -117,10 +130,10 @@ namespace skui::css
       return static_cast<std::uint32_t>(red << 24 | green << 16 | blue << 8 | alpha);
     }
 
-    std::uint8_t red;
-    std::uint8_t green;
-    std::uint8_t blue;
-    std::uint8_t alpha;
+    std::uint8_t red{};
+    std::uint8_t green{};
+    std::uint8_t blue{};
+    std::uint8_t alpha{};
 
   private:
     explicit constexpr color(std::uint8_t red,
@@ -132,6 +145,11 @@ namespace skui::css
       , blue{blue}
       , alpha{alpha}
     {}
+    // converts from float [0,1] to int8 [0,255]
+    static std::uint8_t rescale(float value)
+    {
+      return static_cast<std::uint8_t>(std::round(value*255));
+    }
   };
 
 

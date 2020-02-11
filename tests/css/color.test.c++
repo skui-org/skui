@@ -32,24 +32,53 @@ namespace
   using skui::test::check;
   using skui::core::string;
 
+  void test_from_uint32()
+  {
+    skui::css::color c{0xccaaffee};
+
+    check(c.red == 0xcc, "red set correctly from uint32_t for ", static_cast<std::uint32_t>(c));
+    check(c.green == 0xaa, "green set correctly from uint32_t for ", static_cast<std::uint32_t>(c));
+    check(c.blue == 0xff, "blue set correctly from uint32_t for ", static_cast<std::uint32_t>(c));
+    check(c.alpha == 0xee, "alpha set correctly from uint32_t for ", static_cast<std::uint32_t>(c));
+  }
+
   void test_from_rgb()
   {
-    {
-      skui::css::color c{0xccaaffee};
+    auto c = skui::css::color::rgba(0xcc, 0xaa, 0xff, 0xee);
 
-      check(c.red == 0xcc, "red set correctly from uint32_t for " + std::to_string(static_cast<std::uint32_t>(c)));
-      check(c.green == 0xaa, "green set correctly from uint32_t for " + std::to_string(static_cast<std::uint32_t>(c)));
-      check(c.blue == 0xff, "blue set correctly from uint32_t for " + std::to_string(static_cast<std::uint32_t>(c)));
-      check(c.alpha == 0xee, "alpha set correctly from uint32_t for " + std::to_string(static_cast<std::uint32_t>(c)));
-    }
-    {
-      auto c = skui::css::color::rgba(0xcc, 0xaa, 0xff, 0xee);
+    check(c.red == 0xcc, "red set correctly for ", static_cast<std::uint32_t>(c));
+    check(c.green == 0xaa, "green set correctly for ", static_cast<std::uint32_t>(c));
+    check(c.blue == 0xff, "blue set correctly for ", static_cast<std::uint32_t>(c));
+    check(c.alpha == 0xee, "alpha set correctly for ", static_cast<std::uint32_t>(c));
+  }
+  void test_from_rgbf()
+  {
+    auto c = skui::css::color::rgbf(.25f, .5f, .75f);
 
-      check(c.red == 0xcc, "red set correctly for " + std::to_string(static_cast<std::uint32_t>(c)));
-      check(c.green == 0xaa, "green set correctly for " + std::to_string(static_cast<std::uint32_t>(c)));
-      check(c.blue == 0xff, "blue set correctly for " + std::to_string(static_cast<std::uint32_t>(c)));
-      check(c.alpha == 0xee, "alpha set correctly for " + std::to_string(static_cast<std::uint32_t>(c)));
-    }
+    check(c.red == 64, "red set correctly for ", static_cast<std::uint32_t>(c));
+    check(c.green == 128, "green set correctly for ", static_cast<std::uint32_t>(c));
+    check(c.blue == 191, "blue set correctly for ", static_cast<std::uint32_t>(c));
+    check(c.alpha == 255, "alpha set correctly for ", static_cast<std::uint32_t>(c));
+  }
+
+  void test_from_rgba()
+  {
+    auto c = skui::css::color::rgba(0xcc, 0xaa, 0xff, 0xee);
+
+    check(c.red == 0xcc, "red set correctly for ", static_cast<std::uint32_t>(c));
+    check(c.green == 0xaa, "green set correctly for ", static_cast<std::uint32_t>(c));
+    check(c.blue == 0xff, "blue set correctly for ", static_cast<std::uint32_t>(c));
+    check(c.alpha == 0xee, "alpha set correctly for ", static_cast<std::uint32_t>(c));
+  }
+
+  void test_from_rgbaf()
+  {
+    auto c = skui::css::color::rgbaf(.25f, .5f, .75f, 1.f );
+
+    check(c.red == 64, "red set correctly for ", static_cast<std::uint32_t>(c));
+    check(c.green == 128, "green set correctly for ", static_cast<std::uint32_t>(c));
+    check(c.blue == 191, "blue set correctly for ", static_cast<std::uint32_t>(c));
+    check(c.alpha == 255, "alpha set correctly for ", static_cast<std::uint32_t>(c));
   }
 
   void test_from_hsl()
@@ -70,7 +99,13 @@ namespace
 
 int main()
 {
+  std::cerr << std::hex;
+
+  test_from_uint32();
   test_from_rgb();
+  test_from_rgbf();
+  test_from_rgba();
+  test_from_rgbaf();
   test_from_hsl();
 
   return skui::test::exit_code;

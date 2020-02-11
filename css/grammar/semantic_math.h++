@@ -76,7 +76,8 @@ namespace skui::css::grammar
     void operator()(ContextType& context)
     {
       using value_type = std::remove_reference_t<decltype(x3::_val(context))>;
-      x3::_val(context) = std::clamp<value_type>(x3::_attr(context), lower, upper);
+
+      x3::_val(context) = static_cast<value_type>(std::clamp<ValueType>(static_cast<ValueType>(x3::_attr(context)), lower, upper));
     }
 
   private:
@@ -88,6 +89,13 @@ namespace skui::css::grammar
   {
     using value_type = std::remove_reference_t<decltype(x3::_val(context))>;
     x3::_val(context) = static_cast<value_type>(std::round(x3::_attr(context)));
+  };
+
+  constexpr auto floor = [](auto& context)
+  {
+    using value_type = std::remove_reference_t<decltype(x3::_val(context))>;
+
+    x3::_val(context) = static_cast<value_type>(std::floor(x3::_attr(context)));
   };
 }
 

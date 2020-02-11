@@ -66,13 +66,17 @@ namespace skui::css::grammar
 
   // functional specifications
   const auto color_rgb = x3::rule<struct rgb, css::color>{"rgb"}
-                      %= x3::lit("rgb") >> '(' >> percentage_or_uint8 >> ',' >> percentage_or_uint8 >> ',' >> percentage_or_uint8 >> x3::attr(255) >> ')';
+                       = (x3::lit("rgb") >> '(' >> percentage_or_uint8_as_float >> ',' >> percentage_or_uint8_as_float >> ',' >> percentage_or_uint8_as_float >> ')')
+                          [factory(&css::color::rgbf)];
   const auto color_rgba = x3::rule<struct rgba, css::color>{"rgba"}
-                       %= x3::lit("rgba") >> '(' >> percentage_or_uint8 >> ',' >> percentage_or_uint8 >> ',' >> percentage_or_uint8 >> ',' >> as<float>(percentage_or_normalized[multiply{255.f}][round]) >> ')';
+                        = (x3::lit("rgba") >> '(' >> percentage_or_uint8_as_float >> ',' >> percentage_or_uint8_as_float >> ',' >> percentage_or_uint8_as_float >> ',' >> percentage_or_normalized >> ')')
+                           [factory(&css::color::rgbaf)];
   const auto color_hsl = x3::rule<struct hsl, css::color>{"hsl"}
-                       = (x3::lit("hsl") >> '(' >> degrees_normalized >> ',' >> percentage_or_normalized >> ',' >> percentage_or_normalized >> ')')[factory(&css::color::hsl)];
+                       = (x3::lit("hsl") >> '(' >> degrees_normalized >> ',' >> percentage_or_normalized >> ',' >> percentage_or_normalized >> ')')
+                          [factory(&css::color::hsl)];
   const auto color_hsla = x3::rule<struct hsla, css::color>{"hsla"}
-                        = (x3::lit("hsla") >> '(' >> degrees_normalized >> ',' >> percentage_or_normalized >> ',' >> percentage_or_normalized >> ',' >> percentage_or_normalized >> ')')[factory(&css::color::hsla)];
+                        = (x3::lit("hsla") >> '(' >> degrees_normalized >> ',' >> percentage_or_normalized >> ',' >> percentage_or_normalized >> ',' >> percentage_or_normalized >> ')')
+                           [factory(&css::color::hsla)];
 
   const auto color = x3::rule<struct color_, css::color>{"color"}
                    = named_color

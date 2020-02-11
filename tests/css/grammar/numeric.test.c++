@@ -106,16 +106,16 @@ int main()
   check_rule_success(percentage, percentage_higher, 1.12f);
   check_rule_success(percentage, percentage_negative, -.05f);
 
-  using skui::css::grammar::percentage_or_uint8;
-  check_rule_success(percentage_or_uint8, positive, 123);
-  check_rule_failure(percentage_or_uint8, negative);
-  check_rule_success(percentage_or_uint8, decimal, 12);
-  check_rule_failure(percentage_or_uint8, hex);
-  check_rule_failure(percentage_or_uint8, text);
-  check_rule_success(percentage_or_uint8, percentage_integral, std::uint8_t(std::round(76.f/100*255)));
-  check_rule_success(percentage_or_uint8, percentage_decimal, std::uint8_t(std::round(23.4f/100*255)));
-  check_rule_success(percentage_or_uint8, percentage_higher, 255);
-  check_rule_success(percentage_or_uint8, percentage_negative, 0);
+  using skui::css::grammar::percentage_or_uint8_as_float;
+  check_rule_success(percentage_or_uint8_as_float, positive, 123.f/255);
+  check_rule_failure(percentage_or_uint8_as_float, negative);
+  check_rule_success(percentage_or_uint8_as_float, decimal, 12.f/255);
+  check_rule_failure(percentage_or_uint8_as_float, hex);
+  check_rule_failure(percentage_or_uint8_as_float, text);
+  check_rule_success(percentage_or_uint8_as_float, percentage_integral, .76f);
+  check_rule_success(percentage_or_uint8_as_float, percentage_decimal, .234f);
+  check_rule_success(percentage_or_uint8_as_float, percentage_higher, 1.f);
+  check_rule_success(percentage_or_uint8_as_float, percentage_negative, 0.f);
 
   using skui::css::grammar::percentage_or_normalized;
   check_rule_success(percentage_or_normalized, positive, 1);
