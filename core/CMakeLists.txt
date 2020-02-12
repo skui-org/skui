@@ -53,8 +53,9 @@ set(utility_src
     utility/bound.h++
     utility/norm.h++
    )
-source_group(core\\traits FILES ${traits_src})
-source_group(core\\utility FILES ${utility_src})
+source_group("" FILES ${core_src})
+source_group(traits FILES ${traits_src})
+source_group(utility FILES ${utility_src})
 
 # Platform-specific files
 if(NOT WIN32)

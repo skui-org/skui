@@ -87,17 +87,21 @@ function(compile_test_library component test_name)
                                                       -P ${test_list_dir}/compile_test.cmake)
 endfunction()
 
+set(shared_src
+    test.h++
+    core/property_tests.h++
+    core/types.h++
+    css/test_rule.h++
+    graphics/composite_value_tests.h++
+    gui/mock_canvas.h++
+    gui/mock_element.h++
+    runtime_test.cmake
+    compile_test.cmake
+   )
 add_custom_target(tests_shared SOURCES
-                  test.h++
-                  core/property_tests.h++
-                  core/types.h++
-                  css/test_rule.h++
-                  graphics/composite_value_tests.h++
-                  gui/mock_canvas.h++
-                  gui/mock_element.h++
-                  runtime_test.cmake
-                  compile_test.cmake
+                  ${shared_src}
                  )
+source_group("" FILES ${shared_src})
 
 add_subdirectory(core)
 add_subdirectory(css)
