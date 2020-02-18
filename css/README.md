@@ -170,7 +170,7 @@ The below tables attempts to track what has already been implemented.
 | caption-side               | :heavy_check_mark: | :heavy_check_mark: |       |
 | caret-color                |         :x:        |        :x:         |       |
 | charset                    |         :x:        |        :x:         |       |
-| clear                      |         :x:        |        :x:         |       |
+| clear                      | :heavy_check_mark: | :heavy_check_mark: |       |
 | clip                       |         :x:        |        :x:         |       |
 | color                      |         :x:        |        :x:         |       |
 | column-count               |         :x:        |        :x:         |       |

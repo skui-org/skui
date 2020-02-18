@@ -31,6 +31,7 @@
 #include "css/property/box_shadow.h++"
 #include "css/property/box_sizing.h++"
 #include "css/property/caption_side.h++"
+#include "css/property/clear.h++"
 
 #include <core/utility.h++>
 
@@ -360,6 +361,22 @@ namespace skui::css
         return os << "top";
       case css::caption_side::bottom:
         return os << "bottom";
+    }
+    return os;
+  }
+
+  std::ostream& operator<<(std::ostream& os, clear clear)
+  {
+    switch(clear)
+    {
+      case css::clear::none:
+        return os << "none";
+      case css::clear::left:
+        return os << "left";
+      case css::clear::right:
+        return os << "right";
+      case css::clear::both:
+        return os << "both";
     }
     return os;
   }
