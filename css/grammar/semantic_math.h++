@@ -41,7 +41,7 @@ namespace skui::css::grammar
     template<typename ContextType>
     void operator()(ContextType& context) const
     {
-      // triggers conversion warnings when multiplying integer types with sizeof(T) < sizeof(int)
+      // triggers conversion warnings when dividing integer types with sizeof(T) < sizeof(int)
       using attribute_type = std::remove_reference_t<decltype(x3::_attr(context))>;
       x3::_attr(context) = static_cast<attribute_type>(x3::_attr(context) / divisor);
     }
@@ -88,6 +88,7 @@ namespace skui::css::grammar
   constexpr auto round = [](auto& context)
   {
     using value_type = std::remove_reference_t<decltype(x3::_val(context))>;
+
     x3::_val(context) = static_cast<value_type>(std::round(x3::_attr(context)));
   };
 
