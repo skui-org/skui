@@ -323,13 +323,6 @@ namespace skui::css
     return os << "ellipse " << ellipse.size;
   }
 
-  std::ostream& operator<<(std::ostream& os, const std::variant<radial_gradient::circle, radial_gradient::ellipse>& shape_size)
-  {
-    std::visit([&os](auto&& v) { os << v; }, shape_size);
-
-    return os;
-  }
-
   std::ostream& operator<<(std::ostream& os,
                            const radial_gradient& radial_gradient)
   {
@@ -340,13 +333,6 @@ namespace skui::css
               << radial_gradient.shape << " at " << radial_gradient.position << ", "
               << radial_gradient.colors
               << ")";
-  }
-
-  std::ostream& operator<<(std::ostream& os, const std::variant<core::string, linear_gradient, radial_gradient>& background_image)
-  {
-    std::visit([&os](auto&& v) { os << v; }, background_image);
-
-    return os;
   }
 
   std::ostream& operator<<(std::ostream& os, const background_size_keyword& background_size_keyword)

@@ -63,6 +63,15 @@ namespace skui::css
   enum class caption_side : std::uint8_t;
   enum class clear : std::uint8_t;
 
+  template<typename... Types>
+  std::ostream& operator<<(std::ostream& os, const std::vector<Types...>& values)
+  {
+    for(std::size_t i = 0; i<values.size(); ++i)
+    {
+      os << values[i] << ", ";
+    }
+    return os << values.back();
+  }
   template<typename... ValueTypes>
   std::ostream& operator<<(std::ostream& os, const std::variant<ValueTypes...>& value)
   {
@@ -89,9 +98,6 @@ namespace skui::css
   std::ostream& operator<<(std::ostream& os, const color& color);
   template<typename ColorStopType>
   std::ostream& operator<<(std::ostream& os, const color_stop<ColorStopType>& color_stop);
-  template<typename ColorStopType>
-  std::ostream& operator<<(std::ostream& os,
-                           const std::vector<skui::css::color_stop<ColorStopType>>& colors);
 
   std::ostream& operator<<(std::ostream& os, const unit unit);
   std::ostream& operator<<(std::ostream& os, const length& length);
@@ -118,7 +124,6 @@ namespace skui::css
   std::ostream& operator<<(std::ostream& os, graphics::size2D<length>& size);
   std::ostream& operator<<(std::ostream& os, const radial_gradient::circle& circle);
   std::ostream& operator<<(std::ostream& os, const radial_gradient::ellipse& ellipse);
-  std::ostream& operator<<(std::ostream& os, const std::variant<radial_gradient::circle, radial_gradient::ellipse>& shape_size);
   std::ostream& operator<<(std::ostream& os, const radial_gradient& radial_gradient);
 
   std::ostream& operator<<(std::ostream& os, const conic_gradient& conic_gradient);
@@ -126,7 +131,6 @@ namespace skui::css
   std::ostream& operator<<(std::ostream& os, const background_size_auto_t&);
   std::ostream& operator<<(std::ostream& os, const background_size_keyword& background_size_keyword);
   std::ostream& operator<<(std::ostream& os, const background_size_width_height& width_height);
-  std::ostream& operator<<(std::ostream& os, const std::variant<core::string, linear_gradient, radial_gradient>& background_image);
 
   std::ostream& operator<<(std::ostream& os, box_decoration_break box_decoration_break);
   std::ostream& operator<<(std::ostream& os, const box_shadow& box_shadow);
@@ -144,19 +148,6 @@ std::ostream& skui::css::operator<<(std::ostream& os, const color_stop<ColorStop
     os << ", " << *color_stop.stop;
   }
   return os << ")";
-}
-
-template<typename ColorStopType>
-std::ostream& skui::css::operator<<(std::ostream& os,
-                                    const std::vector<skui::css::color_stop<ColorStopType>>& colors)
-{
-  for(auto it = colors.begin(); it != colors.end(); ++it)
-  {
-    os << *it;
-    if(it+1 != colors.end())
-      os << ", ";
-  }
-  return os;
 }
 
 #endif
