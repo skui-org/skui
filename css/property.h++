@@ -36,14 +36,18 @@
 
 namespace skui::css
 {
+  inline struct auto_t final {} auto_;
   inline struct inherit_t final {} inherit;
   inline struct initial_t final {} initial;
 
+  constexpr bool operator==(const auto_t&, const auto_t&) { return true; }
   constexpr bool operator==(const inherit_t&, const inherit_t&) { return true; }
   constexpr bool operator==(const initial_t&, const initial_t&) { return true; }
 
   template<typename... ValueTypes>
   using property = std::variant<ValueTypes..., inherit_t, initial_t>;
+  template<typename... ValueTypes>
+  using auto_property = std::variant<auto_t, ValueTypes..., inherit_t, initial_t>;
 
   enum class property_enum
   {

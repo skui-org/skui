@@ -75,8 +75,9 @@ namespace skui::css
       return os << "none";
   }
 
-  std::ostream& operator<<(std::ostream& os, const inherit_t& inherit);
-  std::ostream& operator<<(std::ostream& os, const initial_t& initial);
+  std::ostream& operator<<(std::ostream& os, const auto_t&);
+  std::ostream& operator<<(std::ostream& os, const inherit_t&);
+  std::ostream& operator<<(std::ostream& os, const initial_t&);
 
   std::ostream& operator<<(std::ostream& os, const color& color);
   template<typename ColorStopType>

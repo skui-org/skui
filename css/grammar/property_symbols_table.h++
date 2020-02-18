@@ -31,15 +31,27 @@
 
 namespace skui::css::grammar
 {
-  using boost::spirit::x3::symbols;
+  namespace x3 = boost::spirit::x3;
 
   template<typename... ValueTypes>
-  struct property_symbols_table : symbols<property<ValueTypes...>>
+  struct property_symbols_table : x3::symbols<property<ValueTypes...>>
   {
     property_symbols_table()
     {
       this->add("initial", initial)
                ("inherit", inherit)
+               ;
+    }
+  };
+
+  template<typename... ValueTypes>
+  struct auto_property_symbols_table : x3::symbols<auto_property<ValueTypes...>>
+  {
+    auto_property_symbols_table()
+    {
+      this->add("initial", initial)
+               ("inherit", inherit)
+               ("auto", auto_)
                ;
     }
   };

@@ -40,6 +40,11 @@
 
 namespace skui::css
 {
+  std::ostream& operator<<(std::ostream& os, const auto_t&)
+  {
+    return os << "auto";
+  }
+
   std::ostream& operator<<(std::ostream& os, const inherit_t&)
   {
     return os << "inherit";
