@@ -29,6 +29,7 @@
 #include "css/property/animation.h++"
 #include "css/property/box_decoration_break.h++"
 #include "css/property/box_shadow.h++"
+#include "css/property/box_sizing.h++"
 
 #include <core/utility.h++>
 
@@ -336,5 +337,17 @@ namespace skui::css
               << "blur radius: " << box_shadow.blur_radius << '\n'
               << "spread radius: " << box_shadow.spread_radius << '\n'
               << "color: " << box_shadow.color;
+  }
+
+  std::ostream& operator<<(std::ostream& os, box_sizing box_sizing)
+  {
+    switch(box_sizing)
+    {
+      case css::box_sizing::content_box:
+        return os << "content-box";
+      case css::box_sizing::border_box:
+        return os << "border-box";
+    }
+    return os;
   }
 }
