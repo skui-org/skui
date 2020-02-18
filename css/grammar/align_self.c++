@@ -29,8 +29,7 @@ namespace skui::css::grammar
   align_self_table::align_self_table()
   {
     using css::align_self;
-    add("auto", align_self::auto_)
-       ("stretch", align_self::stretch)
+    add("stretch", align_self::stretch)
        ("center",  align_self::center)
        ("flex-start", align_self::flex_start)
        ("flex-end", align_self::flex_end)

@@ -26,6 +26,9 @@
 
 #include "css/position.h++"
 
+#include "css/property/align_content.h++"
+#include "css/property/align_items.h++"
+#include "css/property/align_self.h++"
 #include "css/property/animation.h++"
 #include "css/property/box_decoration_break.h++"
 #include "css/property/box_shadow.h++"
@@ -53,6 +56,60 @@ namespace skui::css
   std::ostream& operator<<(std::ostream& os, const initial_t&)
   {
     return os << "initial";
+  }
+
+  std::ostream& operator<<(std::ostream& os, align_content align_content)
+  {
+    switch(align_content)
+    {
+      case css::align_content::stretch:
+        return os << "stretch";
+      case css::align_content::center:
+        return os << "center";
+      case css::align_content::flex_start:
+        return os << "flex-start";
+      case css::align_content::flex_end:
+        return os << "flex-end";
+      case css::align_content::space_between:
+        return os << "space-between";
+      case css::align_content::space_around:
+        return os << "space-around";
+    }
+    return os;
+  }
+  std::ostream& operator<<(std::ostream& os, align_items align_items)
+  {
+    switch(align_items)
+    {
+      case css::align_items::stretch:
+        return os << "stretch";
+      case css::align_items::center:
+        return os << "center";
+      case css::align_items::flex_start:
+        return os << "flex-start";
+      case css::align_items::flex_end:
+        return os << "flex-end";
+      case css::align_items::baseline:
+        return os << "baseline";
+    }
+    return os;
+  }
+  std::ostream& operator<<(std::ostream& os, align_self align_self)
+  {
+    switch(align_self)
+    {
+      case css::align_self::stretch:
+        return os << "stretch";
+      case css::align_self::center:
+        return os << "center";
+      case css::align_self::flex_start:
+        return os << "flex-start";
+      case css::align_self::flex_end:
+        return os << "flex-end";
+      case css::align_self::baseline:
+        return os << "baseline";
+    }
+    return os;
   }
 
   std::ostream& operator<<(std::ostream& os, const color& color)

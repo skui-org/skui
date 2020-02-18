@@ -24,6 +24,9 @@
 #
 
 runtime_test(css color)
+runtime_test(css grammar/align_content)
+runtime_test(css grammar/align_items)
+runtime_test(css grammar/align_self)
 runtime_test(css grammar/angle)
 runtime_test(css grammar/animation)
 runtime_test(css grammar/background)

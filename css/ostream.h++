@@ -50,6 +50,9 @@ namespace skui::css
   struct steps;
   struct position;
 
+  enum class align_content : std::uint8_t;
+  enum class align_items : std::uint8_t;
+  enum class align_self : std::uint8_t;
   enum class animation_direction : std::uint8_t;
   enum class fill_mode : std::uint8_t;
   enum class play_state : std::uint8_t;
@@ -78,6 +81,10 @@ namespace skui::css
   std::ostream& operator<<(std::ostream& os, const auto_t&);
   std::ostream& operator<<(std::ostream& os, const inherit_t&);
   std::ostream& operator<<(std::ostream& os, const initial_t&);
+
+  std::ostream& operator<<(std::ostream& os, align_content align_content);
+  std::ostream& operator<<(std::ostream& os, align_items align_items);
+  std::ostream& operator<<(std::ostream& os, align_self align_self);
 
   std::ostream& operator<<(std::ostream& os, const color& color);
   template<typename ColorStopType>

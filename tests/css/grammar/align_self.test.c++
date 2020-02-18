@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright © 2018-2020 Ruben Van Boxem
+ * Copyright © 2020 Ruben Van Boxem
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,21 +22,36 @@
  * THE SOFTWARE.
  **/
 
-#ifndef SKUI_CSS_GRAMMAR_ALIGN_SELF_H
-#define SKUI_CSS_GRAMMAR_ALIGN_SELF_H
+#include "css/test_rule.h++"
 
-#include "css/grammar/property_symbols_table.h++"
+#include <css/grammar/align_self.h++>
 
-#include "css/property/align_self.h++"
+#include <css/ostream.h++>
 
-#include <boost/spirit/home/x3/string/symbols.hpp>
-
-namespace skui::css::grammar
+namespace
 {
-  struct align_self_table : auto_property_symbols_table<css::align_self>
-  {
-    align_self_table();
-  } const align_self;
+  const auto auto_ = "auto";
+  const auto stretch = "stretch";
+  const auto center = "center";
+  const auto flex_start = "flex-start";
+  const auto flex_end = "flex-end";
+  const auto baseline = "baseline";
+
+  namespace x3 = boost::spirit::x3;
+  const auto align_self = x3::rule<struct align_self, skui::css::auto_property<skui::css::align_self>>{"align-self"}
+                        = skui::css::grammar::align_self;
 }
 
-#endif
+int main()
+{
+  using skui::test::check_rule_success;
+
+  check_rule_success(align_self, auto_, skui::css::auto_);
+  check_rule_success(align_self, stretch, skui::css::align_self::stretch);
+  check_rule_success(align_self, center, skui::css::align_self::center);
+  check_rule_success(align_self, flex_start, skui::css::align_self::flex_start);
+  check_rule_success(align_self, flex_end, skui::css::align_self::flex_end);
+  check_rule_success(align_self, baseline, skui::css::align_self::baseline);
+
+  return skui::test::exit_code;
+}

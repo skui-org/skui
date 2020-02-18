@@ -31,7 +31,6 @@ namespace skui::css
 {
   enum class align_self : std::uint8_t
   {
-    auto_,
     stretch,
     center,
     flex_start,
