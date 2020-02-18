@@ -46,7 +46,7 @@ namespace skui::css::grammar
   {
     return implementation::apply(std::forward<Functor>(functor),
                                  std::forward<Sequence>(sequence),
-                                 std::make_index_sequence<size(sequence)>{});
+                                 std::make_index_sequence<boost::fusion::size(sequence)>{});
   }
   template<typename Functor>
   auto factory(Functor f)
