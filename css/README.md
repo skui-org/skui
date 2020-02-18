@@ -164,7 +164,7 @@ The below tables attempts to track what has already been implemented.
 | border-top-width           |         :x:        |        :x:         |       |
 | border-width               |         :x:        |        :x:         |       |
 | bottom                     |         :x:        |        :x:         |       |
-| box-decoration-break       |         :x:        |        :x:         |       |
+| box-decoration-break       | :heavy_check_mark: | :heavy_check_mark: |       |
 | box-shadow                 |         :x:        |        :x:         |       |
 | box-sizing                 |         :x:        |        :x:         |       |
 | caption-side               |         :x:        |        :x:         |       |

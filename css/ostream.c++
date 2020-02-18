@@ -27,6 +27,7 @@
 #include "css/position.h++"
 
 #include "css/property/animation.h++"
+#include "css/property/box_decoration_break.h++"
 
 #include <iomanip>
 #include <iostream>
@@ -309,4 +310,15 @@ namespace skui::css
                               << conic_gradient.colors << ")";
   }
 
+  std::ostream& operator<<(std::ostream& os, box_decoration_break box_decoration_break)
+  {
+    switch(box_decoration_break)
+    {
+      case css::box_decoration_break::slice:
+        return os << "slice";
+      case css::box_decoration_break::clone:
+        return os << "clone";
+    }
+    return os;
+  }
 }
