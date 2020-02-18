@@ -40,6 +40,7 @@ namespace skui::css
   struct animation;
   struct background_size_width_height;
   struct background_size_auto;
+  struct box_shadow;
   struct cubic_bezier;
   struct infinite_t;
   struct initial_t;
@@ -61,6 +62,14 @@ namespace skui::css
   {
     std::visit([&os](auto&& v) { os << v; }, value);
     return os;
+  }
+  template<typename ValueType>
+  std::ostream& operator<<(std::ostream& os, const std::optional<ValueType>& value)
+  {
+    if(value)
+      return os << *value;
+    else
+      return os << "none";
   }
 
   std::ostream& operator<<(std::ostream& os, const inherit_t& inherit);
@@ -109,6 +118,7 @@ namespace skui::css
   std::ostream& operator<<(std::ostream& os, const std::variant<core::string, linear_gradient, radial_gradient>& background_image);
 
   std::ostream& operator<<(std::ostream& os, box_decoration_break box_decoration_break);
+  std::ostream& operator<<(std::ostream& os, const box_shadow& box_shadow);
 }
 
 template<typename ColorStopType>

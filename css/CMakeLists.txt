@@ -48,6 +48,7 @@ set(properties_src
     property/background_gradient.h++
     property/border.h++
     property/box_decoration_break.h++
+    property/box_shadow.h++
     property/linear_gradient.h++
     property/radial_gradient.h++
    )
@@ -64,6 +65,7 @@ set(grammar_src
     grammar/background.h++ grammar/background.c++
     grammar/backface_visibility.h++ grammar/backface_visibility.c++
     grammar/box_decoration_break.h++ grammar/box_decoration_break.c++
+    grammar/box_shadow.h++
     grammar/color.h++ grammar/color.c++
     grammar/color_stop.h++
     grammar/conic_gradient.h++

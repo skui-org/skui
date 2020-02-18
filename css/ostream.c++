@@ -28,6 +28,9 @@
 
 #include "css/property/animation.h++"
 #include "css/property/box_decoration_break.h++"
+#include "css/property/box_shadow.h++"
+
+#include <core/utility.h++>
 
 #include <iomanip>
 #include <iostream>
@@ -320,5 +323,18 @@ namespace skui::css
         return os << "clone";
     }
     return os;
+  }
+
+  std::ostream& operator<<(std::ostream& os, const box_shadow& box_shadow)
+  {
+    const core::ostream_format_keeper format_guard{os};
+
+    return os << std::boolalpha
+              << "inset: " << box_shadow.inset << '\n'
+              << "x offset: " << box_shadow.x_offset << '\n'
+              << "y offset: " << box_shadow.y_offset << '\n'
+              << "blur radius: " << box_shadow.blur_radius << '\n'
+              << "spread radius: " << box_shadow.spread_radius << '\n'
+              << "color: " << box_shadow.color;
   }
 }
