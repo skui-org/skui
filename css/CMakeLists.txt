@@ -50,6 +50,7 @@ set(properties_src
     property/box_decoration_break.h++
     property/box_shadow.h++
     property/box_sizing.h++
+    property/caption_side.h++
     property/linear_gradient.h++
     property/radial_gradient.h++
    )
@@ -68,6 +69,7 @@ set(grammar_src
     grammar/box_decoration_break.h++ grammar/box_decoration_break.c++
     grammar/box_shadow.h++
     grammar/box_sizing.h++ grammar/box_sizing.c++
+    grammar/caption_side.h++ grammar/caption_side.c++
     grammar/color.h++ grammar/color.c++
     grammar/color_stop.h++
     grammar/conic_gradient.h++

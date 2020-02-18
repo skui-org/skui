@@ -30,6 +30,7 @@
 #include "css/property/box_decoration_break.h++"
 #include "css/property/box_shadow.h++"
 #include "css/property/box_sizing.h++"
+#include "css/property/caption_side.h++"
 
 #include <core/utility.h++>
 
@@ -347,6 +348,18 @@ namespace skui::css
         return os << "content-box";
       case css::box_sizing::border_box:
         return os << "border-box";
+    }
+    return os;
+  }
+
+  std::ostream& operator<<(std::ostream& os, caption_side caption_side)
+  {
+    switch(caption_side)
+    {
+      case css::caption_side::top:
+        return os << "top";
+      case css::caption_side::bottom:
+        return os << "bottom";
     }
     return os;
   }

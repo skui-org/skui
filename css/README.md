@@ -167,7 +167,7 @@ The below tables attempts to track what has already been implemented.
 | box-decoration-break       | :heavy_check_mark: | :heavy_check_mark: |       |
 | box-shadow                 | :heavy_check_mark: | :heavy_check_mark: |       |
 | box-sizing                 | :heavy_check_mark: | :heavy_check_mark: |       |
-| caption-side               |         :x:        |        :x:         |       |
+| caption-side               | :heavy_check_mark: | :heavy_check_mark: |       |
 | caret-color                |         :x:        |        :x:         |       |
 | charset                    |         :x:        |        :x:         |       |
 | clear                      |         :x:        |        :x:         |       |

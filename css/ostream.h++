@@ -57,6 +57,7 @@ namespace skui::css
   enum class background_size_keyword : std::uint8_t;
   enum class box_decoration_break : std::uint8_t;
   enum class box_sizing : std::uint8_t;
+  enum class caption_side : std::uint8_t;
 
   template<typename... ValueTypes>
   std::ostream& operator<<(std::ostream& os, const std::variant<ValueTypes...>& value)
@@ -121,6 +122,7 @@ namespace skui::css
   std::ostream& operator<<(std::ostream& os, box_decoration_break box_decoration_break);
   std::ostream& operator<<(std::ostream& os, const box_shadow& box_shadow);
   std::ostream& operator<<(std::ostream& os, box_sizing box_sizing);
+  std::ostream& operator<<(std::ostream& os, caption_side caption_side);
 }
 
 template<typename ColorStopType>
