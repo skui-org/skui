@@ -38,15 +38,15 @@ namespace
 
   void test_implicit_size()
   {
-    skui::gui::row row(std::make_unique<mock_element>(10),
-                       std::make_unique<mock_element>(0),
-                       std::make_unique<mock_element>(5));
+    skui::gui::row row(std::make_unique<mock_element>(10.f),
+                       std::make_unique<mock_element>(0.f),
+                       std::make_unique<mock_element>(5.f));
     check_close(row.implicit_size(mock_canvas{}),
-                {15, 10},
+                {15.f, 10.f},
                 epsilon<skui::graphics::scalar_size>, "implicit_size returns correct value");
-    row.spacing = 3;
+    row.spacing = 3.f;
     check_close(row.implicit_size(mock_canvas{}),
-                {21, 10},
+                {21.f, 10.f},
                 epsilon<skui::graphics::scalar_size>, "implicit_size takes spacing into account correctly");
   }
 }

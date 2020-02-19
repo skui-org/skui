@@ -38,16 +38,16 @@ namespace
 
   void test_implicit_size()
   {
-    skui::gui::column column(std::make_unique<mock_element>(10),
-                             std::make_unique<mock_element>(0),
-                             std::make_unique<mock_element>(5));
+    skui::gui::column column(std::make_unique<mock_element>(10.f),
+                             std::make_unique<mock_element>(0.f),
+                             std::make_unique<mock_element>(5.f));
     check_close(column.implicit_size(mock_canvas{}),
-                {10, 15},
+                {10.f, 15.f},
                 epsilon<skui::graphics::scalar_size>, "implicit_size returns correct value");
 
-    column.spacing = 3;
+    column.spacing = 3.f;
     check_close(column.implicit_size(mock_canvas{}),
-                {10, 21},
+                {10.f, 21.f},
                 epsilon<skui::graphics::scalar_size>, "implicit_size takes spacing into account correctly");
   }
 }
