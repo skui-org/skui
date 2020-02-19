@@ -58,11 +58,11 @@ namespace skui::css::grammar
   const auto color_hex_alpha = x3::rule<struct hex_alpha, css::color>{"8 digit hex color (extension)"}
                              = uint8_hex >> uint8_hex >> uint8_hex >> uint8_hex;
   const auto color_hex = x3::rule<struct hex, css::color>{"6 digit hex color"}
-                       = uint8_hex >> uint8_hex >> uint8_hex >> x3::attr(255);
+                       = uint8_hex >> uint8_hex >> uint8_hex >> x3::attr(std::uint8_t{255});
   const auto color_short_hex_alpha = x3::rule<struct short_hex_alpha, css::color>{"4 digit hex color"}
                                    = shorthand_hex >> shorthand_hex >> shorthand_hex >> shorthand_hex;
   const auto color_short_hex = x3::rule<struct short_hex, css::color>{"3 digit hex color"}
-                             = shorthand_hex >> shorthand_hex >> shorthand_hex >> x3::attr(255);
+                             = shorthand_hex >> shorthand_hex >> shorthand_hex >> x3::attr(std::uint8_t{255});
 
   // functional specifications
   const auto color_rgb = x3::rule<struct rgb, css::color>{"rgb"}
