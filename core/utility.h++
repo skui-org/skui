@@ -40,7 +40,7 @@
 namespace skui::core
 {
   template<typename Freeable>
-  struct free_deleter { void operator()(Freeable* resource) { std::free((void*)resource); } };
+  struct free_deleter { void operator()(Freeable* resource) { std::free(const_cast<void*>(reinterpret_cast<const void*>(resource))); } };
   template<typename T>
   using unique_free_ptr = std::unique_ptr<T, free_deleter<T>>;
 
