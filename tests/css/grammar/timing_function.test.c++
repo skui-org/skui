@@ -31,16 +31,16 @@ namespace
 {
   using skui::core::string;
 
-  const string ease = "ease";
-  const string linear = "linear";
-  const string ease_in = "ease-in";
-  const string ease_out = "ease-out";
-  const string ease_in_out = "ease-in-out";
-  const string cubic_bezier = "cubic-bezier(.1, .2, .3, .4)";
+  constexpr auto ease = "ease";
+  constexpr auto linear = "linear";
+  constexpr auto ease_in = "ease-in";
+  constexpr auto ease_out = "ease-out";
+  constexpr auto ease_in_out = "ease-in-out";
+  constexpr auto cubic_bezier = "cubic-bezier(.1, .2, .3, .4)";
 
-  const string step_start = "step-start";
-  const string step_end = "step-end";
-  const string steps = "steps(2, end)";
+  constexpr auto step_start = "step-start";
+  constexpr auto step_end = "step-end";
+  constexpr auto steps = "steps(2, end)";
 
   namespace x3 = boost::spirit::x3;
 

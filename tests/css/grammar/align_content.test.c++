@@ -27,15 +27,14 @@
 
 #include <css/grammar/align_content.h++>
 
-
 namespace
 {
-  const auto stretch = "stretch";
-  const auto center = "center";
-  const auto flex_start = "flex-start";
-  const auto flex_end = "flex-end";
-  const auto space_between = "space-between";
-  const auto space_around = "space-around";
+  constexpr auto stretch = "stretch";
+  constexpr auto center = "center";
+  constexpr auto flex_start = "flex-start";
+  constexpr auto flex_end = "flex-end";
+  constexpr auto space_between = "space-between";
+  constexpr auto space_around = "space-around";
 
   namespace x3 = boost::spirit::x3;
   const auto align_content = x3::rule<struct align_content, skui::css::property<skui::css::align_content>>{"align-content"}

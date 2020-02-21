@@ -27,15 +27,14 @@
 
 #include <css/grammar/box_shadow.h++>
 
-
 namespace
 {
   //box-shadow: none;
-  const auto offsets_color = "60px -16px teal";
-  const auto offsets_blur_color = "10px 5px 5px black";
-  const auto offsets_blur_spread_color = "2px 2px 2px 1px rgba(0, 0, 0, 0.2)";
-  const auto inset_offsets_color = "inset 5em 1em gold";
-  const auto multiple_shadows = "3px 3px red, -1em 0 0.4em olive";
+  constexpr auto offsets_color = "60px -16px teal";
+  constexpr auto offsets_blur_color = "10px 5px 5px black";
+  constexpr auto offsets_blur_spread_color = "2px 2px 2px 1px rgba(0, 0, 0, 0.2)";
+  constexpr auto inset_offsets_color = "inset 5em 1em gold";
+  constexpr auto multiple_shadows = "3px 3px red, -1em 0 0.4em olive";
 }
 
 int main()

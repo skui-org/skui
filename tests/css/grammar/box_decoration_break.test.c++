@@ -27,11 +27,10 @@
 
 #include <css/grammar/box_decoration_break.h++>
 
-
 namespace
 {
-  const auto slice = "slice";
-  const auto clone_ = "clone";
+  constexpr auto slice = "slice";
+  constexpr auto clone_ = "clone";
 
   namespace x3 = boost::spirit::x3;
   const auto box_decoration_break = x3::rule<struct box_decoration_break, skui::css::property<skui::css::box_decoration_break>>{"box-decoration-break"}

@@ -27,15 +27,14 @@
 
 #include <css/grammar/align_self.h++>
 
-
 namespace
 {
-  const auto auto_ = "auto";
-  const auto stretch = "stretch";
-  const auto center = "center";
-  const auto flex_start = "flex-start";
-  const auto flex_end = "flex-end";
-  const auto baseline = "baseline";
+  constexpr auto auto_ = "auto";
+  constexpr auto stretch = "stretch";
+  constexpr auto center = "center";
+  constexpr auto flex_start = "flex-start";
+  constexpr auto flex_end = "flex-end";
+  constexpr auto baseline = "baseline";
 
   namespace x3 = boost::spirit::x3;
   const auto align_self = x3::rule<struct align_self, skui::css::auto_property<skui::css::align_self>>{"align-self"}

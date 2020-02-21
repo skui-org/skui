@@ -32,22 +32,18 @@ std::ostream& operator<<(std::ostream& os, std::chrono::milliseconds duration)
 
 #include "css/test_rule.h++"
 
-#include <core/string.h++>
-
 #include <css/grammar/time.h++>
 
 namespace
 {
-  using skui::core::string;
+  constexpr auto milliseconds = "20.54ms";
+  constexpr auto milliseconds_e = "1.2e2ms";
 
-  const string milliseconds = "20.54ms";
-  const string milliseconds_e = "1.2e2ms";
+  constexpr auto seconds = "25.3456s";
+  constexpr auto seconds_e = "2.123e-1s";
 
-  const string seconds = "25.3456s";
-  const string seconds_e = "2.123e-1s";
-
-  const string not_time = "23";
-  const string also_not_time = "ms";
+  constexpr auto not_time = "23";
+  constexpr auto also_not_time = "ms";
 }
 
 int main()

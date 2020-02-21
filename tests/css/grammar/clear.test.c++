@@ -27,13 +27,12 @@
 
 #include <css/grammar/clear.h++>
 
-
 namespace
 {
-  const auto none = "none";
-  const auto left = "left";
-  const auto right = "right";
-  const auto both = "both";
+  constexpr auto none = "none";
+  constexpr auto left = "left";
+  constexpr auto right = "right";
+  constexpr auto both = "both";
 
   namespace x3 = boost::spirit::x3;
   const auto clear = x3::rule<struct clear, skui::css::property<skui::css::clear>>{"clear"}

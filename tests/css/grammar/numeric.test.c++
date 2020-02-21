@@ -26,12 +26,8 @@
 
 #include <css/grammar/numeric.h++>
 
-#include <core/string.h++>
-
 namespace
 {
-  using skui::core::string;
-
   using boost::spirit::x3::rule;
 
   const auto uint8 = rule<struct uint8, std::uint8_t>{"uint8"}
@@ -43,19 +39,18 @@ namespace
   const auto non_scientific_float = rule<struct non_scientific_float>{"non-scientific float"}
                                   = skui::css::grammar::non_scientific_float;
 
-  const string positive = "123";
-  const string negative = "-123";
-  const string decimal = "12.3";
-  const string hex = "AB";
-  const string text = "text";
+  constexpr auto positive = "123";
+  constexpr auto negative = "-123";
+  constexpr auto decimal = "12.3";
+  constexpr auto hex = "AB";
+  constexpr auto text = "text";
 
+  constexpr auto percentage_integral = "76%";
+  constexpr auto percentage_decimal = "23.4%";
+  constexpr auto percentage_higher = "112%";
+  constexpr auto percentage_negative = "-5%";
 
-  const string percentage_integral = "76%";
-  const string percentage_decimal = "23.4%";
-  const string percentage_higher = "112%";
-  const string percentage_negative = "-5%";
-
-  const string scientific = "1e-5";
+  const auto scientific = "1e-5";
 }
 
 int main()

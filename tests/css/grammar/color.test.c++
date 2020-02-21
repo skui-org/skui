@@ -25,34 +25,31 @@
 #include "css/ostream.h++"
 #include "css/test_rule.h++"
 
-#include <core/string.h++>
 #include <css/grammar/color.h++>
 
 namespace
 {
-  using skui::core::string;
+  constexpr auto named = "magenta";
+  constexpr auto named_incorrect = "meganta";
 
-  const string named = "magenta";
-  const string named_incorrect = "meganta";
+  constexpr auto hex = "#150fda";
+  constexpr auto hex_short = "#9A1";
+  constexpr auto hex_alpha = "#A1B2C3D4";
+  constexpr auto hex_alpha_short = "#103D";
+  constexpr auto hex_incorrect = "#ACOLOR";
 
-  const string hex = "#150fda";
-  const string hex_short = "#9A1";
-  const string hex_alpha = "#A1B2C3D4";
-  const string hex_alpha_short = "#103D";
-  const string hex_incorrect = "#ACOLOR";
+  constexpr auto rgb = "rgb(1,2%,3.5)";
+  constexpr auto rgba = "rgba(1%,2,256,4.8)";
+  constexpr auto rgb_incorrect = "rgb(e6,1,2)";
+  constexpr auto rgba_incorrect = "rgba(1,2,3,-3)";
 
-  const string rgb = "rgb(1,2%,3.5)";
-  const string rgba = "rgba(1%,2,256,4.8)";
-  const string rgb_incorrect = "rgb(e6,1,2)";
-  const string rgba_incorrect = "rgba(1,2,3,-3)";
-
-  const string hsl = "hsl(1,2%,.3)";
-  const string hsla = "hsla(1,.2,3%,4%)";
-  const string hsla_large_hue = "hsla(780, 3%, .5, 4.8)";
-  const string hsla_large_saturation = "hsla(180, 110%, 0.1, .314)";
-  const string hsla_large_lightness = "hsla(45, 78%, 3.14, 6.32%)";
-  const string hsl_incorrect = "hsl(1,2,x)";
-  const string hsla_incorrect = "hsla(1, hello, .3;)";
+  constexpr auto hsl = "hsl(1,2%,.3)";
+  constexpr auto hsla = "hsla(1,.2,3%,4%)";
+  constexpr auto hsla_large_hue = "hsla(780, 3%, .5, 4.8)";
+  constexpr auto hsla_large_saturation = "hsla(180, 110%, 0.1, .314)";
+  constexpr auto hsla_large_lightness = "hsla(45, 78%, 3.14, 6.32%)";
+  constexpr auto hsl_incorrect = "hsl(1,2,x)";
+  constexpr auto hsla_incorrect = "hsla(1, hello, .3;)";
 }
 
 int main()

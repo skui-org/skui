@@ -29,8 +29,8 @@
 
 namespace
 {
-  const auto top = "top";
-  const auto bottom = "bottom";
+  constexpr auto top = "top";
+  constexpr auto bottom = "bottom";
 
   namespace x3 = boost::spirit::x3;
   const auto caption_side = x3::rule<struct caption_side, skui::css::property<skui::css::caption_side>>{"caption-side"}

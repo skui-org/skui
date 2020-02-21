@@ -29,15 +29,15 @@
 
 namespace
 {
-  const auto background_image_url = "url(\"some/path\")";
-  const auto background_image_urls = "url(\"some/path\"), url(\"other/path\")";
-  const auto background_image_gradient_url = "linear-gradient(to top, red, blue), url(\"some/path\")";
-  const auto background_image_none_url = "none, url(\"some/path\")";
+  constexpr auto background_image_url = "url(\"some/path\")";
+  constexpr auto background_image_urls = "url(\"some/path\"), url(\"other/path\")";
+  constexpr auto background_image_gradient_url = "linear-gradient(to top, red, blue), url(\"some/path\")";
+  constexpr auto background_image_none_url = "none, url(\"some/path\")";
 
-  const auto background_size_cover_and_auto = "cover, auto";
-  const auto background_size_width = "5 %";
-  const auto background_size_auto_height = "auto 10px";
-  const auto background_size_auto_contain = "auto, contain";
+  constexpr auto background_size_cover_and_auto = "cover, auto";
+  constexpr auto background_size_width = "5 %";
+  constexpr auto background_size_auto_height = "auto 10px";
+  constexpr auto background_size_auto_contain = "auto, contain";
 }
 
 int main()

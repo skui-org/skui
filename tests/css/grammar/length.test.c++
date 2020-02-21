@@ -29,24 +29,22 @@
 
 namespace
 {
-  using skui::core::string;
+  constexpr auto centimeter = "2cm";
+  constexpr auto millimeter = "1e3mm";
+  constexpr auto inch = "2e-3in";
+  constexpr auto pixel = "20px";
+  constexpr auto point = "12pt";
+  constexpr auto pica = "300pc";
 
-  const string centimeter = "2cm";
-  const string millimeter = "1e3mm";
-  const string inch = "2e-3in";
-  const string pixel = "20px";
-  const string point = "12pt";
-  const string pica = "300pc";
-
-  const string em = "2e-7em";
-  const string ex = "3.4ex";
-  const string ch = "123ch";
-  const string rem = "1rem";
-  const string vw = "0.1vw";
-  const string vh = "100vh";
-  const string vmin = "10vmin";
-  const string vmax = "20vmax";
-  const string percentage = "3.4%";
+  constexpr auto em = "2e-7em";
+  constexpr auto ex = "3.4ex";
+  constexpr auto ch = "123ch";
+  constexpr auto rem = "1rem";
+  constexpr auto vw = "0.1vw";
+  constexpr auto vh = "100vh";
+  constexpr auto vmin = "10vmin";
+  constexpr auto vmax = "20vmax";
+  constexpr auto percentage = "3.4%";
 }
 
 int main()

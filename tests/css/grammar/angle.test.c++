@@ -29,10 +29,10 @@
 
 namespace
 {
-  const auto radians = ".5rad";
-  const auto gradians = "75grad";
-  const auto turns = "1.5turn";
-  const auto degrees = "780deg";
+  constexpr auto radians = ".5rad";
+  constexpr auto gradians = "75grad";
+  constexpr auto turns = "1.5turn";
+  constexpr auto degrees = "780deg";
 }
 
 int main()

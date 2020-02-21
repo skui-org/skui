@@ -28,11 +28,9 @@
 
 namespace
 {
-  using skui::core::string;
-
-  const string good_url = "url(\"somefile.jpg\")";
-  const string funky_url = "url(\"C:\\somefile/_.jpg\")";
-  const string bad_url = "thisisnotaurl";
+  constexpr auto good_url = "url(\"somefile.jpg\")";
+  constexpr auto funky_url = "url(\"C:\\somefile/_.jpg\")";
+  constexpr auto bad_url = "thisisnotaurl";
 }
 
 int main()

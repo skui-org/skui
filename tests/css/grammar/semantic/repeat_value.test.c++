@@ -32,8 +32,8 @@ namespace
   using skui::css::grammar::repeat_value;
   namespace x3 = boost::spirit::x3;
 
-  const string one = "1.2";
-  const string two = "1.2 3.4";
+  constexpr auto one = "1.2";
+  constexpr auto two = "1.2 3.4";
 
   const auto one_to_four = x3::rule<struct one_to_four, std::vector<double>, true>{"one to four"}
                          = (x3::double_ >> x3::eps)[repeat_value<0,0,0>];

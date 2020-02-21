@@ -29,15 +29,15 @@
 
 namespace
 {
-  const auto direction = "to top";
-  const auto angle = "1.25 turn";
+  constexpr auto direction = "to top";
+  constexpr auto angle = "1.25 turn";
 
-  const auto non_repeating_linear_gradient = "linear-gradient(to right, red, blue)";
-  const auto repeating_linear_gradient = "repeating-linear-gradient(to bottom left, yellow 30%, green 100vw, black)";
-  const auto default_direction_linear_gradient = "linear-gradient(#FF00FF, rgb(255,0,0))";
+  constexpr auto non_repeating_linear_gradient = "linear-gradient(to right, red, blue)";
+  constexpr auto repeating_linear_gradient = "repeating-linear-gradient(to bottom left, yellow 30%, green 100vw, black)";
+  constexpr auto default_direction_linear_gradient = "linear-gradient(#FF00FF, rgb(255,0,0))";
 
-  const auto leading_comma = "linear-gradient(, red)";
-  const auto missing_comma = "linear-gradient(to top red)";
+  constexpr auto leading_comma = "linear-gradient(, red)";
+  constexpr auto missing_comma = "linear-gradient(to top red)";
 }
 
 int main()

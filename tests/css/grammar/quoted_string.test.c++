@@ -28,12 +28,10 @@
 
 namespace
 {
-  using skui::core::string;
-
-  const string good = "\"this is a \' quoted _string\"";
-  const string bad = "this is not a quoted string";
-  const string unterminated = "\"when will it end?";
-  const string continues = "\"here\" or not?\"";
+  constexpr auto good = "\"this is a \' quoted _string\"";
+  constexpr auto bad = "this is not a quoted string";
+  constexpr auto unterminated = "\"when will it end?";
+  constexpr auto continues = "\"here\" or not?\"";
 }
 
 int main()

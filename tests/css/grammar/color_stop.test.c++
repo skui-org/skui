@@ -29,12 +29,12 @@
 
 namespace
 {
-  const auto color = "red";
+  constexpr auto color = "red";
 
-  const auto color_percentage = "blue 5.4%";
-  const auto color_length = "green .3in";
+  constexpr auto color_percentage = "blue 5.4%";
+  constexpr auto color_length = "green .3in";
 
-  const auto color_angle = "yellow .5turn";
+  constexpr auto color_angle = "yellow .5turn";
 }
 
 int main()

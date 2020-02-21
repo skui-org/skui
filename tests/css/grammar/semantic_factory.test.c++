@@ -28,7 +28,6 @@
 
 namespace
 {
-  using skui::core::string;
   using skui::test::check_rule_success;
   using skui::test::check;
   using namespace boost::spirit::x3;
@@ -69,7 +68,7 @@ namespace
 
   void test_semantic_factory()
   {
-    const string input = "1 2";
+    constexpr auto input = "1 2";
 
     check_rule_success(two_ints_rule, input, two_ints::create(1, 2));
   }

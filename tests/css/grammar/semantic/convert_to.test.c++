@@ -24,15 +24,12 @@
 
 #include "css/test_rule.h++"
 
-#include <core/string.h++>
-
 #include <css/grammar/semantic/convert_to.h++>
 
 namespace
 {
   namespace x3 = boost::spirit::x3;
 
-  using skui::core::string;
   using skui::css::grammar::convert_to;
 
   struct constructible_from_int
@@ -72,7 +69,7 @@ namespace
   const auto conversion2 = x3::rule<struct conversion2, constructible_from_float>{"conversion2"}
                          = x3::int_[convert_to<constructible_from_float, float>{}];
 
-  const string integer = "42";
+  constexpr auto integer = "42";
 }
 
 int main()

@@ -29,13 +29,13 @@
 
 namespace
 {
-  const auto from = "conic-gradient(from 5deg, red, blue)";
-  const auto repeating_at = "repeating-conic-gradient(at center, pink, blue)";
-  const auto from_at = "conic-gradient(from .5turn at bottom left, green, yellow)";
-  const auto repeating_colors = "conic-gradient(red, green, blue)";
+  constexpr auto from = "conic-gradient(from 5deg, red, blue)";
+  constexpr auto repeating_at = "repeating-conic-gradient(at center, pink, blue)";
+  constexpr auto from_at = "conic-gradient(from .5turn at bottom left, green, yellow)";
+  constexpr auto repeating_colors = "conic-gradient(red, green, blue)";
 
-  const auto leading_comma = "conic-gradient(,red)";
-  const auto missing_comma = "conic-gradient(at top yellow)";
+  constexpr auto leading_comma = "conic-gradient(,red)";
+  constexpr auto missing_comma = "conic-gradient(at top yellow)";
 }
 
 int main()

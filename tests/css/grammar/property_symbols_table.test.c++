@@ -47,12 +47,10 @@ std::ostream& operator<<(std::ostream& os, Enum e)
 
 namespace
 {
-  using skui::core::string;
-
-  const string inherit = "inherit";
-  const string initial = "initial";
-  const string one = "one";
-  const string two = "two";
+  constexpr auto inherit = "inherit";
+  constexpr auto initial = "initial";
+  constexpr auto one = "one";
+  constexpr auto two = "two";
 
   struct enum_table : skui::css::grammar::property_symbols_table<Enum>
   {

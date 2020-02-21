@@ -28,8 +28,8 @@
 
 namespace
 {
-  const auto is_repeating = "repeating-";
-  const auto not_repeating = "somethingelse";
+  constexpr auto is_repeating = "repeating-";
+  constexpr auto not_repeating = "somethingelse";
 }
 
 int main()

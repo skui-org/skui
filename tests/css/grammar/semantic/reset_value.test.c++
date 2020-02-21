@@ -28,11 +28,10 @@
 
 namespace
 {
-  using skui::core::string;
   using skui::css::grammar::reset_value;
 
-  const string one = "1";
-  const string two = "1 2";
+  constexpr auto one = "1";
+  constexpr auto two = "1 2";
 
   using namespace boost::spirit::x3;
 

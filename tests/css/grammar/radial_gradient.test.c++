@@ -29,20 +29,20 @@
 
 namespace
 {
-  const auto circle_default = "circle";
-  const auto circle_radius = "circle 5 pt";
-  const auto circle_extent = "circle closest-corner";
+  constexpr auto circle_default = "circle";
+  constexpr auto circle_radius = "circle 5 pt";
+  constexpr auto circle_extent = "circle closest-corner";
 
-  const auto ellipse_default = "ellipse";
-  const auto ellipse_radii = "ellipse 3cm 5rem";
-  const auto ellipse_extent = "ellipse farthest-side";
+  constexpr auto ellipse_default = "ellipse";
+  constexpr auto ellipse_radii = "ellipse 3cm 5rem";
+  constexpr auto ellipse_extent = "ellipse farthest-side";
 
-  const auto non_repeating_radial_gradient = "radial-gradient(ellipse at top, red, blue)";
-  const auto repeating_radial_gradient = "repeating-radial-gradient(at top right, yellow 30%, green 100vw, black)";
-  const auto default_shape_position_radial_gradient = "radial-gradient(#FF00FF, rgb(255,0,0))";
+  constexpr auto non_repeating_radial_gradient = "radial-gradient(ellipse at top, red, blue)";
+  constexpr auto repeating_radial_gradient = "repeating-radial-gradient(at top right, yellow 30%, green 100vw, black)";
+  constexpr auto default_shape_position_radial_gradient = "radial-gradient(#FF00FF, rgb(255,0,0))";
 
-  const auto leading_comma = "radial-gradient(, red)";
-  const auto missing_comma = "radial-gradient(at top red)";
+  constexpr auto leading_comma = "radial-gradient(, red)";
+  constexpr auto missing_comma = "radial-gradient(at top red)";
 }
 
 int main()

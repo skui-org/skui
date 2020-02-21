@@ -29,51 +29,48 @@
 
 namespace
 {
-  using skui::core::string;
+  constexpr auto top_left = "top left";
+  constexpr auto top_center = "top center";
+  constexpr auto top_right = "top right";
+  constexpr auto center_left = "center left";
+  constexpr auto center_center = "center center";
+  constexpr auto center_right = "center right";
+  constexpr auto bottom_left = "bottom left";
+  constexpr auto bottom_center = "bottom center";
+  constexpr auto bottom_right = "bottom right";
 
-  const auto top_left = "top left";
-  const auto top_center = "top center";
-  const auto top_right = "top right";
-  const auto center_left = "center left";
-  const auto center_center = "center center";
-  const auto center_right = "center right";
-  const auto bottom_left = "bottom left";
-  const auto bottom_center = "bottom center";
-  const auto bottom_right = "bottom right";
+  constexpr auto left_top = "left top";
+  constexpr auto left_center = "left center";
+  constexpr auto left_bottom = "left bottom";
+  constexpr auto center_top = "center top";
+  constexpr auto center_bottom = "center bottom";
+  constexpr auto right_top = "right top";
+  constexpr auto right_center = "right center";
+  constexpr auto right_bottom = "right bottom";
 
-  const auto left_top = "left top";
-  const auto left_center = "left center";
-  const auto left_bottom = "left bottom";
-  const auto center_top = "center top";
-  const auto center_bottom = "center bottom";
-  const auto right_top = "right top";
-  const auto right_center = "right center";
-  const auto right_bottom = "right bottom";
+  constexpr auto top = "top";
+  constexpr auto center = "center";
+  constexpr auto bottom = "bottom";
+  constexpr auto left = "left";
+  constexpr auto right = "right";
 
-  const auto top = "top";
-  const auto center = "center";
-  const auto bottom = "bottom";
-  const auto left = "left";
-  const auto right = "right";
+  constexpr auto relative_x = "2%";
+  constexpr auto relative_y = "left 4%";
+  constexpr auto relative_x_y = "6% 8%";
+  constexpr auto relative_x_offset = "left 20px";
+  constexpr auto relative_y_offset = "bottom -10px";
+  constexpr auto relative_x_y_offset = "left 5px center 10px";
+  constexpr auto relative_y_x_offset = "center 10px right 20px";
 
-  const auto relative_x = "2%";
-  const auto relative_y = "left 4%";
-  const auto relative_x_y = "6% 8%";
-  const auto relative_x_offset = "left 20px";
-  const auto relative_y_offset = "bottom -10px";
-  const auto relative_x_y_offset = "left 5px center 10px";
-  const auto relative_y_x_offset = "center 10px right 20px";
+  constexpr auto absolute_x = "20em";
+  constexpr auto absolute_x_y = "10in 20pt";
 
-  const auto absolute_x = "20em";
-  const auto absolute_x_y = "10in 20pt";
+  constexpr auto absolute_x_relative_y = "2 vw bottom 3pt";
+  constexpr auto absolute_y_relative_x = "bottom -2em right";
 
-  const auto absolute_x_relative_y = "2 vw bottom 3pt";
-  const auto absolute_y_relative_x = "bottom -2em right";
-
-  const auto zero_x_relative_y = "0 bottom -3px";
-  const auto absolute_x_zero_y = "2px 0";
-  const auto zero_x_zero_y = "0 0";
-
+  constexpr auto zero_x_relative_y = "0 bottom -3px";
+  constexpr auto absolute_x_zero_y = "2px 0";
+  constexpr auto zero_x_zero_y = "0 0";
 }
 
 int main()

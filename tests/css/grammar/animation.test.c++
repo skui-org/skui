@@ -30,11 +30,10 @@
 namespace
 {
   using namespace std::chrono_literals;
-  using skui::core::string;
 
   using skui::css::animation;
 
-  const string full_animation_ordered_input = "my_name 20s linear 5s 2 alternate both paused";
+  const auto full_animation_ordered_input = "my_name 20s linear 5s 2 alternate both paused";
   animation full_animation_ordered()
   {
     animation a;

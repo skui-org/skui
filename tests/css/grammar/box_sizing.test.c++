@@ -27,11 +27,10 @@
 
 #include <css/grammar/box_sizing.h++>
 
-
 namespace
 {
-  const auto content_box = "content-box";
-  const auto border_box = "border-box";
+  constexpr auto content_box = "content-box";
+  constexpr auto border_box = "border-box";
 
   namespace x3 = boost::spirit::x3;
   const auto box_sizing = x3::rule<struct box_sizing, skui::css::property<skui::css::box_sizing>>{"box-sizing"}
