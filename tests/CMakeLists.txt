@@ -91,6 +91,7 @@ set(shared_src
     test.h++
     core/property_tests.h++
     core/types.h++
+    css/ostream.h++
     css/test_rule.h++
     graphics/composite_value_tests.h++
     gui/mock_canvas.h++

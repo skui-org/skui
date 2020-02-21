@@ -22,6 +22,7 @@
  * THE SOFTWARE.
  **/
 
+#include "css/ostream.h++"
 #include "css/test_rule.h++"
 
 #include <css/grammar/property_symbols_table.h++>
@@ -31,8 +32,16 @@ enum class Enum
   one,
   two
 };
-std::ostream& operator<<(std::ostream& os, skui::css::property<Enum>)
+
+std::ostream& operator<<(std::ostream& os, Enum e)
 {
+  switch(e)
+  {
+    case Enum::one:
+      return os << "one";
+    case Enum::two:
+      return os << "two";
+  }
   return os;
 }
 

@@ -22,9 +22,9 @@
  * THE SOFTWARE.
  **/
 
+#include "css/ostream.h++"
 #include "css/test_rule.h++"
 
-#include <css/ostream.h++>
 #include <css/grammar/angle.h++>
 
 namespace

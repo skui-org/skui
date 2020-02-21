@@ -22,19 +22,25 @@
  * THE SOFTWARE.
  **/
 
-#include "ostream.h++"
+#ifndef SKUI_TEST_CSS_OSTREAM_H
+#define SKUI_TEST_CSS_OSTREAM_H
 
-#include "css/position.h++"
+#include <css/color_stop.h++>
+#include <css/time.h++>
+#include <css/timing_function.h++>
 
-#include "css/property/align_content.h++"
-#include "css/property/align_items.h++"
-#include "css/property/align_self.h++"
-#include "css/property/animation.h++"
-#include "css/property/box_decoration_break.h++"
-#include "css/property/box_shadow.h++"
-#include "css/property/box_sizing.h++"
-#include "css/property/caption_side.h++"
-#include "css/property/clear.h++"
+#include <css/position.h++>
+
+#include <css/property/align_content.h++>
+#include <css/property/align_items.h++>
+#include <css/property/align_self.h++>
+#include <css/property/animation.h++>
+#include <css/property/background.h++>
+#include <css/property/box_decoration_break.h++>
+#include <css/property/box_shadow.h++>
+#include <css/property/box_sizing.h++>
+#include <css/property/caption_side.h++>
+#include <css/property/clear.h++>
 
 #include <core/utility.h++>
 
@@ -43,22 +49,45 @@
 
 namespace skui::css
 {
-  std::ostream& operator<<(std::ostream& os, const auto_t&)
+  template<typename... Types>
+  std::ostream& operator<<(std::ostream& os, const std::vector<Types...>& values)
+  {
+    for(std::size_t i = 0; i<values.size(); ++i)
+    {
+      os << values[i] << ", ";
+    }
+    return os << values.back();
+  }
+  template<typename... ValueTypes>
+  std::ostream& operator<<(std::ostream& os, const std::variant<ValueTypes...>& value)
+  {
+    std::visit([&os](auto&& v) { os << v; }, value);
+    return os;
+  }
+  template<typename ValueType>
+  std::ostream& operator<<(std::ostream& os, const std::optional<ValueType>& value)
+  {
+    if(value)
+      return os << *value;
+    else
+      return os << "none";
+  }
+  inline std::ostream& operator<<(std::ostream& os, const auto_t&)
   {
     return os << "auto";
   }
 
-  std::ostream& operator<<(std::ostream& os, const inherit_t&)
+  inline std::ostream& operator<<(std::ostream& os, const inherit_t&)
   {
     return os << "inherit";
   }
 
-  std::ostream& operator<<(std::ostream& os, const initial_t&)
+  inline std::ostream& operator<<(std::ostream& os, const initial_t&)
   {
     return os << "initial";
   }
 
-  std::ostream& operator<<(std::ostream& os, align_content align_content)
+  inline std::ostream& operator<<(std::ostream& os, align_content align_content)
   {
     switch(align_content)
     {
@@ -77,7 +106,7 @@ namespace skui::css
     }
     return os;
   }
-  std::ostream& operator<<(std::ostream& os, align_items align_items)
+  inline std::ostream& operator<<(std::ostream& os, align_items align_items)
   {
     switch(align_items)
     {
@@ -94,7 +123,7 @@ namespace skui::css
     }
     return os;
   }
-  std::ostream& operator<<(std::ostream& os, align_self align_self)
+  inline std::ostream& operator<<(std::ostream& os, align_self align_self)
   {
     switch(align_self)
     {
@@ -112,14 +141,14 @@ namespace skui::css
     return os;
   }
 
-  std::ostream& operator<<(std::ostream& os, const color& color)
+  inline std::ostream& operator<<(std::ostream& os, const color& color)
   {
     core::ostream_format_keeper keeper(os);
 
     return os << std::setfill('0') << std::setw(8) << std::hex << std::uint32_t(color);
   }
 
-  std::ostream& operator<<(std::ostream& os, const unit unit)
+  inline std::ostream& operator<<(std::ostream& os, const unit unit)
   {
     switch(unit)
     {
@@ -157,12 +186,12 @@ namespace skui::css
     return os;
   }
 
-  std::ostream& operator<<(std::ostream& os, const length& length)
+  inline std::ostream& operator<<(std::ostream& os, const length& length)
   {
     return os << length.value << ' ' << length.unit;
   }
 
-  std::ostream& operator<<(std::ostream& os, const length_with_offset& length_with_offset)
+  inline std::ostream& operator<<(std::ostream& os, const length_with_offset& length_with_offset)
   {
     os << length_with_offset.value;
     if(length_with_offset.offset != length{})
@@ -172,7 +201,7 @@ namespace skui::css
     return os;
   }
 
-  std::ostream& operator<<(std::ostream& os, const position& position)
+  inline std::ostream& operator<<(std::ostream& os, const position& position)
   {
     if(position == top)
       os << "top";
@@ -198,23 +227,34 @@ namespace skui::css
     return os;
   }
 
-  std::ostream& operator<<(std::ostream& os, const skui::css::time& time)
+  template<typename ColorStopType>
+  std::ostream& operator<<(std::ostream& os, const color_stop<ColorStopType>& color_stop)
+  {
+    os << "color-stop(" << color_stop.color;
+    if(color_stop.stop)
+    {
+      os << ", " << *color_stop.stop;
+    }
+    return os << ")";
+  }
+
+  inline std::ostream& operator<<(std::ostream& os, const skui::css::time& time)
   {
     return os << time.count() << " ms";
   }
 
-  std::ostream& operator<<(std::ostream& os, const steps& steps)
+  inline std::ostream& operator<<(std::ostream& os, const steps& steps)
   {
     return os << "steps(" << steps.intervals << ", " << steps.change << ')';
   }
 
-  std::ostream& operator<<(std::ostream& os, const cubic_bezier& cubic_bezier)
+  inline std::ostream& operator<<(std::ostream& os, const cubic_bezier& cubic_bezier)
   {
     return os << "cubic-bezier(" << cubic_bezier.x1 << ", " << cubic_bezier.y1 << ", "
                                  << cubic_bezier.x2 << ", " << cubic_bezier.y2 << ')';
   }
 
-  std::ostream& operator<<(std::ostream& os, const timing_function& timing_function)
+  inline std::ostream& operator<<(std::ostream& os, const timing_function& timing_function)
   {
     std::visit([&os](const auto& value) { os << value; }, timing_function);
     return os;
@@ -236,7 +276,7 @@ namespace skui::css
     return os;
   }
 
-  std::ostream& operator<<(std::ostream& os, const fill_mode& mode)
+  inline std::ostream& operator<<(std::ostream& os, const fill_mode& mode)
   {
     switch(mode)
     {
@@ -252,7 +292,7 @@ namespace skui::css
     return os;
   }
 
-  std::ostream& operator<<(std::ostream& os, const play_state& state)
+  inline std::ostream& operator<<(std::ostream& os, const play_state& state)
   {
     switch(state)
     {
@@ -264,12 +304,12 @@ namespace skui::css
     return os;
   }
 
-  std::ostream& operator<<(std::ostream& os, const infinite_t&)
+  inline std::ostream& operator<<(std::ostream& os, const infinite_t&)
   {
     return os << "infinite";
   }
 
-  std::ostream& operator<<(std::ostream& os, const animation& animation)
+  inline std::ostream& operator<<(std::ostream& os, const animation& animation)
   {
     return os << "animation\n{\n"
                  "  name: " << animation.name << ";\n"
@@ -283,8 +323,8 @@ namespace skui::css
                                                              "}";
   }
 
-  std::ostream& operator<<(std::ostream& os,
-                           const linear_gradient& linear_gradient)
+  inline std::ostream& operator<<(std::ostream& os,
+                                  const linear_gradient& linear_gradient)
   {
     if(linear_gradient.repeating)
       os << "repeating-";
@@ -295,8 +335,8 @@ namespace skui::css
     return os << ", " << linear_gradient.colors << ")";
   }
 
-  std::ostream& operator<<(std::ostream& os,
-                           radial_gradient::extent extent)
+  inline std::ostream& operator<<(std::ostream& os,
+                                  radial_gradient::extent extent)
   {
     switch(extent)
     {
@@ -308,17 +348,17 @@ namespace skui::css
     return os;
   }
 
-  std::ostream& operator<<(std::ostream& os, const graphics::size2D<length>& size)
+  inline std::ostream& operator<<(std::ostream& os, const graphics::size2D<length>& size)
   {
     return os << '(' << size.width << ", " << size.height << ')';
   }
 
-  std::ostream& operator<<(std::ostream& os, const radial_gradient::circle& circle)
+  inline std::ostream& operator<<(std::ostream& os, const radial_gradient::circle& circle)
   {
     return os << "circle " << circle.radius;
   }
 
-  std::ostream& operator<<(std::ostream& os, const radial_gradient::ellipse& ellipse)
+  inline std::ostream& operator<<(std::ostream& os, const radial_gradient::ellipse& ellipse)
   {
     return os << "ellipse " << ellipse.size;
   }
@@ -335,7 +375,7 @@ namespace skui::css
               << ")";
   }
 
-  std::ostream& operator<<(std::ostream& os, const background_size_keyword& background_size_keyword)
+  inline std::ostream& operator<<(std::ostream& os, const background_size_keyword& background_size_keyword)
   {
     switch(background_size_keyword)
     {
@@ -347,7 +387,7 @@ namespace skui::css
     return os;
   }
 
-  std::ostream& operator<<(std::ostream& os, const background_size_width_height& width_height)
+  inline std::ostream& operator<<(std::ostream& os, const background_size_width_height& width_height)
   {
     return os << width_height.width << ' ' << width_height.height;
   }
@@ -361,10 +401,86 @@ namespace skui::css
   {
     return os << "conic-gradient(from " << conic_gradient.from << ", "
                                 "at " << conic_gradient.position << ", "
-                              << conic_gradient.colors << ")";
+              << conic_gradient.colors << ")";
   }
 
-  std::ostream& operator<<(std::ostream& os, box_decoration_break box_decoration_break)
+  inline std::ostream& operator<<(std::ostream& os, background_repeat background_repeat)
+  {
+    switch(background_repeat)
+    {
+      case background_repeat::repeat:
+        return os << "repeat";
+      case background_repeat::repeat_x:
+        return os << "repeat-x";
+      case background_repeat::repeat_y:
+        return os << "repeat-y";
+      case background_repeat::no_repeat:
+        return os << "no-repeat";
+      case background_repeat::space:
+        return os << "space";
+      case background_repeat::round:
+        return os << "round";
+    }
+    return os;
+  }
+
+  inline std::ostream& operator<<(std::ostream& os, background_origin origin)
+  {
+    switch(origin)
+    {
+      case background_origin::padding_box:
+        return os << "padding-box";
+      case background_origin::border_box:
+        return os << "border-box";
+      case background_origin::content_box:
+        return os << "content-box";
+    }
+    return os;
+  }
+
+  inline std::ostream& operator<<(std::ostream& os, const background_clip clip)
+  {
+    switch(clip)
+    {
+      case background_clip::border_box:
+        return os << "border-box";
+      case background_clip::padding_box:
+        return os << "padding-box";
+      case background_clip::content_box:
+        return os << "content-box";
+      case background_clip::text:
+        return os << "text";
+    }
+    return os;
+  }
+
+  inline std::ostream& operator<<(std::ostream& os, background_attachment attachment)
+  {
+    switch(attachment)
+    {
+      case background_attachment::scroll:
+        return os << "scroll";
+      case background_attachment::fixed:
+        return os << "fixed";
+      case background_attachment::local:
+        return os << "local";
+    }
+    return os;
+  }
+/*
+  inline std::ostream& operator<<(std::ostream& os, const background_layer& background_layer)
+  {
+    return os << "background-color: " << background_layer.color << '\n'
+              << "background-image: " << background_layer.image << '\n'
+              << "background-position: " << background_layer.position << '\n'
+              << "background-size: " << background_layer.size << '\n'
+              << "background-repeat: " << background_layer.repeat << '\n'
+              << "background-origin: " << background_layer.origin << '\n'
+              << "background-clip: " << background_layer.clip << '\n'
+              << "background-attachment; " << background_layer.attachment;
+  }
+*/
+  inline std::ostream& operator<<(std::ostream& os, box_decoration_break box_decoration_break)
   {
     switch(box_decoration_break)
     {
@@ -376,7 +492,7 @@ namespace skui::css
     return os;
   }
 
-  std::ostream& operator<<(std::ostream& os, const box_shadow& box_shadow)
+  inline std::ostream& operator<<(std::ostream& os, const box_shadow& box_shadow)
   {
     const core::ostream_format_keeper format_guard{os};
 
@@ -389,7 +505,7 @@ namespace skui::css
               << "color: " << box_shadow.color;
   }
 
-  std::ostream& operator<<(std::ostream& os, box_sizing box_sizing)
+  inline std::ostream& operator<<(std::ostream& os, box_sizing box_sizing)
   {
     switch(box_sizing)
     {
@@ -401,7 +517,7 @@ namespace skui::css
     return os;
   }
 
-  std::ostream& operator<<(std::ostream& os, caption_side caption_side)
+  inline std::ostream& operator<<(std::ostream& os, caption_side caption_side)
   {
     switch(caption_side)
     {
@@ -413,7 +529,7 @@ namespace skui::css
     return os;
   }
 
-  std::ostream& operator<<(std::ostream& os, clear clear)
+  inline std::ostream& operator<<(std::ostream& os, clear clear)
   {
     switch(clear)
     {
@@ -429,3 +545,5 @@ namespace skui::css
     return os;
   }
 }
+
+#endif

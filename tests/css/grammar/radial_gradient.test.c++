@@ -22,13 +22,10 @@
  * THE SOFTWARE.
  **/
 
-#include <css/ostream.h++>
-
-#include <css/grammar/radial_gradient.h++>
-
+#include "css/ostream.h++"
 #include "css/test_rule.h++"
 
-#include <utility>
+#include <css/grammar/radial_gradient.h++>
 
 namespace
 {

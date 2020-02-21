@@ -22,11 +22,11 @@
  * THE SOFTWARE.
  **/
 
+#include "css/ostream.h++"
 #include "css/test_rule.h++"
 
 #include <css/grammar/box_sizing.h++>
 
-#include <css/ostream.h++>
 
 namespace
 {
