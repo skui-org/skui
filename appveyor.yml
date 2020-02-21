@@ -6,7 +6,7 @@ environment:
     VCVARS: C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat
     VCVARSARG: amd64
     CMAKE_ARGS: -DCMAKE_SYSTEM_VERSION=10.0
-    BUILD_ARGS: /verbosity:minimal
+    BUILD_ARGS: /verbosity:quiet /clp:PerformanceSummary;Summary;ShowCommandLine;ForceNoAlign
     PACKAGE_ID: vs2017_x86_64
 
   - TOOLCHAIN: "Visual Studio 2019 x64"
@@ -15,7 +15,7 @@ environment:
     VCVARS: C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat
     VCVARSARG: amd64
     CMAKE_ARGS: -A x64
-    BUILD_ARGS: /verbosity:minimal
+    BUILD_ARGS: /verbosity:quiet /clp:PerformanceSummary;Summary;ShowCommandLine;ForceNoAlign
     PACKAGE_ID: vs2019_x86_64
 
   # Mingw-w64
