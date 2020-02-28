@@ -33,8 +33,7 @@ endif()
 
 execute_process(COMMAND "${CMAKE_COMMAND}" --build ../.. --target "${test_name}"
                 RESULT_VARIABLE exit_code
-                ERROR_VARIABLE stderr
-                OUTPUT_QUIET)
+                ERROR_VARIABLE stderr)
 
 if(NOT 0 EQUAL ${exit_code})
   message(FATAL_ERROR "Could not compile ${test_component}/${test_name}${CMAKE_EXECUTABLE_SUFFIX}:\n${stderr}")
