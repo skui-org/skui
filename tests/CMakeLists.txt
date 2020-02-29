@@ -41,6 +41,7 @@ function(runtime_test component test_name)
 
   add_test(${component}/${test_name} ${CMAKE_COMMAND} -Dtest_component=${component}
                                                       -Dtest_name=${test_target_name}
+                                                      -Dbuild_type=${CMAKE_BUILD_TYPE}
                                                       -P ${test_list_dir}/runtime_test.cmake)
 endfunction()
 

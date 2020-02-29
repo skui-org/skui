@@ -31,7 +31,7 @@ if(NOT 0 EQUAL ${exit_code})
   message(FATAL_ERROR "Could not remove ${test_component}/${test_name}${CMAKE_EXECUTABLE_SUFFIX}:\n${stderr}")
 endif()
 
-execute_process(COMMAND "${CMAKE_COMMAND}" --build ../.. --target "${test_name}"
+execute_process(COMMAND "${CMAKE_COMMAND}" --build ../.. --config ${build_type} --target "${test_name}"
                 RESULT_VARIABLE exit_code
                 ERROR_VARIABLE stderr)
 
