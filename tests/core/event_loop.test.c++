@@ -86,7 +86,7 @@ namespace
 
       std::mutex mutex, mutex2;
       std::condition_variable condition;
-      std::atomic_bool ready;
+      std::atomic_bool ready{false};
 
       std::unique_lock lock{mutex}; // block command until we wait on condition
       std::unique_lock lock2{mutex2}; // block part 2 of command
