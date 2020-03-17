@@ -97,8 +97,8 @@ namespace skui::gui
     // temporary drawing of a dummy image
     void draw();
 
-    void initialize_and_execute_platform_loop();
-    void create_graphics_context_and_execute_render_loop();
+    void initialize_and_execute_platform_loop(std::atomic_bool& initialized);
+    void create_graphics_context_and_execute_render_loop(std::atomic_bool& initialized);
     void execute_event_loop();
 
     void update_geometry();

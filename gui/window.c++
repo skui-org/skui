@@ -73,9 +73,12 @@ namespace skui::gui
     , has_been_closed{false}
   {
     std::unique_lock lock{mutex};
-    std::thread t(&window::initialize_and_execute_platform_loop, this);
+    std::atomic_bool initialized{false};
+
+    std::thread t(&window::initialize_and_execute_platform_loop, this, std::ref(initialized));
     events_thread.swap(t);
-    handle_condition_variable.wait(lock, [this] { return native_window != nullptr; });
+    handle_condition_variable.wait(lock, [&] { return initialized.load(); });
+    lock.unlock();
     implementation::windows().push_back(this);
 
     title = core::application::instance().name;
@@ -164,18 +167,17 @@ namespace skui::gui
     element->draw(*canvas);
   }
 
-  void window::initialize_and_execute_platform_loop()
+  void window::initialize_and_execute_platform_loop(std::atomic_bool& initialized)
   {
     native_window = native_window::create(position, size, flags);
 
-    std::thread t(&window::create_graphics_context_and_execute_render_loop, this);
+    std::thread t(&window::create_graphics_context_and_execute_render_loop, this, std::ref(initialized));
     render_thread.swap(t);
 
     // Ensure calling thread is waiting for handle_condition_variable
     std::unique_lock handle_lock{mutex};
-    handle_condition_variable.notify_one();
-
-    // Continue calling thread before initiating event loop
+    // Ensure graphics context is set up before continuing
+    handle_condition_variable.wait(handle_lock, [&] { return initialized.load(); });
     handle_lock.unlock();
 
     execute_event_loop();
@@ -187,7 +189,7 @@ namespace skui::gui
       core::application::instance().quit();
   }
 
-  void window::create_graphics_context_and_execute_render_loop()
+  void window::create_graphics_context_and_execute_render_loop(std::atomic_bool& initialized)
   {
     if(flags.test(window_flag::opengl))
     {
@@ -203,6 +205,12 @@ namespace skui::gui
 
       graphics_context = std::make_unique<graphics::raster_context>(raster_visual->pixels());
     }
+    {
+      // Ensure initialize_and_execute_platform_loop is waiting on handle_condition_variable
+      std::unique_lock handle_lock{mutex};
+    }
+    initialized = true;
+    handle_condition_variable.notify_all();
 
     render_loop.execute();
   }
