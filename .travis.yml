@@ -231,6 +231,30 @@ jobs:
         - . ./ci/setup_cmake.sh 3.16.4 Linux
         - . ./ci/setup_ninja.sh 1.8.2 linux
         - . ./ci/setup_libcxx.sh 9.0.1 /usr
+    - os: linux
+      compiler: clang-10
+      env:
+        - GENERATOR=Ninja
+        - C_COMPILER=clang-10
+        - CXX_COMPILER=clang++-10
+        - CONFIGURATION=Release
+      addons:
+        apt:
+          packages:
+            - clang-10
+            - libgl1-mesa-dev
+            - libegl1-mesa-dev
+            - libgles2-mesa-dev
+            - libxcb-util0-dev
+            - libxcb-image0-dev
+          sources:
+            - ubuntu-toolchain-r-test
+            - sourceline: 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-10 main'
+              key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
+      before_install:
+        - . ./ci/setup_cmake.sh 3.16.4 Linux
+        - . ./ci/setup_ninja.sh 1.8.2 linux
+        - . ./ci/setup_libcxx.sh 10.0.0 /usr
     - os: osx
       osx_image: xcode9.4
       env:
