@@ -27,7 +27,7 @@ environment:
     CMAKE_ARGS: -DGC_SECTIONS=OFF
     PACKAGE_ID: mingw_x86_64
 
-  # Clang targeting MSVC
+  # Clang 7.1.0 targeting MSVC 2017
   - TOOLCHAIN: "Visual Studio 2017 Clang/LLVM 7.1.0"
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     GENERATOR: Ninja
@@ -39,7 +39,7 @@ environment:
     CLANG_URL: https://github.com/llvm/llvm-project/releases/download/llvmorg-7.1.0/LLVM-7.1.0-win64.exe
     PACKAGE_ID: vs2017clang7_x86_64
 
-  # Clang targeting MSVC
+  # Clang 8.0.1 targeting MSVC 2017
   - TOOLCHAIN: "Visual Studio 2017 Clang/LLVM 8.0.1"
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     GENERATOR: Ninja
@@ -51,8 +51,8 @@ environment:
     CLANG_URL: https://github.com/llvm/llvm-project/releases/download/llvmorg-8.0.1/LLVM-8.0.1-win64.exe
     PACKAGE_ID: vs2017clang8_x86_64
 
-  # Clang targeting MSVC
-  - TOOLCHAIN: "Visual Studio 2017 Clang/LLVM 9.0.0"
+  # Clang 9.0.1 targeting MSVC 2017
+  - TOOLCHAIN: "Visual Studio 2017 Clang/LLVM 9.0.1"
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     GENERATOR: Ninja
     PACMAN_PACKAGES: "mingw-w64-x86_64-ninja"
@@ -60,11 +60,11 @@ environment:
     VCVARS: C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat
     VCVARSARG: amd64
     CMAKE_ARGS: -DCMAKE_C_COMPILER=clang-cl.exe -DCMAKE_CXX_COMPILER=clang-cl.exe
-    CLANG_URL: https://releases.llvm.org/9.0.0/LLVM-9.0.0-win64.exe
+    CLANG_URL: https://github.com/llvm/llvm-project/releases/download/llvmorg-9.0.1/LLVM-9.0.1-win64.exe
     PACKAGE_ID: vs2017clang9_x86_64
 
-  # Clang targeting MSVC
-  - TOOLCHAIN: "Visual Studio 2019 Clang/LLVM 8.0.1"
+  # Clang 9.0.1 targeting MSVC 2019
+  - TOOLCHAIN: "Visual Studio 2019 Clang/LLVM 9.0.1"
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
     GENERATOR: Ninja
     PACMAN_PACKAGES: "mingw-w64-x86_64-ninja"
@@ -72,19 +72,7 @@ environment:
     VCVARS: C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat
     VCVARSARG: amd64
     CMAKE_ARGS: -DCMAKE_C_COMPILER=clang-cl.exe -DCMAKE_CXX_COMPILER=clang-cl.exe
-    CLANG_URL: https://github.com/llvm/llvm-project/releases/download/llvmorg-8.0.1/LLVM-8.0.1-win64.exe
-    PACKAGE_ID: vs2019clang8_x86_64
-
-  # Clang targeting MSVC
-  - TOOLCHAIN: "Visual Studio 2019 Clang/LLVM 9.0.0"
-    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-    GENERATOR: Ninja
-    PACMAN_PACKAGES: "mingw-w64-x86_64-ninja"
-    PATH: C:\Program Files\LLVM\bin;C:\msys64\mingw64\bin;%PATH%
-    VCVARS: C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat
-    VCVARSARG: amd64
-    CMAKE_ARGS: -DCMAKE_C_COMPILER=clang-cl.exe -DCMAKE_CXX_COMPILER=clang-cl.exe
-    CLANG_URL: https://releases.llvm.org/9.0.0/LLVM-9.0.0-win64.exe
+    CLANG_URL: https://github.com/llvm/llvm-project/releases/download/llvmorg-9.0.1/LLVM-9.0.1-win64.exe
     PACKAGE_ID: vs2019clang9_x86_64
 
   # Clang targeting mingw-w64
