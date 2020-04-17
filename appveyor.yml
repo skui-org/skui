@@ -18,6 +18,15 @@ environment:
     BUILD_ARGS: /verbosity:quiet /clp:PerformanceSummary;Summary;ShowCommandLine;ForceNoAlign
     PACKAGE_ID: vs2019_x86_64
 
+  - TOOLCHAIN: "Visual Studio 2019 ClangCL x64"
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+    GENERATOR: Visual Studio 16 2019
+    VCVARS: C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat
+    VCVARSARG: amd64
+    CMAKE_ARGS: -A x64 -T ClangCL
+    BUILD_ARGS: /verbosity:minimal
+    PACKAGE_ID: vs2019clang9_x86_64
+
   # Mingw-w64
   - TOOLCHAIN: "MinGW-w64 GCC"
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
