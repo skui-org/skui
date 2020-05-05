@@ -152,9 +152,7 @@ namespace skui::gui::native_window
   {
     const static bool dummy = register_window_class();
     if(!dummy)
-    {
       core::debug_print("Call to RegisterClassExW failed.\n", core::get_last_error_string());
-    }
   }
 
   win32::~win32() = default;
@@ -212,7 +210,7 @@ namespace skui::gui::native_window
     GetClientRect(window, &rect);
 
     return {{static_cast<std::int32_t>(rect.left), static_cast<std::int32_t>(rect.top)},
-      {static_cast<graphics::pixel>(rect.right-rect.left), static_cast<graphics::pixel>(rect.bottom - rect.top)}};
+            {static_cast<graphics::pixel>(rect.right-rect.left), static_cast<graphics::pixel>(rect.bottom - rect.top)}};
   }
 
   HWND win32::get_hwnd() const
