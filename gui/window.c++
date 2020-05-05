@@ -182,7 +182,6 @@ namespace skui::gui
 
     execute_event_loop();
 
-    graphics_context.reset();
     native_window.reset();
 
     if(flags.test(window_flag::exit_on_close))
@@ -213,6 +212,8 @@ namespace skui::gui
     handle_condition_variable.notify_all();
 
     render_loop.execute();
+
+    graphics_context.reset();
   }
 
   void window::execute_event_loop()
