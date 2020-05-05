@@ -42,10 +42,9 @@ namespace skui::gui
 {
   namespace implementation
   {
-    static std::unique_ptr<window::window_list> list_of_windows;
     window::window_list& windows()
     {
-      list_of_windows = std::make_unique<window::window_list>();
+      static std::unique_ptr<window::window_list> list_of_windows = std::make_unique<window::window_list>();
 
       return *list_of_windows;
     }
