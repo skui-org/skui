@@ -56,7 +56,7 @@ namespace skui::gui::native_window
       switch(msg)
       {
         case WM_CLOSE:
-          DestroyWindow(hwnd);
+          window.close();
           break;
         case WM_PAINT:
         {
@@ -187,7 +187,7 @@ namespace skui::gui::native_window
 
   void win32::close()
   {
-    CloseWindow(window);
+    DestroyWindow(window);
   }
 
   skui::core::string win32::get_title() const
