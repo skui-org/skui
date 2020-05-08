@@ -36,7 +36,7 @@ namespace skui::core
   namespace implementation
   {
     constexpr char so_suffix[] =
-    #ifdef __APPLE__
+#ifdef __APPLE__
         ".dylib";
 #else
         ".so";
