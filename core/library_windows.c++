@@ -53,13 +53,12 @@ namespace skui::core
 
     void* load(const path& filename)
     {
-      const path filename_only = filename.filename();
-      const path directory =  filename_only == filename.filename() ? executable_path()
-                                                                   : (fs::current_path() / filename).remove_filename();
+      path directory = fs::absolute(filename).remove_filename();
+      path filename_only = filename.filename();
 
       std::array<path, 3> filenames{{directory / filename_only,
-                                     directory / filename_only + dll_suffix,
-                                     directory / dll_prefix + filename_only + dll_suffix}};
+                                     directory / (filename_only + dll_suffix),
+                                     directory / (dll_prefix + filename_only + dll_suffix)}};
 
       for(const auto& filepath : filenames)
       {
