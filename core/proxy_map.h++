@@ -32,6 +32,7 @@
 #ifndef SKUI_CORE_PROXY_MAP_H
 #define SKUI_CORE_PROXY_MAP_H
 
+#include <ostream>
 #include <functional>
 #include <type_traits>
 
