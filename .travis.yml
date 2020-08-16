@@ -116,29 +116,6 @@ jobs:
         - lcov --list coverage.info # debug info
         - bash <(curl -s https://codecov.io/bash) -f coverage.info || echo "Codecov did not collect coverage reports"
     - os: linux
-      compiler: clang-5.0
-      env:
-        - GENERATOR=Ninja
-        - C_COMPILER=clang-5.0
-        - CXX_COMPILER=clang++-5.0
-        - CONFIGURATION=Release
-      addons:
-        apt:
-          packages:
-            - clang-5.0
-            - libgl1-mesa-dev
-            - libegl1-mesa-dev
-            - libgles2-mesa-dev
-            - libxcb-util0-dev
-            - libxcb-image0-dev
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-xenial-5.0
-      before_install:
-        - . ./ci/setup_cmake.sh 3.16.4 Linux
-        - . ./ci/setup_ninja.sh 1.8.2 linux
-        - . ./ci/setup_libcxx.sh 5.0.2 /usr
-    - os: linux
       compiler: clang-6.0
       env:
         - GENERATOR=Ninja
@@ -183,7 +160,7 @@ jobs:
       before_install:
         - . ./ci/setup_cmake.sh 3.16.4 Linux
         - . ./ci/setup_ninja.sh 1.8.2 linux
-        - . ./ci/setup_libcxx.sh 7.0.1 /usr
+        - . ./ci/setup_libcxx.sh 7.1.0 /usr
     - os: linux
       compiler: clang-8
       env:
@@ -254,9 +231,9 @@ jobs:
       before_install:
         - . ./ci/setup_cmake.sh 3.16.4 Linux
         - . ./ci/setup_ninja.sh 1.8.2 linux
-        - . ./ci/setup_libcxx.sh 10.0.0 /usr
+        - . ./ci/setup_libcxx.sh 10.0.1 /usr
     - os: osx
-      osx_image: xcode9.4
+      osx_image: xcode11.6
       env:
         - GENERATOR=Ninja
         - C_COMPILER=clang
@@ -269,7 +246,7 @@ jobs:
         - . ./ci/setup_ninja.sh 1.8.2 mac
         - . ./ci/setup_libcxx.sh 8.0.1 /Users/travis/libc++
     - os: osx
-      osx_image: xcode10
+      osx_image: xcode12
       env:
         - GENERATOR=Ninja
         - C_COMPILER=clang
@@ -280,82 +257,4 @@ jobs:
       before_install:
         - . ./ci/setup_cmake.sh 3.16.4 Darwin
         - . ./ci/setup_ninja.sh 1.8.2 mac
-        - . ./ci/setup_libcxx.sh 8.0.1 /Users/travis/libc++
-    - os: osx
-      osx_image: xcode10.1
-      env:
-        - GENERATOR=Ninja
-        - C_COMPILER=clang
-        - CXX_COMPILER=clang++
-        - CI_CXX_FLAGS='-D_LIBCPP_DISABLE_AVAILABILITY -Wno-unused-command-line-argument -nostdinc++ -isystem /Users/travis/libc++/include/c++/v1'
-        - CI_LDFLAGS='-L /Users/travis/libc++/lib'
-        - CONFIGURATION=Release
-      before_install:
-        - . ./ci/setup_cmake.sh 3.16.4 Darwin
-        - . ./ci/setup_ninja.sh 1.8.2 mac
-        - . ./ci/setup_libcxx.sh 8.0.1 /Users/travis/libc++
-    - os: osx
-      osx_image: xcode10.2
-      env:
-        - GENERATOR=Ninja
-        - C_COMPILER=clang
-        - CXX_COMPILER=clang++
-        - CI_CXX_FLAGS='-D_LIBCPP_DISABLE_AVAILABILITY -Wno-unused-command-line-argument -nostdinc++ -isystem /Users/travis/libc++/include/c++/v1'
-        - CI_LDFLAGS='-L /Users/travis/libc++/lib'
-        - CONFIGURATION=Release
-      before_install:
-        - . ./ci/setup_cmake.sh 3.16.4 Darwin
-        - . ./ci/setup_ninja.sh 1.8.2 mac
-        - . ./ci/setup_libcxx.sh 8.0.1 /Users/travis/libc++
-    - os: osx
-      osx_image: xcode11
-      env:
-        - GENERATOR=Ninja
-        - C_COMPILER=clang
-        - CXX_COMPILER=clang++
-        - CI_CXX_FLAGS='-D_LIBCPP_DISABLE_AVAILABILITY -Wno-unused-command-line-argument -nostdinc++ -isystem /Users/travis/libc++/include/c++/v1'
-        - CI_LDFLAGS='-L /Users/travis/libc++/lib'
-        - CONFIGURATION=Release
-      before_install:
-        - . ./ci/setup_cmake.sh 3.16.4 Darwin
-        - . ./ci/setup_ninja.sh 1.8.2 mac
-        - . ./ci/setup_libcxx.sh 8.0.1 /Users/travis/libc++
-    - os: osx
-      osx_image: xcode11.1
-      env:
-        - GENERATOR=Ninja
-        - C_COMPILER=clang
-        - CXX_COMPILER=clang++
-        - CI_CXX_FLAGS='-D_LIBCPP_DISABLE_AVAILABILITY -Wno-unused-command-line-argument -nostdinc++ -isystem /Users/travis/libc++/include/c++/v1'
-        - CI_LDFLAGS='-L /Users/travis/libc++/lib'
-        - CONFIGURATION=Release
-      before_install:
-        - . ./ci/setup_cmake.sh 3.16.4 Darwin
-        - . ./ci/setup_ninja.sh 1.8.2 mac
-        - . ./ci/setup_libcxx.sh 8.0.1 /Users/travis/libc++
-    - os: osx
-      osx_image: xcode11.2
-      env:
-        - GENERATOR=Ninja
-        - C_COMPILER=clang
-        - CXX_COMPILER=clang++
-        - CI_CXX_FLAGS='-D_LIBCPP_DISABLE_AVAILABILITY -Wno-unused-command-line-argument -nostdinc++ -isystem /Users/travis/libc++/include/c++/v1'
-        - CI_LDFLAGS='-L /Users/travis/libc++/lib'
-        - CONFIGURATION=Release
-      before_install:
-        - . ./ci/setup_cmake.sh 3.16.4 Darwin
-        - . ./ci/setup_ninja.sh 1.8.2 mac
-        - . ./ci/setup_libcxx.sh 8.0.1 /Users/travis/libc++
-    - os: osx
-      osx_image: xcode11.3
-      env:
-        - GENERATOR=Ninja
-        - C_COMPILER=clang
-        - CXX_COMPILER=clang++
-        - CI_CXX_FLAGS='-D_LIBCPP_DISABLE_AVAILABILITY -Wno-unused-command-line-argument -nostdinc++ -isystem /Users/travis/libc++/include/c++/v1'
-        - CI_LDFLAGS='-L /Users/travis/libc++/lib'
-        - CONFIGURATION=Release
-      before_install:
-        - . ./ci/setup_cmake.sh 3.16.4 Darwin
-        - . ./ci/setup_ninja.sh 1.8.2 mac
-        - . ./ci/setup_libcxx.sh 8.0.1 /Users/travis/libc++
+        - . ./ci/setup_libcxx.sh 10.0.1 /Users/travis/libc++
