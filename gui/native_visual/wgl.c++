@@ -33,7 +33,7 @@ namespace skui::gui::native_visual
   {
     base::gl_function_type get_gl(void*, const char name[])
     {
-	  auto p = (base::gl_function_type)wglGetProcAddress(name);
+      auto p = (base::gl_function_type)wglGetProcAddress(name);
       if(p == 0 ||
          p == reinterpret_cast<base::gl_function_type>(0x1) ||
          p == reinterpret_cast<base::gl_function_type>(0x2) ||
@@ -74,7 +74,7 @@ namespace skui::gui::native_visual
       0,
       0,
       0, 0, 0, 0,
-      24,                        //Number of bits for the depthbuffer
+      24,                       //Number of bits for the depthbuffer
       8,                        //Number of bits for the stencilbuffer
       0,                        //Number of Aux buffers in the framebuffer.
       PFD_MAIN_PLANE,
@@ -105,7 +105,12 @@ namespace skui::gui::native_visual
   {
     BOOL success = wglMakeCurrent(device_context, gl_context);
     if(success == FALSE)
-      core::debug_print("Failed making WGL Context current.\n");
+      core::debug_print("Failed making WGL Context current. (", GetLastError(), ")\n");
+  }
+
+  void wgl::make_no_current() const
+  {
+    wglMakeCurrent(NULL, NULL);
   }
 
   base::gl_get_function_type wgl::get_gl_function() const

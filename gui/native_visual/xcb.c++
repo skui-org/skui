@@ -89,6 +89,10 @@ namespace skui::gui::native_visual
   {
   }
 
+  void xcb::make_no_current() const
+  {
+  }
+
   void xcb::swap_buffers(const graphics::pixel_size& size) const
   {
     const std::uint16_t width = static_cast<std::uint16_t>(size.width);

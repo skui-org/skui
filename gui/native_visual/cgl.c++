@@ -49,6 +49,9 @@ namespace skui::gui::native_visual
   void cgl::make_current() const
   {}
 
+  void cgl::make_no_current() const
+  {}
+
   void cgl::swap_buffers(const graphics::pixel_size&) const
   {}
 
