@@ -41,7 +41,6 @@ namespace skui::gui
     exit_on_close, // Quit application when last window with this flag set closes
   };
   using window_flags = core::bitflag<window_flag>;
-  using namespace core::bitflag_operators;
 }
 
 #endif // WINDOW_FLAGS_H

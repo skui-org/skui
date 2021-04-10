@@ -30,6 +30,8 @@
 
 namespace skui::gui
 {
+  using namespace core::bitflag_operators;
+
   const window_flags window::default_flags = window_flag::exit_on_close | window_flag::opengl | window_flag::anti_alias;
 }
 
