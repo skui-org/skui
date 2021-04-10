@@ -76,6 +76,7 @@ namespace skui::gui::events
 {
   xcb::xcb(gui::window& window)
     : base{window}
+    , wm_delete_window{XCB_ATOM_NONE}
   {
     auto native_xcb_window = dynamic_cast<native_window::xcb*>(&window.get_native_window());
     if(!native_xcb_window)
@@ -85,16 +86,15 @@ namespace skui::gui::events
     xcb_window = native_xcb_window->get_window();
 
     // The magic incantation to receive and be able to check for the "window was closed" event
-    xcb_intern_atom_cookie_t cookie = xcb_intern_atom(connection, true, 12, "WM_PROTOCOLS");
-    core::unique_free_ptr<xcb_intern_atom_reply_t> reply(xcb_intern_atom_reply(connection, cookie, nullptr));
-
-    xcb_intern_atom_cookie_t cookie2 = xcb_intern_atom(connection, false, 16, "WM_DELETE_WINDOW");
-    wm_delete_window.reset(xcb_intern_atom_reply(connection, cookie2, nullptr));
-
+    wm_delete_window = native_xcb_window->get_atom(gui::xcb::atom::wm_delete_window);
     xcb_change_property(connection,
                         XCB_PROP_MODE_REPLACE,
                         xcb_window,
-                        reply->atom, 4, 32, 1, &wm_delete_window->atom);
+                        native_xcb_window->get_atom(gui::xcb::atom::wm_protocols),
+                        4,
+                        32,
+                        1,
+                        &wm_delete_window);
     // end magic
 
     xcb_flush(connection);
@@ -234,11 +234,8 @@ namespace skui::gui::events
         {
           const auto& client_message = reinterpret_cast<const xcb_client_message_event_t&>(*event_ptr);
 
-          if(client_message.data.data32[0] == wm_delete_window->atom)
-          {
-            core::debug_print("WM_DELETE_WINDOW received.\n");
+          if(client_message.data.data32[0] == wm_delete_window)
             window.close();
-          }
           break;
         }
         case XCB_DESTROY_NOTIFY:

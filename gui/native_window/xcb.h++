@@ -35,25 +35,48 @@
 #include <core/utility.h++>
 
 #include <memory>
+#include <unordered_map>
 
 #include <xcb/xcb.h>
 
-namespace skui::gui::native_window
+namespace skui::gui::xcb
 {
-  class xcb_data
+  enum class atom
+  {
+    wm_protocols,
+    wm_delete_window,
+    wm_change_state,
+  };
+  static const std::unordered_map<atom, std::string> atom_names
+  {
+    {atom::wm_protocols, "WM_PROTOCOLS"},
+    {atom::wm_delete_window, "WM_DELETE_WINDOW"},
+    {atom::wm_change_state, "WM_CHANGE_STATE"},
+  };
+
+  class data
   {
   protected:
-    xcb_data();
-    virtual ~xcb_data();
-    xcb_data(xcb_connection_t* connection);
+    data();
+    virtual ~data();
+    data(xcb_connection_t* connection);
 
     int preferred_screen_index;
     xcb_connection_t* connection;
     xcb_screen_t* preferred_screen;
-  };
 
-  class xcb : public xcb_data
-      , public base
+    std::unordered_map<atom, xcb_atom_t> atoms;
+
+  private:
+    void initialize_atoms();
+    void initialize_atom(atom atom);
+  };
+}
+
+namespace skui::gui::native_window
+{
+  class xcb : public gui::xcb::data
+            , public base
   {
   public:
     xcb();
@@ -71,6 +94,7 @@ namespace skui::gui::native_window
 
     xcb_connection_t* get_connection() const;
     xcb_window_t get_window() const;
+    const xcb_atom_t& get_atom(gui::xcb::atom atom) const;
 
   protected:
     xcb(std::unique_ptr<native_visual::base>&& native_visual,

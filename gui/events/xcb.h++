@@ -52,7 +52,7 @@ namespace skui::gui::events
     xcb_connection_t* connection;
     xcb_window_t xcb_window;
 
-    core::unique_free_ptr<xcb_intern_atom_reply_t> wm_delete_window;
+    xcb_atom_t wm_delete_window;
     core::bitflag<input::button> pressed_buttons;
   };
 }

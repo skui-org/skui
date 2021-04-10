@@ -80,24 +80,53 @@ namespace
   }
 }
 
-namespace skui::gui::native_window
+namespace skui::gui::xcb
 {
-  xcb_data::xcb_data()
-    : preferred_screen_index{}
-    , connection{xcb_connect(nullptr, &preferred_screen_index)}
-    , preferred_screen{screen_of_display(connection, preferred_screen_index)}
+  data::data()
+    : data{xcb_connect(nullptr, 0)}
   {}
 
-  xcb_data::xcb_data(xcb_connection_t* connection)
+  data::data(xcb_connection_t* connection)
     : preferred_screen_index{}
     , connection{connection}
     , preferred_screen{screen_of_display(connection, preferred_screen_index)}
-  {}
+  {
+    initialize_atoms();
+  }
 
-  xcb_data::~xcb_data() = default;
+  void data::initialize_atoms()
+  {
+    initialize_atom(atom::wm_protocols);
+    initialize_atom(atom::wm_delete_window);
+    initialize_atom(atom::wm_change_state);
+  }
 
+  void data::initialize_atom(atom atom)
+  {
+    const auto& atom_name = atom_names.at(atom);
+    xcb_intern_atom_cookie_t cookie = xcb_intern_atom(connection,
+                                                      true,
+                                                      static_cast<std::uint16_t>(atom_name.length()),
+                                                      atom_name.c_str());
+    xcb_generic_error_t* error = nullptr;
+    skui::core::unique_free_ptr<xcb_intern_atom_reply_t> reply(xcb_intern_atom_reply(connection, cookie, &error));
+    skui::core::unique_free_ptr<xcb_generic_error_t> error_ptr{error};
+
+    if(error)
+    {
+      skui::core::debug_print("Error retrieving atom ", atom_name, '\n');
+      return;
+    }
+    atoms[atom] = reply->atom;
+  }
+
+  data::~data() = default;
+}
+
+namespace skui::gui::native_window
+{
   xcb::xcb()
-    : xcb_data{}
+    : data{}
     , base{std::make_unique<native_visual::xcb>(connection, preferred_screen)}
   {}
 
@@ -202,6 +231,11 @@ namespace skui::gui::native_window
     return window;
   }
 
+  const xcb_atom_t& xcb::get_atom(gui::xcb::atom atom) const
+  {
+    return atoms.at(atom);
+  }
+
   void xcb::create(const graphics::pixel_position& position,
                    const graphics::pixel_size& size)
   {
@@ -224,7 +258,7 @@ namespace skui::gui::native_window
 
   xcb::xcb(std::unique_ptr<native_visual::base>&& native_visual,
            xcb_connection_t* connection)
-    : xcb_data(connection)
+    : data(connection)
     , base(std::move(native_visual))
   {}
 }
