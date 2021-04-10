@@ -33,6 +33,7 @@
 #define SKUI_CORE_PROXY_MAP_H
 
 #include <functional>
+#include <ostream>
 #include <type_traits>
 
 namespace skui::core
