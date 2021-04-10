@@ -205,10 +205,6 @@ namespace skui::graphics
     SkFont font;
     font.setSize(text.font.size);
 
-    SkPaint paint = text.border.color == colors::transparent ? make_fill_paint(text, {0, 0}, flags)
-                                                             : make_border_paint(text, flags);
-    //paint.setTextSize(text.font.size);
-
     SkFontMetrics metrics;
     font.getMetrics(&metrics);
 
