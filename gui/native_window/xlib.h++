@@ -53,7 +53,7 @@ namespace skui::gui::native_window
   };
 
   class xlib : public xlib_data
-      , public xcb
+             , public xcb
   {
   public:
     xlib(const window_flags& flags);
