@@ -31,6 +31,7 @@ set(core_src
     debug.h++
     event_loop.h++ event_loop.c++
     library.h++ library.c++ library_windows.c++ library_unix.c++
+    overload.h++
     path.h++
     property.h++
     proxy_map.h++
