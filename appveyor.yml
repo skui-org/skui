@@ -1,7 +1,7 @@
 environment:
   matrix:
   - TOOLCHAIN: "Visual Studio 2017 x64"
-    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
     GENERATOR: Visual Studio 15 2017 Win64
     VCVARS: C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat
     VCVARSARG: amd64
@@ -29,7 +29,7 @@ environment:
 
   # Mingw-w64
   - TOOLCHAIN: "MinGW-w64 GCC"
-    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
     GENERATOR: Ninja
     PACMAN_PACKAGES: "mingw-w64-x86_64-{headers,crt,gcc,ninja,binutils}"
     PATH: C:\msys64\mingw64\bin;%PATH%
@@ -38,7 +38,7 @@ environment:
 
   # Clang 7.1.0 targeting MSVC 2017
   - TOOLCHAIN: "Visual Studio 2017 Clang/LLVM 7.1.0"
-    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
     GENERATOR: Ninja
     PACMAN_PACKAGES: "mingw-w64-x86_64-ninja"
     PATH: C:\Program Files\LLVM\bin;C:\msys64\mingw64\bin;%PATH%
@@ -50,7 +50,7 @@ environment:
 
   # Clang 8.0.1 targeting MSVC 2017
   - TOOLCHAIN: "Visual Studio 2017 Clang/LLVM 8.0.1"
-    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
     GENERATOR: Ninja
     PACMAN_PACKAGES: "mingw-w64-x86_64-ninja"
     PATH: C:\Program Files\LLVM\bin;C:\msys64\mingw64\bin;%PATH%
@@ -62,7 +62,7 @@ environment:
 
   # Clang 9.0.1 targeting MSVC 2017
   - TOOLCHAIN: "Visual Studio 2017 Clang/LLVM 9.0.1"
-    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
     GENERATOR: Ninja
     PACMAN_PACKAGES: "mingw-w64-x86_64-ninja"
     PATH: C:\Program Files\LLVM\bin;C:\msys64\mingw64\bin;%PATH%
@@ -74,7 +74,7 @@ environment:
 
   # Clang 10.0.0 targeting MSVC 2017
   - TOOLCHAIN: "Visual Studio 2017 Clang/LLVM 10.0.0"
-    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
     GENERATOR: Ninja
     PACMAN_PACKAGES: "mingw-w64-x86_64-ninja"
     PATH: C:\Program Files\LLVM\bin;C:\msys64\mingw64\bin;%PATH%
@@ -110,7 +110,7 @@ environment:
 
   # Clang targeting mingw-w64
   - TOOLCHAIN: "MinGW-w64 Clang"
-    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
     GENERATOR: Ninja
     PACMAN_PACKAGES: "mingw-w64-x86_64-{headers,crt,clang,ninja,binutils}"
     PATH: C:\msys64\mingw64\bin;%PATH%
