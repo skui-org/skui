@@ -72,6 +72,11 @@ namespace skui::gui::native_visual
       core::debug_print("Call to glXMakeCurrent failed.\n");
   }
 
+  void glx::make_no_current() const
+  {
+    glXMakeCurrent(display, None, NULL)
+  }
+
   void glx::swap_buffers(const graphics::pixel_size&) const
   {
     glXSwapBuffers(display, drawable);

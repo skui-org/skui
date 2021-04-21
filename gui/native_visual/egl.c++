@@ -84,6 +84,11 @@ namespace skui::gui::native_visual
     eglMakeCurrent(egl_display, egl_surface, egl_surface, egl_context);
   }
 
+  void egl::make_current() const
+  {
+      eglMakeCurrent(egl_display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+  }
+
   void egl::swap_buffers(const graphics::pixel_size&) const
   {
     eglSwapBuffers(egl_display, egl_surface);

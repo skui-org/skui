@@ -56,9 +56,10 @@ namespace skui::core
       path directory = fs::absolute(filename).remove_filename();
       path filename_only = filename.filename();
 
-      std::array<path, 3> filenames{{directory / filename_only,
+      std::array<path, 4> filenames{{directory / filename_only,
                                      directory / (filename_only + dll_suffix),
-                                     directory / (dll_prefix + filename_only + dll_suffix)}};
+                                     directory / (dll_prefix + filename_only + dll_suffix),
+                                     filename_only}};
 
       for(const auto& filepath : filenames)
       {

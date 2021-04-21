@@ -59,6 +59,11 @@ namespace skui::gui::native_visual
 
   }
 
+  void win32::make_no_current() const
+  {
+
+  }
+
   void win32::swap_buffers(const graphics::pixel_size& size) const
   {
     BITMAPINFO bitmap_info = create_bitmapinfo(size);
