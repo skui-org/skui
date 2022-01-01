@@ -194,6 +194,7 @@ namespace skui::gui
       const auto& native_visual = native_window->get_native_visual();
       native_visual.make_current();
       graphics_context = std::make_unique<graphics::skia_gl_context>(native_visual.get_gl_function());
+      native_visual.make_release();
     }
     else
     {

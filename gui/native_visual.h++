@@ -45,6 +45,7 @@ namespace skui::gui::native_visual
 
     virtual void create_surface(std::uintptr_t window) = 0;
     virtual void make_current() const = 0;
+    virtual void make_release() const {};
     virtual void swap_buffers(const graphics::pixel_size& size) const = 0;
 
     using gl_function_type = void(*)();
