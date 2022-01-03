@@ -49,6 +49,7 @@ namespace skui::gui::native_visual
     void create_surface(std::uintptr_t window) override;
     void swap_buffers(const graphics::pixel_size&) const override;
     void make_current() const override;
+    void make_release() const override;
 
     gl_get_function_type get_gl_function() const override;
 

@@ -108,6 +108,11 @@ namespace skui::gui::native_visual
       core::debug_print("Failed making WGL Context current.\n");
   }
 
+  void wgl::make_release() const
+  {
+    wglMakeCurrent(device_context, nullptr);
+  }
+
   base::gl_get_function_type wgl::get_gl_function() const
   {
     return &get_gl;
