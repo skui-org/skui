@@ -7,7 +7,7 @@ It uses the newest features of the C++ Standard library (currently targetting C+
 
 SkUI is in a pre-release development phase, and the API is definitely not stable.
 
-[![Build Status](https://travis-ci.com/skui-org/skui.svg?branch=master)](https://travis-ci.com/skui-org/skui)
+[![Build Status](https://app.travis-ci.com/skui-org/skui.svg?branch=master)](https://app.travis-ci.com/skui-org/skui)
 [![Build status](https://ci.appveyor.com/api/projects/status/s9t7o9k8u0p15e0x?svg=true)](https://ci.appveyor.com/project/RubenVanBoxem/skui)
 [![codecov](https://codecov.io/gh/skui-org/skui/branch/master/graph/badge.svg)](https://codecov.io/gh/skui-org/skui)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/e461d12770cf4234b7d5a1ffcd880c2c)](https://www.codacy.com/manual/rubenvb/skui?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=skui-org/skui&amp;utm_campaign=Badge_Grade)
