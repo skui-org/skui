@@ -36,6 +36,9 @@ namespace skui::gui::native_visual
   void coregraphics::make_current() const
   {}
 
+  void coregraphics::make_no_current() const
+  {}
+
   void coregraphics::swap_buffers(const graphics::pixel_size&) const
   {}
 }

@@ -207,6 +207,13 @@ namespace skui::gui
       // Ensure initialize_and_execute_platform_loop is waiting on handle_condition_variable
       std::unique_lock handle_lock{mutex};
     }
+
+    // Release context so that main thread to have right to access GL
+    {
+      const auto& native_visual = native_window->get_native_visual();
+      native_visual.make_no_current();
+    }
+
     initialized = true;
     handle_condition_variable.notify_all();
 
